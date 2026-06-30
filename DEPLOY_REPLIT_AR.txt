@@ -1,0 +1,25 @@
+طريقة تشغيل ADNOR على Replit بدون Admin JSON
+===========================================
+
+1) ارفع ZIP على Replit أو استبدل ملفات المشروع الحالي.
+2) ضع Secrets الثلاثة فقط:
+
+FIREBASE_DATABASE_URL = https://adhamnnn-8a4d2-default-rtdb.firebaseio.com
+DRAW_TIMEZONE = Europe/Istanbul
+ADMIN_TOKEN = ADNOR_ADMIN_2026_987654
+
+3) لا تضف FIREBASE_SERVICE_ACCOUNT_JSON.
+4) اضغط Run أو افتح Shell:
+   npm install
+   npm start
+
+5) افتح رابط المشروع مع:
+   /api/health
+
+النتيجة المطلوبة:
+{"ok":true}
+
+السحب:
+- السيرفر لا ينفذ السحب من نفسه.
+- عند وقت السحب يكتب فقط أن السحب ينتظر موافقة الأدمن.
+- أنت تنفذ السحب من لوحة الأدمن بعد إدخال ADMIN_TOKEN.

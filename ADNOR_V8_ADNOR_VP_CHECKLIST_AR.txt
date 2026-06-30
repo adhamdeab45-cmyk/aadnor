@@ -1,0 +1,34 @@
+ADNOR COMPLETE V8 — ADNOR-VP FIREBASE FIX
+
+هذه النسخة تعتمد مشروع Firebase الرسمي:
+projectId: adhamnnn-8a4d2
+authDomain: adhamnnn-8a4d2.firebaseapp.com
+databaseURL: https://adhamnnn-8a4d2-default-rtdb.firebaseio.com
+storageBucket: adhamnnn-8a4d2.firebasestorage.app
+
+تعديلات V8:
+1) تم استبدال كل إعدادات adnor-new إلى adhamnnn-8a4d2 داخل public/index.html و server.js والملفات المساعدة.
+2) تسجيل الدخول الظاهر للمستخدم: Google/Gmail أو رقم الهاتف فقط.
+3) تم إخفاء تسجيل الإيميل + كلمة السر من الواجهة.
+4) تم دعم صلاحية الأدمن برقم الهاتف: +000000000000000.
+5) تم ترك إيميل الأدمن adhamdeab2@gmail.com كاحتياطي أمان داخل الكود والقواعد حتى لا تفقد الوصول للأدمن أثناء الاختبار.
+6) تم تحديث database.rules.suggested.json لقواعد Firebase متوافقة مع رقم الأدمن والمستخدمين.
+7) تم تحديث Render env المطلوب إلى:
+   FIREBASE_DATABASE_URL=https://adhamnnn-8a4d2-default-rtdb.firebaseio.com
+   DRAW_TIMEZONE=Europe/Istanbul
+   ADMIN_TOKEN=ADNOR_ADMIN_2026_987654
+   SESSION_SECRET=adnor_secret_2026
+
+مهم جداً بعد الرفع:
+- في Render عدّل FIREBASE_DATABASE_URL إلى https://adhamnnn-8a4d2-default-rtdb.firebaseio.com
+- في Firebase مشروع adhamnnn-8a4d2 فعّل Google و Phone من Authentication.
+- في Firebase مشروع adhamnnn-8a4d2 أضف الدومين: adnor-az.onrender.com
+- في Google Cloud مشروع adhamnnn-8a4d2 أضف:
+  Authorized JavaScript origins:
+  https://adnor-az.onrender.com
+  Authorized redirect URIs:
+  https://adhamnnn-8a4d2.firebaseapp.com/__/auth/handler
+  https://adhamnnn-8a4d2.web.app/__/auth/handler
+
+ملاحظة:
+إذا أردت إزالة إيميل الأدمن نهائياً وجعل الأدمن فقط على رقم الهاتف، احذف شرط email من isAdmin ومن database.rules.suggested.json بعد التأكد أن تسجيل الهاتف OTP يعمل 100%.

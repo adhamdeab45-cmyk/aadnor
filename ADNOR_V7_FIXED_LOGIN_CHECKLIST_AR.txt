@@ -1,0 +1,16 @@
+ADNOR V8 FIXED LOGIN CHECKLIST
+
+ما تم إصلاحه:
+1) إصلاح أصل مشكلة Google: تم تثبيت Firebase authDomain على adhamnnn-8a4d2.firebaseapp.com بدل دومين Render.
+2) الواجهة صارت Google + رقم هاتف فقط.
+3) تم إخفاء إيميل/كلمة السر ونسيت كلمة السر من واجهة المستخدم.
+4) تم إخفاء الإيميل من الهيدر والملف الشخصي العام.
+5) تم تحسين رسائل أخطاء Google وPhone.
+6) تم تثبيت reCAPTCHA للهاتف بشكل أنظف.
+7) تم الحفاظ على الأدمن والإيداع والدعم والعجلة والدعوات وصندوق الحظ والسحوبات وحقن الأكواد.
+
+مهم بعد الرفع:
+- لا تغير Firebase config داخل الكود.
+- في Firebase Authorized domains أضف: adnor-az.onrender.com
+- في Google Cloud OAuth Web Client يجب وجود redirect URI: https://adhamnnn-8a4d2.firebaseapp.com/__/auth/handler
+- JavaScript origin: https://adnor-az.onrender.com

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: adnor-az
+    env: node
+    buildCommand: npm install --registry=https://registry.npmjs.org/
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: FIREBASE_DATABASE_URL
+        sync: false
+      - key: DRAW_TIMEZONE
+        sync: false
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: SESSION_SECRET
+        sync: false

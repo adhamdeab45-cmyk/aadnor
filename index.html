@@ -154,6 +154,7 @@
 
     .promo-offer-note{border:1px solid rgba(34,224,162,.38);background:rgba(34,224,162,.08);color:#d8fff4;border-radius:16px;padding:10px;margin-top:10px;font-weight:900;line-height:1.55}
     .special-offer-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,204,77,.42);border-radius:999px;padding:5px 8px;color:#ffe184;background:rgba(255,204,77,.08);font-size:11px;font-weight:900;margin-top:5px}
+    .promo-code-user-box{border:1px solid rgba(34,224,162,.36);background:linear-gradient(180deg,rgba(34,224,162,.08),rgba(2,10,22,.62));border-radius:20px;padding:12px;margin-top:12px}.promo-code-user-box h4{margin:0 0 8px;color:#d8fff4;font-size:15px}.promo-code-user-box p{margin:0 0 10px;color:#aeb8cd;font-size:12px;font-weight:800;line-height:1.6}.promo-admin-list{display:grid;gap:8px;margin-top:10px}.promo-admin-row{border:1px solid rgba(255,204,77,.28);border-radius:17px;background:rgba(2,10,22,.55);padding:11px}.promo-admin-row h4{margin:0;color:#ffe184;font-size:14px}.promo-admin-row p{margin:5px 0 0;color:#aeb8cd;font-size:12px;font-weight:800;line-height:1.55}
 </style>
 </head>
 <body>
@@ -329,6 +330,13 @@
           <div class="wallet-stats" style="margin-top:12px"><div class="wallet-stat"><span>المسجلين من رابطك</span><b id="refCountText">0</b></div><div class="wallet-stat"><span>بونص الدعوات</span><b id="refBonusText">$0.00</b></div><div class="wallet-stat"><span>حالة الدعوات</span><b id="refEnabledText">مفعّلة</b></div></div>
           <div class="fields" style="margin-top:12px"><div class="field-wrap"><label>عندك كود دعوة؟ أدخله مرة واحدة</label><div class="field"><span class="ico">🎁</span><input id="applyRefCodeInput" placeholder="مثال: ADNOR2026"></div></div></div>
           <button class="gold-btn" id="applyRefCodeBtn">تفعيل كود الدعوة</button><div class="ref-status" id="refApplyStatus"></div>
+          <div class="promo-code-user-box">
+            <h4>🎁 كود دعائي / حملة خاصة</h4>
+            <p>إذا وصلك كود من حملة ADNOR أو من مؤثر، أدخله هنا لتحصل على بونص أو لفات مجانية أو تذكرة مجانية حسب إعدادات المدير.</p>
+            <div class="field-wrap"><label>كود الحملة</label><div class="field"><span class="ico">🎫</span><input id="promoCodeInput" placeholder="مثال: ADNOR100"></div></div>
+            <button class="gold-btn" id="redeemPromoCodeBtn" style="margin-top:10px">تفعيل الكود الدعائي</button>
+            <div class="ref-status" id="promoCodeStatus"></div>
+          </div>
         </section>
         <section class="royal-card">
           <div class="section-title"><h3>الحماية واللعب المسؤول</h3><span id="responsibleStatusText">نشط</span></div>
@@ -533,6 +541,24 @@
                 <div class="admin-form-actions"><button class="gold-btn" id="saveReferralSettingsBtn" type="button">حفظ إعدادات الدعوات والبونص</button><button class="admin-mini-btn" id="seedReferralSettingsBtn" type="button">استرجاع الافتراضي</button></div>
               </div>
               <div class="admin-wide-card">
+                <div class="admin-section-head"><h3>أكواد الحملات الدعائية</h3><span>مؤثرين، بونص، لفات، وتذاكر مجانية</span></div>
+                <div class="admin-setting-note">من هنا تعمل كود دعائي مثل ADNOR100 أو كود مؤثر. المستخدم يدخله من صفحة حسابي، والمكافأة تظهر فورًا. كل استخدام ينحفظ في سجل العمليات.</div>
+                <div class="admin-form-grid compact" style="margin-top:12px">
+                  <div class="field-wrap"><label>الكود</label><div class="field"><span class="ico">🎫</span><input id="promoAdminCodeInput" placeholder="ADNOR100"></div></div>
+                  <div class="field-wrap"><label>الحالة</label><div class="field"><span class="ico">✅</span><select id="promoAdminActiveInput"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div></div>
+                  <div class="field-wrap"><label>بونص USD</label><div class="field"><span class="ico">🎁</span><input id="promoAdminBonusInput" type="number" min="0" step="0.01" placeholder="0.50"></div></div>
+                  <div class="field-wrap"><label>لفات مجانية</label><div class="field"><span class="ico">🎡</span><input id="promoAdminSpinsInput" type="number" min="0" step="1" placeholder="1"></div></div>
+                  <div class="field-wrap"><label>تذكرة مجانية</label><div class="field"><span class="ico">🎟️</span><select id="promoAdminTicketInput"><option value="false">لا</option><option value="true">نعم</option></select></div></div>
+                  <div class="field-wrap"><label>عدد الاستخدامات الكلي</label><div class="field"><span class="ico">#</span><input id="promoAdminMaxUsesInput" type="number" min="0" step="1" placeholder="0 = مفتوح"></div></div>
+                  <div class="field-wrap full"><label>رسالة تظهر للمستخدم</label><div class="field"><span class="ico">📝</span><input id="promoAdminNoteInput" placeholder="هدية حملة إطلاق ADNOR"></div></div>
+                </div>
+                <div class="admin-form-actions">
+                  <button class="gold-btn" id="savePromoCodeBtn" type="button">حفظ الكود الدعائي</button>
+                  <button class="admin-mini-btn" id="seedPromoCodesBtn" type="button">إنشاء كود ADNOR100</button>
+                </div>
+                <div class="promo-admin-list" id="adminPromoCodesList"><div class="admin-empty">لا توجد أكواد دعائية بعد</div></div>
+              </div>
+              <div class="admin-wide-card">
                 <div class="admin-section-head"><h3>تواصل الدعم</h3><span>واتساب وتليجرام وجهات إضافية</span></div>
                 <div class="admin-setting-note">هذه الأرقام والروابط تظهر للمستخدم في صفحة الدعم. فيك تغيّر واتساب وتليجرام أو تضيف طريقة تواصل جديدة من هنا.</div>
                 <div class="admin-table" id="adminSupportContactsList"><div class="admin-empty">بانتظار تحميل وسائل التواصل...</div></div>
@@ -657,7 +683,7 @@
     function renderUserTicketHistory(val){currentUserTickets=val||currentUserTickets||{};const all=Object.values(currentUserTickets||{}).sort((a,b)=>(b.createdAt||b.movedAt||0)-(a.createdAt||a.movedAt||0));const active=all.filter(t=>t.status==='active').length;const won=all.filter(t=>t.status==='winner').length;setText('myTicketsTotalText',all.length);setText('myTicketsActiveText',active);setText('myTicketsWonText',won);setText('ticketsCountText',active?('لديك '+active+' تذكرة نشطة'):(all.length?'لا توجد تذاكر نشطة':'لا توجد تذاكر بعد'));setText('activeTicketsText',active);const box=$('myTicketsList');if(!box)return;let list=all;if(currentTicketFilter!=='all')list=all.filter(t=>t.status===currentTicketFilter);if(!list.length){box.innerHTML='<div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر في هذا القسم</h4><p>استخدم الفلتر الآخر أو اشترِ تذكرة جديدة.</p></div><strong>0</strong></div>';return}box.innerHTML=list.slice(0,80).map(t=>{const cls=drawTicketStatusClass(t);const status=drawTicketStatusLabel(t);const detail=(t.status==='moved'&&t.movedTo)?('انتقلت إلى '+drawLabel(t.movedTo)):(t.status==='winner'?'ربحت '+drawLabel(t.drawType):'محفوظة في '+(t.drawLabel||drawLabel(t.drawType)));return '<div class="draw-item"><div class="medal">🎟️</div><div><h4>رقم '+escapeHtml(t.number||'')+' <span class="ticket-mini '+cls+'">'+status+'</span></h4><p>'+escapeHtml(detail)+'<br>النوع: '+escapeHtml(t.drawLabel||drawLabel(t.drawType))+' — السعر: '+money(t.price||0)+'<br>الوقت: '+new Date(t.createdAt||t.movedAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+escapeHtml(t.number||'')+'</strong></div>'}).join('')}
 
     const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
-    const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{}};let currentUserTickets={};let currentTicketFilter='all';let currentAuditFilter="all";let currentUserFilter="all";let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:0.50,referrerBonus:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'};let referralUnsub=null,referralsUnsub=null,userNotifUnsub=null,currentNotifications={};
+    const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{},promoCodes:{},promoRedemptions:{}};let currentUserTickets={};let currentTicketFilter='all';let currentAuditFilter="all";let currentUserFilter="all";let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:0.50,referrerBonus:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'}; let promoCodesCache={};let referralUnsub=null,referralsUnsub=null,userNotifUnsub=null,currentNotifications={};
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){prompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
@@ -1099,6 +1125,61 @@
       await set(ref(db,'referral_codes/'+code),{code,ownerUid:currentUser.uid,ownerEmail:currentUser.email||'',ownerName:'ADNOR Admin',type:'admin_code',active:true,createdAt:Date.now(),updatedAt:Date.now()});
       toast('تم حفظ إعدادات الدعوات والبونص');
     }
+    function renderAdminPromoCodes(){
+      const box=$('adminPromoCodesList'); if(!box)return;
+      const list=arrObj(adminState.promoCodes||{}).sort((a,b)=>(b.updatedAt||b.createdAt||0)-(a.updatedAt||a.createdAt||0));
+      if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد أكواد دعائية بعد</div>';return}
+      box.innerHTML=list.map(c=>'<div class="promo-admin-row"><h4>'+escapeHtml(c.code||'')+' <span class="admin-badge '+(c.active===false?'rejected':'approved')+'">'+(c.active===false?'متوقف':'مفعّل')+'</span></h4><p>بونص: '+money(c.bonus||0)+' — لفات: '+Number(c.freeSpins||0)+' — تذكرة: '+(c.freeTicket?'نعم':'لا')+'<br>استخدامات: '+Number(c.usedCount||0)+' / '+(Number(c.maxUses||0)||'مفتوح')+'<br>'+escapeHtml(c.note||'')+'</p><div class="admin-actions"><button class="blue" onclick="fillPromoCodeForm(\''+escapeHtml(c.code||'')+'\')">تعديل</button><button class="bad" onclick="togglePromoCode(\''+escapeHtml(c.code||'')+'\')">'+(c.active===false?'تفعيل':'إيقاف')+'</button></div></div>').join('')
+    }
+    function fillPromoCodeForm(code){const c=(adminState.promoCodes||{})[code]||{};$('promoAdminCodeInput').value=c.code||code||'';$('promoAdminActiveInput').value=String(c.active!==false);$('promoAdminBonusInput').value=Number(c.bonus||0);$('promoAdminSpinsInput').value=Number(c.freeSpins||0);$('promoAdminTicketInput').value=String(!!c.freeTicket);$('promoAdminMaxUsesInput').value=Number(c.maxUses||0);$('promoAdminNoteInput').value=c.note||'';showAdminSection('settings');setTimeout(()=>$('promoAdminCodeInput')?.focus(),80)}
+    async function savePromoCode(){
+      if(!isAdminUser())return toast('للأدمن فقط');
+      const code=cleanRefCode($('promoAdminCodeInput')?.value||''); if(!code)return toast('اكتب كود صحيح');
+      const now=Date.now();
+      const old=(adminState.promoCodes||{})[code]||{};
+      const data={code,active:$('promoAdminActiveInput')?.value!=='false',bonus:Number($('promoAdminBonusInput')?.value||0),freeSpins:Math.max(0,parseInt($('promoAdminSpinsInput')?.value||0)),freeTicket:$('promoAdminTicketInput')?.value==='true',maxUses:Math.max(0,parseInt($('promoAdminMaxUsesInput')?.value||0)),usedCount:Number(old.usedCount||0),note:$('promoAdminNoteInput')?.value||'',createdAt:old.createdAt||now,updatedAt:now,updatedBy:currentUser.email||''};
+      const updates={};updates['promo_codes/'+code]=data;updates['finance_audit/'+now]={action:'promo_code_saved',code,adminEmail:currentUser.email||'',createdAt:now,details:data};
+      await update(ref(db),updates);toast('تم حفظ الكود الدعائي');
+    }
+    async function seedPromoCodes(){
+      if(!isAdminUser())return;
+      $('promoAdminCodeInput').value='ADNOR100';$('promoAdminActiveInput').value='true';$('promoAdminBonusInput').value='1';$('promoAdminSpinsInput').value='1';$('promoAdminTicketInput').value='true';$('promoAdminMaxUsesInput').value='100';$('promoAdminNoteInput').value='هدية حملة إطلاق ADNOR: بونص + لفة + تذكرة مجانية';
+      await savePromoCode();
+    }
+    async function togglePromoCode(code){
+      if(!isAdminUser())return;const c=(adminState.promoCodes||{})[code]; if(!c)return;
+      await update(ref(db),{'promo_codes/'+code+'/active':c.active===false,'promo_codes/'+code+'/updatedAt':Date.now(),'promo_codes/'+code+'/updatedBy':currentUser.email||''});
+    }
+    async function redeemPromoCode(){
+      if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');
+      const st=$('promoCodeStatus'); const code=cleanRefCode($('promoCodeInput')?.value||'');
+      if(!code){if(st)st.textContent='اكتب كود دعائي صحيح.';return}
+      if(st)st.textContent='جاري فحص الكود...';
+      const snap=await get(ref(db,'promo_codes/'+code)); const c=snap.val();
+      if(!c||c.active===false){if(st)st.textContent='الكود غير موجود أو متوقف.';return}
+      if(Number(c.maxUses||0)>0 && Number(c.usedCount||0)>=Number(c.maxUses||0)){if(st)st.textContent='تم استهلاك عدد استخدامات هذا الكود.';return}
+      const usedSnap=await get(ref(db,'promo_redemptions/'+code+'/'+currentUser.uid));
+      if(usedSnap.exists()){if(st)st.textContent='استخدمت هذا الكود سابقًا.';return}
+      const now=Date.now(); const bonus=Number(c.bonus||0); const spins=Math.max(0,parseInt(c.freeSpins||0)); const freeTicket=!!c.freeTicket;
+      const oldBonus=Number(currentProfile.bonusBalance||0); const oldSpins=Number(currentProfile.freeSpins||0);
+      const ticketPrice=Number((window.lotterySettings&&window.lotterySettings.ticketPrice)||1);
+      const updates={};
+      updates['promo_redemptions/'+code+'/'+currentUser.uid]={code,uid:currentUser.uid,email:currentUser.email||'',bonus,freeSpins:spins,freeTicket,createdAt:now};
+      updates['promo_codes/'+code+'/usedCount']=Number(c.usedCount||0)+1;
+      if(bonus>0)updates['users/'+currentUser.uid+'/bonusBalance']=Number((oldBonus+bonus).toFixed(2));
+      if(spins>0)updates['users/'+currentUser.uid+'/freeSpins']=oldSpins+spins;
+      let msg=[]; if(bonus>0)msg.push('بونص '+money(bonus)); if(spins>0)msg.push(spins+' لفة مجانية');
+      if(freeTicket){
+        const draw='daily'; const ticketNumber=String(Math.floor(Math.random()*10000000)).padStart(7,'0'); const ticketId=push(ref(db,'tickets/'+draw)).key;
+        const t={id:ticketId,number:ticketNumber,uid:currentUser.uid,email:currentUser.email||'',drawType:draw,price:0,status:'active',promoCode:code,createdAt:now+2};
+        updates['tickets/'+draw+'/'+ticketId]=t; updates['user_tickets/'+currentUser.uid+'/'+ticketId]=t; msg.push('تذكرة مجانية رقم '+ticketNumber);
+      }
+      updates['transactions/'+currentUser.uid+'/'+now]={type:'promo_code_redeemed',amount:bonus,status:'bonus',note:'استخدام كود دعائي '+code+' — '+(msg.join(' + ')||'بدون مكافأة مالية'),createdAt:now};
+      updates['user_notifications/'+currentUser.uid+'/'+now]=notifObj('promo_bonus','تم تفعيل كود دعائي','حصلت على '+(msg.join(' + ')||'مكافأة دعائية')+'.',{code,bonus,freeSpins:spins,freeTicket});
+      updates['admin_notifications/'+now]={type:'promo_code_redeemed',uid:currentUser.uid,email:currentUser.email||'',text:'استخدم '+(currentUser.email||'مستخدم')+' الكود الدعائي '+code+' — '+(msg.join(' + ')||'مكافأة'),createdAt:now,status:'new'};
+      updates['finance_audit/'+now]={action:'promo_code_redeemed',code,uid:currentUser.uid,email:currentUser.email||'',bonus,freeSpins:spins,freeTicket,adminCampaign:true,createdAt:now};
+      await update(ref(db),updates); if(st)st.textContent='تم تفعيل الكود: '+(msg.join(' + ')||'تمت العملية')+'.'; toast('تم تفعيل الكود الدعائي');
+    }
     function renderAdminReferrals(list){const box=$('adminReferralsList');if(!box)return;list=list.slice(0,30);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد دعوات بعد</div>';return}box.innerHTML=list.map(r=>'<div class="admin-row"><div><h4>كود '+escapeHtml(r.code||'')+' <span class="admin-badge approved">'+statusLabel(r.status||'approved')+'</span></h4><p>الداعي: '+escapeHtml(r.referrerEmail||r.referrerUid||'')+'<br>المستخدم الجديد: '+escapeHtml(r.referredEmail||r.referredUid||'')+'<br>بونص المستخدم: '+money(r.newUserBonus)+' — بونص الداعي: '+money(r.referrerBonus)+'</p></div><div class="admin-actions"><button class="warn" data-copy="'+escapeHtml(r.id||'')+'" onclick="copyText(this.dataset.copy)">نسخ ID</button></div></div>').join('')}
     if($('saveDisplayNameBtn'))$('saveDisplayNameBtn').onclick=saveDisplayName;
     if($('copyAccountUidBtn'))$('copyAccountUidBtn').onclick=()=>copyText(currentUser?.uid||'');
@@ -1117,6 +1198,9 @@
     if($('saveSupportContactBtn'))$('saveSupportContactBtn').onclick=adminSaveSupportContact;
     if($('newSupportContactBtn'))$('newSupportContactBtn').onclick=newSupportContactForm;
     if($('seedSupportContactsBtn'))$('seedSupportContactsBtn').onclick=()=>seedSupportContacts(true);
+    if($('savePromoCodeBtn'))$('savePromoCodeBtn').onclick=savePromoCode;
+    if($('seedPromoCodesBtn'))$('seedPromoCodesBtn').onclick=seedPromoCodes;
+    if($('redeemPromoCodeBtn'))$('redeemPromoCodeBtn').onclick=redeemPromoCode;
 
     function showAdminSection(sec){if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');const adminPage=$('page-admin');adminPage?.classList.toggle('admin-overview',sec==='overview');adminPage?.classList.toggle('admin-section-mode',sec!=='overview');document.querySelectorAll('.admin-section').forEach(x=>x.classList.toggle('active',x.id==='admin-section-'+sec));document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===sec));if(sec==='users'&&$('adminUserSearch'))setTimeout(()=>$('adminUserSearch').focus(),120);if(sec!=='overview')window.scrollTo({top:0,behavior:'smooth'})}
     document.querySelectorAll('.admin-menu-btn').forEach(b=>b.onclick=()=>showAdminSection(b.dataset.adminSection));if($('accountOpenAdminBtn'))$('accountOpenAdminBtn').onclick=()=>showPage('admin');
@@ -1124,11 +1208,11 @@
 
     function isAdminUser(){return !!(currentProfile&&currentProfile.isAdmin)}
     function setupAdminVisibility(){const ok=isAdminUser();$('drawerAdminBtn')?.classList.toggle('hidden',!ok);$('accountAdminEntry')?.classList.toggle('show',ok);const nav=document.querySelector('.bottom-nav');nav?.classList.remove('admin-on');if($('drawerUserName'))$('drawerUserName').textContent=currentProfile?.name||'مستخدم ADNOR';if($('drawerUserEmail'))$('drawerUserEmail').textContent=currentProfile?.email||'نظام آمن';if($('accountVipText'))$('accountVipText').textContent=currentProfile?.isVIP?'VIP':'عادي'}
-    function stopAdminListeners(){adminUnsubs.forEach(fn=>{try{fn&&fn()}catch(e){}});adminUnsubs=[];adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{}}}
-    function startAdminListeners(){if(!isAdminUser()||adminUnsubs.length)return;adminUnsubs.push(onValue(ref(db,'users'),s=>{adminState.users=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance/deposits'),s=>{adminState.deposits=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance/withdrawals'),s=>{adminState.withdrawals=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'admin_support_tickets'),s=>{adminState.support=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'admin_notifications'),s=>{adminState.notifications=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'draw_history'),s=>{adminState.drawHistory=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'tickets'),s=>{adminState.tickets=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'referrals'),s=>{adminState.referrals=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'wheel_logs'),s=>{adminState.wheelLogs=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'wheel_settings'),s=>{adminState.wheelSettings=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance_audit'),s=>{adminState.financeAudit=s.val()||{};renderAdmin()}))}
+    function stopAdminListeners(){adminUnsubs.forEach(fn=>{try{fn&&fn()}catch(e){}});adminUnsubs=[];adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{},promoCodes:{},promoRedemptions:{}}}
+    function startAdminListeners(){if(!isAdminUser()||adminUnsubs.length)return;adminUnsubs.push(onValue(ref(db,'users'),s=>{adminState.users=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance/deposits'),s=>{adminState.deposits=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance/withdrawals'),s=>{adminState.withdrawals=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'admin_support_tickets'),s=>{adminState.support=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'admin_notifications'),s=>{adminState.notifications=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'draw_history'),s=>{adminState.drawHistory=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'tickets'),s=>{adminState.tickets=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'referrals'),s=>{adminState.referrals=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'wheel_logs'),s=>{adminState.wheelLogs=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'wheel_settings'),s=>{adminState.wheelSettings=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance_audit'),s=>{adminState.financeAudit=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'promo_codes'),s=>{adminState.promoCodes=s.val()||{};promoCodesCache=adminState.promoCodes;renderAdmin()}));adminUnsubs.push(onValue(ref(db,'promo_redemptions'),s=>{adminState.promoRedemptions=s.val()||{};renderAdmin()}))}
     function statusLabel(s){return {pending:'قيد المراجعة',approved:'مقبول',rejected:'مرفوض',open:'مفتوحة',review:'قيد المراجعة',answered:'تم الرد',closed:'مغلقة',completed:'مكتمل'}[s||'pending']||s||'قيد المراجعة'}
     function arrObj(o){return Object.values(o||{}).sort((a,b)=>(b.createdAt||b.updatedAt||0)-(a.createdAt||a.updatedAt||0))}
-    function renderAdmin(){if(!isAdminUser())return;const users=arrObj(adminState.users),deps=arrObj(adminState.deposits),wds=arrObj(adminState.withdrawals),sups=arrObj(adminState.support),notes=arrObj(adminState.notifications),draws=arrObj(adminState.drawHistory);const sum=users.reduce((a,u)=>a+Number(u.realBalance||0)+Number(u.bonusBalance||0)+Number(u.reservedWithdrawalBalance||0),0);if($('adminUsersCount'))$('adminUsersCount').textContent=users.length;if($('adminBalancesSum'))$('adminBalancesSum').textContent=money(sum);if($('adminDepositsPending'))$('adminDepositsPending').textContent=deps.filter(x=>x.status==='pending').length;if($('adminWithdrawsPending'))$('adminWithdrawsPending').textContent=wds.filter(x=>x.status==='pending').length;if($('adminSupportCount'))$('adminSupportCount').textContent=sups.filter(x=>x.status!=='closed').length;if($('adminNotesCount'))$('adminNotesCount').textContent=notes.length;renderAdminUsers(users);renderAdminDeposits(deps);renderAdminWithdrawals(wds);renderAdminSupport(sups);renderAdminNotifications(notes);renderAdminDraws(draws);renderAdminDrawStats();renderAdminReferrals(arrObj(adminState.referrals));renderReferralAdminForm();renderAdminLotterySettings();renderAdminWheelLogs();renderAdminGameProfitSummary();renderWheelAdminForm();renderAdminAudit()}
+    function renderAdmin(){if(!isAdminUser())return;const users=arrObj(adminState.users),deps=arrObj(adminState.deposits),wds=arrObj(adminState.withdrawals),sups=arrObj(adminState.support),notes=arrObj(adminState.notifications),draws=arrObj(adminState.drawHistory);const sum=users.reduce((a,u)=>a+Number(u.realBalance||0)+Number(u.bonusBalance||0)+Number(u.reservedWithdrawalBalance||0),0);if($('adminUsersCount'))$('adminUsersCount').textContent=users.length;if($('adminBalancesSum'))$('adminBalancesSum').textContent=money(sum);if($('adminDepositsPending'))$('adminDepositsPending').textContent=deps.filter(x=>x.status==='pending').length;if($('adminWithdrawsPending'))$('adminWithdrawsPending').textContent=wds.filter(x=>x.status==='pending').length;if($('adminSupportCount'))$('adminSupportCount').textContent=sups.filter(x=>x.status!=='closed').length;if($('adminNotesCount'))$('adminNotesCount').textContent=notes.length;renderAdminUsers(users);renderAdminDeposits(deps);renderAdminWithdrawals(wds);renderAdminSupport(sups);renderAdminNotifications(notes);renderAdminDraws(draws);renderAdminDrawStats();renderAdminReferrals(arrObj(adminState.referrals));renderReferralAdminForm();renderAdminLotterySettings();renderAdminWheelLogs();renderAdminGameProfitSummary();renderWheelAdminForm();renderAdminPromoCodes();renderAdminAudit()}
     function renderAdminUsers(users){
       const box=$('adminUsersList');if(!box)return;
       users=users||[];
@@ -1368,7 +1452,7 @@
       toast((mode==='schedule'?'تمت جدولة النتيجة':'تم تنفيذ السحب مباشرة')+' — الفائز: '+(winner.userEmail||winner.number)+' — المنقول: '+moved);
     }
     if($('adminUserSearch'))$('adminUserSearch').addEventListener('input',()=>renderAdminUsers(arrObj(adminState.users)));document.querySelectorAll('.user-chip').forEach(btn=>btn.addEventListener('click',()=>{currentUserFilter=btn.dataset.userFilter||'all';renderAdminUsers(arrObj(adminState.users))}));if($('exportUsersBtn'))$('exportUsersBtn').onclick=exportUsersCsv;if($('adminAuditSearch'))$('adminAuditSearch').addEventListener('input',renderAdminAudit);document.querySelectorAll('.audit-chip').forEach(btn=>btn.addEventListener('click',()=>{currentAuditFilter=btn.dataset.auditFilter||'all';renderAdminAudit()}));if($('auditExportBtn'))$('auditExportBtn').onclick=exportAuditCsv;if($('auditRefreshBtn'))$('auditRefreshBtn').onclick=renderAdminAudit;if($('savePaymentMethodBtn'))$('savePaymentMethodBtn').onclick=adminSavePaymentMethod;if($('newPaymentMethodBtn'))$('newPaymentMethodBtn').onclick=()=>fillPaymentForm({id:'',name:'',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'',qrUrl:'',details:''});if($('resetPaymentMethodsBtn'))$('resetPaymentMethodsBtn').onclick=()=>seedPaymentMethods(true);if($('saveLotterySettingsBtn'))$('saveLotterySettingsBtn').onclick=adminSaveLotterySettings;if($('resetLotterySettingsBtn'))$('resetLotterySettingsBtn').onclick=()=>seedLotterySettings(true);if($('saveWheelSettingsBtn'))$('saveWheelSettingsBtn').onclick=adminSaveWheelSettings;if($('resetWheelSettingsBtn'))$('resetWheelSettingsBtn').onclick=()=>seedWheelSettings(true);
-    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,openAdminUserCard,openUserGameProfit,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
+    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
     Object.defineProperty(window,'supportContacts',{get:()=>supportContacts});
 
     function tick(){const now=new Date();const target=new Date(now);target.setHours(20,0,0,0);if(now>=target)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const days=Math.floor(diff/86400000);diff%=86400000;const hours=Math.floor(diff/3600000);diff%=3600000;const mins=Math.floor(diff/60000);diff%=60000;const secs=Math.floor(diff/1000);$('d').textContent=String(days).padStart(2,'0');$('h').textContent=String(hours).padStart(2,'0');$('m').textContent=String(mins).padStart(2,'0');$('s').textContent=String(secs).padStart(2,'0')}setInterval(tick,1000);tick();$('ticketNumber').value=randomTicket();

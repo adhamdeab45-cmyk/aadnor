@@ -3,118 +3,117 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ADNOR | Firebase Clean Login Popup Fix</title>
-  <meta name="description" content="ADNOR clean Firebase Google/Apple login test" />
+  <title>ADNOR | Wallet & Admin Base</title>
+  <meta name="description" content="ADNOR V14 wallet and admin base connected to Firebase" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#020711;
-      --bg2:#071a33;
-      --card:rgba(255,255,255,.08);
-      --line:rgba(255,255,255,.14);
-      --gold:#f5bd3f;
-      --gold2:#ffdf7d;
-      --blue:#12c9ff;
-      --green:#18f29b;
-      --red:#ef4444;
-      --text:#f8fafc;
-      --muted:#a8b3c7;
-      --shadow:0 24px 80px rgba(0,0,0,.45);
+      --bg:#020711;--bg2:#071a33;--card:rgba(255,255,255,.075);--card2:rgba(255,255,255,.11);
+      --line:rgba(255,255,255,.14);--gold:#f5bd3f;--gold2:#ffdf7d;--blue:#12c9ff;--green:#18f29b;--red:#ef4444;--orange:#fb923c;--text:#f8fafc;--muted:#a8b3c7;--shadow:0 24px 80px rgba(0,0,0,.45);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:"IBM Plex Sans Arabic", system-ui, -apple-system, Segoe UI, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(245,189,63,.20), transparent 34%),
-        radial-gradient(circle at 18% 25%, rgba(18,201,255,.16), transparent 32%),
-        linear-gradient(135deg, var(--bg), var(--bg2));
-      color:var(--text);
-      overflow-x:hidden;
-    }
-    .stars:before,.stars:after{
-      content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:radial-gradient(circle, rgba(255,255,255,.45) 1px, transparent 1px);
-      background-size:42px 42px;opacity:.12;
-    }
-    .stars:after{background-size:75px 75px;opacity:.08;filter:blur(.3px)}
-    .wrap{position:relative;z-index:1;min-height:100%;display:grid;place-items:center;padding:22px}
-    .panel{width:min(1040px,100%);display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:stretch}
-    @media(max-width:860px){.panel{grid-template-columns:1fr}.hero{min-height:260px}}
-    .glass{
-      border:1px solid var(--line);background:linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.055));
-      border-radius:28px;box-shadow:var(--shadow);backdrop-filter:blur(16px);overflow:hidden;
-    }
-    .hero{padding:30px;position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:560px}
-    .hero:before{content:"";position:absolute;inset:-60px -60px auto auto;width:240px;height:240px;border-radius:50%;background:rgba(245,189,63,.18);filter:blur(22px)}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:58px;height:58px;border-radius:20px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:grid;place-items:center;color:#111827;font-weight:900;box-shadow:0 0 35px rgba(245,189,63,.35)}
-    .brand h1{margin:0;font-size:32px;letter-spacing:1px}.brand p{margin:0;color:var(--muted);font-size:14px}
-    .headline{margin-top:30px}.headline h2{font-size:clamp(34px,6vw,68px);line-height:1.03;margin:0 0 14px;font-weight:900}.headline strong{color:var(--gold2)}
-    .headline p{color:#d9e2f3;font-size:18px;line-height:1.9;max-width:620px}
-    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.chip{border:1px solid rgba(245,189,63,.24);background:rgba(245,189,63,.08);color:#ffe8a3;padding:10px 13px;border-radius:999px;font-size:13px}
-    .login{padding:24px;min-height:560px;display:flex;flex-direction:column;justify-content:center;gap:14px}
-    .login h3{font-size:28px;margin:0 0 4px}.login .sub{margin:0 0 12px;color:var(--muted);line-height:1.7}
-    .btn{width:100%;border:0;border-radius:18px;padding:15px 16px;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.18s transform,.18s opacity,.18s box-shadow}
-    .btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-    .google{background:#fff;color:#111827}.apple{background:#111;color:#fff;border:1px solid rgba(255,255,255,.14)}.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111827}.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line)}
-    .status{white-space:pre-wrap;line-height:1.8;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:18px;padding:13px;color:#dbeafe;min-height:58px;font-size:14px}
-    .err{color:#fecaca;border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10)}.ok{color:#bbf7d0;border-color:rgba(24,242,155,.35);background:rgba(24,242,155,.08)}
-    .mini{font-size:12px;color:var(--muted);line-height:1.8}.mini code{color:#ffe8a3}
-    .app{display:none;width:min(1100px,100%)}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.12)}
-    .userbox{display:flex;align-items:center;gap:12px}.avatar{width:46px;height:46px;border-radius:16px;background:rgba(255,255,255,.10);overflow:hidden;display:grid;place-items:center}.avatar img{width:100%;height:100%;object-fit:cover}.small{font-size:13px;color:var(--muted)}
-    .content{padding:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:860px){.content{grid-template-columns:1fr}}
-    .card{padding:18px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.065)}.card h4{margin:0 0 8px;font-size:18px}.card p{margin:0;color:var(--muted);line-height:1.7}.value{font-size:32px;font-weight:900;color:var(--gold2);margin:10px 0}.adminBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,189,63,.13);color:#ffe8a3;border:1px solid rgba(245,189,63,.32);padding:8px 10px;border-radius:999px;font-weight:800}
-    .log{max-height:240px;overflow:auto;direction:ltr;text-align:left;font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:12px;color:#d9e2f3;background:rgba(0,0,0,.22);padding:12px;border-radius:16px;border:1px solid var(--line);white-space:pre-wrap}
+    *{box-sizing:border-box}html,body{min-height:100%}body{margin:0;font-family:"IBM Plex Sans Arabic",system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at top right,rgba(245,189,63,.18),transparent 34%),radial-gradient(circle at 18% 20%,rgba(18,201,255,.13),transparent 30%),linear-gradient(135deg,var(--bg),var(--bg2));color:var(--text);overflow-x:hidden}.stars:before,.stars:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(circle,rgba(255,255,255,.42) 1px,transparent 1px);background-size:42px 42px;opacity:.10}.stars:after{background-size:78px 78px;opacity:.06;filter:blur(.4px)}button,input,select,textarea{font-family:inherit}.wrap{position:relative;z-index:1;min-height:100vh;padding:18px}.glass{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.105),rgba(255,255,255,.052));border-radius:28px;box-shadow:var(--shadow);backdrop-filter:blur(16px)}.loginGrid{min-height:calc(100vh - 36px);display:grid;place-items:center}.loginPanel{width:min(1100px,100%);display:grid;grid-template-columns:1.08fr .92fr;gap:18px}.hero,.loginBox{padding:28px;min-height:560px}.hero{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}.hero:before{content:"";position:absolute;inset:-70px -70px auto auto;width:270px;height:270px;border-radius:50%;background:rgba(245,189,63,.18);filter:blur(22px)}.brand{display:flex;align-items:center;gap:12px}.logo{width:58px;height:58px;border-radius:20px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:grid;place-items:center;color:#111827;font-weight:900;box-shadow:0 0 35px rgba(245,189,63,.35)}.brand h1{margin:0;font-size:32px;letter-spacing:1px}.brand p{margin:0;color:var(--muted);font-size:14px}.headline h2{font-size:clamp(34px,6vw,68px);line-height:1.03;margin:0 0 14px;font-weight:900}.headline strong{color:var(--gold2)}.headline p{color:#d9e2f3;font-size:18px;line-height:1.9;max-width:650px}.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.chip{border:1px solid rgba(245,189,63,.24);background:rgba(245,189,63,.08);color:#ffe8a3;padding:10px 13px;border-radius:999px;font-size:13px}.loginBox{display:flex;flex-direction:column;justify-content:center;gap:14px}.loginBox h3{font-size:30px;margin:0}.sub,.muted{color:var(--muted);line-height:1.8}.btn{border:0;border-radius:18px;padding:13px 15px;font-size:15px;font-weight:850;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s transform,.18s opacity,.18s box-shadow}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}.btn.full{width:100%}.google{background:#fff;color:#111827}.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111827}.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line)}.danger{background:rgba(239,68,68,.14);color:#fecaca;border:1px solid rgba(239,68,68,.35)}.okbtn{background:rgba(24,242,155,.14);color:#bbf7d0;border:1px solid rgba(24,242,155,.32)}.status{white-space:pre-wrap;line-height:1.8;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:18px;padding:13px;color:#dbeafe;min-height:58px;font-size:14px}.err{color:#fecaca;border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10)}.ok{color:#bbf7d0;border-color:rgba(24,242,155,.35);background:rgba(24,242,155,.08)}.mini{font-size:12px;color:var(--muted);line-height:1.8}.mini code{color:#ffe8a3}.app{display:none;width:min(1220px,100%);margin:0 auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;margin-bottom:14px}.userbox{display:flex;align-items:center;gap:10px;min-width:0}.avatar{width:44px;height:44px;border-radius:16px;background:rgba(255,255,255,.10);overflow:hidden;display:grid;place-items:center;flex:0 0 auto}.avatar img{width:100%;height:100%;object-fit:cover}.small{font-size:12px;color:var(--muted)}.tabs{display:flex;gap:9px;overflow:auto;margin:0 0 14px;padding:4px}.tab{white-space:nowrap;border:1px solid var(--line);background:rgba(255,255,255,.075);color:#fff;padding:11px 14px;border-radius:999px;font-weight:800;cursor:pointer}.tab.active{background:linear-gradient(135deg,rgba(255,223,125,.95),rgba(245,189,63,.95));color:#111827;border-color:rgba(245,189,63,.8)}.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{grid-column:span 4;padding:17px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.065)}.card.wide{grid-column:span 8}.card.full{grid-column:1/-1}.card h3,.card h4{margin:0 0 8px}.card p{margin:0;color:var(--muted);line-height:1.7}.value{font-size:32px;font-weight:900;color:var(--gold2);margin:8px 0}.form{display:grid;gap:10px}.input,.select,.textarea{width:100%;border:1px solid var(--line);background:rgba(0,0,0,.20);color:#fff;border-radius:15px;padding:12px 13px;outline:none}.textarea{min-height:95px;resize:vertical}.select option{background:#0b132b;color:#fff}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:rgba(0,0,0,.13)}table{width:100%;border-collapse:collapse;min-width:720px}th,td{padding:11px;border-bottom:1px solid rgba(255,255,255,.09);text-align:right;font-size:13px}th{color:#ffe8a3;background:rgba(245,189,63,.08)}tr:last-child td{border-bottom:0}.badge{display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.pending{background:rgba(251,146,60,.13);color:#fed7aa;border:1px solid rgba(251,146,60,.28)}.approved{background:rgba(24,242,155,.13);color:#bbf7d0;border:1px solid rgba(24,242,155,.28)}.rejected{background:rgba(239,68,68,.13);color:#fecaca;border:1px solid rgba(239,68,68,.28)}.adminBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,189,63,.13);color:#ffe8a3;border:1px solid rgba(245,189,63,.32);padding:8px 10px;border-radius:999px;font-weight:800}.log{max-height:240px;overflow:auto;direction:ltr;text-align:left;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#d9e2f3;background:rgba(0,0,0,.22);padding:12px;border-radius:16px;border:1px solid var(--line);white-space:pre-wrap}.bottomNav{position:sticky;bottom:10px;z-index:5;display:none;gap:8px;justify-content:center;background:rgba(2,7,17,.75);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;padding:8px;margin-top:14px}.bottomNav button{border:0;background:transparent;color:#fff;padding:9px 11px;border-radius:16px;font-weight:800}.bottomNav button.active{background:rgba(245,189,63,.18);color:#ffe8a3}.hide{display:none!important}.ltr{direction:ltr;text-align:left}.copy{cursor:pointer;color:#ffe8a3}.warning{border:1px solid rgba(251,146,60,.35);background:rgba(251,146,60,.10);color:#fed7aa;border-radius:16px;padding:12px;line-height:1.7}@media(max-width:900px){.loginPanel{grid-template-columns:1fr}.hero,.loginBox{min-height:auto}.grid{grid-template-columns:1fr}.card,.card.wide{grid-column:1/-1}.topbar{align-items:flex-start;flex-direction:column}.tabs{display:none}.bottomNav{display:flex}.wrap{padding:12px}.glass{border-radius:22px}}
   </style>
 </head>
 <body>
 <div class="stars"></div>
 <main class="wrap">
-  <section id="loginScreen" class="panel">
-    <div class="hero glass">
-      <div class="brand">
-        <div class="logo">AD</div>
-        <div><h1>ADNOR</h1><p>نسخة نظيفة لاختبار Firebase</p></div>
+  <section id="loginScreen" class="loginGrid">
+    <div class="loginPanel">
+      <div class="hero glass">
+        <div class="brand"><div class="logo">AD</div><div><h1>ADNOR</h1><p>V14 Wallet & Admin Base</p></div></div>
+        <div class="headline"><h2>أساس <strong>نظامي</strong><br>للمحفظة والأدمن</h2><p>هذه النسخة مبنية فوق تسجيل Google الذي اشتغل، بدون Backend وبدون أي كود قديم. نضيف الآن المحفظة، الإيداع، السحب، ولوحة الأدمن الأولى.</p><div class="chips"><span class="chip">Google Login</span><span class="chip">Realtime Database</span><span class="chip">Admin: adhamdeab2@gmail.com</span></div></div>
+        <p class="mini">تأكد أن دومين Render موجود في Firebase Authorized domains.</p>
       </div>
-      <div class="headline">
-        <h2>دخول <strong>نظامي</strong><br>بدون أكواد قديمة</h2>
-        <p>هذه النسخة لا تستخدم أي Backend ولا أي روابط <b>/api</b>. فقط Firebase الجديد، Google و Apple، وتحويل الأدمن مباشرة.</p>
-        <div class="chips"><span class="chip">Google فقط للاختبار أولاً</span><span class="chip">Apple يحتاج إعداد Apple Developer</span><span class="chip">Realtime Database جاهز</span></div>
+      <div class="loginBox glass">
+        <h3>تسجيل الدخول</h3><p class="sub">ادخل بحساب Google. حساب الأدمن يتحول تلقائيًا للوحة الإدارة.</p>
+        <button id="googleBtn" class="btn google full">متابعة بحساب Google</button>
+        <div id="status" class="status">جاهز. اضغط Google.</div>
+        <p class="mini">المشروع: <code>adhamnnn-8a4d2</code></p>
       </div>
-      <p class="mini">الدومين الحالي يجب أن يكون مضافًا في Firebase → Authentication → Settings → Authorized domains.</p>
-    </div>
-    <div class="login glass">
-      <h3>تسجيل الدخول</h3>
-      <p class="sub">استخدم Google أولًا. إذا ظهر خطأ، رح يظهر لك السبب الحقيقي هنا بدون تخمين.</p>
-      <button id="googleBtn" class="btn google">متابعة بحساب Google</button>
-      <button id="appleBtn" class="btn apple">متابعة بحساب Apple</button>
-      <div id="status" class="status">جاهز. اضغط Google للتجربة. هذه النسخة تستخدم Popup أولاً لتجاوز مشكلة Redirect على Render.</div>
-      <p class="mini">الأدمن الرئيسي: <code>adhamdeab2@gmail.com</code><br>مشروع Firebase: <code>adhamnnn-8a4d2</code></p>
     </div>
   </section>
 
-  <section id="appScreen" class="app glass">
-    <div class="topbar">
-      <div class="brand"><div class="logo">AD</div><div><h1 style="font-size:24px">ADNOR</h1><p id="roleLabel">حساب مستخدم</p></div></div>
-      <div class="userbox"><div class="avatar" id="avatar">👤</div><div><b id="userName">---</b><div class="small" id="userEmail">---</div></div><button id="logoutBtn" class="btn ghost" style="width:auto;padding:10px 14px">خروج</button></div>
+  <section id="appScreen" class="app">
+    <div class="topbar glass">
+      <div class="brand"><div class="logo">AD</div><div><h1 style="font-size:25px">ADNOR</h1><p id="roleLabel">واجهة مستخدم</p></div></div>
+      <div class="userbox"><div class="avatar" id="avatar">👤</div><div style="min-width:0"><b id="userName">---</b><div class="small" id="userEmail">---</div></div><button id="logoutBtn" class="btn ghost" style="width:auto;padding:10px 14px">خروج</button></div>
     </div>
-    <div class="content">
-      <div class="card"><h4>حالة Firebase</h4><p id="firebaseState">متصل</p><div class="value">OK</div></div>
-      <div class="card"><h4>الدور</h4><p id="roleText">---</p><div id="adminBadgeBox"></div></div>
-      <div class="card"><h4>اختبار قاعدة البيانات</h4><p>يتم حفظ تسجيل الدخول داخل Realtime Database.</p><button id="testDbBtn" class="btn gold" style="margin-top:12px">إرسال اختبار</button></div>
-      <div class="card" style="grid-column:1/-1"><h4>سجل التشخيص</h4><div id="debugLog" class="log"></div></div>
-    </div>
+
+    <nav class="tabs glass" id="tabs">
+      <button class="tab active" data-page="home">الرئيسية</button>
+      <button class="tab" data-page="wallet">المحفظة</button>
+      <button class="tab" data-page="deposit">الإيداع</button>
+      <button class="tab" data-page="withdraw">السحب</button>
+      <button class="tab" data-page="lottery">اليانصيب</button>
+      <button class="tab" data-page="games">الألعاب</button>
+      <button class="tab" data-page="support">الدعم</button>
+      <button class="tab adminOnly hide" data-page="admin">الأدمن</button>
+    </nav>
+
+    <section id="page-home" class="page active">
+      <div class="grid">
+        <div class="card"><h4>الرصيد الحقيقي</h4><p>قابل للعب والسحب</p><div class="value" id="realBalance">$0.00</div></div>
+        <div class="card"><h4>رصيد البونص</h4><p>للعب فقط</p><div class="value" id="bonusBalance">$0.00</div></div>
+        <div class="card"><h4>محجوز للسحب</h4><p>طلبات السحب قيد المراجعة</p><div class="value" id="reservedBalance">$0.00</div></div>
+        <div class="card wide"><h3>أهلاً بك في ADNOR</h3><p>هذه أول نسخة عملية للمحفظة ولوحة الأدمن. لا تضف الكود القديم فوقها. من هنا نكبر المشروع خطوة خطوة.</p><div class="row" style="margin-top:12px"><button class="btn gold" data-go="deposit">طلب إيداع</button><button class="btn ghost" data-go="withdraw">طلب سحب</button><button class="btn ghost" data-go="wallet">سجل العمليات</button></div></div>
+        <div class="card"><h4>حالة Firebase</h4><p>متصل</p><div class="value">OK</div></div>
+      </div>
+    </section>
+
+    <section id="page-wallet" class="page">
+      <div class="grid">
+        <div class="card"><h4>الرصيد الحقيقي</h4><div class="value" id="wRealBalance">$0.00</div></div>
+        <div class="card"><h4>البونص</h4><div class="value" id="wBonusBalance">$0.00</div></div>
+        <div class="card"><h4>المحجوز</h4><div class="value" id="wReservedBalance">$0.00</div></div>
+        <div class="card full"><h3>سجل العمليات</h3><div class="tableWrap"><table><thead><tr><th>الوقت</th><th>النوع</th><th>المبلغ</th><th>الحالة</th><th>ملاحظة</th></tr></thead><tbody id="txRows"><tr><td colspan="5">لا توجد عمليات بعد</td></tr></tbody></table></div></div>
+      </div>
+    </section>
+
+    <section id="page-deposit" class="page">
+      <div class="grid">
+        <div class="card wide"><h3>طلب إيداع</h3><p>هذه نسخة أولى بدون رفع صورة. الخطوة القادمة نفعّل Storage للإيصالات.</p><form class="form" id="depositForm" style="margin-top:12px"><input class="input" id="depAmount" type="number" step="0.01" min="1" placeholder="المبلغ بالدولار"><select class="select" id="depMethod"><option value="USDT TRC20">USDT TRC20</option><option value="Sham Cash">Sham Cash</option><option value="Bank / IBAN">Bank / IBAN</option><option value="WhatsApp">WhatsApp</option><option value="Telegram">Telegram</option></select><textarea class="textarea" id="depNote" placeholder="ملاحظة أو رقم العملية"></textarea><button class="btn gold full" type="submit">إرسال طلب الإيداع</button></form></div>
+        <div class="card"><h4>مهم</h4><p>الإيداع لا يضاف للرصيد إلا بعد موافقة الأدمن.</p></div>
+      </div>
+    </section>
+
+    <section id="page-withdraw" class="page">
+      <div class="grid">
+        <div class="card wide"><h3>طلب سحب</h3><p>عند إرسال الطلب، يتم نقل المبلغ من الرصيد الحقيقي إلى الرصيد المحجوز حتى يوافق الأدمن أو يرفض.</p><form class="form" id="withdrawForm" style="margin-top:12px"><input class="input" id="wdAmount" type="number" step="0.01" min="1" placeholder="المبلغ بالدولار"><select class="select" id="wdMethod"><option value="USDT TRC20">USDT TRC20</option><option value="Sham Cash">Sham Cash</option><option value="Bank / IBAN">Bank / IBAN</option><option value="WhatsApp">WhatsApp</option><option value="Telegram">Telegram</option></select><textarea class="textarea" id="wdDetails" placeholder="بيانات التحويل / العنوان / الحساب"></textarea><button class="btn gold full" type="submit">إرسال طلب السحب</button></form></div>
+        <div class="card"><h4>الرصيد المتاح</h4><div class="value" id="wdAvailable">$0.00</div></div>
+      </div>
+    </section>
+
+    <section id="page-lottery" class="page"><div class="grid"><div class="card full"><h3>اليانصيب</h3><p>سيتم إضافته بعد تثبيت المحفظة والإيداع والسحب. التذكرة ستكون 1 USD وتدخل اليومي ثم الأسبوعي ثم الشهري ثم السنوي.</p><div class="warning" style="margin-top:12px">لا نركّب اليانصيب قبل ما نتأكد أن المحفظة والأدمن يعملون بلا أخطاء.</div></div></div></section>
+    <section id="page-games" class="page"><div class="grid"><div class="card full"><h3>الألعاب</h3><p>سيتم إضافة عجلة الحظ الملكية بعد المحفظة. كل دورة ستُحفظ في سجل خاص.</p></div></div></section>
+
+    <section id="page-support" class="page">
+      <div class="grid"><div class="card wide"><h3>الدعم الفني</h3><form class="form" id="supportForm" style="margin-top:12px"><input class="input" id="supportTitle" placeholder="عنوان المشكلة"><textarea class="textarea" id="supportMsg" placeholder="اكتب رسالتك"></textarea><button class="btn gold full" type="submit">إرسال تذكرة دعم</button></form></div><div class="card"><h4>قادم لاحقًا</h4><p>ربط WhatsApp وTelegram وتنبيه Gmail.</p></div></div>
+    </section>
+
+    <section id="page-admin" class="page">
+      <div class="grid">
+        <div class="card"><h4>عدد المستخدمين</h4><div class="value" id="statUsers">0</div></div>
+        <div class="card"><h4>إيداعات معلّقة</h4><div class="value" id="statDeps">0</div></div>
+        <div class="card"><h4>سحوبات معلّقة</h4><div class="value" id="statWds">0</div></div>
+        <div class="card full"><h3>إدارة المستخدمين</h3><div class="tableWrap"><table><thead><tr><th>الاسم</th><th>الإيميل</th><th>حقيقي</th><th>بونص</th><th>محجوز</th><th>UID</th></tr></thead><tbody id="adminUsersRows"><tr><td colspan="6">تحميل...</td></tr></tbody></table></div></div>
+        <div class="card wide"><h3>إضافة / خصم رصيد</h3><form class="form" id="adjustForm"><select class="select" id="adjustUser"></select><input class="input" id="adjustAmount" type="number" step="0.01" placeholder="المبلغ: موجب للإضافة، سالب للخصم"><select class="select" id="adjustBalanceType"><option value="realBalance">الرصيد الحقيقي</option><option value="bonusBalance">رصيد البونص</option></select><input class="input" id="adjustNote" placeholder="ملاحظة"><button class="btn gold full" type="submit">تنفيذ التعديل</button></form></div>
+        <div class="card"><h4>صلاحيتك</h4><div class="adminBadge">👑 أدمن رئيسي</div><p style="margin-top:12px">أي تعديل يتم حفظه في سجل العمليات.</p></div>
+        <div class="card full"><h3>طلبات الإيداع</h3><div class="tableWrap"><table><thead><tr><th>الوقت</th><th>المستخدم</th><th>المبلغ</th><th>الطريقة</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="depositRows"><tr><td colspan="6">لا توجد طلبات</td></tr></tbody></table></div></div>
+        <div class="card full"><h3>طلبات السحب</h3><div class="tableWrap"><table><thead><tr><th>الوقت</th><th>المستخدم</th><th>المبلغ</th><th>الطريقة</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="withdrawRows"><tr><td colspan="6">لا توجد طلبات</td></tr></tbody></table></div></div>
+      </div>
+    </section>
+
+    <div class="card full glass" style="margin-top:14px"><h4>سجل التشخيص</h4><div id="debugLog" class="log"></div></div>
+    <nav class="bottomNav" id="bottomNav"><button class="active" data-page="home">الرئيسية</button><button data-page="wallet">المحفظة</button><button data-page="deposit">إيداع</button><button data-page="withdraw">سحب</button><button class="adminOnly hide" data-page="admin">أدمن</button></nav>
   </section>
 </main>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getDatabase, ref, update, push, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { getDatabase, ref, update, push, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",
@@ -129,154 +128,171 @@
 
   const ADMIN_EMAIL = "adhamdeab2@gmail.com";
   const $ = (id) => document.getElementById(id);
-  const statusBox = $("status");
-  const debugLog = $("debugLog");
-  let auth, db, currentUser = null;
+  let app, auth, db, currentUser = null, currentProfile = null, isAdmin = false;
+  let allUsers = {}, allDeposits = {}, allWithdrawals = {};
 
-  function safeEmail(email){ return String(email || "").toLowerCase().replace(/[.#$\[\]\/]/g, "_"); }
-  function now(){ return new Date().toISOString(); }
-  function log(msg){
-    const line = `[${new Date().toLocaleTimeString()}] ${msg}`;
-    console.log("[ADNOR CLEAN]", msg);
-    if(debugLog) debugLog.textContent = `${line}\n${debugLog.textContent || ""}`;
-  }
-  function showStatus(msg, type=""){
-    statusBox.className = "status" + (type ? " " + type : "");
-    statusBox.textContent = msg;
-  }
-  function friendlyError(error){
-    const code = error?.code || "unknown";
-    const message = error?.message || String(error);
-    const hints = {
-      "auth/unauthorized-domain": "الدومين غير مضاف في Firebase Authorized domains. أضف دومين Render مثل aadnor.onrender.com.",
-      "auth/operation-not-allowed": "طريقة الدخول غير مفعّلة من Firebase Authentication > Sign-in method.",
-      "auth/popup-blocked": "المتصفح منع نافذة Google. اسمح بالنوافذ المنبثقة لهذا الموقع أو جرّب متصفح Chrome عادي.",
-      "auth/cancelled-popup-request": "تم إلغاء محاولة دخول سابقة. أعد المحاولة.",
-      "auth/account-exists-with-different-credential": "هذا البريد مربوط بطريقة دخول ثانية.",
-      "auth/network-request-failed": "مشكلة إنترنت أو حظر اتصال Firebase.",
-      "auth/invalid-api-key": "Firebase apiKey غير صحيح أو من مشروع آخر."
-    };
-    return `الخطأ: ${code}\n${hints[code] || "انسخ هذا الكود وأرسله لي."}\n\nتفاصيل تقنية:\n${message}`;
+  const money = (n) => `$${Number(n||0).toFixed(2)}`;
+  const ts = () => new Date().toISOString();
+  const esc = (v) => String(v ?? "").replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const safeEmail = (email) => String(email || "").toLowerCase().replace(/[.#$\[\]\/]/g,"_");
+  const log = (msg) => { console.log("[ADNOR V14]", msg); const el=$("debugLog"); if(el) el.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n` + (el.textContent || ""); };
+  const showStatus = (msg, type="") => { const el=$("status"); if(el){ el.className = "status" + (type ? " " + type : ""); el.textContent = msg; } };
+  const friendlyError = (e) => {
+    const code = e?.code || "unknown"; const message = e?.message || String(e);
+    const hints = {"auth/unauthorized-domain":"الدومين غير مضاف في Firebase Authorized domains.","auth/operation-not-allowed":"Google غير مفعّل من Firebase Authentication.","auth/popup-blocked":"المتصفح منع النافذة. اسمح بالـ popups.","PERMISSION_DENIED":"قواعد Realtime Database لا تسمح بهذه العملية. حدّث Rules."};
+    return `${code}: ${hints[code] || message}`;
+  };
+
+  function go(page){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    const target=$("page-"+page); if(target) target.classList.add("active");
+    document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active", b.dataset.page===page));
+    window.scrollTo({top:0,behavior:"smooth"});
   }
 
-  async function saveUser(user){
-    const isAdmin = (user.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  async function recordTx(uid, tx){
+    const r = push(ref(db, `transactions/${uid}`));
+    await set(r, { id:r.key, createdAt:ts(), ...tx });
+  }
+
+  async function ensureUser(user){
     const uid = user.uid;
-    const payload = {
-      uid,
-      name: user.displayName || "مستخدم ADNOR",
-      email: user.email || "",
-      photoURL: user.photoURL || "",
-      provider: user.providerData?.map(p=>p.providerId).join(",") || "unknown",
-      role: isAdmin ? "admin" : "user",
-      isAdmin,
-      lastLoginAt: now(),
-      project: "adhamnnn-8a4d2"
+    const snap = await get(ref(db, `users/${uid}`));
+    const existing = snap.exists() ? snap.val() : {};
+    const adminFlag = (user.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const base = {
+      uid, name:user.displayName || existing.name || "مستخدم ADNOR", email:user.email || existing.email || "", photoURL:user.photoURL || existing.photoURL || "", role:adminFlag ? "admin" : (existing.role || "user"), isAdmin: adminFlag || existing.isAdmin === true,
+      realBalance: Number(existing.realBalance || 0), bonusBalance: Number(existing.bonusBalance || 0), reservedWithdrawalBalance: Number(existing.reservedWithdrawalBalance || 0), status: existing.status || "active", createdAt: existing.createdAt || ts(), lastLoginAt: ts()
     };
-    const updates = {};
-    updates[`users/${uid}`] = payload;
-    updates[`login_logs/${uid}/${Date.now()}`] = { email: payload.email, isAdmin, at: now(), domain: location.hostname };
-    if(isAdmin){
-      updates[`admins/${uid}`] = true;
-      updates[`admin_emails/${safeEmail(user.email)}`] = true;
-    }
+    const updates = {}; updates[`users/${uid}`]=base; updates[`login_logs/${uid}/${Date.now()}`]={email:base.email,isAdmin:base.isAdmin,at:ts(),domain:location.hostname};
+    if(base.isAdmin){ updates[`admins/${uid}`]=true; updates[`admin_emails/${safeEmail(base.email)}`]=true; }
     await update(ref(db), updates);
-    return isAdmin;
+    return base;
   }
 
-  function renderLoggedIn(user, isAdmin){
-    currentUser = user;
-    $("loginScreen").style.display = "none";
-    $("appScreen").style.display = "block";
-    $("userName").textContent = user.displayName || "مستخدم ADNOR";
-    $("userEmail").textContent = user.email || "بدون بريد ظاهر";
-    $("roleLabel").textContent = isAdmin ? "لوحة الأدمن" : "واجهة مستخدم";
-    $("roleText").textContent = isAdmin ? "هذا الحساب أدمن رئيسي وله حق التصرف." : "هذا حساب مستخدم عادي.";
-    $("adminBadgeBox").innerHTML = isAdmin ? '<span class="adminBadge">👑 أدمن رئيسي</span>' : '<span class="small">ليس أدمن</span>';
-    if(user.photoURL) $("avatar").innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
-    log(`تم تسجيل الدخول: ${user.email || user.uid} | admin=${isAdmin}`);
+  function renderProfile(profile){
+    currentProfile = profile; isAdmin = profile.isAdmin === true || String(profile.email).toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    $("userName").textContent = profile.name || "مستخدم ADNOR"; $("userEmail").textContent = profile.email || "---"; $("roleLabel").textContent = isAdmin ? "لوحة الأدمن" : "واجهة مستخدم";
+    if(profile.photoURL) $("avatar").innerHTML = `<img src="${esc(profile.photoURL)}" alt="avatar">`; else $("avatar").textContent = (profile.name || "A").slice(0,1).toUpperCase();
+    ["realBalance","wRealBalance","wdAvailable"].forEach(id=>$(id).textContent = money(profile.realBalance));
+    ["bonusBalance","wBonusBalance"].forEach(id=>$(id).textContent = money(profile.bonusBalance));
+    ["reservedBalance","wReservedBalance"].forEach(id=>$(id).textContent = money(profile.reservedWithdrawalBalance));
+    document.querySelectorAll(".adminOnly").forEach(el=>el.classList.toggle("hide", !isAdmin));
+  }
+
+  function renderTx(rows){
+    const tbody=$("txRows"); const items = Object.values(rows || {}).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,50);
+    tbody.innerHTML = items.length ? items.map(t=>`<tr><td>${esc(new Date(t.createdAt).toLocaleString())}</td><td>${esc(t.type || "-")}</td><td>${money(t.amount)}</td><td><span class="badge ${esc(t.status || "pending")}">${esc(t.status || "pending")}</span></td><td>${esc(t.note || "")}</td></tr>`).join("") : `<tr><td colspan="5">لا توجد عمليات بعد</td></tr>`;
+  }
+
+  function renderAdmin(){
+    if(!isAdmin) return;
+    const users = Object.values(allUsers || {});
+    $("statUsers").textContent = users.length;
+    $("statDeps").textContent = Object.values(allDeposits||{}).filter(d=>d.status==="pending").length;
+    $("statWds").textContent = Object.values(allWithdrawals||{}).filter(w=>w.status==="pending").length;
+    $("adminUsersRows").innerHTML = users.length ? users.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${money(u.realBalance)}</td><td>${money(u.bonusBalance)}</td><td>${money(u.reservedWithdrawalBalance)}</td><td class="ltr copy" title="انسخ UID">${esc(u.uid)}</td></tr>`).join("") : `<tr><td colspan="6">لا يوجد مستخدمين</td></tr>`;
+    $("adjustUser").innerHTML = users.map(u=>`<option value="${esc(u.uid)}">${esc(u.email || u.name || u.uid)}</option>`).join("");
+    const deps = Object.values(allDeposits||{}).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,80);
+    $("depositRows").innerHTML = deps.length ? deps.map(d=>`<tr><td>${esc(new Date(d.createdAt).toLocaleString())}</td><td>${esc(d.userEmail||d.uid)}</td><td>${money(d.amount)}</td><td>${esc(d.method)}</td><td><span class="badge ${esc(d.status)}">${esc(d.status)}</span></td><td>${d.status==="pending"?`<button class="btn okbtn" data-approve-dep="${esc(d.id)}">قبول</button> <button class="btn danger" data-reject-dep="${esc(d.id)}">رفض</button>`:"-"}</td></tr>`).join("") : `<tr><td colspan="6">لا توجد طلبات</td></tr>`;
+    const wds = Object.values(allWithdrawals||{}).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,80);
+    $("withdrawRows").innerHTML = wds.length ? wds.map(w=>`<tr><td>${esc(new Date(w.createdAt).toLocaleString())}</td><td>${esc(w.userEmail||w.uid)}</td><td>${money(w.amount)}</td><td>${esc(w.method)}</td><td><span class="badge ${esc(w.status)}">${esc(w.status)}</span></td><td>${w.status==="pending"?`<button class="btn okbtn" data-approve-wd="${esc(w.id)}">قبول</button> <button class="btn danger" data-reject-wd="${esc(w.id)}">رفض</button>`:"-"}</td></tr>`).join("") : `<tr><td colspan="6">لا توجد طلبات</td></tr>`;
+  }
+
+  function attachListeners(){
+    document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+    document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+    $("googleBtn").addEventListener("click", async ()=>{ try{ showStatus("جاري فتح Google...",""); const provider = new GoogleAuthProvider(); provider.setCustomParameters({prompt:"select_account"}); await signInWithPopup(auth, provider); }catch(e){ console.error(e); showStatus(friendlyError(e),"err"); } });
+    $("logoutBtn").addEventListener("click",()=>signOut(auth));
+    $("depositForm").addEventListener("submit", submitDeposit);
+    $("withdrawForm").addEventListener("submit", submitWithdraw);
+    $("supportForm").addEventListener("submit", submitSupport);
+    $("adjustForm").addEventListener("submit", submitAdjust);
+    document.addEventListener("click", async (e)=>{
+      const depA=e.target.closest("[data-approve-dep]"); const depR=e.target.closest("[data-reject-dep]"); const wdA=e.target.closest("[data-approve-wd]"); const wdR=e.target.closest("[data-reject-wd]");
+      try{ if(depA) await approveDeposit(depA.dataset.approveDep); if(depR) await rejectDeposit(depR.dataset.rejectDep); if(wdA) await approveWithdrawal(wdA.dataset.approveWd); if(wdR) await rejectWithdrawal(wdR.dataset.rejectWd); }catch(err){ alert(friendlyError(err)); console.error(err); }
+    });
+  }
+
+  async function submitDeposit(e){
+    e.preventDefault(); if(!currentUser) return;
+    const amount = Number($("depAmount").value); if(!amount || amount<=0) return alert("اكتب مبلغ صحيح");
+    const r = push(ref(db, "finance/deposits"));
+    const data = {id:r.key, uid:currentUser.uid, userEmail:currentProfile.email, userName:currentProfile.name, amount, method:$("depMethod").value, note:$("depNote").value || "", status:"pending", createdAt:ts()};
+    await set(r, data); await recordTx(currentUser.uid,{type:"deposit_request",amount,status:"pending",note:`طلب إيداع عبر ${data.method}`});
+    $("depositForm").reset(); alert("تم إرسال طلب الإيداع للأدمن"); go("wallet");
+  }
+
+  async function submitWithdraw(e){
+    e.preventDefault(); if(!currentUser || !currentProfile) return;
+    const amount = Number($("wdAmount").value); if(!amount || amount<=0) return alert("اكتب مبلغ صحيح");
+    if(Number(currentProfile.realBalance||0) < amount) return alert("الرصيد الحقيقي غير كافي");
+    const r = push(ref(db, "finance/withdrawals"));
+    const newReal = Number(currentProfile.realBalance||0) - amount; const newReserved = Number(currentProfile.reservedWithdrawalBalance||0) + amount;
+    const data = {id:r.key, uid:currentUser.uid, userEmail:currentProfile.email, userName:currentProfile.name, amount, method:$("wdMethod").value, details:$("wdDetails").value || "", status:"pending", createdAt:ts()};
+    const updates = {}; updates[`finance/withdrawals/${r.key}`]=data; updates[`users/${currentUser.uid}/realBalance`]=newReal; updates[`users/${currentUser.uid}/reservedWithdrawalBalance`]=newReserved;
+    await update(ref(db), updates); await recordTx(currentUser.uid,{type:"withdraw_request",amount,status:"pending",note:`طلب سحب عبر ${data.method}`});
+    $("withdrawForm").reset(); alert("تم إرسال طلب السحب وحجز المبلغ"); go("wallet");
+  }
+
+  async function submitSupport(e){
+    e.preventDefault(); if(!currentUser) return;
+    const title=$("supportTitle").value.trim(), msg=$("supportMsg").value.trim(); if(!title || !msg) return alert("اكتب العنوان والرسالة");
+    const r=push(ref(db,"support_tickets")); await set(r,{id:r.key,uid:currentUser.uid,userEmail:currentProfile.email,title,message:msg,status:"open",createdAt:ts()});
+    $("supportForm").reset(); alert("تم إرسال تذكرة الدعم");
+  }
+
+  async function submitAdjust(e){
+    e.preventDefault(); if(!isAdmin) return;
+    const uid=$("adjustUser").value, amount=Number($("adjustAmount").value), type=$("adjustBalanceType").value, note=$("adjustNote").value || "تعديل أدمن";
+    if(!uid || !amount) return alert("اختار مستخدم واكتب مبلغ");
+    const user = allUsers[uid]; if(!user) return alert("المستخدم غير موجود");
+    const current = Number(user[type]||0); const next = Math.max(0, current + amount);
+    await update(ref(db), { [`users/${uid}/${type}`]: next }); await recordTx(uid,{type:"admin_adjust",amount,status:"approved",note:`${note} (${type}) بواسطة ${currentProfile.email}`});
+    $("adjustForm").reset(); alert("تم تعديل الرصيد");
+  }
+
+  async function approveDeposit(id){
+    if(!confirm("قبول الإيداع وإضافة الرصيد؟")) return; const d=allDeposits[id]; if(!d || d.status!=="pending") return;
+    const uSnap=await get(ref(db,`users/${d.uid}`)); const u=uSnap.val()||{}; const next=Number(u.realBalance||0)+Number(d.amount||0);
+    await update(ref(db),{[`users/${d.uid}/realBalance`]:next,[`finance/deposits/${id}/status`]:"approved",[`finance/deposits/${id}/approvedAt`]:ts(),[`finance/deposits/${id}/approvedBy`]:currentProfile.email});
+    await recordTx(d.uid,{type:"deposit_approved",amount:Number(d.amount),status:"approved",note:`تم قبول الإيداع بواسطة ${currentProfile.email}`});
+  }
+  async function rejectDeposit(id){
+    const reason=prompt("سبب الرفض؟") || "مرفوض من الأدمن"; const d=allDeposits[id]; if(!d || d.status!=="pending") return;
+    await update(ref(db),{[`finance/deposits/${id}/status`]:"rejected",[`finance/deposits/${id}/rejectedAt`]:ts(),[`finance/deposits/${id}/rejectedBy`]:currentProfile.email,[`finance/deposits/${id}/rejectReason`]:reason});
+    await recordTx(d.uid,{type:"deposit_rejected",amount:Number(d.amount),status:"rejected",note:reason});
+  }
+  async function approveWithdrawal(id){
+    if(!confirm("قبول السحب وإنهاء المبلغ المحجوز؟")) return; const w=allWithdrawals[id]; if(!w || w.status!=="pending") return;
+    const uSnap=await get(ref(db,`users/${w.uid}`)); const u=uSnap.val()||{}; const nextReserved=Math.max(0, Number(u.reservedWithdrawalBalance||0)-Number(w.amount||0));
+    await update(ref(db),{[`users/${w.uid}/reservedWithdrawalBalance`]:nextReserved,[`finance/withdrawals/${id}/status`]:"approved",[`finance/withdrawals/${id}/approvedAt`]:ts(),[`finance/withdrawals/${id}/approvedBy`]:currentProfile.email});
+    await recordTx(w.uid,{type:"withdraw_approved",amount:Number(w.amount),status:"approved",note:`تم قبول السحب بواسطة ${currentProfile.email}`});
+  }
+  async function rejectWithdrawal(id){
+    const reason=prompt("سبب الرفض؟") || "مرفوض من الأدمن"; const w=allWithdrawals[id]; if(!w || w.status!=="pending") return;
+    const uSnap=await get(ref(db,`users/${w.uid}`)); const u=uSnap.val()||{}; const nextReserved=Math.max(0, Number(u.reservedWithdrawalBalance||0)-Number(w.amount||0)); const nextReal=Number(u.realBalance||0)+Number(w.amount||0);
+    await update(ref(db),{[`users/${w.uid}/reservedWithdrawalBalance`]:nextReserved,[`users/${w.uid}/realBalance`]:nextReal,[`finance/withdrawals/${id}/status`]:"rejected",[`finance/withdrawals/${id}/rejectedAt`]:ts(),[`finance/withdrawals/${id}/rejectedBy`]:currentProfile.email,[`finance/withdrawals/${id}/rejectReason`]:reason});
+    await recordTx(w.uid,{type:"withdraw_rejected",amount:Number(w.amount),status:"rejected",note:reason});
   }
 
   async function start(){
     try{
-      const app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      auth.languageCode = "ar";
-      db = getDatabase(app);
-      await setPersistence(auth, browserLocalPersistence);
-      log(`Firebase initialized on ${location.hostname}`);
-
-      try{
-        log("Checking redirect result...");
-        const result = await getRedirectResult(auth);
-        if(result?.user){ log(`Redirect result user: ${result.user.email || result.user.uid}`); }
-        else { log("No redirect pending"); }
-      }catch(e){
-        console.error(e);
-        showStatus(friendlyError(e), "err");
-      }
-
-      onAuthStateChanged(auth, async (user) => {
+      app=initializeApp(firebaseConfig); auth=getAuth(app); db=getDatabase(app); auth.languageCode="ar"; await setPersistence(auth,browserLocalPersistence); attachListeners(); log(`Firebase initialized on ${location.hostname}`);
+      onAuthStateChanged(auth, async (user)=>{
         log(`onAuthStateChanged: ${user ? (user.email || user.uid) : "NULL"}`);
-        if(!user){
-          $("loginScreen").style.display = "grid";
-          $("appScreen").style.display = "none";
-          return;
-        }
-        try{
-          const isAdmin = await saveUser(user);
-          renderLoggedIn(user, isAdmin);
-        }catch(e){
-          console.error(e);
-          showStatus(`تم الدخول لكن فشل حفظ البيانات في Realtime Database.\n${friendlyError(e)}`, "err");
-          renderLoggedIn(user, false);
+        if(!user){ currentUser=null; $("loginScreen").style.display="grid"; $("appScreen").style.display="none"; return; }
+        currentUser=user; const profile=await ensureUser(user); $("loginScreen").style.display="none"; $("appScreen").style.display="block"; renderProfile(profile);
+        onValue(ref(db,`users/${user.uid}`), snap=>{ if(snap.exists()) renderProfile(snap.val()); });
+        onValue(ref(db,`transactions/${user.uid}`), snap=>renderTx(snap.val()||{}));
+        if((profile.email||"").toLowerCase() === ADMIN_EMAIL.toLowerCase()){
+          onValue(ref(db,"users"), snap=>{ allUsers=snap.val()||{}; renderAdmin(); });
+          onValue(ref(db,"finance/deposits"), snap=>{ allDeposits=snap.val()||{}; renderAdmin(); });
+          onValue(ref(db,"finance/withdrawals"), snap=>{ allWithdrawals=snap.val()||{}; renderAdmin(); });
         }
       });
-    }catch(e){
-      console.error(e);
-      showStatus(friendlyError(e), "err");
-    }
+    }catch(e){ console.error(e); showStatus(friendlyError(e),"err"); }
   }
-
-  $("googleBtn").addEventListener("click", async () => {
-    try{
-      showStatus("جارٍ فتح نافذة Google... إذا ظهرت نافذة صغيرة اختر الحساب ولا تلمس Console.", "ok");
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: "select_account" });
-      try{
-        const result = await signInWithPopup(auth, provider);
-        log(`Popup result user: ${result.user?.email || result.user?.uid || "unknown"}`);
-      }catch(popupError){
-        console.error(popupError);
-        log(`Popup failed: ${popupError.code || popupError.message}`);
-        if(["auth/popup-blocked", "auth/popup-closed-by-user", "auth/cancelled-popup-request"].includes(popupError.code)){
-          showStatus("النافذة انمنعت أو انغلقت. رح نجرب Redirect الآن...", "ok");
-          await signInWithRedirect(auth, provider);
-        }else{
-          throw popupError;
-        }
-      }
-    }catch(e){ console.error(e); showStatus(friendlyError(e), "err"); }
-  });
-
-  $("appleBtn").addEventListener("click", async () => {
-    try{
-      showStatus("Apple نتركه بعدين. جرّب Google أولاً حتى نثبت Firebase.", "err");
-      return;
-    }catch(e){ console.error(e); showStatus(friendlyError(e), "err"); }
-  });
-
-  $("logoutBtn").addEventListener("click", async () => { await signOut(auth); location.reload(); });
-  $("testDbBtn").addEventListener("click", async () => {
-    if(!currentUser) return;
-    try{
-      const r = push(ref(db, `system_tests/${currentUser.uid}`));
-      await set(r, { at: now(), email: currentUser.email || "", domain: location.hostname, note: "ADNOR clean static test" });
-      log("Database test saved successfully");
-      alert("تم حفظ اختبار قاعدة البيانات بنجاح ✅");
-    }catch(e){ alert(friendlyError(e)); }
-  });
-
   start();
 </script>
 </body>

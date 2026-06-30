@@ -756,7 +756,7 @@
       updates['user_finance/'+currentUser.uid+'/deposits/'+id]=data;
       updates['transactions/'+currentUser.uid+'/'+now]={type:'deposit_request',amount:amount,status:'pending',note:'طلب إيداع مع إيصال قيد المراجعة',createdAt:now,hasReceiptData:true};
       updates['admin_notifications/'+now]={type:'deposit',uid:currentUser.uid,email:currentUser.email||'',text:'طلب إيداع جديد بقيمة '+money(amount)+' مع إيصال',createdAt:now,status:'new'};
-      queueGmailAlert(updates,'deposit_'+id,'deposit_new','طلب إيداع جديد','وصل طلب إيداع جديد بقيمة '+money(amount)+' من '+(currentUser.email||'مستخدم')+' عبر '+pm.name+'. افتح لوحة ADNOR لمراجعة الإيصال.',{requestId:id,uid:currentUser.uid,email:currentUser.email||'',amount,method:pm.name});
+      queueGmailAlert(updates,'deposit_'+id,'deposit_new','طلب إيداع جديد','وصل طلب إيداع جديد بقيمة '+money(amount)+' من '+(currentUser.email||'مستخدم')+' عبر '+m.name+'. افتح لوحة ADNOR لمراجعة الإيصال.',{requestId:id,uid:currentUser.uid,email:currentUser.email||'',amount,method:m.name});
       try{
         await update(ref(db),updates);
         $('depositAmount').value='';$('depositRef').value='';$('depositReceipt').value='';

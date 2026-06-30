@@ -161,15 +161,15 @@
     .site-alert.show{display:block}.site-alert .sub{display:block;color:#cbd4e5;font-size:12px;margin-top:3px}.admin-module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.admin-module-toggle{border:1px solid rgba(255,204,77,.28);border-radius:18px;background:rgba(2,10,22,.52);padding:11px;color:#cbd4e5;font-weight:900;line-height:1.6}.admin-module-toggle label{display:flex;align-items:center;gap:8px;color:#ffe184}.admin-module-toggle input{width:20px;height:20px;accent-color:#d89524}@media(max-width:700px){.admin-module-grid{grid-template-columns:1fr}}
 
 
-    /* V52 — UI Layout Restructure */
+    /* V53 — UI Layout Restructure: Bottom navigation removed */
     .balance-hero{display:none!important}
-    .app-wrap{padding-bottom:104px}
+    .app-wrap{padding-bottom:18px}
     .v52-compact-wallet{position:sticky;top:67px;z-index:9;margin:0 0 12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid rgba(255,204,77,.38);border-radius:22px;padding:10px 11px;background:linear-gradient(180deg,rgba(7,22,44,.88),rgba(2,9,20,.90));box-shadow:0 0 22px rgba(0,0,0,.28),inset 0 0 18px rgba(255,205,76,.04);backdrop-filter:blur(14px)}
     .v52-compact-wallet .cw-title{display:block;color:#aeb8cd;font-size:11px;font-weight:900;margin-bottom:3px}.v52-compact-wallet .cw-money{display:block;color:#ffe184;font-size:21px;font-weight:1000;direction:ltr;letter-spacing:.2px}.v52-compact-wallet .cw-sub{display:block;color:#92a2bd;font-size:10px;font-weight:900;margin-top:2px}.v52-compact-actions{display:flex;gap:6px}.v52-compact-actions button{height:38px;padding:0 12px;border-radius:14px;border:1px solid rgba(255,210,91,.55);background:rgba(3,12,27,.72);color:#ffdf7d;font:inherit;font-size:12px;font-weight:1000;cursor:pointer}.v52-compact-actions button.primary{background:linear-gradient(180deg,#fff0a5,#d89524 60%,#9b5f10);color:#151007;border-color:#fff0a5}
     .app-wrap[data-active-page="home"] .v52-compact-wallet,.app-wrap[data-active-page="support"] .v52-compact-wallet,.app-wrap[data-active-page="account"] .v52-compact-wallet,.app-wrap[data-active-page="notifications"] .v52-compact-wallet,.app-wrap.admin-layout .v52-compact-wallet{display:none}
     .home-hero{position:relative;overflow:hidden;border-radius:32px;border:1px solid rgba(255,204,77,.62);padding:18px 16px;background:radial-gradient(circle at 20% 0,rgba(255,223,125,.23),transparent 32%),radial-gradient(circle at 90% 15%,rgba(18,201,255,.18),transparent 34%),linear-gradient(180deg,rgba(8,26,52,.94),rgba(2,8,18,.96));box-shadow:0 0 28px rgba(0,0,0,.42),0 0 22px rgba(255,188,38,.12);margin-bottom:12px}.home-hero:before{content:"";position:absolute;inset:-2px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);transform:skewX(-25deg) translateX(-80%);animation:shine 5.5s infinite}.home-hero-inner{position:relative;z-index:1}.home-hello{display:flex;align-items:center;justify-content:space-between;gap:10px}.home-hello h2{margin:0;color:#fff4be;font-size:23px;line-height:1.35}.home-hello p{margin:4px 0 0;color:#b9c4d5;font-size:12px;font-weight:900}.home-badge{min-width:74px;border-radius:17px;padding:8px 9px;text-align:center;background:linear-gradient(180deg,#fff0a5,#d89524 60%,#9b5f10);color:#151007;font-weight:1000;box-shadow:0 0 18px rgba(255,188,39,.22)}
     .home-money-card{margin-top:14px;border:1px solid rgba(255,204,77,.38);border-radius:24px;padding:14px;background:rgba(2,10,22,.56)}.home-money-card span{display:block;color:#aeb8cd;font-size:12px;font-weight:900}.home-money-card b{display:block;color:#ffe184;font-size:34px;line-height:1.1;margin-top:4px;direction:ltr}.home-money-card small{color:#8fa0bb;font-weight:900}.home-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.home-actions button{min-height:66px;border-radius:20px;border:1px solid rgba(255,204,77,.36);background:rgba(3,13,29,.75);color:#e8edf7;font:inherit;font-weight:1000;font-size:12px;display:grid;place-items:center;gap:4px;cursor:pointer}.home-actions button i{font-style:normal;font-size:22px}.home-actions button.gold{background:linear-gradient(180deg,#fff0a5,#d89524 60%,#9b5f10);color:#151007;border-color:#fff0a5}
-    .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.home-tile{border:1px solid rgba(255,204,77,.32);border-radius:22px;padding:12px;background:linear-gradient(180deg,rgba(8,25,49,.80),rgba(2,10,22,.90));box-shadow:inset 0 0 18px rgba(255,205,76,.03)}.home-tile span{display:block;color:#aeb8cd;font-size:11px;font-weight:900}.home-tile b{display:block;color:#ffe184;font-size:19px;margin-top:4px;direction:ltr}.home-section-clean{margin-top:12px}.home-section-clean .draw-list{margin-top:8px}.v52-page-kicker{margin:0 0 10px;color:#aeb8cd;font-size:12px;font-weight:900;text-align:center}.page:not(#page-home)>.jackpot:first-child{margin-top:2px}.bottom-nav{grid-template-columns:repeat(5,1fr)}
+    .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.home-tile{border:1px solid rgba(255,204,77,.32);border-radius:22px;padding:12px;background:linear-gradient(180deg,rgba(8,25,49,.80),rgba(2,10,22,.90));box-shadow:inset 0 0 18px rgba(255,205,76,.03)}.home-tile span{display:block;color:#aeb8cd;font-size:11px;font-weight:900}.home-tile b{display:block;color:#ffe184;font-size:19px;margin-top:4px;direction:ltr}.home-section-clean{margin-top:12px}.home-section-clean .draw-list{margin-top:8px}.v52-page-kicker{margin:0 0 10px;color:#aeb8cd;font-size:12px;font-weight:900;text-align:center}.page:not(#page-home)>.jackpot:first-child{margin-top:2px}.bottom-nav{display:none!important}
     .drawer-menu .drawer-link.v52-secondary{opacity:.96}.drawer-menu .drawer-link.v52-primary{border-color:rgba(255,224,122,.55);background:linear-gradient(180deg,rgba(12,33,63,.82),rgba(2,10,22,.92))}
     @media(max-width:420px){.home-actions{grid-template-columns:repeat(2,1fr)}.home-grid{grid-template-columns:1fr}.v52-compact-wallet{top:64px}.home-money-card b{font-size:30px}}
 
@@ -746,13 +746,7 @@
       </div>
 
 
-      <nav class="bottom-nav">
-        <button class="nav-btn active" data-page="home"><i>🏠</i><span>الرئيسية</span></button>
-        <button class="nav-btn" data-page="lottery"><i>💎</i><span>اليانصيب</span></button>
-        <button class="nav-btn" data-page="games"><i>🎮</i><span>الألعاب</span></button>
-        <button class="nav-btn" data-page="wallet"><i>💳</i><span>المحفظة</span></button>
-        <button class="nav-btn" data-page="account"><i>👤</i><span>حسابي</span></button>
-      </nav>
+      <!-- V53: تم حذف القائمة السفلية. التنقل صار من زر الثلاث خطوط ☰ ومن أزرار الصفحة الرئيسية. -->
     </div>
   </main>
 

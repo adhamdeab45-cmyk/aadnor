@@ -374,6 +374,7 @@
             <button class="admin-menu-btn" data-admin-section="payments"><span><i>💳</i> طرق الدفع</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="notifications"><span><i>🔔</i> الإشعارات</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="settings"><span><i>⚙️</i> الإعدادات</span><span>›</span></button>
+            <button class="admin-menu-btn" data-admin-section="campaigns"><span><i>📣</i> الحملات</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="logs"><span><i>📜</i> سجل العمليات</span><span>›</span></button>
           </aside>
           <div class="admin-content">
@@ -388,6 +389,7 @@
                   <button onclick="showAdminSection('payments')"><span><b>طرق الدفع</b><small>USDT، شام كاش، بنك، واتساب، تيليجرام</small></span><i>💳</i></button>
                   <button onclick="showAdminSection('notifications')"><span><b>الإشعارات</b><small>آخر الأحداث والتنبيهات المهمة</small></span><i>🔔</i></button>
                   <button onclick="showAdminSection('settings')"><span><b>الإعدادات</b><small>البونص، الإحالات، السياسة، شاشة البداية</small></span><i>⚙️</i></button>
+                  <button onclick="showAdminSection('campaigns')"><span><b>تحليلات الحملات</b><small>أداء أكواد الدعاية والمؤثرين والاستخدامات</small></span><i>📣</i></button>
                   <button onclick="showAdminSection('logs')"><span><b>سجل العمليات</b><small>التدقيق ومراجعة التغييرات المالية</small></span><i>📜</i></button>
                 </div></div>
             </section>
@@ -579,6 +581,28 @@
               <div class="admin-wide-card">
                 <div class="admin-section-head"><h3>آخر الدعوات</h3><span>سجل مختصر</span></div>
                 <div class="admin-table" id="adminReferralsList"><div class="admin-empty">لا توجد دعوات بعد</div></div>
+              </div>
+            </section>
+            <section class="admin-section" id="admin-section-campaigns">
+              <div class="admin-wide-card">
+                <div class="admin-section-head"><div class="head-title"><h3>تحليلات الحملات الدعائية</h3><span>أكواد المؤثرين، الاستخدامات، البونص، اللفات، والتذاكر المجانية</span></div></div>
+                <div class="admin-grid" style="margin-bottom:12px">
+                  <div class="admin-stat"><span>إجمالي الأكواد</span><b id="campaignCodesCount">0</b></div>
+                  <div class="admin-stat"><span>استخدامات الحملات</span><b id="campaignUsesCount">0</b></div>
+                  <div class="admin-stat"><span>بونص موزع</span><b id="campaignBonusSum">$0.00</b></div>
+                  <div class="admin-stat"><span>لفات مجانية</span><b id="campaignSpinsSum">0</b></div>
+                  <div class="admin-stat"><span>تذاكر مجانية</span><b id="campaignTicketsSum">0</b></div>
+                  <div class="admin-stat"><span>أفضل كود</span><b id="campaignTopCode">—</b></div>
+                </div>
+                <div class="admin-form-grid compact">
+                  <div class="field-wrap full"><label>بحث داخل الحملات</label><div class="field"><span class="ico">🔎</span><input id="campaignSearchInput" placeholder="ابحث بالكود أو البريد أو UID"></div></div>
+                </div>
+                <div class="admin-form-actions"><button class="admin-mini-btn" id="exportCampaignsCsvBtn" type="button">تصدير CSV</button><button class="gold-btn" type="button" onclick="showAdminSection('settings')">إنشاء / تعديل كود دعائي</button></div>
+                <div class="promo-admin-list" id="adminCampaignsList"><div class="admin-empty">لا توجد بيانات حملات بعد</div></div>
+              </div>
+              <div class="admin-wide-card">
+                <div class="admin-section-head"><h3>آخر استخدامات الأكواد</h3><span>تفاصيل المستخدمين الذين فعّلوا الأكواد</span></div>
+                <div class="admin-table" id="adminCampaignRedemptionsList"><div class="admin-empty">لا توجد استخدامات بعد</div></div>
               </div>
             </section>
             <section class="admin-section" id="admin-section-logs">
@@ -1180,6 +1204,55 @@
       updates['finance_audit/'+now]={action:'promo_code_redeemed',code,uid:currentUser.uid,email:currentUser.email||'',bonus,freeSpins:spins,freeTicket,adminCampaign:true,createdAt:now};
       await update(ref(db),updates); if(st)st.textContent='تم تفعيل الكود: '+(msg.join(' + ')||'تمت العملية')+'.'; toast('تم تفعيل الكود الدعائي');
     }
+    function flattenPromoRedemptions(){
+      const out=[]; const root=adminState.promoRedemptions||{};
+      Object.entries(root).forEach(([code,byUser])=>{Object.values(byUser||{}).forEach(r=>out.push(Object.assign({code},r||{})))});
+      return out.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    }
+    function campaignSummaryFor(code){
+      const red=flattenPromoRedemptions().filter(r=>(r.code||'')===code);
+      return {
+        uses:red.length,
+        bonus:red.reduce((a,r)=>a+Number(r.bonus||0),0),
+        spins:red.reduce((a,r)=>a+Number(r.freeSpins||0),0),
+        tickets:red.filter(r=>!!r.freeTicket).length,
+        last:red[0]?.createdAt||0,
+        red
+      };
+    }
+    function renderAdminCampaigns(){
+      const listBox=$('adminCampaignsList'); const redBox=$('adminCampaignRedemptionsList');
+      if(!listBox&&!redBox)return;
+      const codes=arrObj(adminState.promoCodes||{}).sort((a,b)=>(b.usedCount||0)-(a.usedCount||0));
+      const red=flattenPromoRedemptions(); const q=($('campaignSearchInput')?.value||'').toLowerCase().trim();
+      const totals=codes.map(c=>Object.assign({},c,campaignSummaryFor(c.code||'')));
+      const uses=red.length, bonus=red.reduce((a,r)=>a+Number(r.bonus||0),0), spins=red.reduce((a,r)=>a+Number(r.freeSpins||0),0), tickets=red.filter(r=>!!r.freeTicket).length;
+      const top=totals.slice().sort((a,b)=>(b.uses||0)-(a.uses||0))[0];
+      if($('campaignCodesCount'))$('campaignCodesCount').textContent=codes.length;
+      if($('campaignUsesCount'))$('campaignUsesCount').textContent=uses;
+      if($('campaignBonusSum'))$('campaignBonusSum').textContent=money(bonus);
+      if($('campaignSpinsSum'))$('campaignSpinsSum').textContent=spins;
+      if($('campaignTicketsSum'))$('campaignTicketsSum').textContent=tickets;
+      if($('campaignTopCode'))$('campaignTopCode').textContent=top&&top.code?top.code:'—';
+      let filtered=totals.filter(c=>!q || String(c.code||'').toLowerCase().includes(q) || String(c.note||'').toLowerCase().includes(q));
+      if(listBox){
+        if(!filtered.length){listBox.innerHTML='<div class="admin-empty">لا توجد حملات مطابقة</div>'}else{
+          listBox.innerHTML=filtered.map(c=>'<div class="promo-admin-row"><h4>'+escapeHtml(c.code||'')+' <span class="admin-badge '+(c.active===false?'rejected':'approved')+'">'+(c.active===false?'متوقف':'مفعّل')+'</span></h4><p>الاستخدامات: '+Number(c.uses||0)+' / '+(Number(c.maxUses||0)||'مفتوح')+'<br>البونص الموزع: '+money(c.bonus||0)+' — اللفات: '+Number(c.spins||0)+' — التذاكر: '+Number(c.tickets||0)+'<br>آخر استخدام: '+(c.last?new Date(c.last).toLocaleString('ar-TR'):'لا يوجد')+'<br>'+escapeHtml(c.note||'')+'</p><div class="admin-actions"><button class="blue" onclick="fillPromoCodeForm(\''+escapeHtml(c.code||'')+'\')">تعديل الكود</button><button class="warn" onclick="copyText(\''+escapeHtml(c.code||'')+'\')">نسخ الكود</button></div></div>').join('')
+        }
+      }
+      let redFiltered=red.filter(r=>!q || String(r.code||'').toLowerCase().includes(q) || String(r.email||'').toLowerCase().includes(q) || String(r.uid||'').toLowerCase().includes(q)).slice(0,80);
+      if(redBox){
+        if(!redFiltered.length){redBox.innerHTML='<div class="admin-empty">لا توجد استخدامات مطابقة</div>'}else{
+          redBox.innerHTML=redFiltered.map(r=>'<div class="admin-row"><div><h4>'+escapeHtml(r.code||'')+' <span class="admin-badge approved">مستخدم</span></h4><p>'+escapeHtml(r.email||r.uid||'')+'<br>بونص: '+money(r.bonus||0)+' — لفات: '+Number(r.freeSpins||0)+' — تذكرة: '+(r.freeTicket?'نعم':'لا')+'<br>'+new Date(r.createdAt||Date.now()).toLocaleString('ar-TR')+'</p></div><div class="admin-actions"><button class="warn" onclick="copyText(\''+escapeHtml(r.uid||'')+'\')">نسخ UID</button></div></div>').join('')
+        }
+      }
+    }
+    function exportCampaignsCsv(){
+      const rows=[['code','active','uses','bonus_sum','free_spins_sum','free_tickets','max_uses','note']];
+      arrObj(adminState.promoCodes||{}).forEach(c=>{const s=campaignSummaryFor(c.code||'');rows.push([c.code||'',c.active!==false,s.uses,s.bonus,s.spins,s.tickets,Number(c.maxUses||0),c.note||''])});
+      const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');
+      const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='adnor_campaigns_'+Date.now()+'.csv';a.click();URL.revokeObjectURL(a.href);
+    }
     function renderAdminReferrals(list){const box=$('adminReferralsList');if(!box)return;list=list.slice(0,30);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد دعوات بعد</div>';return}box.innerHTML=list.map(r=>'<div class="admin-row"><div><h4>كود '+escapeHtml(r.code||'')+' <span class="admin-badge approved">'+statusLabel(r.status||'approved')+'</span></h4><p>الداعي: '+escapeHtml(r.referrerEmail||r.referrerUid||'')+'<br>المستخدم الجديد: '+escapeHtml(r.referredEmail||r.referredUid||'')+'<br>بونص المستخدم: '+money(r.newUserBonus)+' — بونص الداعي: '+money(r.referrerBonus)+'</p></div><div class="admin-actions"><button class="warn" data-copy="'+escapeHtml(r.id||'')+'" onclick="copyText(this.dataset.copy)">نسخ ID</button></div></div>').join('')}
     if($('saveDisplayNameBtn'))$('saveDisplayNameBtn').onclick=saveDisplayName;
     if($('copyAccountUidBtn'))$('copyAccountUidBtn').onclick=()=>copyText(currentUser?.uid||'');
@@ -1201,6 +1274,8 @@
     if($('savePromoCodeBtn'))$('savePromoCodeBtn').onclick=savePromoCode;
     if($('seedPromoCodesBtn'))$('seedPromoCodesBtn').onclick=seedPromoCodes;
     if($('redeemPromoCodeBtn'))$('redeemPromoCodeBtn').onclick=redeemPromoCode;
+    if($('campaignSearchInput'))$('campaignSearchInput').oninput=renderAdminCampaigns;
+    if($('exportCampaignsCsvBtn'))$('exportCampaignsCsvBtn').onclick=exportCampaignsCsv;
 
     function showAdminSection(sec){if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');const adminPage=$('page-admin');adminPage?.classList.toggle('admin-overview',sec==='overview');adminPage?.classList.toggle('admin-section-mode',sec!=='overview');document.querySelectorAll('.admin-section').forEach(x=>x.classList.toggle('active',x.id==='admin-section-'+sec));document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===sec));if(sec==='users'&&$('adminUserSearch'))setTimeout(()=>$('adminUserSearch').focus(),120);if(sec!=='overview')window.scrollTo({top:0,behavior:'smooth'})}
     document.querySelectorAll('.admin-menu-btn').forEach(b=>b.onclick=()=>showAdminSection(b.dataset.adminSection));if($('accountOpenAdminBtn'))$('accountOpenAdminBtn').onclick=()=>showPage('admin');
@@ -1212,7 +1287,7 @@
     function startAdminListeners(){if(!isAdminUser()||adminUnsubs.length)return;adminUnsubs.push(onValue(ref(db,'users'),s=>{adminState.users=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance/deposits'),s=>{adminState.deposits=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance/withdrawals'),s=>{adminState.withdrawals=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'admin_support_tickets'),s=>{adminState.support=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'admin_notifications'),s=>{adminState.notifications=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'draw_history'),s=>{adminState.drawHistory=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'tickets'),s=>{adminState.tickets=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'referrals'),s=>{adminState.referrals=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'wheel_logs'),s=>{adminState.wheelLogs=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'wheel_settings'),s=>{adminState.wheelSettings=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'finance_audit'),s=>{adminState.financeAudit=s.val()||{};renderAdmin()}));adminUnsubs.push(onValue(ref(db,'promo_codes'),s=>{adminState.promoCodes=s.val()||{};promoCodesCache=adminState.promoCodes;renderAdmin()}));adminUnsubs.push(onValue(ref(db,'promo_redemptions'),s=>{adminState.promoRedemptions=s.val()||{};renderAdmin()}))}
     function statusLabel(s){return {pending:'قيد المراجعة',approved:'مقبول',rejected:'مرفوض',open:'مفتوحة',review:'قيد المراجعة',answered:'تم الرد',closed:'مغلقة',completed:'مكتمل'}[s||'pending']||s||'قيد المراجعة'}
     function arrObj(o){return Object.values(o||{}).sort((a,b)=>(b.createdAt||b.updatedAt||0)-(a.createdAt||a.updatedAt||0))}
-    function renderAdmin(){if(!isAdminUser())return;const users=arrObj(adminState.users),deps=arrObj(adminState.deposits),wds=arrObj(adminState.withdrawals),sups=arrObj(adminState.support),notes=arrObj(adminState.notifications),draws=arrObj(adminState.drawHistory);const sum=users.reduce((a,u)=>a+Number(u.realBalance||0)+Number(u.bonusBalance||0)+Number(u.reservedWithdrawalBalance||0),0);if($('adminUsersCount'))$('adminUsersCount').textContent=users.length;if($('adminBalancesSum'))$('adminBalancesSum').textContent=money(sum);if($('adminDepositsPending'))$('adminDepositsPending').textContent=deps.filter(x=>x.status==='pending').length;if($('adminWithdrawsPending'))$('adminWithdrawsPending').textContent=wds.filter(x=>x.status==='pending').length;if($('adminSupportCount'))$('adminSupportCount').textContent=sups.filter(x=>x.status!=='closed').length;if($('adminNotesCount'))$('adminNotesCount').textContent=notes.length;renderAdminUsers(users);renderAdminDeposits(deps);renderAdminWithdrawals(wds);renderAdminSupport(sups);renderAdminNotifications(notes);renderAdminDraws(draws);renderAdminDrawStats();renderAdminReferrals(arrObj(adminState.referrals));renderReferralAdminForm();renderAdminLotterySettings();renderAdminWheelLogs();renderAdminGameProfitSummary();renderWheelAdminForm();renderAdminPromoCodes();renderAdminAudit()}
+    function renderAdmin(){if(!isAdminUser())return;const users=arrObj(adminState.users),deps=arrObj(adminState.deposits),wds=arrObj(adminState.withdrawals),sups=arrObj(adminState.support),notes=arrObj(adminState.notifications),draws=arrObj(adminState.drawHistory);const sum=users.reduce((a,u)=>a+Number(u.realBalance||0)+Number(u.bonusBalance||0)+Number(u.reservedWithdrawalBalance||0),0);if($('adminUsersCount'))$('adminUsersCount').textContent=users.length;if($('adminBalancesSum'))$('adminBalancesSum').textContent=money(sum);if($('adminDepositsPending'))$('adminDepositsPending').textContent=deps.filter(x=>x.status==='pending').length;if($('adminWithdrawsPending'))$('adminWithdrawsPending').textContent=wds.filter(x=>x.status==='pending').length;if($('adminSupportCount'))$('adminSupportCount').textContent=sups.filter(x=>x.status!=='closed').length;if($('adminNotesCount'))$('adminNotesCount').textContent=notes.length;renderAdminUsers(users);renderAdminDeposits(deps);renderAdminWithdrawals(wds);renderAdminSupport(sups);renderAdminNotifications(notes);renderAdminDraws(draws);renderAdminDrawStats();renderAdminReferrals(arrObj(adminState.referrals));renderReferralAdminForm();renderAdminLotterySettings();renderAdminWheelLogs();renderAdminGameProfitSummary();renderWheelAdminForm();renderAdminPromoCodes();renderAdminCampaigns();renderAdminAudit()}
     function renderAdminUsers(users){
       const box=$('adminUsersList');if(!box)return;
       users=users||[];

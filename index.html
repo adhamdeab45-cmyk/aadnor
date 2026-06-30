@@ -440,6 +440,7 @@
       });
     }
     $('sendDepositBtn').onclick=async()=>{clearDepositStatus();
+      const btn=$('sendDepositBtn');
       if(!currentUser)return toast('سجل الدخول أولًا');
       if(currentProfile?.isFrozen)return toast('حسابك موقوف مؤقتًا');
       const amount=Number($('depositAmount').value||0);
@@ -449,30 +450,46 @@
       if(m.minDeposit&&amount<Number(m.minDeposit))return toast('أقل إيداع عبر '+m.name+' هو '+m.minDeposit+' USD');
       const file=$('depositReceipt').files[0];
       if(!file)return toast('ارفع صورة الإيصال أولًا حتى تصل للأدمن');
+      if(!file.type || !file.type.startsWith('image/')){setDepositStatus('الإيصال لازم يكون صورة فقط', 'err');return}
+      if(file.size > 8*1024*1024){setDepositStatus('حجم الصورة كبير جدًا. اختار صورة أقل من 8MB أو صوّر الإيصال بصورة أوضح.', 'err');return}
       const depRef=push(ref(db,'finance/deposits'));
       const id=depRef.key;
-      let receiptUrl='',receiptDataUrl='',receiptStorageError='';
+      let receiptDataUrl='',receiptUrl='',receiptStorageError='storage_skipped_v29_realtime_receipt';
       try{
-        setDepositStatus('جاري رفع صورة الإيصال...', 'work');
-        receiptUrl=await uploadReceipt(file,id);
+        btn.disabled=true;
+        setDepositStatus('جاري تجهيز صورة الإيصال داخل الطلب...', 'work');
+        const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('receipt-process-timeout')),12000));
+        receiptDataUrl=await Promise.race([compressReceiptToDataUrl(file),timeout]);
       }catch(e){
-        console.error('Receipt upload failed:', e);
-        receiptStorageError=(e.code||e.message||'storage-upload-failed');
-        if(String(e.message||'').includes('receipt-not-image')){setDepositStatus('الإيصال لازم يكون صورة فقط', 'err');return}
-        if(String(e.message||'').includes('receipt-too-large')){setDepositStatus('حجم الصورة كبير، اختار صورة أقل من 5MB', 'err');return}
-        setDepositStatus('تعذر رفع الإيصال على Storage، عم جرّب أرسله مضغوط داخل الطلب...', 'work');
-        try{receiptDataUrl=await compressReceiptToDataUrl(file)}catch(cerr){console.error('Receipt compress failed:',cerr);setDepositStatus('فشل إرسال الإيصال. فعّل Firebase Storage أو اختر صورة أصغر/أوضح. الخطأ: '+(receiptStorageError||cerr.message||''),'err');return}
+        console.error('Receipt local processing failed:',e);
+        const msg=String(e.message||e.code||'');
+        if(msg.includes('receipt-not-image'))setDepositStatus('الإيصال لازم يكون صورة فقط', 'err');
+        else if(msg.includes('receipt-data-too-large'))setDepositStatus('الصورة بقيت كبيرة بعد الضغط. قصّ الإيصال أو صوّره من قريب ثم جرّب مرة ثانية.', 'err');
+        else if(msg.includes('receipt-process-timeout'))setDepositStatus('تجهيز الصورة أخذ وقت طويل. جرّب صورة أصغر أو أعد تصوير الإيصال.', 'err');
+        else setDepositStatus('فشل تجهيز صورة الإيصال: '+msg, 'err');
+        btn.disabled=false;
+        return;
       }
-      if(!receiptUrl&&!receiptDataUrl){setDepositStatus('لم يصل الإيصال، لن يتم إرسال الطلب بدون صورة','err');return}
-      setDepositStatus('جاري حفظ طلب الإيداع...', 'work');
+      if(!receiptDataUrl){setDepositStatus('لم يتم تجهيز الإيصال، لن يتم إرسال الطلب بدون صورة','err');btn.disabled=false;return}
+      setDepositStatus('جاري حفظ طلب الإيداع وإرساله للأدمن...', 'work');
       const data={id,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile.name||'',amount,method:depositMethod,methodName:m.name,methodAddress:m.address||'',reference:$('depositRef').value.trim(),receiptUrl,receiptDataUrl,receiptStorageError,receiptFileName:file.name,status:'pending',reviewStatus:'بانتظار مراجعة الأدمن',createdAt:Date.now(),createdHost:location.host};
+      const now=Date.now();
       const updates={};
       updates['finance/deposits/'+id]=data;
       updates['user_finance/'+currentUser.uid+'/deposits/'+id]=data;
-      updates['transactions/'+currentUser.uid+'/'+Date.now()]={type:'deposit_request',amount:amount,status:'pending',note:'طلب إيداع مع إيصال قيد المراجعة',createdAt:Date.now(),receiptUrl,hasReceiptData:!!receiptDataUrl};
-      updates['admin_notifications/'+Date.now()]={type:'deposit',uid:currentUser.uid,email:currentUser.email||'',text:'طلب إيداع جديد بقيمة '+money(amount)+' مع إيصال',createdAt:Date.now(),status:'new'};
-      try{await update(ref(db),updates);$('depositAmount').value='';$('depositRef').value='';$('depositReceipt').value='';setDepositStatus('تم إرسال طلب الإيداع مع الإيصال للأدمن بنجاح. الحالة: بانتظار المراجعة','ok');toast('تم إرسال طلب الإيداع بنجاح')}
-      catch(e){console.error(e);setDepositStatus('فشل حفظ طلب الإيداع في قاعدة البيانات: '+(e.code||e.message),'err');toast('فشل حفظ طلب الإيداع')}
+      updates['transactions/'+currentUser.uid+'/'+now]={type:'deposit_request',amount:amount,status:'pending',note:'طلب إيداع مع إيصال قيد المراجعة',createdAt:now,hasReceiptData:true};
+      updates['admin_notifications/'+now]={type:'deposit',uid:currentUser.uid,email:currentUser.email||'',text:'طلب إيداع جديد بقيمة '+money(amount)+' مع إيصال',createdAt:now,status:'new'};
+      try{
+        await update(ref(db),updates);
+        $('depositAmount').value='';$('depositRef').value='';$('depositReceipt').value='';
+        setDepositStatus('تم إرسال طلب الإيداع مع الإيصال للأدمن بنجاح. الحالة: بانتظار المراجعة','ok');
+        toast('تم إرسال طلب الإيداع بنجاح');
+        if(isAdminUser()) setTimeout(()=>{showPage('admin');showAdminSection('deposits')},700);
+      }catch(e){
+        console.error(e);
+        setDepositStatus('فشل حفظ طلب الإيداع في قاعدة البيانات: '+(e.code||e.message),'err');
+        toast('فشل حفظ طلب الإيداع');
+      }finally{btn.disabled=false}
     };
     $('sendWithdrawBtn').onclick=async()=>{if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');if(currentProfile.isFrozen)return toast('حسابك موقوف مؤقتًا');const amount=Number($('withdrawAmount').value||0),details=$('withdrawDetails').value.trim();const bal=Number(currentProfile.realBalance||0),res=Number(currentProfile.reservedWithdrawalBalance||0);if(amount<=0)return toast('اكتب مبلغ السحب');const wm=getMethod(withdrawMethod);if(!wm)return toast('اختر طريقة سحب مفعّلة');if(wm.minWithdraw&&amount<Number(wm.minWithdraw))return toast('أقل سحب عبر '+wm.name+' هو '+wm.minWithdraw+' USD');if(amount>bal)return toast('الرصيد المتاح غير كافٍ');if(!details)return toast('اكتب بيانات حساب الاستلام');const id=push(ref(db,'finance/withdrawals')).key;const data={id,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile.name||'',amount,method:withdrawMethod,methodName:wm.name,details,status:'pending',reviewStatus:'تم حجز المبلغ بانتظار مراجعة الأدمن',createdAt:Date.now(),createdHost:location.host};const updates={};updates['finance/withdrawals/'+id]=data;updates['user_finance/'+currentUser.uid+'/withdrawals/'+id]=data;updates['users/'+currentUser.uid+'/realBalance']=bal-amount;updates['users/'+currentUser.uid+'/reservedWithdrawalBalance']=res+amount;updates['transactions/'+currentUser.uid+'/'+Date.now()]={type:'withdraw_request',amount:-amount,status:'pending',note:'طلب سحب قيد المراجعة',balanceBefore:bal,balanceAfter:bal-amount,createdAt:Date.now()};updates['admin_notifications/'+Date.now()]={type:'withdraw',uid:currentUser.uid,email:currentUser.email||'',text:'طلب سحب جديد بقيمة '+money(amount),createdAt:Date.now(),status:'new'};try{await update(ref(db),updates);$('withdrawAmount').value='';$('withdrawDetails').value='';toast('تم إرسال طلب السحب وحجز المبلغ')}catch(e){console.error(e);toast('فشل طلب السحب: '+(e.code||e.message))}};
     function renderHistory(obj){const arr=Object.values(obj).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,12);if(!arr.length){$('historyList').innerHTML='<div class="hist-item"><div class="medal">⏳</div><div><h4>لا توجد عمليات بعد</h4><p>سيظهر هنا الإيداع والسحب وشراء التذاكر.</p></div><strong>$0</strong></div>';return}$('historyList').innerHTML=arr.map(x=>{const neg=Number(x.amount)<0;const title={ticket_purchase:'شراء تذكرة',deposit_request:'طلب إيداع',deposit_approved:'قبول إيداع',deposit_rejected:'رفض إيداع',withdraw_request:'طلب سحب',withdraw_approved:'سحب مكتمل',withdraw_rejected_refund:'رفض سحب/استرجاع',admin_balance_adjust:'تعديل رصيد',wheel_spin:'دوران عجلة',daily_lucky_box:'صندوق الحظ',draw_prize:'جائزة سحب'}[x.type]||'عملية';const dt=x.createdAt?new Date(x.createdAt).toLocaleString('ar-TR'):'';return '<div class="hist-item '+(neg?'negative':'')+'"><div class="medal">'+(neg?'−':'+')+'</div><div><h4>'+title+'</h4><p>'+((x.note||x.status||'')+' — '+dt)+'</p></div><strong>'+money(x.amount||0)+'</strong></div>'}).join('')}

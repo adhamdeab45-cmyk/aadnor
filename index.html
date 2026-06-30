@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR | V30 Withdraw Pro Flow</title>
+  <title>ADNOR | V33 Manual Draws No Random</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -335,7 +335,7 @@
             <section class="admin-section" id="admin-section-draws">
               <div class="admin-wide-card">
                 <div class="admin-section-head"><h3>السحوبات / اليانصيب</h3><span>تحكم كامل بالسعر والجوائز والتنفيذ</span></div>
-                <div class="hint">هنا تتحكم بسعر التذكرة، قيمة جوائز اليومي/الأسبوعي/الشهري/السنوي، ونقل التذاكر غير الرابحة للسحب التالي. كل نتيجة تحفظ داخل Firebase بسجل شفاف.</div>
+                <div class="hint">هنا تتحكم بسعر التذكرة، قيمة جوائز اليومي/الأسبوعي/الشهري/السنوي، ونقل التذاكر غير الرابحة للسحب التالي. كل نتيجة تحفظ داخل Firebase بسجل إداري واضح، ولا يوجد اختيار عشوائي.</div>
                 <div class="admin-mini-stats" id="adminDrawStats"></div>
               </div>
               <div class="admin-wide-card">
@@ -351,12 +351,24 @@
                 <div class="admin-actions"><button class="ok" id="saveLotterySettingsBtn">حفظ إعدادات اليانصيب</button><button class="blue" id="resetLotterySettingsBtn">استرجاع الافتراضي</button></div>
               </div>
               <div class="admin-wide-card">
-                <div class="admin-section-head"><h3>تنفيذ السحب الرسمي</h3><span>اختيار عشوائي وحفظ النتيجة</span></div>
-                <div class="method-grid">
-                  <button class="method" onclick="adminRunDraw('daily')">السحب اليومي<span id="adminPrizeDaily">$4,500</span></button>
-                  <button class="method" onclick="adminRunDraw('weekly')">السحب الأسبوعي<span id="adminPrizeWeekly">$15,000</span></button>
-                  <button class="method" onclick="adminRunDraw('monthly')">السحب الشهري<span id="adminPrizeMonthly">$50,000</span></button>
-                  <button class="method" onclick="adminRunDraw('yearly')">السحب السنوي<span id="adminPrizeYearly">$250,000</span></button>
+                <div class="admin-section-head"><h3>تنفيذ السحب الرسمي</h3><span>بدون عشوائي — اختيار بطاقة رابحة من المدير فقط</span></div>
+                <div class="hint">لا يوجد أي سحب عشوائي في هذا القسم. اكتب رقم البطاقة الرابحة كما اشتراها المستخدم، ثم اختر: جدولة النتيجة لوقت محدد أو تنفيذ مباشر الآن. النتيجة المجدولة لا تظهر للمستخدمين إلا بعد وقت النشر.</div>
+                <div class="admin-form-grid">
+                  <div class="field-wrap"><label>السحب اليومي — <span id="adminPrizeDaily">$4,500</span></label><div class="field"><span class="ico">☀️</span><input id="manualWinner_daily" placeholder="رقم البطاقة الرابحة"></div></div>
+                  <div class="field-wrap"><label>وقت نشر اليومي</label><div class="field"><span class="ico">⏰</span><input id="manualPublish_daily" type="datetime-local"></div></div>
+                  <div class="admin-actions"><button class="ok" onclick="adminManualDraw('daily','schedule')">جدولة النتيجة</button><button class="blue" onclick="setDrawPublishToday('daily')">ضبط 8 مساءً</button><button class="bad" onclick="adminManualDraw('daily','direct')">تنفيذ مباشر</button></div>
+
+                  <div class="field-wrap"><label>السحب الأسبوعي — <span id="adminPrizeWeekly">$15,000</span></label><div class="field"><span class="ico">📅</span><input id="manualWinner_weekly" placeholder="رقم البطاقة الرابحة"></div></div>
+                  <div class="field-wrap"><label>وقت نشر الأسبوعي</label><div class="field"><span class="ico">⏰</span><input id="manualPublish_weekly" type="datetime-local"></div></div>
+                  <div class="admin-actions"><button class="ok" onclick="adminManualDraw('weekly','schedule')">جدولة النتيجة</button><button class="blue" onclick="setDrawPublishToday('weekly')">ضبط 8 مساءً</button><button class="bad" onclick="adminManualDraw('weekly','direct')">تنفيذ مباشر</button></div>
+
+                  <div class="field-wrap"><label>السحب الشهري — <span id="adminPrizeMonthly">$50,000</span></label><div class="field"><span class="ico">🌙</span><input id="manualWinner_monthly" placeholder="رقم البطاقة الرابحة"></div></div>
+                  <div class="field-wrap"><label>وقت نشر الشهري</label><div class="field"><span class="ico">⏰</span><input id="manualPublish_monthly" type="datetime-local"></div></div>
+                  <div class="admin-actions"><button class="ok" onclick="adminManualDraw('monthly','schedule')">جدولة النتيجة</button><button class="blue" onclick="setDrawPublishToday('monthly')">ضبط 8 مساءً</button><button class="bad" onclick="adminManualDraw('monthly','direct')">تنفيذ مباشر</button></div>
+
+                  <div class="field-wrap"><label>السحب السنوي — <span id="adminPrizeYearly">$250,000</span></label><div class="field"><span class="ico">👑</span><input id="manualWinner_yearly" placeholder="رقم البطاقة الرابحة"></div></div>
+                  <div class="field-wrap"><label>وقت نشر السنوي</label><div class="field"><span class="ico">⏰</span><input id="manualPublish_yearly" type="datetime-local"></div></div>
+                  <div class="admin-actions"><button class="ok" onclick="adminManualDraw('yearly','schedule')">جدولة النتيجة</button><button class="blue" onclick="setDrawPublishToday('yearly')">ضبط 8 مساءً</button><button class="bad" onclick="adminManualDraw('yearly','direct')">تنفيذ مباشر</button></div>
                 </div>
                 <div class="admin-table" id="adminDrawHistory"><div class="admin-empty">لا يوجد سجل سحوبات بعد</div></div>
               </div>
@@ -461,7 +473,7 @@
     function updateLotteryUi(){TICKET_PRICE=Number(lotterySettings.ticketPrice||1);setText('ticketPriceText',money(TICKET_PRICE));if(currentDraw){setText('drawName',drawLabel(currentDraw));setText('jackpotText',money(prizeFor(currentDraw)))}setText('adminPrizeDaily',money(prizeFor('daily')));setText('adminPrizeWeekly',money(prizeFor('weekly')));setText('adminPrizeMonthly',money(prizeFor('monthly')));setText('adminPrizeYearly',money(prizeFor('yearly')));renderAdminLotterySettings();renderLatestDrawPublic();renderAdminDrawStats()}
     function listenLotterySettings(){if(lotteryUnsub)try{lotteryUnsub()}catch(e){};lotteryUnsub=onValue(ref(db,'lottery_settings'),snap=>{lotterySettings=mergeLotterySettings(snap.val());updateLotteryUi()})}
     function listenPublicDrawHistory(){if(publicDrawUnsub)try{publicDrawUnsub()}catch(e){};publicDrawUnsub=onValue(ref(db,'draw_history'),snap=>{publicDrawHistory=snap.val()||{};renderLatestDrawPublic()})}
-    function renderLatestDrawPublic(){const list=Object.values(publicDrawHistory||{}).filter(d=>!currentDraw||d.drawType===currentDraw).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));const last=list[0];if(last){setText('lastWinnerText','الفائز: '+(last.winnerEmail||last.winnerName||'مستخدم')+' — رقم '+(last.ticketNumber||''));setText('lastPrizeText',money(last.prize||0))}else{setText('lastWinnerText','الفائز: بانتظار أول سحب رسمي');setText('lastPrizeText','$0')}}
+    function renderLatestDrawPublic(){const now=Date.now();const list=Object.values(publicDrawHistory||{}).filter(d=>(!currentDraw||d.drawType===currentDraw) && (!d.publishAt || Number(d.publishAt)<=now)).sort((a,b)=>((b.publishAt||b.createdAt||0)-(a.publishAt||a.createdAt||0)));const last=list[0];if(last){setText('lastWinnerText','الفائز: '+(last.winnerEmail||last.winnerName||'مستخدم')+' — رقم '+(last.ticketNumber||''));setText('lastPrizeText',money(last.prize||0))}else{setText('lastWinnerText','الفائز: بانتظار أول سحب رسمي');setText('lastPrizeText','$0')}}
 
     const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
     const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{}};let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:0.50,referrerBonus:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'};let referralUnsub=null,referralsUnsub=null;
@@ -808,7 +820,7 @@
     function renderAdminLotterySettings(){if(!$('lotteryTicketPrice'))return;$('lotteryTicketPrice').value=Number(lotterySettings.ticketPrice||1);$('lotteryMoveLosers').value=lotterySettings.moveLosers!==false?'true':'false';$('lotteryPrizeDaily').value=prizeFor('daily');$('lotteryPrizeWeekly').value=prizeFor('weekly');$('lotteryPrizeMonthly').value=prizeFor('monthly');$('lotteryPrizeYearly').value=prizeFor('yearly')}
     async function adminSaveLotterySettings(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeLotterySettings({ticketPrice:Number($('lotteryTicketPrice').value||1),moveLosers:$('lotteryMoveLosers').value==='true',daily:{prize:Number($('lotteryPrizeDaily').value||0)},weekly:{prize:Number($('lotteryPrizeWeekly').value||0)},monthly:{prize:Number($('lotteryPrizeMonthly').value||0)},yearly:{prize:Number($('lotteryPrizeYearly').value||0)}});data.updatedAt=Date.now();data.updatedBy=currentUser.email;await set(ref(db,'lottery_settings'),data);toast('تم حفظ إعدادات اليانصيب')}
     async function seedLotterySettings(force=false){if(!isAdminUser())return toast('للأدمن فقط');if(!force){const s=await get(ref(db,'lottery_settings'));if(s.exists())return}const data=mergeLotterySettings(defaultLotterySettings);data.updatedAt=Date.now();data.updatedBy=currentUser.email;await set(ref(db,'lottery_settings'),data);toast('تم استرجاع إعدادات اليانصيب الافتراضية')}
-    function renderAdminDraws(list){const box=$('adminDrawHistory');if(!box)return;list=list.slice(0,12);if(!list.length){box.innerHTML='<div class="admin-empty">لا يوجد سجل سحوبات بعد</div>';return}box.innerHTML=list.map(d=>'<div class="admin-row"><div><h4>'+escapeHtml(d.drawLabel||d.drawType||'سحب')+' — '+money(d.prize||0)+'</h4><p>الفائز: '+escapeHtml(d.winnerEmail||'')+'<br>رقم التذكرة: '+escapeHtml(d.ticketNumber||'')+' — التذاكر: '+(d.totalTickets||0)+' — المنقول: '+(d.movedTickets||0)+'<br>الشفافية: '+escapeHtml(d.seed||'')+'</p></div><span class="admin-badge approved">منشور</span></div>').join('')}
+    function renderAdminDraws(list){const box=$('adminDrawHistory');if(!box)return;list=list.slice(0,14);if(!list.length){box.innerHTML='<div class="admin-empty">لا يوجد سجل سحوبات بعد</div>';return}const now=Date.now();box.innerHTML=list.map(d=>{const scheduled=Number(d.publishAt||0)>now;const pub=d.publishAt?new Date(d.publishAt).toLocaleString('ar-TR'):'فوري';return '<div class="admin-row"><div><h4>'+escapeHtml(d.drawLabel||d.drawType||'سحب')+' — '+money(d.prize||0)+'</h4><p>الفائز: '+escapeHtml(d.winnerEmail||'')+'<br>رقم التذكرة: '+escapeHtml(d.ticketNumber||'')+' — التذاكر: '+(d.totalTickets||0)+' — المنقول: '+(d.movedTickets||0)+'<br>طريقة التنفيذ: اختيار إداري يدوي — وقت النشر: '+pub+'<br>السجل: '+escapeHtml(d.seed||'')+'</p></div><span class="admin-badge '+(scheduled?'pending':'approved')+'">'+(scheduled?'مجدول':'منشور')+'</span></div>'}).join('')}
     function renderAdminPaymentMethods(list){const box=$('adminPaymentMethodsList');if(!box)return;list=list||methods;if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد طرق دفع</div>';return}box.innerHTML=list.map(m=>'<div class="admin-row"><div><h4>'+escapeHtml(m.name)+' <span class="pay-status '+(m.active!==false?'on':'off')+'">'+(m.active!==false?'مفعلة':'متوقفة')+'</span></h4><p>النوع: '+paymentTypeLabel(m.type)+' — أقل إيداع: '+Number(m.minDeposit||0)+' — أقل سحب: '+Number(m.minWithdraw||0)+'<br>'+escapeHtml(m.address||'لا يوجد عنوان')+'</p></div><div class="admin-actions"><button class="blue" onclick="adminEditPaymentMethod(\''+m.id+'\')">تعديل</button><button class="'+(m.active!==false?'bad':'ok')+'" onclick="adminTogglePaymentMethod(\''+m.id+'\')">'+(m.active!==false?'إيقاف':'تفعيل')+'</button></div></div>').join('')}
     function paymentTypeLabel(t){return t==='deposit'?'إيداع فقط':(t==='withdraw'?'سحب فقط':'إيداع وسحب')}
     function fillPaymentForm(m){editingPaymentId=m?.id||'';$('payId').value=m?.id||'';$('payName').value=m?.name||'';$('payType').value=m?.type||'both';$('payActive').value=(m?.active!==false?'true':'false');$('payMinDeposit').value=m?.minDeposit??'';$('payMinWithdraw').value=m?.minWithdraw??'';$('payAddress').value=m?.address||'';$('payQrUrl').value=m?.qrUrl||'';$('payDetails').value=m?.details||'';$('paymentFormMode').textContent=m?.id?('تعديل: '+m.name):'طريقة جديدة'}
@@ -826,9 +838,85 @@
     async function adminRejectWithdraw(id){const reason=prompt('سبب رفض السحب','بيانات التحويل غير صحيحة')||'مرفوض من الإدارة';const snap=await get(ref(db,'finance/withdrawals/'+id));const w=snap.val();if(!w||w.status!=='pending')return toast('الطلب غير متاح');const us=await get(ref(db,'users/'+w.uid));const u=us.val()||{};const amount=Number(w.amount||0),beforeReal=Number(u.realBalance||0),beforeRes=Number(u.reservedWithdrawalBalance||0),real=Number((beforeReal+amount).toFixed(2)),res=Math.max(0,beforeRes-amount),now=Date.now();const updates={};updates['finance/withdrawals/'+id+'/status']='rejected';updates['finance/withdrawals/'+id+'/rejectedAt']=now;updates['finance/withdrawals/'+id+'/rejectedBy']=currentUser.email;updates['finance/withdrawals/'+id+'/rejectReason']=reason;updates['user_finance/'+w.uid+'/withdrawals/'+id+'/status']='rejected';updates['user_finance/'+w.uid+'/withdrawals/'+id+'/rejectedAt']=now;updates['user_finance/'+w.uid+'/withdrawals/'+id+'/rejectReason']=reason;updates['users/'+w.uid+'/realBalance']=real;updates['users/'+w.uid+'/reservedWithdrawalBalance']=res;updates['users/'+w.uid+'/updatedAt']=now;updates['transactions/'+w.uid+'/'+now]={type:'withdraw_rejected_refund',amount,status:'rejected',balanceBefore:beforeReal,balanceAfter:real,note:'رجوع مبلغ السحب: '+reason,adminEmail:currentUser.email,createdAt:now};updates['finance_audit/'+now]={action:'withdraw_rejected_refund',requestId:id,uid:w.uid,email:w.email||'',amount,reason,beforeReal,afterReal:real,beforeReserved:beforeRes,afterReserved:res,adminEmail:currentUser.email,createdAt:now};updates['admin_notifications/'+now]={type:'withdraw_rejected',uid:w.uid,email:w.email||'',text:'تم رفض سحب '+money(amount)+' وإرجاع الرصيد — '+reason,createdAt:now,status:'done'};await update(ref(db),updates);toast('تم رفض السحب ورجوع المبلغ')}
     async function adminReplySupport(id){const snap=await get(ref(db,'admin_support_tickets/'+id));const t=snap.val();if(!t)return toast('التذكرة غير موجودة');const reply=prompt('اكتب رد الإدارة',t.adminReply||'');if(!reply)return;const updates={};updates['admin_support_tickets/'+id+'/adminReply']=reply;updates['admin_support_tickets/'+id+'/status']='answered';updates['admin_support_tickets/'+id+'/updatedAt']=Date.now();updates['support_tickets/'+t.uid+'/'+id+'/adminReply']=reply;updates['support_tickets/'+t.uid+'/'+id+'/status']='answered';updates['support_tickets/'+t.uid+'/'+id+'/updatedAt']=Date.now();await update(ref(db),updates);toast('تم إرسال رد الإدارة')}
     async function adminCloseSupport(id){const snap=await get(ref(db,'admin_support_tickets/'+id));const t=snap.val();if(!t)return;const updates={};updates['admin_support_tickets/'+id+'/status']='closed';updates['admin_support_tickets/'+id+'/updatedAt']=Date.now();updates['support_tickets/'+t.uid+'/'+id+'/status']='closed';updates['support_tickets/'+t.uid+'/'+id+'/updatedAt']=Date.now();await update(ref(db),updates);toast('تم إغلاق التذكرة')}
-    async function adminRunDraw(drawType){if(!isAdminUser())return toast('للأدمن فقط');if(!drawEnabled(drawType))return toast('هذا السحب متوقف من إعدادات الإدارة');const prize=prizeFor(drawType);if(!confirm('تنفيذ '+drawLabel(drawType)+' الآن؟ الجائزة '+money(prize)))return;const snap=await get(ref(db,'tickets/'+drawType));const tickets=Object.values(snap.val()||{}).filter(t=>t.status==='active');if(!tickets.length)return toast('لا توجد تذاكر نشطة لهذا السحب');let rnd=new Uint32Array(1);crypto.getRandomValues(rnd);const winner=tickets[rnd[0]%tickets.length];const us=await get(ref(db,'users/'+winner.uid));const u=us.val()||{};const before=Number(u.realBalance||0),after=Number((before+prize).toFixed(2));const drawId=push(ref(db,'draw_history')).key;const seed='ADNOR-'+drawType+'-'+Date.now()+'-'+String(rnd[0]);const nextType=nextDrawType(drawType);const moveLosers=lotterySettings.moveLosers!==false && !!nextType;let moved=0;const updates={};tickets.forEach(t=>{if(t.id===winner.id){updates['tickets/'+drawType+'/'+t.id+'/status']='winner';updates['tickets/'+drawType+'/'+t.id+'/resultDrawId']=drawId;updates['user_tickets/'+t.uid+'/'+t.id+'/status']='winner';updates['user_tickets/'+t.uid+'/'+t.id+'/resultDrawId']=drawId}else if(moveLosers){const newId=push(ref(db,'tickets/'+nextType)).key;const movedTicket={...t,id:newId,previousTicketId:t.id,previousDraw:drawType,drawType:nextType,drawLabel:drawLabel(nextType),status:'active',movedAt:Date.now(),movedFromDrawId:drawId};updates['tickets/'+drawType+'/'+t.id+'/status']='moved';updates['tickets/'+drawType+'/'+t.id+'/movedTo']=nextType;updates['tickets/'+drawType+'/'+t.id+'/resultDrawId']=drawId;updates['tickets/'+nextType+'/'+newId]=movedTicket;updates['user_tickets/'+t.uid+'/'+t.id+'/status']='moved';updates['user_tickets/'+t.uid+'/'+t.id+'/movedTo']=nextType;updates['user_tickets/'+t.uid+'/'+newId]=movedTicket;moved++}else{updates['tickets/'+drawType+'/'+t.id+'/status']='lost';updates['tickets/'+drawType+'/'+t.id+'/resultDrawId']=drawId;updates['user_tickets/'+t.uid+'/'+t.id+'/status']='lost';updates['user_tickets/'+t.uid+'/'+t.id+'/resultDrawId']=drawId}});updates['users/'+winner.uid+'/realBalance']=after;updates['users/'+winner.uid+'/updatedAt']=Date.now();updates['transactions/'+winner.uid+'/'+Date.now()]={type:'draw_prize',amount:prize,balanceBefore:before,balanceAfter:after,note:'ربح '+drawLabel(drawType),createdAt:Date.now()};updates['draw_history/'+drawId]={id:drawId,drawType,drawLabel:drawLabel(drawType),prize,winnerUid:winner.uid,winnerEmail:winner.userEmail||'',winnerName:winner.userName||'',ticketNumber:winner.number,totalTickets:tickets.length,movedTickets:moved,seed,createdAt:Date.now(),adminEmail:currentUser.email};updates['draw_rounds/'+drawType+'/'+drawId]={id:drawId,drawType,prize,totalTickets:tickets.length,winnerTicketId:winner.id,winnerUid:winner.uid,movedTickets:moved,seed,createdAt:Date.now(),adminEmail:currentUser.email};updates['admin_notifications/'+Date.now()]={type:'draw_result',text:'تم تنفيذ '+drawLabel(drawType)+' والفائز '+(winner.userEmail||winner.number),createdAt:Date.now(),status:'new'};await update(ref(db),updates);toast('تم تنفيذ السحب والفائز: '+(winner.userEmail||winner.number)+' — تم نقل '+moved+' تذكرة للسحب التالي')}
+
+    function setDrawPublishToday(drawType){
+      const el=$('manualPublish_'+drawType);if(!el)return;
+      const d=new Date();d.setHours(20,0,0,0);if(d.getTime()<Date.now())d.setDate(d.getDate()+1);
+      const pad=n=>String(n).padStart(2,'0');
+      el.value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+      toast('تم ضبط وقت النشر على 8 مساءً');
+    }
+    function cleanTicketNumber(v){return String(v||'').replace(/\D/g,'').slice(0,12)}
+    function findManualWinner(tickets,number){const clean=cleanTicketNumber(number);return tickets.find(t=>cleanTicketNumber(t.number)===clean || String(t.id||'')===String(number||'').trim())}
+    async function adminManualDraw(drawType,mode){
+      if(!isAdminUser())return toast('للأدمن فقط');
+      if(!drawEnabled(drawType))return toast('هذا السحب متوقف من إعدادات الإدارة');
+      const input=$('manualWinner_'+drawType);const publishInput=$('manualPublish_'+drawType);
+      const wanted=(input?.value||'').trim();
+      if(!wanted)return toast('اكتب رقم البطاقة الرابحة أولًا');
+      let publishAt=Date.now();
+      if(mode==='schedule'){
+        if(!publishInput?.value)return toast('حدد وقت نشر النتيجة أولًا');
+        publishAt=new Date(publishInput.value).getTime();
+        if(!publishAt||Number.isNaN(publishAt))return toast('وقت النشر غير صحيح');
+      }
+      const prize=prizeFor(drawType);
+      const actionLabel=mode==='schedule'?'جدولة النتيجة':'تنفيذ مباشر';
+      const pubText=mode==='schedule'?new Date(publishAt).toLocaleString('ar-TR'):'الآن';
+      if(!confirm(actionLabel+' لـ '+drawLabel(drawType)+'؟\nرقم البطاقة: '+wanted+'\nالجائزة: '+money(prize)+'\nوقت النشر: '+pubText))return;
+      const snap=await get(ref(db,'tickets/'+drawType));
+      const tickets=Object.values(snap.val()||{}).filter(t=>t.status==='active');
+      if(!tickets.length)return toast('لا توجد تذاكر نشطة لهذا السحب');
+      const winner=findManualWinner(tickets,wanted);
+      if(!winner)return toast('لم يتم العثور على بطاقة نشطة بهذا الرقم داخل '+drawLabel(drawType));
+      const us=await get(ref(db,'users/'+winner.uid));
+      const u=us.val()||{};
+      const before=Number(u.realBalance||0),after=Number((before+prize).toFixed(2));
+      const now=Date.now();
+      const drawId=push(ref(db,'draw_history')).key;
+      const seed='ADNOR-MANUAL-'+drawType+'-'+now+'-'+cleanTicketNumber(winner.number);
+      const nextType=nextDrawType(drawType);
+      const moveLosers=lotterySettings.moveLosers!==false && !!nextType;
+      let moved=0;
+      const updates={};
+      tickets.forEach(t=>{
+        if(t.id===winner.id){
+          updates['tickets/'+drawType+'/'+t.id+'/status']='winner';
+          updates['tickets/'+drawType+'/'+t.id+'/resultDrawId']=drawId;
+          updates['tickets/'+drawType+'/'+t.id+'/publishAt']=publishAt;
+          updates['user_tickets/'+t.uid+'/'+t.id+'/status']='winner';
+          updates['user_tickets/'+t.uid+'/'+t.id+'/resultDrawId']=drawId;
+          updates['user_tickets/'+t.uid+'/'+t.id+'/publishAt']=publishAt;
+        }else if(moveLosers){
+          const newId=push(ref(db,'tickets/'+nextType)).key;
+          const movedTicket={...t,id:newId,previousTicketId:t.id,previousDraw:drawType,drawType:nextType,drawLabel:drawLabel(nextType),status:'active',movedAt:now,movedFromDrawId:drawId};
+          updates['tickets/'+drawType+'/'+t.id+'/status']='moved';
+          updates['tickets/'+drawType+'/'+t.id+'/movedTo']=nextType;
+          updates['tickets/'+drawType+'/'+t.id+'/resultDrawId']=drawId;
+          updates['tickets/'+nextType+'/'+newId]=movedTicket;
+          updates['user_tickets/'+t.uid+'/'+t.id+'/status']='moved';
+          updates['user_tickets/'+t.uid+'/'+t.id+'/movedTo']=nextType;
+          updates['user_tickets/'+t.uid+'/'+newId]=movedTicket;
+          moved++;
+        }else{
+          updates['tickets/'+drawType+'/'+t.id+'/status']='lost';
+          updates['tickets/'+drawType+'/'+t.id+'/resultDrawId']=drawId;
+          updates['user_tickets/'+t.uid+'/'+t.id+'/status']='lost';
+          updates['user_tickets/'+t.uid+'/'+t.id+'/resultDrawId']=drawId;
+        }
+      });
+      updates['users/'+winner.uid+'/realBalance']=after;
+      updates['users/'+winner.uid+'/updatedAt']=now;
+      updates['transactions/'+winner.uid+'/'+now]={type:'draw_prize',amount:prize,balanceBefore:before,balanceAfter:after,note:'ربح '+drawLabel(drawType)+' — اختيار إداري يدوي',createdAt:now,publishAt,drawId};
+      updates['draw_history/'+drawId]={id:drawId,drawType,drawLabel:drawLabel(drawType),prize,winnerUid:winner.uid,winnerEmail:winner.userEmail||'',winnerName:winner.userName||'',winnerTicketId:winner.id,ticketNumber:winner.number,totalTickets:tickets.length,movedTickets:moved,seed,drawMode:'manual_admin',status:mode==='schedule'?'scheduled':'published',publishAt,createdAt:now,adminEmail:currentUser.email};
+      updates['draw_rounds/'+drawType+'/'+drawId]={id:drawId,drawType,prize,totalTickets:tickets.length,winnerTicketId:winner.id,winnerUid:winner.uid,movedTickets:moved,seed,drawMode:'manual_admin',status:mode==='schedule'?'scheduled':'published',publishAt,createdAt:now,adminEmail:currentUser.email};
+      updates['admin_notifications/'+now]={type:'draw_result',text:(mode==='schedule'?'تمت جدولة ':'تم تنفيذ ')+drawLabel(drawType)+' يدويًا للبطاقة '+winner.number,createdAt:now,status:'new',drawId};
+      await update(ref(db),updates);
+      if(input)input.value='';
+      toast((mode==='schedule'?'تمت جدولة النتيجة':'تم تنفيذ السحب مباشرة')+' — الفائز: '+(winner.userEmail||winner.number)+' — المنقول: '+moved);
+    }
     if($('adminUserSearch'))$('adminUserSearch').addEventListener('input',()=>renderAdminUsers(arrObj(adminState.users)));if($('savePaymentMethodBtn'))$('savePaymentMethodBtn').onclick=adminSavePaymentMethod;if($('newPaymentMethodBtn'))$('newPaymentMethodBtn').onclick=()=>fillPaymentForm({id:'',name:'',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'',qrUrl:'',details:''});if($('resetPaymentMethodsBtn'))$('resetPaymentMethodsBtn').onclick=()=>seedPaymentMethods(true);if($('saveLotterySettingsBtn'))$('saveLotterySettingsBtn').onclick=adminSaveLotterySettings;if($('resetLotterySettingsBtn'))$('resetLotterySettingsBtn').onclick=()=>seedLotterySettings(true);
-    Object.assign(window,{copyText,showAdminSection,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminRunDraw,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode});
+    Object.assign(window,{copyText,showAdminSection,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode});
 
     function tick(){const now=new Date();const target=new Date(now);target.setHours(20,0,0,0);if(now>=target)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const days=Math.floor(diff/86400000);diff%=86400000;const hours=Math.floor(diff/3600000);diff%=3600000;const mins=Math.floor(diff/60000);diff%=60000;const secs=Math.floor(diff/1000);$('d').textContent=String(days).padStart(2,'0');$('h').textContent=String(hours).padStart(2,'0');$('m').textContent=String(mins).padStart(2,'0');$('s').textContent=String(secs).padStart(2,'0')}setInterval(tick,1000);tick();$('ticketNumber').value=randomTicket();
   </script>

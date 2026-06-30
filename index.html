@@ -110,7 +110,7 @@
     .request-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.request-meta span{border:1px solid rgba(255,204,77,.26);background:rgba(2,10,22,.58);border-radius:999px;padding:5px 8px;font-size:11px;font-weight:900;color:#cbd7eb}
     .admin-row.finance-row{align-items:flex-start}.admin-row.finance-row h4{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.admin-row.finance-row p{line-height:1.65}.admin-row.finance-row .amount-big{font-size:18px;color:#ffe184;text-shadow:0 0 10px rgba(255,204,77,.28)}
     .finance-note{border:1px dashed rgba(255,204,77,.30);border-radius:14px;background:rgba(2,10,22,.44);padding:9px;margin-top:8px;color:#d8e2f4;font-weight:800;font-size:12px;line-height:1.6}
-    .receipt-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:7px}.receipt-actions a{border:1px solid rgba(34,224,162,.36);border-radius:12px;padding:7px 9px;color:#54ffc6;text-decoration:none;font-weight:900;font-size:12px;background:rgba(34,224,162,.08)}
+    .receipt-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:7px}.receipt-actions a{border:1px solid rgba(34,224,162,.36);border-radius:12px;padding:7px 9px;color:#54ffc6;text-decoration:none;font-weight:900;font-size:12px;background:rgba(34,224,162,.08)}.deposit-status{margin-top:10px;border-radius:18px;padding:12px 13px;border:1px solid rgba(255,205,74,.34);background:rgba(5,15,32,.74);color:#dce7f7;font-weight:900;line-height:1.7;display:none}.deposit-status.show{display:block}.deposit-status.ok{border-color:rgba(34,224,162,.55);color:#7fffd7;background:rgba(34,224,162,.08)}.deposit-status.err{border-color:rgba(255,92,105,.55);color:#ffb4bb;background:rgba(255,92,105,.10)}.deposit-status.work{border-color:rgba(255,205,74,.55);color:#ffe291;background:rgba(255,205,74,.08)}
     .admin-actions .warn{background:rgba(255,200,75,.10)!important;border-color:rgba(255,200,75,.45)!important;color:#ffe184!important}
 
   </style>
@@ -189,7 +189,7 @@
               <div class="field-wrap"><label>رقم/مرجع التحويل</label><div class="field"><span class="ico">#</span><input id="depositRef" placeholder="اكتب رقم العملية أو ملاحظة"></div></div>
             </div>
             <div class="filebox">📎 رفع صورة الإيصال <input id="depositReceipt" type="file" accept="image/*"></div>
-            <button class="gold-btn" id="sendDepositBtn">إرسال طلب الإيداع</button>
+            <button class="gold-btn" id="sendDepositBtn">إرسال طلب الإيداع</button><div class="deposit-status" id="depositStatus"></div>
           </div>
           <div id="wallet-withdraw" class="wallet-panel hidden">
             <div class="hint danger-hint">عند إرسال طلب السحب يتم حجز المبلغ مباشرة من الرصيد المتاح حتى يقبله الأدمن أو يرفضه.</div>
@@ -368,6 +368,8 @@
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){prompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
+    function setDepositStatus(msg,type='work'){const el=$('depositStatus');if(!el){toast(msg);return}el.className='deposit-status show '+type;el.textContent=msg}
+    function clearDepositStatus(){const el=$('depositStatus');if(el){el.className='deposit-status';el.textContent=''}}
     function modal(title,body){$('modalTitle').textContent=title;$('modalBody').textContent=body;$('infoModal').style.display='flex'}$('closeModal').onclick=()=>$('infoModal').style.display='none';
     function checkAgreements(){if(!$('ageOk').checked||!$('termsOk').checked||!$('rulesOk').checked){toast('قبل المتابعة لازم توافق على العمر والشروط وقواعد الاستخدام.');return false}return true}
     async function ensureUser(user){const isAdmin=(user.email||'').toLowerCase()===ADMIN_EMAIL;const userRef=ref(db,'users/'+user.uid);const snap=await get(userRef);const old=snap.val()||{};const base={uid:user.uid,name:$('displayName').value.trim()||old.name||user.displayName||'مستخدم ADNOR',email:user.email||'',photoURL:user.photoURL||'',country:$('country').value||old.country||'تركيا',birthDate:$('birthDate').value||old.birthDate||'',role:isAdmin?'admin':(old.role||'user'),isAdmin,isFrozen:old.isFrozen||false,isVIP:old.isVIP||false,realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),lastLoginAt:Date.now(),updatedAt:Date.now(),createdAt:old.createdAt||Date.now()};await update(userRef,base);await set(ref(db,'login_logs/'+user.uid+'/'+Date.now()),{email:user.email||'',provider:'google',at:Date.now(),host:location.host});if(isAdmin){await set(ref(db,'admins/'+user.uid),true);await set(ref(db,'admin_emails/'+ADMIN_EMAIL.replaceAll('.','_')),true)}return base}
@@ -413,7 +415,31 @@
       await uploadBytes(rr,file,meta);
       return await getDownloadURL(rr);
     }
-    $('sendDepositBtn').onclick=async()=>{
+    function compressReceiptToDataUrl(file){
+      return new Promise((resolve,reject)=>{
+        if(!file || !file.type || !file.type.startsWith('image/'))return reject(new Error('receipt-not-image'));
+        const img=new Image();
+        const url=URL.createObjectURL(file);
+        img.onload=()=>{
+          try{
+            const max=1100;
+            let w=img.naturalWidth||img.width,h=img.naturalHeight||img.height;
+            const ratio=Math.min(1,max/Math.max(w,h));
+            w=Math.max(1,Math.round(w*ratio));h=Math.max(1,Math.round(h*ratio));
+            const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+            const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+            let data=canvas.toDataURL('image/jpeg',0.72);
+            URL.revokeObjectURL(url);
+            if(data.length>900000){data=canvas.toDataURL('image/jpeg',0.55)}
+            if(data.length>1100000)return reject(new Error('receipt-data-too-large'));
+            resolve(data);
+          }catch(err){URL.revokeObjectURL(url);reject(err)}
+        };
+        img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('receipt-compress-failed'))};
+        img.src=url;
+      });
+    }
+    $('sendDepositBtn').onclick=async()=>{clearDepositStatus();
       if(!currentUser)return toast('سجل الدخول أولًا');
       if(currentProfile?.isFrozen)return toast('حسابك موقوف مؤقتًا');
       const amount=Number($('depositAmount').value||0);
@@ -425,26 +451,28 @@
       if(!file)return toast('ارفع صورة الإيصال أولًا حتى تصل للأدمن');
       const depRef=push(ref(db,'finance/deposits'));
       const id=depRef.key;
-      let receiptUrl='';
+      let receiptUrl='',receiptDataUrl='',receiptStorageError='';
       try{
-        toast('جاري رفع صورة الإيصال...');
+        setDepositStatus('جاري رفع صورة الإيصال...', 'work');
         receiptUrl=await uploadReceipt(file,id);
       }catch(e){
         console.error('Receipt upload failed:', e);
-        if(String(e.message||'').includes('receipt-not-image')) return toast('الإيصال لازم يكون صورة فقط');
-        if(String(e.message||'').includes('receipt-too-large')) return toast('حجم الصورة كبير، اختار صورة أقل من 5MB');
-        return toast('فشل رفع الإيصال. فعّل Firebase Storage وضع قواعد التخزين ثم جرّب من جديد: '+(e.code||e.message||''));
+        receiptStorageError=(e.code||e.message||'storage-upload-failed');
+        if(String(e.message||'').includes('receipt-not-image')){setDepositStatus('الإيصال لازم يكون صورة فقط', 'err');return}
+        if(String(e.message||'').includes('receipt-too-large')){setDepositStatus('حجم الصورة كبير، اختار صورة أقل من 5MB', 'err');return}
+        setDepositStatus('تعذر رفع الإيصال على Storage، عم جرّب أرسله مضغوط داخل الطلب...', 'work');
+        try{receiptDataUrl=await compressReceiptToDataUrl(file)}catch(cerr){console.error('Receipt compress failed:',cerr);setDepositStatus('فشل إرسال الإيصال. فعّل Firebase Storage أو اختر صورة أصغر/أوضح. الخطأ: '+(receiptStorageError||cerr.message||''),'err');return}
       }
-      if(!receiptUrl)return toast('لم يصل رابط الإيصال، لن يتم إرسال الطلب بدون صورة');
-      toast('جاري حفظ طلب الإيداع...');
-      const data={id,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile.name||'',amount,method:depositMethod,methodName:m.name,methodAddress:m.address||'',reference:$('depositRef').value.trim(),receiptUrl,receiptFileName:file.name,status:'pending',reviewStatus:'بانتظار مراجعة الأدمن',createdAt:Date.now(),createdHost:location.host};
+      if(!receiptUrl&&!receiptDataUrl){setDepositStatus('لم يصل الإيصال، لن يتم إرسال الطلب بدون صورة','err');return}
+      setDepositStatus('جاري حفظ طلب الإيداع...', 'work');
+      const data={id,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile.name||'',amount,method:depositMethod,methodName:m.name,methodAddress:m.address||'',reference:$('depositRef').value.trim(),receiptUrl,receiptDataUrl,receiptStorageError,receiptFileName:file.name,status:'pending',reviewStatus:'بانتظار مراجعة الأدمن',createdAt:Date.now(),createdHost:location.host};
       const updates={};
       updates['finance/deposits/'+id]=data;
       updates['user_finance/'+currentUser.uid+'/deposits/'+id]=data;
-      updates['transactions/'+currentUser.uid+'/'+Date.now()]={type:'deposit_request',amount:amount,status:'pending',note:'طلب إيداع مع إيصال قيد المراجعة',createdAt:Date.now(),receiptUrl};
+      updates['transactions/'+currentUser.uid+'/'+Date.now()]={type:'deposit_request',amount:amount,status:'pending',note:'طلب إيداع مع إيصال قيد المراجعة',createdAt:Date.now(),receiptUrl,hasReceiptData:!!receiptDataUrl};
       updates['admin_notifications/'+Date.now()]={type:'deposit',uid:currentUser.uid,email:currentUser.email||'',text:'طلب إيداع جديد بقيمة '+money(amount)+' مع إيصال',createdAt:Date.now(),status:'new'};
-      try{await update(ref(db),updates);$('depositAmount').value='';$('depositRef').value='';$('depositReceipt').value='';toast('تم إرسال طلب الإيداع مع الإيصال للأدمن بنجاح')}
-      catch(e){console.error(e);toast('فشل حفظ طلب الإيداع: '+(e.code||e.message))}
+      try{await update(ref(db),updates);$('depositAmount').value='';$('depositRef').value='';$('depositReceipt').value='';setDepositStatus('تم إرسال طلب الإيداع مع الإيصال للأدمن بنجاح. الحالة: بانتظار المراجعة','ok');toast('تم إرسال طلب الإيداع بنجاح')}
+      catch(e){console.error(e);setDepositStatus('فشل حفظ طلب الإيداع في قاعدة البيانات: '+(e.code||e.message),'err');toast('فشل حفظ طلب الإيداع')}
     };
     $('sendWithdrawBtn').onclick=async()=>{if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');if(currentProfile.isFrozen)return toast('حسابك موقوف مؤقتًا');const amount=Number($('withdrawAmount').value||0),details=$('withdrawDetails').value.trim();const bal=Number(currentProfile.realBalance||0),res=Number(currentProfile.reservedWithdrawalBalance||0);if(amount<=0)return toast('اكتب مبلغ السحب');const wm=getMethod(withdrawMethod);if(!wm)return toast('اختر طريقة سحب مفعّلة');if(wm.minWithdraw&&amount<Number(wm.minWithdraw))return toast('أقل سحب عبر '+wm.name+' هو '+wm.minWithdraw+' USD');if(amount>bal)return toast('الرصيد المتاح غير كافٍ');if(!details)return toast('اكتب بيانات حساب الاستلام');const id=push(ref(db,'finance/withdrawals')).key;const data={id,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile.name||'',amount,method:withdrawMethod,methodName:wm.name,details,status:'pending',reviewStatus:'تم حجز المبلغ بانتظار مراجعة الأدمن',createdAt:Date.now(),createdHost:location.host};const updates={};updates['finance/withdrawals/'+id]=data;updates['user_finance/'+currentUser.uid+'/withdrawals/'+id]=data;updates['users/'+currentUser.uid+'/realBalance']=bal-amount;updates['users/'+currentUser.uid+'/reservedWithdrawalBalance']=res+amount;updates['transactions/'+currentUser.uid+'/'+Date.now()]={type:'withdraw_request',amount:-amount,status:'pending',note:'طلب سحب قيد المراجعة',balanceBefore:bal,balanceAfter:bal-amount,createdAt:Date.now()};updates['admin_notifications/'+Date.now()]={type:'withdraw',uid:currentUser.uid,email:currentUser.email||'',text:'طلب سحب جديد بقيمة '+money(amount),createdAt:Date.now(),status:'new'};try{await update(ref(db),updates);$('withdrawAmount').value='';$('withdrawDetails').value='';toast('تم إرسال طلب السحب وحجز المبلغ')}catch(e){console.error(e);toast('فشل طلب السحب: '+(e.code||e.message))}};
     function renderHistory(obj){const arr=Object.values(obj).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,12);if(!arr.length){$('historyList').innerHTML='<div class="hist-item"><div class="medal">⏳</div><div><h4>لا توجد عمليات بعد</h4><p>سيظهر هنا الإيداع والسحب وشراء التذاكر.</p></div><strong>$0</strong></div>';return}$('historyList').innerHTML=arr.map(x=>{const neg=Number(x.amount)<0;const title={ticket_purchase:'شراء تذكرة',deposit_request:'طلب إيداع',deposit_approved:'قبول إيداع',deposit_rejected:'رفض إيداع',withdraw_request:'طلب سحب',withdraw_approved:'سحب مكتمل',withdraw_rejected_refund:'رفض سحب/استرجاع',admin_balance_adjust:'تعديل رصيد',wheel_spin:'دوران عجلة',daily_lucky_box:'صندوق الحظ',draw_prize:'جائزة سحب'}[x.type]||'عملية';const dt=x.createdAt?new Date(x.createdAt).toLocaleString('ar-TR'):'';return '<div class="hist-item '+(neg?'negative':'')+'"><div class="medal">'+(neg?'−':'+')+'</div><div><h4>'+title+'</h4><p>'+((x.note||x.status||'')+' — '+dt)+'</p></div><strong>'+money(x.amount||0)+'</strong></div>'}).join('')}
@@ -469,7 +497,7 @@
     function arrObj(o){return Object.values(o||{}).sort((a,b)=>(b.createdAt||b.updatedAt||0)-(a.createdAt||a.updatedAt||0))}
     function renderAdmin(){if(!isAdminUser())return;const users=arrObj(adminState.users),deps=arrObj(adminState.deposits),wds=arrObj(adminState.withdrawals),sups=arrObj(adminState.support),notes=arrObj(adminState.notifications),draws=arrObj(adminState.drawHistory);const sum=users.reduce((a,u)=>a+Number(u.realBalance||0)+Number(u.bonusBalance||0)+Number(u.reservedWithdrawalBalance||0),0);if($('adminUsersCount'))$('adminUsersCount').textContent=users.length;if($('adminBalancesSum'))$('adminBalancesSum').textContent=money(sum);if($('adminDepositsPending'))$('adminDepositsPending').textContent=deps.filter(x=>x.status==='pending').length;if($('adminWithdrawsPending'))$('adminWithdrawsPending').textContent=wds.filter(x=>x.status==='pending').length;if($('adminSupportCount'))$('adminSupportCount').textContent=sups.filter(x=>x.status!=='closed').length;if($('adminNotesCount'))$('adminNotesCount').textContent=notes.length;renderAdminUsers(users);renderAdminDeposits(deps);renderAdminWithdrawals(wds);renderAdminSupport(sups);renderAdminNotifications(notes);renderAdminDraws(draws)}
     function renderAdminUsers(users){const box=$('adminUsersList');if(!box)return;const q=($('adminUserSearch')?.value||'').toLowerCase();const list=users.filter(u=>(u.email||'').toLowerCase().includes(q)||(u.name||'').toLowerCase().includes(q)||(u.uid||'').toLowerCase().includes(q)).slice(0,30);if(!list.length){box.innerHTML='<div class="admin-empty">لا يوجد مستخدمين مطابقين</div>';return}box.innerHTML=list.map(u=>'<div class="admin-row"><div><h4>'+escapeHtml(u.name||'مستخدم')+' <span class="admin-badge '+(u.isFrozen?'rejected':'approved')+'">'+(u.isFrozen?'مجمّد':'نشط')+'</span> '+(u.isVIP?'<span class="admin-badge">VIP</span>':'')+'</h4><p>'+escapeHtml(u.email||'')+'<br>الرصيد: '+money(u.realBalance)+' — البونص: '+money(u.bonusBalance)+' — المحجوز: '+money(u.reservedWithdrawalBalance)+'</p></div><div class="admin-actions"><button class="blue" onclick="adminAdjustBalance(\''+u.uid+'\')">تعديل رصيد</button><button onclick="adminToggleVip(\''+u.uid+'\')">VIP</button><button class="bad" onclick="adminToggleFreeze(\''+u.uid+'\')">'+(u.isFrozen?'فك التجميد':'تجميد')+'</button></div></div>').join('')}
-    function renderAdminDeposits(list){const box=$('adminDepositsList');if(!box)return;list=list.slice(0,40);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد طلبات إيداع</div>';return}box.innerHTML=list.map(d=>{const dt=d.createdAt?new Date(d.createdAt).toLocaleString('ar-TR'):'';return '<div class="admin-row finance-row"><div><h4><span class="amount-big">'+money(d.amount)+'</span> <span class="admin-badge '+(d.status||'pending')+'">'+statusLabel(d.status)+'</span></h4><p>'+escapeHtml(d.name||'')+' — '+escapeHtml(d.email||'')+'<br>الطريقة: '+escapeHtml(d.methodName||d.method||'')+' — المرجع: '+escapeHtml(d.reference||'بدون')+'</p><div class="request-meta"><span>الوقت: '+dt+'</span><span>UID: '+escapeHtml((d.uid||'').slice(0,8))+'</span></div>'+(d.methodAddress?'<div class="finance-note">عنوان الدفع وقت الطلب: '+escapeHtml(d.methodAddress)+'</div>':'')+(d.rejectReason?'<div class="finance-note">سبب الرفض: '+escapeHtml(d.rejectReason)+'</div>':'')+(d.receiptUrl?'<div class="receipt-actions"><img class="receipt-thumb" src="'+d.receiptUrl+'" alt="receipt"><a href="'+d.receiptUrl+'" target="_blank">فتح الإيصال</a></div>':'<div class="finance-note">لا يوجد إيصال مرفوع.</div>')+'</div><div class="admin-actions">'+(d.status==='pending'?'<button class="ok" onclick="adminApproveDeposit(\''+d.id+'\')">قبول وإضافة الرصيد</button><button class="bad" onclick="adminRejectDeposit(\''+d.id+'\')">رفض بسبب</button>':'<button class="warn" data-copy="'+escapeHtml(d.id)+'" onclick="copyText(this.dataset.copy)">نسخ ID</button>')+'</div></div>'}).join('')}
+    function renderAdminDeposits(list){const box=$('adminDepositsList');if(!box)return;list=list.slice(0,40);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد طلبات إيداع</div>';return}box.innerHTML=list.map(d=>{const dt=d.createdAt?new Date(d.createdAt).toLocaleString('ar-TR'):'';return '<div class="admin-row finance-row"><div><h4><span class="amount-big">'+money(d.amount)+'</span> <span class="admin-badge '+(d.status||'pending')+'">'+statusLabel(d.status)+'</span></h4><p>'+escapeHtml(d.name||'')+' — '+escapeHtml(d.email||'')+'<br>الطريقة: '+escapeHtml(d.methodName||d.method||'')+' — المرجع: '+escapeHtml(d.reference||'بدون')+'</p><div class="request-meta"><span>الوقت: '+dt+'</span><span>UID: '+escapeHtml((d.uid||'').slice(0,8))+'</span></div>'+(d.methodAddress?'<div class="finance-note">عنوان الدفع وقت الطلب: '+escapeHtml(d.methodAddress)+'</div>':'')+(d.rejectReason?'<div class="finance-note">سبب الرفض: '+escapeHtml(d.rejectReason)+'</div>':'')+((d.receiptUrl||d.receiptDataUrl)?'<div class="receipt-actions"><img class="receipt-thumb" src="'+(d.receiptUrl||d.receiptDataUrl)+'" alt="receipt"><a href="'+(d.receiptUrl||d.receiptDataUrl)+'" target="_blank">فتح الإيصال</a></div>':'<div class="finance-note">لا يوجد إيصال مرفوع.</div>')+'</div><div class="admin-actions">'+(d.status==='pending'?'<button class="ok" onclick="adminApproveDeposit(\''+d.id+'\')">قبول وإضافة الرصيد</button><button class="bad" onclick="adminRejectDeposit(\''+d.id+'\')">رفض بسبب</button>':'<button class="warn" data-copy="'+escapeHtml(d.id)+'" onclick="copyText(this.dataset.copy)">نسخ ID</button>')+'</div></div>'}).join('')}
     function renderAdminWithdrawals(list){const box=$('adminWithdrawalsList');if(!box)return;list=list.slice(0,40);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد طلبات سحب</div>';return}box.innerHTML=list.map(w=>{const dt=w.createdAt?new Date(w.createdAt).toLocaleString('ar-TR'):'';return '<div class="admin-row finance-row"><div><h4><span class="amount-big">'+money(w.amount)+'</span> <span class="admin-badge '+(w.status||'pending')+'">'+statusLabel(w.status)+'</span></h4><p>'+escapeHtml(w.name||'')+' — '+escapeHtml(w.email||'')+'<br>الطريقة: '+escapeHtml(w.methodName||w.method||'')+'</p><div class="request-meta"><span>الوقت: '+dt+'</span><span>محجوز حتى القبول/الرفض</span><span>UID: '+escapeHtml((w.uid||'').slice(0,8))+'</span></div><div class="finance-note">بيانات الاستلام:<br>'+escapeHtml(w.details||'بدون بيانات')+'</div>'+(w.rejectReason?'<div class="finance-note">سبب الرفض: '+escapeHtml(w.rejectReason)+'</div>':'')+'</div><div class="admin-actions">'+(w.status==='pending'?'<button class="ok" onclick="adminApproveWithdraw(\''+w.id+'\')">قبول وإنهاء الحجز</button><button class="bad" onclick="adminRejectWithdraw(\''+w.id+'\')">رفض وإرجاع الرصيد</button>':'<button class="warn" onclick="copyText(\''+escapeHtml(w.id)+'\')">نسخ ID</button>')+'</div></div>'}).join('')}
     function renderAdminSupport(list){const box=$('adminSupportList');if(!box)return;list=list.slice(0,30);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد تذاكر دعم</div>';return}box.innerHTML=list.map(t=>'<div class="admin-row"><div><h4>'+escapeHtml(t.title||'طلب دعم')+' <span class="admin-badge '+ticketStatusClass(t.status)+'">'+ticketStatusLabel(t.status)+'</span></h4><p>'+escapeHtml(t.email||'')+' — '+escapeHtml(t.categoryLabel||'عام')+'<br>'+escapeHtml(t.message||'')+(t.adminReply?'<br><b style="color:#ffe184">ردك:</b> '+escapeHtml(t.adminReply):'')+'</p></div><div class="admin-actions"><button class="blue" onclick="adminReplySupport(\''+t.id+'\')">رد</button><button onclick="adminCloseSupport(\''+t.id+'\')">إغلاق</button></div></div>').join('')}
     function renderAdminNotifications(list){const box=$('adminNotificationsList');if(!box)return;list=list.slice(0,10);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد إشعارات بعد</div>';return}box.innerHTML=list.map(n=>'<div class="admin-note"><b>'+escapeHtml(n.type||'إشعار')+'</b><span>'+escapeHtml(n.text||'')+'</span><span>'+new Date(n.createdAt||Date.now()).toLocaleString('ar-TR')+'</span></div>').join('')}

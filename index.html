@@ -1148,7 +1148,7 @@
     }
     async function togglePromoCode(code){
       if(!isAdminUser())return;const c=(adminState.promoCodes||{})[code]; if(!c)return;
-      await update(ref(db),{'promo_codes/'+code+'/active':c.active===false,'promo_codes/'+code+'/updatedAt':Date.now(),'promo_codes/'+code+'/updatedBy':currentUser.email||''});
+      const updates={}; updates['promo_codes/'+code+'/active']=c.active===false; updates['promo_codes/'+code+'/updatedAt']=Date.now(); updates['promo_codes/'+code+'/updatedBy']=currentUser.email||''; await update(ref(db),updates);
     }
     async function redeemPromoCode(){
       if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');

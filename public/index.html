@@ -1,198 +1,274 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-<title>ADNOR | Clean Firebase Login</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-<style>
-:root{--bg:#020711;--card:#071a33;--card2:#0b2444;--gold:#f5bd3f;--gold2:#ffdf7d;--green:#18f29b;--red:#ef4444;--blue:#12c9ff;--txt:#f8f4e8;--muted:#aebbd0;--bd:rgba(245,189,63,.28)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;background:radial-gradient(circle at top,#123969 0,#061020 42%,#020711 100%);color:var(--txt)}body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 15%,rgba(245,189,63,.16),transparent 22%),radial-gradient(circle at 80% 8%,rgba(18,201,255,.14),transparent 24%),radial-gradient(circle at 50% 100%,rgba(24,242,155,.08),transparent 25%)}button,input{font-family:inherit}.wrap{min-height:100vh;display:grid;place-items:center;padding:18px}.card{width:min(480px,100%);border:1px solid var(--bd);border-radius:28px;background:linear-gradient(145deg,rgba(11,36,68,.94),rgba(3,10,22,.96));box-shadow:0 22px 70px rgba(0,0,0,.45),0 0 30px rgba(245,189,63,.12);padding:24px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;inset:-2px;background:linear-gradient(110deg,transparent,rgba(245,189,63,.13),transparent);transform:translateX(100%);animation:shine 4s infinite}@keyframes shine{0%{transform:translateX(100%)}45%,100%{transform:translateX(-100%)}}.content{position:relative;z-index:1}.logo{text-align:center;margin:6px 0 20px}.logo .crown{font-size:44px}.logo h1{margin:4px 0 0;color:var(--gold2);font-size:46px;letter-spacing:4px;text-shadow:0 0 20px rgba(245,189,63,.55)}.logo p{margin:4px 0 0;color:var(--muted)}.legal{border:1px dashed var(--bd);border-radius:18px;padding:12px;margin:14px 0;background:rgba(255,255,255,.04);font-size:13px;line-height:1.6}.legal label{display:flex;gap:8px;margin:8px 0;align-items:flex-start}.legal input{margin-top:5px}.btn{width:100%;border:0;border-radius:16px;padding:14px 16px;margin:8px 0;font-weight:900;font-size:16px;cursor:pointer}.btn.google{background:#fff;color:#111}.btn.apple{background:#050505;color:#fff;border:1px solid rgba(255,255,255,.25)}.btn.ghost{background:rgba(255,255,255,.04);color:var(--txt);border:1px solid var(--bd)}.btn:disabled{opacity:.55;cursor:not-allowed}.status{white-space:pre-wrap;direction:ltr;text-align:left;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08);padding:12px;border-radius:16px;margin-top:12px;color:#d8e7ff;font-size:12px;line-height:1.55}.msg{white-space:pre-wrap;border-radius:16px;padding:12px;margin-top:12px;font-size:14px;line-height:1.7}.msg.ok{background:rgba(24,242,155,.12);border:1px solid rgba(24,242,155,.32);color:#caffe8}.msg.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.32);color:#ffd4d4}.hidden{display:none!important}.app{min-height:100vh;padding:16px}.top{max-width:1000px;margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}.pill{border:1px solid var(--bd);border-radius:999px;padding:8px 12px;background:rgba(3,10,22,.7);color:var(--gold)}.panel{max-width:1000px;margin:0 auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.box{border:1px solid var(--bd);border-radius:22px;background:linear-gradient(145deg,rgba(11,36,68,.92),rgba(3,10,22,.93));padding:16px}.box h3{margin:0 0 10px;color:var(--gold2)}.k{color:var(--muted);font-size:12px}.v{font-size:22px;font-weight:900;color:var(--green);direction:ltr;text-align:left}.list{font-size:13px;line-height:1.9;color:#d8e7ff}.admin-badge{color:#081;display:inline-block;background:var(--green);border-radius:99px;padding:5px 10px;font-weight:900;color:#002212}.version{position:fixed;bottom:10px;left:10px;border:1px solid rgba(24,242,155,.4);border-radius:999px;padding:6px 10px;color:var(--green);background:rgba(0,0,0,.35);font-size:11px}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADNOR | Firebase Clean Login</title>
+  <meta name="description" content="ADNOR clean Firebase Google/Apple login test" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#020711;
+      --bg2:#071a33;
+      --card:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.14);
+      --gold:#f5bd3f;
+      --gold2:#ffdf7d;
+      --blue:#12c9ff;
+      --green:#18f29b;
+      --red:#ef4444;
+      --text:#f8fafc;
+      --muted:#a8b3c7;
+      --shadow:0 24px 80px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"IBM Plex Sans Arabic", system-ui, -apple-system, Segoe UI, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(245,189,63,.20), transparent 34%),
+        radial-gradient(circle at 18% 25%, rgba(18,201,255,.16), transparent 32%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    .stars:before,.stars:after{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:radial-gradient(circle, rgba(255,255,255,.45) 1px, transparent 1px);
+      background-size:42px 42px;opacity:.12;
+    }
+    .stars:after{background-size:75px 75px;opacity:.08;filter:blur(.3px)}
+    .wrap{position:relative;z-index:1;min-height:100%;display:grid;place-items:center;padding:22px}
+    .panel{width:min(1040px,100%);display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:stretch}
+    @media(max-width:860px){.panel{grid-template-columns:1fr}.hero{min-height:260px}}
+    .glass{
+      border:1px solid var(--line);background:linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.055));
+      border-radius:28px;box-shadow:var(--shadow);backdrop-filter:blur(16px);overflow:hidden;
+    }
+    .hero{padding:30px;position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:560px}
+    .hero:before{content:"";position:absolute;inset:-60px -60px auto auto;width:240px;height:240px;border-radius:50%;background:rgba(245,189,63,.18);filter:blur(22px)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:58px;height:58px;border-radius:20px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:grid;place-items:center;color:#111827;font-weight:900;box-shadow:0 0 35px rgba(245,189,63,.35)}
+    .brand h1{margin:0;font-size:32px;letter-spacing:1px}.brand p{margin:0;color:var(--muted);font-size:14px}
+    .headline{margin-top:30px}.headline h2{font-size:clamp(34px,6vw,68px);line-height:1.03;margin:0 0 14px;font-weight:900}.headline strong{color:var(--gold2)}
+    .headline p{color:#d9e2f3;font-size:18px;line-height:1.9;max-width:620px}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.chip{border:1px solid rgba(245,189,63,.24);background:rgba(245,189,63,.08);color:#ffe8a3;padding:10px 13px;border-radius:999px;font-size:13px}
+    .login{padding:24px;min-height:560px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+    .login h3{font-size:28px;margin:0 0 4px}.login .sub{margin:0 0 12px;color:var(--muted);line-height:1.7}
+    .btn{width:100%;border:0;border-radius:18px;padding:15px 16px;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.18s transform,.18s opacity,.18s box-shadow}
+    .btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .google{background:#fff;color:#111827}.apple{background:#111;color:#fff;border:1px solid rgba(255,255,255,.14)}.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111827}.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line)}
+    .status{white-space:pre-wrap;line-height:1.8;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:18px;padding:13px;color:#dbeafe;min-height:58px;font-size:14px}
+    .err{color:#fecaca;border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10)}.ok{color:#bbf7d0;border-color:rgba(24,242,155,.35);background:rgba(24,242,155,.08)}
+    .mini{font-size:12px;color:var(--muted);line-height:1.8}.mini code{color:#ffe8a3}
+    .app{display:none;width:min(1100px,100%)}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.12)}
+    .userbox{display:flex;align-items:center;gap:12px}.avatar{width:46px;height:46px;border-radius:16px;background:rgba(255,255,255,.10);overflow:hidden;display:grid;place-items:center}.avatar img{width:100%;height:100%;object-fit:cover}.small{font-size:13px;color:var(--muted)}
+    .content{padding:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:860px){.content{grid-template-columns:1fr}}
+    .card{padding:18px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.065)}.card h4{margin:0 0 8px;font-size:18px}.card p{margin:0;color:var(--muted);line-height:1.7}.value{font-size:32px;font-weight:900;color:var(--gold2);margin:10px 0}.adminBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,189,63,.13);color:#ffe8a3;border:1px solid rgba(245,189,63,.32);padding:8px 10px;border-radius:999px;font-weight:800}
+    .log{max-height:240px;overflow:auto;direction:ltr;text-align:left;font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:12px;color:#d9e2f3;background:rgba(0,0,0,.22);padding:12px;border-radius:16px;border:1px solid var(--line);white-space:pre-wrap}
+  </style>
 </head>
 <body>
-
-<section id="authScreen" class="wrap">
-  <div class="card"><div class="content">
-    <div class="logo"><div class="crown">👑</div><h1>ADNOR</h1><p>نسخة دخول نظيفة — Google و Apple فقط</p></div>
-    <div class="legal">
-      <label><input id="age18" type="checkbox"> <span>أؤكد أن عمري 18 سنة أو أكثر.</span></label>
-      <label><input id="termsOk" type="checkbox"> <span>أوافق على شروط استخدام ADNOR وسياسة الخصوصية.</span></label>
+<div class="stars"></div>
+<main class="wrap">
+  <section id="loginScreen" class="panel">
+    <div class="hero glass">
+      <div class="brand">
+        <div class="logo">AD</div>
+        <div><h1>ADNOR</h1><p>نسخة نظيفة لاختبار Firebase</p></div>
+      </div>
+      <div class="headline">
+        <h2>دخول <strong>نظامي</strong><br>بدون أكواد قديمة</h2>
+        <p>هذه النسخة لا تستخدم أي Backend ولا أي روابط <b>/api</b>. فقط Firebase الجديد، Google و Apple، وتحويل الأدمن مباشرة.</p>
+        <div class="chips"><span class="chip">Google فقط للاختبار أولاً</span><span class="chip">Apple يحتاج إعداد Apple Developer</span><span class="chip">Realtime Database جاهز</span></div>
+      </div>
+      <p class="mini">الدومين الحالي يجب أن يكون مضافًا في Firebase → Authentication → Settings → Authorized domains.</p>
     </div>
-    <button id="googleBtn" class="btn google">G متابعة بحساب Google</button>
-    <button id="appleBtn" class="btn apple"> متابعة بحساب Apple</button>
-    <button id="reloadBtn" class="btn ghost">تحديث الصفحة</button>
-    <div id="message" class="msg hidden"></div>
-    <div id="debug" class="status"></div>
-  </div></div>
-</section>
-
-<section id="appScreen" class="app hidden">
-  <div class="top">
-    <div class="pill">👑 ADNOR</div>
-    <button id="logoutBtn" class="btn ghost" style="width:auto;margin:0">تسجيل خروج</button>
-  </div>
-  <div id="userPanel" class="panel hidden">
-    <div class="box"><h3>حساب المستخدم</h3><div id="userInfo" class="list"></div></div>
-    <div class="grid">
-      <div class="box"><h3>الرصيد الحقيقي</h3><div class="v">$0.00</div><div class="k">realBalance</div></div>
-      <div class="box"><h3>البونص</h3><div class="v">$0.00</div><div class="k">bonusBalance</div></div>
-      <div class="box"><h3>المحجوز للسحب</h3><div class="v">$0.00</div><div class="k">reservedWithdrawalBalance</div></div>
+    <div class="login glass">
+      <h3>تسجيل الدخول</h3>
+      <p class="sub">استخدم Google أولًا. إذا ظهر خطأ، رح يظهر لك السبب الحقيقي هنا بدون تخمين.</p>
+      <button id="googleBtn" class="btn google">متابعة بحساب Google</button>
+      <button id="appleBtn" class="btn apple">متابعة بحساب Apple</button>
+      <div id="status" class="status">جاهز. اضغط Google للتجربة.</div>
+      <p class="mini">الأدمن الرئيسي: <code>adhamdeab2@gmail.com</code><br>مشروع Firebase: <code>adhamnnn-8a4d2</code></p>
     </div>
-  </div>
-  <div id="adminPanel" class="panel hidden">
-    <div class="box"><h3>لوحة الأدمن <span class="admin-badge">ADMIN</span></h3><div id="adminInfo" class="list"></div></div>
-    <div class="grid">
-      <div class="box"><h3>طلبات الإيداع</h3><div class="v" id="depositCount">0</div><div class="k">finance/deposits</div></div>
-      <div class="box"><h3>طلبات السحب</h3><div class="v" id="withdrawCount">0</div><div class="k">finance/withdrawals</div></div>
-      <div class="box"><h3>المستخدمين</h3><div class="v" id="usersCount">0</div><div class="k">users</div></div>
+  </section>
+
+  <section id="appScreen" class="app glass">
+    <div class="topbar">
+      <div class="brand"><div class="logo">AD</div><div><h1 style="font-size:24px">ADNOR</h1><p id="roleLabel">حساب مستخدم</p></div></div>
+      <div class="userbox"><div class="avatar" id="avatar">👤</div><div><b id="userName">---</b><div class="small" id="userEmail">---</div></div><button id="logoutBtn" class="btn ghost" style="width:auto;padding:10px 14px">خروج</button></div>
     </div>
-  </div>
-</section>
-<div class="version">ADNOR V11 CLEAN AUTH</div>
+    <div class="content">
+      <div class="card"><h4>حالة Firebase</h4><p id="firebaseState">متصل</p><div class="value">OK</div></div>
+      <div class="card"><h4>الدور</h4><p id="roleText">---</p><div id="adminBadgeBox"></div></div>
+      <div class="card"><h4>اختبار قاعدة البيانات</h4><p>يتم حفظ تسجيل الدخول داخل Realtime Database.</p><button id="testDbBtn" class="btn gold" style="margin-top:12px">إرسال اختبار</button></div>
+      <div class="card" style="grid-column:1/-1"><h4>سجل التشخيص</h4><div id="debugLog" class="log"></div></div>
+    </div>
+  </section>
+</main>
 
-<script>
-const ADMIN_EMAIL = 'adhamdeab2@gmail.com';
-const firebaseConfig = {
-  apiKey: "AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",
-  authDomain: "adhamnnn-8a4d2.firebaseapp.com",
-  databaseURL: "https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",
-  projectId: "adhamnnn-8a4d2",
-  storageBucket: "adhamnnn-8a4d2.firebasestorage.app",
-  messagingSenderId: "812431761704",
-  appId: "1:812431761704:web:2b85a0532574cc4378301d",
-  measurementId: "G-59WKJBRDG8"
-};
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { getDatabase, ref, update, push, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.warn);
-
-const $ = (id)=>document.getElementById(id);
-const debugLines = [];
-function log(line){debugLines.push(new Date().toLocaleTimeString()+' | '+line);$('debug').textContent = debugLines.slice(-14).join('\n');}
-function msg(text,type='err'){$('message').className='msg '+(type==='ok'?'ok':'err');$('message').textContent=text;}
-function clearMsg(){$('message').className='msg hidden';$('message').textContent='';}
-function legalOk(){
-  if(!$('age18').checked || !$('termsOk').checked){msg('لازم توافق على شرط العمر والشروط أولاً.');return false;}
-  localStorage.setItem('ADNOR_LEGAL_OK','1');return true;
-}
-function friendly(e){
-  const code = e && e.code ? e.code : 'unknown';
-  if(code === 'auth/unauthorized-domain') return 'الدومين غير مضاف داخل Firebase Authorized domains. أضف هذا الدومين بالضبط: '+location.hostname;
-  if(code === 'auth/operation-not-allowed') return 'طريقة الدخول غير مفعلة في Firebase. فعّل Google أو Apple من Authentication > Sign-in method.';
-  if(code === 'auth/popup-blocked') return 'المتصفح منع النافذة. سأجرب التحويل redirect.';
-  if(code === 'auth/popup-closed-by-user') return 'أغلقت نافذة Google قبل إكمال الدخول.';
-  if(code === 'auth/invalid-api-key') return 'Firebase apiKey غير صحيح أو من مشروع مختلف.';
-  if(code === 'auth/network-request-failed') return 'مشكلة إنترنت أو حظر من المتصفح.';
-  return '['+code+'] '+((e && e.message) || String(e));
-}
-async function ensureProfile(user){
-  const email = (user.email || '').toLowerCase();
-  const role = email === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'user';
-  const ref = db.ref('users/'+user.uid);
-  const snap = await ref.once('value');
-  const base = {
-    uid:user.uid,
-    name:user.displayName || (email ? email.split('@')[0] : 'ADNOR User'),
-    email:user.email || '',
-    photoURL:user.photoURL || '',
-    role,
-    isAdmin: role === 'admin',
-    realBalance:0,
-    bonusBalance:0,
-    reservedWithdrawalBalance:0,
-    lastLogin:Date.now()
+  const firebaseConfig = {
+    apiKey: "AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",
+    authDomain: "adhamnnn-8a4d2.firebaseapp.com",
+    databaseURL: "https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",
+    projectId: "adhamnnn-8a4d2",
+    storageBucket: "adhamnnn-8a4d2.firebasestorage.app",
+    messagingSenderId: "812431761704",
+    appId: "1:812431761704:web:2b85a0532574cc4378301d",
+    measurementId: "G-59WKJBRDG8"
   };
-  if(!snap.exists()) base.createdAt = Date.now();
-  await ref.update(base);
-  await db.ref('system/login_logs').push({uid:user.uid,email:user.email||'',role,host:location.hostname,time:Date.now()});
-  return base;
-}
-async function signIn(providerName){
-  if(!legalOk()) return;
-  clearMsg();
-  $('googleBtn').disabled = true; $('appleBtn').disabled = true;
-  try{
-    const provider = providerName === 'apple' ? new firebase.auth.OAuthProvider('apple.com') : new firebase.auth.GoogleAuthProvider();
-    if(providerName === 'google') provider.setCustomParameters({prompt:'select_account'});
-    log('Start '+providerName+' popup on '+location.hostname);
-    try{
-      await auth.signInWithPopup(provider);
-      log(providerName+' popup done');
-    }catch(e){
-      log(providerName+' popup error '+(e.code||'?'));
-      if(['auth/popup-blocked','auth/cancelled-popup-request'].includes(e.code)){
-        msg('تم منع النافذة، جاري التحويل...', 'ok');
-        await new Promise(r=>setTimeout(r,500));
-        await auth.signInWithRedirect(provider);
-        return;
-      }
-      throw e;
+
+  const ADMIN_EMAIL = "adhamdeab2@gmail.com";
+  const $ = (id) => document.getElementById(id);
+  const statusBox = $("status");
+  const debugLog = $("debugLog");
+  let auth, db, currentUser = null;
+
+  function safeEmail(email){ return String(email || "").toLowerCase().replace(/[.#$\[\]\/]/g, "_"); }
+  function now(){ return new Date().toISOString(); }
+  function log(msg){
+    const line = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    console.log("[ADNOR CLEAN]", msg);
+    if(debugLog) debugLog.textContent = `${line}\n${debugLog.textContent || ""}`;
+  }
+  function showStatus(msg, type=""){
+    statusBox.className = "status" + (type ? " " + type : "");
+    statusBox.textContent = msg;
+  }
+  function friendlyError(error){
+    const code = error?.code || "unknown";
+    const message = error?.message || String(error);
+    const hints = {
+      "auth/unauthorized-domain": "الدومين غير مضاف في Firebase Authorized domains. أضف دومين Render مثل aadnor.onrender.com.",
+      "auth/operation-not-allowed": "طريقة الدخول غير مفعّلة من Firebase Authentication > Sign-in method.",
+      "auth/popup-blocked": "المتصفح منع النافذة. نحن نستخدم Redirect، لكن جرّب فتح الموقع بتبويب كامل.",
+      "auth/cancelled-popup-request": "تم إلغاء محاولة دخول سابقة. أعد المحاولة.",
+      "auth/account-exists-with-different-credential": "هذا البريد مربوط بطريقة دخول ثانية.",
+      "auth/network-request-failed": "مشكلة إنترنت أو حظر اتصال Firebase.",
+      "auth/invalid-api-key": "Firebase apiKey غير صحيح أو من مشروع آخر."
+    };
+    return `الخطأ: ${code}\n${hints[code] || "انسخ هذا الكود وأرسله لي."}\n\nتفاصيل تقنية:\n${message}`;
+  }
+
+  async function saveUser(user){
+    const isAdmin = (user.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const uid = user.uid;
+    const payload = {
+      uid,
+      name: user.displayName || "مستخدم ADNOR",
+      email: user.email || "",
+      photoURL: user.photoURL || "",
+      provider: user.providerData?.map(p=>p.providerId).join(",") || "unknown",
+      role: isAdmin ? "admin" : "user",
+      isAdmin,
+      lastLoginAt: now(),
+      project: "adhamnnn-8a4d2"
+    };
+    const updates = {};
+    updates[`users/${uid}`] = payload;
+    updates[`login_logs/${uid}/${Date.now()}`] = { email: payload.email, isAdmin, at: now(), domain: location.hostname };
+    if(isAdmin){
+      updates[`admins/${uid}`] = true;
+      updates[`admin_emails/${safeEmail(user.email)}`] = true;
     }
-  }catch(e){
-    msg(friendly(e));
-    log('ERROR '+friendly(e));
-    $('googleBtn').disabled = false; $('appleBtn').disabled = false;
+    await update(ref(db), updates);
+    return isAdmin;
   }
-}
-async function completeRedirect(){
-  try{
-    log('Check redirect result...');
-    const res = await auth.getRedirectResult();
-    if(res && res.user) log('Redirect OK '+res.user.email);
-    else log('No redirect pending');
-  }catch(e){msg(friendly(e));log('Redirect ERROR '+friendly(e));}
-}
-function showApp(profile){
-  $('authScreen').classList.add('hidden');
-  $('appScreen').classList.remove('hidden');
-  const isAdmin = (profile.email||'').toLowerCase() === ADMIN_EMAIL.toLowerCase() || profile.role === 'admin';
-  $('userPanel').classList.toggle('hidden', isAdmin);
-  $('adminPanel').classList.toggle('hidden', !isAdmin);
-  const info = `الاسم: ${profile.name}\nالإيميل: ${profile.email}\nUID: ${profile.uid}\nالدور: ${profile.role}\nالدومين: ${location.hostname}`;
-  if(isAdmin){
-    $('adminInfo').textContent = info+'\n\nتم تحويلك للأدمن لأن بريدك هو '+ADMIN_EMAIL;
-    db.ref('users').on('value',s=>{$('usersCount').textContent = s.exists()?Object.keys(s.val()).length:0;});
-    db.ref('finance/deposits').on('value',s=>{$('depositCount').textContent = s.exists()?Object.keys(s.val()).length:0;});
-    db.ref('finance/withdrawals').on('value',s=>{$('withdrawCount').textContent = s.exists()?Object.keys(s.val()).length:0;});
-  }else{
-    $('userInfo').textContent = info;
-  }
-}
 
-$('googleBtn').onclick = ()=>signIn('google');
-$('appleBtn').onclick = ()=>signIn('apple');
-$('reloadBtn').onclick = ()=>location.reload();
-$('logoutBtn').onclick = ()=>auth.signOut().then(()=>location.reload());
-if(localStorage.getItem('ADNOR_LEGAL_OK')==='1'){$('age18').checked=true;$('termsOk').checked=true;}
-
-log('Project: '+firebaseConfig.projectId);
-log('authDomain: '+firebaseConfig.authDomain);
-log('host: '+location.hostname);
-log('admin: '+ADMIN_EMAIL);
-completeRedirect();
-auth.onAuthStateChanged(async user=>{
-  log('Auth state: '+(user ? (user.email||user.uid) : 'NO USER'));
-  if(!user){$('googleBtn').disabled=false;$('appleBtn').disabled=false;return;}
-  try{
-    const profile = await ensureProfile(user);
-    msg('تم تسجيل الدخول بنجاح ✓', 'ok');
-    showApp(profile);
-  }catch(e){
-    msg('دخلت من Google لكن قاعدة البيانات لم تحفظ الحساب:\n'+friendly(e));
-    log('DB ERROR '+friendly(e));
+  function renderLoggedIn(user, isAdmin){
+    currentUser = user;
+    $("loginScreen").style.display = "none";
+    $("appScreen").style.display = "block";
+    $("userName").textContent = user.displayName || "مستخدم ADNOR";
+    $("userEmail").textContent = user.email || "بدون بريد ظاهر";
+    $("roleLabel").textContent = isAdmin ? "لوحة الأدمن" : "واجهة مستخدم";
+    $("roleText").textContent = isAdmin ? "هذا الحساب أدمن رئيسي وله حق التصرف." : "هذا حساب مستخدم عادي.";
+    $("adminBadgeBox").innerHTML = isAdmin ? '<span class="adminBadge">👑 أدمن رئيسي</span>' : '<span class="small">ليس أدمن</span>';
+    if(user.photoURL) $("avatar").innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
+    log(`تم تسجيل الدخول: ${user.email || user.uid} | admin=${isAdmin}`);
   }
-});
+
+  async function start(){
+    try{
+      const app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      auth.languageCode = "ar";
+      db = getDatabase(app);
+      await setPersistence(auth, browserLocalPersistence);
+      log(`Firebase initialized on ${location.hostname}`);
+
+      try{
+        log("Checking redirect result...");
+        const result = await getRedirectResult(auth);
+        if(result?.user){ log(`Redirect result user: ${result.user.email || result.user.uid}`); }
+        else { log("No redirect pending"); }
+      }catch(e){
+        console.error(e);
+        showStatus(friendlyError(e), "err");
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        log(`onAuthStateChanged: ${user ? (user.email || user.uid) : "NULL"}`);
+        if(!user){
+          $("loginScreen").style.display = "grid";
+          $("appScreen").style.display = "none";
+          return;
+        }
+        try{
+          const isAdmin = await saveUser(user);
+          renderLoggedIn(user, isAdmin);
+        }catch(e){
+          console.error(e);
+          showStatus(`تم الدخول لكن فشل حفظ البيانات في Realtime Database.\n${friendlyError(e)}`, "err");
+          renderLoggedIn(user, false);
+        }
+      });
+    }catch(e){
+      console.error(e);
+      showStatus(friendlyError(e), "err");
+    }
+  }
+
+  $("googleBtn").addEventListener("click", async () => {
+    try{
+      showStatus("جارٍ فتح Google...", "ok");
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+      await signInWithRedirect(auth, provider);
+    }catch(e){ console.error(e); showStatus(friendlyError(e), "err"); }
+  });
+
+  $("appleBtn").addEventListener("click", async () => {
+    try{
+      showStatus("جارٍ فتح Apple... ملاحظة: Apple يحتاج إعداد Apple Developer.", "ok");
+      const provider = new OAuthProvider("apple.com");
+      provider.addScope("email");
+      provider.addScope("name");
+      await signInWithRedirect(auth, provider);
+    }catch(e){ console.error(e); showStatus(friendlyError(e), "err"); }
+  });
+
+  $("logoutBtn").addEventListener("click", async () => { await signOut(auth); location.reload(); });
+  $("testDbBtn").addEventListener("click", async () => {
+    if(!currentUser) return;
+    try{
+      const r = push(ref(db, `system_tests/${currentUser.uid}`));
+      await set(r, { at: now(), email: currentUser.email || "", domain: location.hostname, note: "ADNOR clean static test" });
+      log("Database test saved successfully");
+      alert("تم حفظ اختبار قاعدة البيانات بنجاح ✅");
+    }catch(e){ alert(friendlyError(e)); }
+  });
+
+  start();
 </script>
 </body>
 </html>

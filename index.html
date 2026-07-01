@@ -1024,6 +1024,18 @@
                   <div class="field-wrap"><label>وقت نشر السنوي</label><div class="field"><span class="ico">⏰</span><input id="manualPublish_yearly" type="datetime-local"></div></div>
                   <div class="admin-actions"><button class="ok" onclick="adminManualDraw('yearly','schedule')">جدولة النتيجة</button><button class="blue" onclick="setDrawPublishToday('yearly')">ضبط 8 مساءً</button><button class="bad" onclick="adminManualDraw('yearly','direct')">تنفيذ مباشر</button></div>
                 </div>
+                <div class="admin-direct-result-box" style="margin-top:16px;padding:16px;border:1px solid rgba(212,175,55,.28);border-radius:22px;background:linear-gradient(145deg,rgba(10,14,30,.84),rgba(0,0,0,.72));">
+                  <div class="admin-section-head"><h3>تثبيت آخر نتيجة في مربع السحب</h3><span>كود مستقل للمربع الظاهر للمستخدم</span></div>
+                  <div class="hint">هذا القسم يكتب النتيجة مباشرة في مربع <b>آخر نتيجة سحب</b> داخل صفحة اليانصيب. اكتب الرقم واسم الفائز واضغط نشر الآن. لا يعتمد على زر التنفيذ القديم.</div>
+                  <div class="admin-form-grid">
+                    <div class="field-wrap"><label>نوع السحب</label><div class="field"><span class="ico">🏆</span><select id="resultBoxDrawType"><option value="daily">اليومي</option><option value="weekly">الأسبوعي</option><option value="monthly">الشهري</option><option value="yearly">السنوي</option></select></div></div>
+                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="resultBoxTicketNumber" inputmode="numeric" maxlength="7" placeholder="مثال: 5173406"></div></div>
+                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="resultBoxWinnerName" placeholder="مثال: أبو خالد"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="resultBoxPrize" type="number" min="0" step="0.01" placeholder="4500"></div></div>
+                    <div class="field-wrap"><label>وقت النشر الاختياري</label><div class="field"><span class="ico">⏰</span><input id="resultBoxPublishAt" type="datetime-local"></div></div>
+                  </div>
+                  <div class="admin-actions"><button class="bad" onclick="adminPublishResultBox('direct')">نشر الآن في المربع</button><button class="ok" onclick="adminPublishResultBox('schedule')">جدولة للمربع</button><button class="blue" onclick="prefillResultBoxPrize()">تعبئة الجائزة الحالية</button></div>
+                </div>
                 <div class="admin-table" id="adminDrawHistory"><div class="admin-empty">لا يوجد سجل سحوبات بعد</div></div>
               </div>
             </section>
@@ -1392,7 +1404,7 @@
     const defaultWheelSettings={enabled:true,minBet:1,maxBet:500,segments:[{label:'0x',m:0,w:26},{label:'1x',m:1,w:22},{label:'2x',m:2,w:15},{label:'0x',m:0,w:24},{label:'100x',m:100,w:1},{label:'1x',m:1,w:20},{label:'10000x',m:10000,w:0.08},{label:'2x',m:2,w:13},{label:'0.5x',m:.5,w:12},{label:'5x',m:5,w:5},{label:'10x',m:10,w:2},{label:'0x',m:0,w:24}],luckyBox:{enabled:true,chance:35,min:0.10,max:1,cooldownHours:24}};
     let wheelSettings=JSON.parse(JSON.stringify(defaultWheelSettings));
     let wheelSegments=wheelSettings.segments;
-    let lotteryUnsub=null, publicDrawUnsub=null, publicDrawRoundUnsubs=[], publicDrawHistory={}, publicDrawRounds={}, publicDrawResultsUnsub=null, publicDrawResults={}, displayDrawResultsUnsub=null, displayDrawResults={};
+    let lotteryUnsub=null, publicDrawUnsub=null, publicDrawRoundUnsubs=[], publicDrawHistory={}, publicDrawRounds={}, publicDrawResultsUnsub=null, publicDrawResults={}, displayDrawResultsUnsub=null, displayDrawResults={}, resultBoxDirectUnsub=null, resultBoxDirect={};
     function mergeLotterySettings(v){const base=JSON.parse(JSON.stringify(defaultLotterySettings));v=v||{};base.ticketPrice=Number(v.ticketPrice||base.ticketPrice);base.moveLosers=(v.moveLosers!==false);['daily','weekly','monthly','yearly'].forEach(k=>{base[k]={...base[k],...(v[k]||{})};base[k].enabled=(base[k].enabled!==false);base[k].prize=Number(base[k].prize||0);});return base}
     function prizeFor(type){return Number((lotterySettings?.[type]?.prize ?? drawMeta[type]?.jackpot ?? 0))}
     function drawLabel(type){return lotterySettings?.[type]?.label || drawMeta[type]?.label || type}
@@ -1408,6 +1420,11 @@
       publicDrawRoundUnsubs=[];
       if(publicDrawResultsUnsub)try{publicDrawResultsUnsub()}catch(e){};
       if(displayDrawResultsUnsub)try{displayDrawResultsUnsub()}catch(e){};
+      if(resultBoxDirectUnsub)try{resultBoxDirectUnsub()}catch(e){};
+      resultBoxDirectUnsub=onValue(ref(db,'system_settings/result_box_direct'),snap=>{
+        resultBoxDirect=snap.val()||{};
+        renderLatestDrawPublic();
+      },err=>{console.error('system_settings/result_box_direct read failed',err); resultBoxDirect={}; renderLatestDrawPublic();});
       displayDrawResultsUnsub=onValue(ref(db,'system_settings/latest_draw_results'),snap=>{
         displayDrawResults=snap.val()||{};
         renderLatestDrawPublic();
@@ -1443,6 +1460,10 @@
         return o;
       };
       const addResult=(d,extra={})=>{if(d&&typeof d==='object')rows.push(normalizeDrawResult(d,extra));};
+      const rbd=resultBoxDirect||{};
+      Object.entries(rbd.current||{}).forEach(([roundType,d])=>addResult(d,{id:d.id||('box_'+roundType),drawType:roundType,_src:'result_box_current'}));
+      Object.entries(rbd.history||{}).forEach(([roundType,obj])=>Object.entries(obj||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,drawType:roundType,_src:'result_box_history'})));
+      addResult(rbd.latest,{id:rbd.latest?.id||'result_box_latest',_src:'result_box_latest'});
       const ddr=displayDrawResults||{};
       Object.entries(ddr.current||{}).forEach(([roundType,d])=>addResult(d,{id:d.id||('display_'+roundType),drawType:roundType,_src:'display_current'}));
       Object.entries(ddr.history||{}).forEach(([roundType,obj])=>Object.entries(obj||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,drawType:roundType,_src:'display_history'})));
@@ -2439,6 +2460,50 @@
       toast('تم ضبط وقت النشر على 8 مساءً');
     }
     function cleanTicketNumber(v){return String(v||'').replace(/\D/g,'').slice(0,12)}
+    function prefillResultBoxPrize(){
+      const type=($('resultBoxDrawType')?.value)||'daily';
+      const el=$('resultBoxPrize');
+      if(el)el.value=Number(prizeFor(type)||0);
+      toast('تمت تعبئة جائزة '+drawLabel(type));
+    }
+    async function adminPublishResultBox(mode='direct'){
+      if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');
+      const drawType=($('resultBoxDrawType')?.value)||'daily';
+      const rawNumber=$('resultBoxTicketNumber')?.value||'';
+      const ticketNumber=String(cleanTicketNumber(rawNumber)).replace(/\D/g,'').padStart(7,'0').slice(-7);
+      const winnerName=String($('resultBoxWinnerName')?.value||'').trim();
+      const prize=Number($('resultBoxPrize')?.value||prizeFor(drawType)||0);
+      const now=Date.now();
+      let publishAt=now;
+      if(mode==='schedule'){
+        const val=$('resultBoxPublishAt')?.value;
+        if(!val)return toast('اختر وقت النشر أو استخدم نشر الآن');
+        publishAt=new Date(val).getTime();
+        if(!publishAt||isNaN(publishAt))return toast('وقت النشر غير صحيح');
+      }
+      if(!rawNumber || ticketNumber==='0000000')return toast('اكتب رقم التذكرة الرابحة أولًا');
+      if(!winnerName)return toast('اكتب اسم الفائز كما تريد أن يظهر للمستخدمين');
+      const id='box_'+drawType+'_'+now;
+      const status=mode==='schedule'?'scheduled':'published';
+      const result={id,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,winnerEmail:'',prize,status,publishAt,publishedAt:status==='published'?now:0,createdAt:now,updatedAt:now,source:'result_box_direct',adminEmail:currentUser?.email||''};
+      const updates={};
+      updates['system_settings/result_box_direct/current/'+drawType]=result;
+      updates['system_settings/result_box_direct/history/'+drawType+'/'+id]=result;
+      updates['system_settings/result_box_direct/latest']=result;
+      updates['public_draw_results/current/'+drawType]=result;
+      updates['public_draw_results/history/'+drawType+'/'+id]=result;
+      updates['public_draw_results/latest']=result;
+      updates['admin_notifications/'+now]={type:'draw_result_box',text:(status==='published'?'تم نشر ':'تمت جدولة ')+'آخر نتيجة في مربع '+drawLabel(drawType)+' — '+ticketNumber+' — '+winnerName,createdAt:now,status:'new'};
+      await update(ref(db),updates);
+      resultBoxDirect=resultBoxDirect||{};
+      resultBoxDirect.current={...(resultBoxDirect.current||{}),[drawType]:result};
+      resultBoxDirect.latest=result;
+      publicDrawResults=publicDrawResults||{};
+      publicDrawResults.current={...(publicDrawResults.current||{}),[drawType]:result};
+      publicDrawResults.latest=result;
+      renderLatestDrawPublic();
+      toast(status==='published'?'تم نشر آخر نتيجة في المربع':'تمت جدولة آخر نتيجة في المربع');
+    }
     function findManualWinner(tickets,number){const clean=cleanTicketNumber(number);return tickets.find(t=>cleanTicketNumber(t.number)===clean || String(t.id||'')===String(number||'').trim())}
     async function adminManualDraw(drawType,mode){
       if(!isAdminUser())return toast('للأدمن فقط');
@@ -2660,7 +2725,7 @@
 
 
     if($('adminUserSearch'))$('adminUserSearch').addEventListener('input',()=>renderAdminUsers(arrObj(adminState.users)));document.querySelectorAll('.user-chip').forEach(btn=>btn.addEventListener('click',()=>{currentUserFilter=btn.dataset.userFilter||'all';renderAdminUsers(arrObj(adminState.users))}));if($('exportUsersBtn'))$('exportUsersBtn').onclick=exportUsersCsv;if($('adminAuditSearch'))$('adminAuditSearch').addEventListener('input',renderAdminAudit);document.querySelectorAll('.audit-chip').forEach(btn=>btn.addEventListener('click',()=>{currentAuditFilter=btn.dataset.auditFilter||'all';renderAdminAudit()}));if($('auditExportBtn'))$('auditExportBtn').onclick=exportAuditCsv;if($('auditRefreshBtn'))$('auditRefreshBtn').onclick=renderAdminAudit;if($('saveSiteControlBtn'))$('saveSiteControlBtn').onclick=adminSaveSiteControl;if($('seedSiteControlBtn'))$('seedSiteControlBtn').onclick=seedSiteControl;if($('savePaymentMethodBtn'))$('savePaymentMethodBtn').onclick=adminSavePaymentMethod;if($('newPaymentMethodBtn'))$('newPaymentMethodBtn').onclick=()=>fillPaymentForm({id:'',name:'',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'',qrUrl:'',details:''});if($('resetPaymentMethodsBtn'))$('resetPaymentMethodsBtn').onclick=()=>seedPaymentMethods(true);if($('saveLotterySettingsBtn'))$('saveLotterySettingsBtn').onclick=adminSaveLotterySettings;if($('resetLotterySettingsBtn'))$('resetLotterySettingsBtn').onclick=()=>seedLotterySettings(true);if($('saveWheelSettingsBtn'))$('saveWheelSettingsBtn').onclick=adminSaveWheelSettings;if($('resetWheelSettingsBtn'))$('resetWheelSettingsBtn').onclick=()=>seedWheelSettings(true);
-    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,adminSaveSiteControl,seedSiteControl,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,saveAiKnowledgeFromForm,teachAiFromUnanswered,deleteAiKnowledge,dismissAiUnanswered,fillAiFormFromUnanswered,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
+    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,adminSaveSiteControl,seedSiteControl,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminPublishResultBox,prefillResultBoxPrize,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,saveAiKnowledgeFromForm,teachAiFromUnanswered,deleteAiKnowledge,dismissAiUnanswered,fillAiFormFromUnanswered,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
     Object.defineProperty(window,'supportContacts',{get:()=>supportContacts});
 
     function tick(){const now=new Date();const target=new Date(now);target.setHours(20,0,0,0);if(now>=target)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const days=Math.floor(diff/86400000);diff%=86400000;const hours=Math.floor(diff/3600000);diff%=3600000;const mins=Math.floor(diff/60000);diff%=60000;const secs=Math.floor(diff/1000);$('d').textContent=String(days).padStart(2,'0');$('h').textContent=String(hours).padStart(2,'0');$('m').textContent=String(mins).padStart(2,'0');$('s').textContent=String(secs).padStart(2,'0')}setInterval(tick,1000);tick();$('ticketNumber').value=randomTicket();

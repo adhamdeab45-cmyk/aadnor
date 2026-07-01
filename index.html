@@ -248,6 +248,90 @@
     .bottom-nav{border-radius:22px!important;background:rgba(2,9,21,.92)!important}.bottom-nav .nav-btn.active{background:linear-gradient(180deg,#fff2cc,#d4af37 46%,#aa7c11 82%)!important;color:#100c05!important}
     @media(max-width:390px){.v62-royal-head{grid-template-columns:minmax(116px,1.2fr) 38px minmax(62px,.70fr) minmax(72px,.82fr) 43px!important;gap:5px!important}.v62-balance-card{height:64px!important}.v62-settings-btn,.v62-user-card,.v62-menu-btn,.v62-logo{height:64px!important}.v62-logo .mini-logo{font-size:26px!important}.v63-hero-draw .drawname{font-size:34px!important}.v63-prize-amount{font-size:42px!important}.v63-countdown{grid-template-columns:1fr repeat(4,.9fr)!important}.v63-ticket-input{grid-template-columns:50px 1fr 50px!important}.v63-number-box input{font-size:22px!important;letter-spacing:6px!important}.v63-winner-digits span{width:33px!important;height:33px!important;font-size:19px!important}}
 </style>
+
+
+<style id="adnor-v64-header-real-fix">
+  /* V64: تنظيف هيدر اليانصيب ومنع دخول العناصر ببعض */
+  #appWrap:not(.admin-layout) .v62-royal-head{
+    display:grid!important;
+    grid-template-columns:54px minmax(0,1fr) 54px!important;
+    grid-template-areas:
+      "bell logo menu"
+      "user balance balance"!important;
+    gap:10px!important;
+    align-items:center!important;
+    margin:0 0 13px!important;
+    direction:ltr!important;
+  }
+  #appWrap:not(.admin-layout) .v62-royal-head>*{direction:rtl!important;min-width:0!important;box-sizing:border-box!important}
+  #appWrap:not(.admin-layout) .v62-settings-btn{display:none!important}
+  #appWrap:not(.admin-layout) #bellBtn.hidden,
+  #appWrap:not(.admin-layout) #bellBtn{
+    grid-area:bell!important;
+    display:grid!important;
+    place-items:center!important;
+    width:54px!important;
+    height:54px!important;
+    border-radius:18px!important;
+    border:1px solid rgba(212,175,55,.56)!important;
+    background:linear-gradient(145deg,rgba(15,22,47,.88),rgba(3,5,13,.98))!important;
+    color:#ffe184!important;
+    box-shadow:0 14px 30px rgba(0,0,0,.42),0 0 20px rgba(255,194,54,.10)!important;
+    position:relative!important;
+    cursor:pointer!important;
+    font-size:0!important;
+    padding:0!important;
+  }
+  #appWrap:not(.admin-layout) #bellBtn::before{content:"🔔";font-size:22px;line-height:1;filter:drop-shadow(0 0 8px rgba(255,210,82,.36))}
+  #appWrap:not(.admin-layout) #bellBtn .notif-badge{
+    position:absolute!important;top:-7px!important;left:-7px!important;min-width:19px!important;height:19px!important;
+    border-radius:999px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    background:linear-gradient(180deg,#39ffc8,#09a76f)!important;color:#02130d!important;border:1px solid rgba(255,255,255,.55)!important;
+    font-size:10px!important;font-weight:900!important;padding:0 5px!important;box-shadow:0 0 12px rgba(34,224,162,.45)!important;
+  }
+  #appWrap:not(.admin-layout) .v62-logo{
+    grid-area:logo!important;height:58px!important;display:grid!important;place-items:center!important;text-align:center!important;
+    overflow:visible!important;z-index:2!important;
+  }
+  #appWrap:not(.admin-layout) .v62-logo .mini-crown{font-size:24px!important;margin-bottom:-9px!important;line-height:1!important;color:#ffe184!important;filter:drop-shadow(0 0 10px rgba(255,205,57,.75))!important}
+  #appWrap:not(.admin-layout) .v62-logo .mini-logo{font-size:35px!important;letter-spacing:1.4px!important;line-height:1!important;white-space:nowrap!important}
+  #appWrap:not(.admin-layout) .v62-menu-btn{
+    grid-area:menu!important;width:54px!important;height:54px!important;border-radius:18px!important;font-size:30px!important;
+    display:grid!important;place-items:center!important;padding:0!important;
+  }
+  #appWrap:not(.admin-layout) .v62-user-card{
+    grid-area:user!important;height:64px!important;border-radius:20px!important;padding:8px 7px!important;
+    display:grid!important;align-content:center!important;text-align:center!important;overflow:hidden!important;
+  }
+  #appWrap:not(.admin-layout) .v62-user-card b{font-size:12px!important;line-height:1.2!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#ffe184!important}
+  #appWrap:not(.admin-layout) .v62-user-card span{font-size:10px!important;line-height:1.2!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#ffca55!important;direction:ltr!important;display:block!important;margin-top:4px!important}
+  #appWrap:not(.admin-layout) .v62-balance-card{
+    grid-area:balance!important;height:64px!important;border-radius:20px!important;padding:8px 9px!important;
+    display:grid!important;grid-template-columns:minmax(0,1fr) 33px 33px!important;gap:7px!important;align-items:center!important;
+    overflow:hidden!important;direction:ltr!important;
+  }
+  #appWrap:not(.admin-layout) .v62-balance-card>div{min-width:0!important;overflow:hidden!important;text-align:right!important;direction:rtl!important}
+  #appWrap:not(.admin-layout) .v62-balance-card .cw-title{font-size:11px!important;line-height:1.1!important;color:#e7edf8!important;text-align:right!important;white-space:nowrap!important}
+  #appWrap:not(.admin-layout) .v62-balance-card .cw-money{
+    display:block!important;font-size:clamp(18px,5vw,22px)!important;line-height:1.18!important;max-width:100%!important;
+    overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#24efaa!important;text-align:right!important;direction:ltr!important;
+  }
+  #appWrap:not(.admin-layout) .v62-balance-card button{width:33px!important;height:33px!important;min-width:33px!important;border-radius:50%!important;font-size:16px!important;padding:0!important}
+  #appWrap:not(.admin-layout) .v62-balance-card #depositBtn{font-size:23px!important;line-height:1!important}
+  #appWrap:not(.admin-layout) .v62-balance-card #withdrawBtn,
+  #appWrap:not(.admin-layout) .v62-balance-card #v52QuickDepositBtn{display:none!important}
+  #appWrap:not(.admin-layout) .drawer-link[data-drawer-page="account"] span:first-child::before{content:""!important}
+  @media(max-width:390px){
+    #appWrap:not(.admin-layout) .v62-royal-head{grid-template-columns:50px minmax(0,1fr) 50px!important;grid-template-areas:"bell logo menu" "user balance balance"!important;gap:8px!important}
+    #appWrap:not(.admin-layout) #bellBtn.hidden,#appWrap:not(.admin-layout) #bellBtn,#appWrap:not(.admin-layout) .v62-menu-btn{width:50px!important;height:50px!important;border-radius:17px!important}
+    #appWrap:not(.admin-layout) .v62-logo{height:54px!important}.v62-logo .mini-logo{font-size:30px!important}
+    #appWrap:not(.admin-layout) .v62-user-card{height:60px!important;padding:7px 6px!important}.v62-user-card b{font-size:11px!important}.v62-user-card span{font-size:9px!important}
+    #appWrap:not(.admin-layout) .v62-balance-card{height:60px!important;grid-template-columns:minmax(0,1fr) 30px 30px!important;gap:6px!important;padding:7px 8px!important}
+    #appWrap:not(.admin-layout) .v62-balance-card .cw-money{font-size:18px!important}
+    #appWrap:not(.admin-layout) .v62-balance-card button{width:30px!important;height:30px!important;min-width:30px!important}
+  }
+</style>
+
 </head>
 <body>
   <div class="aurora"></div>
@@ -301,7 +385,7 @@
           <button class="drawer-link v52-primary" data-drawer-page="games"><span>🎮 الألعاب</span><span>›</span></button>
           <button class="drawer-link v52-primary" data-drawer-page="vip"><span>👑 VIP الملكي</span><span>›</span></button>
           <button class="drawer-link v52-primary" data-drawer-page="wallet"><span>💳 المحفظة</span><span>›</span></button>
-          <button class="drawer-link v52-primary" data-drawer-page="account"><span>👤 حسابي</span><span>›</span></button>
+          <button class="drawer-link v52-primary" data-drawer-page="account"><span>⚙️ الضبط والإعدادات</span><span>›</span></button>
           <button class="drawer-link v52-secondary" data-drawer-page="results"><span>🏆 النتائج وتذاكري</span><span>›</span></button>
           <button class="drawer-link v52-secondary" data-drawer-page="support"><span>💬 الدعم الفني</span><span>›</span></button>
           <button class="drawer-link v52-secondary" data-drawer-page="ai"><span>🤖 مساعد ADNOR الذكي</span><span>›</span></button>

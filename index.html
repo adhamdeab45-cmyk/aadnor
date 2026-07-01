@@ -1388,7 +1388,22 @@
   <div class="modal" id="infoModal"><div class="sheet"><h3 id="modalTitle">ADNOR</h3><p id="modalBody">قريبًا</p><button class="close" id="closeModal">إغلاق</button></div></div>
   <div class="toast" id="toast"></div>
 
-  <script type="module">
+  
+<script id="adnor-v90-emergency-result-prize-fallback">
+// V90 fallback: يمنع خطأ setCurrentPrize is not defined إذا كان الكود القديم مستدعى من زر الأدمن
+function setCurrentPrize(type){
+  try{
+    var el=document.getElementById('resultBoxPrize');
+    var typed=Number((el&&el.value)||0);
+    if(typed>0) return Number(typed.toFixed(2));
+    var map={daily:4500,weekly:15000,monthly:50000,yearly:250000};
+    var v=Number(map[type||'daily']||0);
+    if(el&&!Number(el.value||0)) el.value=v;
+    return v;
+  }catch(e){return 0;}
+}
+</script>
+<script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
     import { getDatabase, ref, set, update, get, onValue, push, increment } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
@@ -2490,7 +2505,7 @@
     function prefillResultBoxPrize(){
       const type=($('resultBoxDrawType')?.value)||'daily';
       const el=$('resultBoxPrize');
-      if(el)el.value=setCurrentPrize(type);
+      if(el)el.value=Number((Number(prizeFor(type)||0)||0).toFixed(2));
       toast('تمت تعبئة جائزة '+drawLabel(type));
     }
     async function saveLastResultBoxToLotterySettings(result){
@@ -2518,7 +2533,7 @@
       const rawNumber=$('resultBoxTicketNumber')?.value||'';
       const ticketNumber=String(cleanTicketNumber(rawNumber)).replace(/\D/g,'').padStart(7,'0').slice(-7);
       const winnerName=String($('resultBoxWinnerName')?.value||'').trim();
-      const prize=setCurrentPrize(drawType);
+      const prize=Number((Number($('resultBoxPrize')?.value||0)||Number(prizeFor(drawType)||0)||0).toFixed(2));
       const now=Date.now();
       let publishAt=now;
       if(mode==='schedule'){
@@ -2543,7 +2558,7 @@
       const rawNumber=$('resultBoxTicketNumber')?.value||'';
       const ticketNumber=String(cleanTicketNumber(rawNumber)).replace(/\D/g,'').padStart(7,'0').slice(-7);
       const winnerName=String($('resultBoxWinnerName')?.value||'').trim()||'ADNOR';
-      const prize=setCurrentPrize(drawType);
+      const prize=Number((Number($('resultBoxPrize')?.value||0)||Number(prizeFor(drawType)||0)||0).toFixed(2));
       const now=Date.now();
       if(!rawNumber || ticketNumber==='0000000')return toast('اكتب رقم تذكرة صحيح');
       const result={id:'force_box_'+drawType+'_'+now,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,prize,status:'published',publishAt:now,publishedAt:now,createdAt:now,updatedAt:now,source:'v89_direct_lottery_settings_box',adminEmail:currentUser?.email||''};

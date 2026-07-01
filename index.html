@@ -1402,7 +1402,16 @@
     function listenLotterySettings(){if(lotteryUnsub)try{lotteryUnsub()}catch(e){};lotteryUnsub=onValue(ref(db,'lottery_settings'),snap=>{lotterySettings=mergeLotterySettings(snap.val());updateLotteryUi()})}
     function listenPublicDrawHistory(){if(publicDrawUnsub)try{publicDrawUnsub()}catch(e){};publicDrawUnsub=onValue(ref(db,'draw_history'),snap=>{publicDrawHistory=snap.val()||{};renderLatestDrawPublic()})}
     function maskEmail(v){v=String(v||'مستخدم ADNOR');if(!v.includes('@'))return v;const [a,b]=v.split('@');return (a.slice(0,2)+'***'+a.slice(-1))+'@'+(b||'');}
-    function publicDrawsList(type='all'){const now=Date.now();return Object.values(publicDrawHistory||{}).filter(d=>(type==='all'||d.drawType===type) && (!d.publishAt || Number(d.publishAt)<=now)).sort((a,b)=>((b.publishAt||b.createdAt||0)-(a.publishAt||a.createdAt||0)));}
+    function drawPublishMillis(d){let v=Number(d?.publishAt||d?.publishedAt||d?.createdAt||0); if(v && v<100000000000) v*=1000; return v||0}
+    function publicDrawsList(type='all'){
+      const now=Date.now();
+      return Object.values(publicDrawHistory||{}).filter(d=>{
+        const dType=d.drawType||d.type||'daily';
+        const p=drawPublishMillis(d);
+        const visible=(d.status==='published') || !p || p<=now;
+        return (type==='all'||dType===type) && visible;
+      }).sort((a,b)=>drawPublishMillis(b)-drawPublishMillis(a));
+    }
     function renderLatestDrawPublic(){
       setText('homeJackpotText',money(getCurrentPrize()));
       const list=publicDrawsList(currentDraw);
@@ -2739,6 +2748,21 @@
     const __v76RenderProfile=renderProfile;renderProfile=function(){__v76RenderProfile();renderDailyLogin();};
     const __v76RenderAdmin=renderAdmin;renderAdmin=function(){__v76RenderAdmin();renderDailyLoginAdmin();};
     const __v76ShowAdminSection=showAdminSection;showAdminSection=function(sec){__v76ShowAdminSection(sec);if(sec==='dailylogin')setTimeout(renderDailyLoginAdmin,50)};
+
+
+    /* V81: تحديث تلقائي لنتيجة السحب عند وصول وقت النشر بدون ما يحتاج المستخدم يعمل Refresh */
+    let __v81DrawRefreshTimer=null;
+    function startV81DrawAutoRefresh(){
+      if(__v81DrawRefreshTimer) return;
+      __v81DrawRefreshTimer=setInterval(()=>{
+        try{ if(typeof renderLatestDrawPublic==='function') renderLatestDrawPublic(); }catch(e){ console.warn('V81 draw refresh',e); }
+        try{ if(typeof renderAdminDraws==='function' && adminState?.drawHistory) renderAdminDraws(Object.values(adminState.drawHistory||{}).sort((a,b)=>(drawPublishMillis(b)||b.createdAt||0)-(drawPublishMillis(a)||a.createdAt||0))); }catch(e){}
+      },5000);
+      window.addEventListener('focus',()=>{try{renderLatestDrawPublic()}catch(e){}});
+      document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{renderLatestDrawPublic()}catch(e){}}});
+    }
+    startV81DrawAutoRefresh();
+
     Object.assign(window,{claimDailyLogin,adminSaveDailyLoginSettings,openDailyLoginModal,closeDailyLoginModal});
 
         Object.assign(window,{claimVipTask,openVipDailyBox,adminSaveVipSettings});

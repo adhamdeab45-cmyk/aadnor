@@ -261,7 +261,23 @@
 #page-games .wheel-stage{margin-top:4px}
 @media(max-width:430px){#page-games .wheel-disc{width:min(292px,78vw);height:min(292px,78vw)}#page-games .wheel-center{inset:29%}#page-games .wheel-title-clean{gap:8px;align-items:center}#page-games .wheel-title-clean h3{font-size:16px}#page-games .wheel-title-clean span{font-size:12px;padding:6px 8px}.bet-grid{grid-template-columns:repeat(3,1fr)}}
 
-</style>
+
+
+    /* V68 wallet clean flow */
+    .v68-wallet-page>.jackpot{display:none!important}
+    .v68-wallet-page{padding-bottom:14px}
+    .v68-wallet-stats{margin:4px 0 12px;gap:9px}
+    .v68-wallet-stats .wallet-stat{min-height:78px;border-radius:22px;background:linear-gradient(180deg,rgba(9,28,53,.90),rgba(2,9,20,.96));border-color:rgba(255,207,78,.42);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 18px rgba(255,211,90,.04)}
+    .v68-wallet-stats .wallet-stat span{font-size:12px;color:#aeb8cd;font-weight:1000}.v68-wallet-stats .wallet-stat b{font-size:18px;color:#25e4a9;direction:ltr;margin-top:5px;white-space:nowrap}.v68-wallet-stats .wallet-stat:nth-child(2) b{color:#ffe184}.v68-wallet-stats .wallet-stat:nth-child(3) b{color:#ffbd68}
+    .v68-wallet-card{padding:14px;border-radius:26px;overflow:visible}.v68-wallet-title{margin-bottom:10px}.v68-wallet-title h3{font-size:19px}.v68-wallet-title span{font-size:11px;color:#93a3bb}
+    .v68-wallet-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}.v68-wallet-tabs button{height:62px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,rgba(8,25,49,.82),rgba(2,10,22,.92));border:1px solid rgba(255,205,77,.34);color:#cbd5e6}.v68-wallet-tabs button i{font-style:normal;font-size:20px;line-height:1}.v68-wallet-tabs button b{font-size:13px}.v68-wallet-tabs button.active{background:linear-gradient(180deg,#fff2b4,#d89625 58%,#8f570d);border-color:#fff1aa;color:#140f06;box-shadow:0 0 22px rgba(255,190,39,.25)}
+    .v68-wallet-panel{border:1px solid rgba(255,205,77,.24);border-radius:24px;padding:12px;background:linear-gradient(180deg,rgba(4,15,33,.62),rgba(0,0,0,.18));box-shadow:inset 0 0 20px rgba(255,205,77,.03)}.v68-panel-head{border-radius:20px;border:1px solid rgba(0,201,255,.26);background:rgba(0,155,255,.07);padding:12px;margin-bottom:12px}.v68-panel-head h4{margin:0;color:#ffe184;font-size:16px}.v68-panel-head p{margin:5px 0 0;color:#b9d6ee;font-size:12px;font-weight:800;line-height:1.6}
+    .v68-method-grid{grid-template-columns:1fr;gap:9px;margin-bottom:10px}.v68-method-grid .method{min-height:62px;border-radius:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;position:relative;padding:12px 14px}.v68-method-grid .method:after{content:'فتح';font-size:11px;font-weight:1000;color:#151007;background:linear-gradient(180deg,#fff1a8,#d99924);border-radius:999px;padding:6px 10px;box-shadow:0 0 12px rgba(255,188,39,.18)}.v68-method-grid .method.active:after{content:'مختار';background:linear-gradient(180deg,#40ffd0,#14b987);color:#01140f}.v68-method-grid .method span{margin:0;color:#93a3bb;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .v68-method-details{border:1px solid rgba(255,205,77,.30);background:rgba(2,10,22,.66);border-radius:20px;padding:12px;margin:0 0 12px;color:#dbe6f7;font-size:12px;font-weight:800;line-height:1.7}.v68-method-details b{display:block;color:#ffe184;font-size:15px;margin-bottom:5px}.v68-method-details .finance-mini-grid{margin-top:9px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.v68-method-details .finance-pill{border:1px solid rgba(255,204,77,.25);border-radius:14px;padding:8px;background:rgba(0,0,0,.20);font-size:10px;text-align:center}.v68-method-details .finance-pill b{font-size:10px;color:#9fb0c8;margin:0 0 4px}.v68-method-details .copy-line{display:flex;gap:7px;margin-top:9px;align-items:center}.v68-method-details code{flex:1;min-width:0;direction:ltr;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid rgba(255,204,77,.25);border-radius:12px;padding:9px;color:#fff;background:#020914}.v68-method-details .copy-btn{border:1px solid rgba(255,204,77,.55);border-radius:12px;background:rgba(255,204,77,.12);color:#ffe184;font:inherit;font-size:11px;font-weight:1000;padding:8px 10px}
+    .v68-wallet-fields{display:grid;grid-template-columns:1fr;gap:10px}.v68-filebox{margin-top:10px}.v68-submit-btn{width:100%;margin-top:10px;height:55px;border-radius:20px;font-size:15px}.v68-history-list{margin-top:8px}.v68-history-list .hist-item{grid-template-columns:44px 1fr auto;border-radius:18px}.v68-history-list .medal{width:40px;height:40px;font-size:18px}
+    @media(min-width:620px){.v68-method-grid{grid-template-columns:1fr 1fr}.v68-wallet-fields{grid-template-columns:1fr 1fr}}
+
+  </style>
 
 
 <style id="adnor-v64-header-real-fix">
@@ -344,7 +360,23 @@
     #appWrap:not(.admin-layout) .v62-balance-card .cw-money{font-size:18px!important}
     #appWrap:not(.admin-layout) .v62-balance-card button{width:30px!important;height:30px!important;min-width:30px!important}
   }
-</style>
+
+
+    /* V68 wallet clean flow */
+    .v68-wallet-page>.jackpot{display:none!important}
+    .v68-wallet-page{padding-bottom:14px}
+    .v68-wallet-stats{margin:4px 0 12px;gap:9px}
+    .v68-wallet-stats .wallet-stat{min-height:78px;border-radius:22px;background:linear-gradient(180deg,rgba(9,28,53,.90),rgba(2,9,20,.96));border-color:rgba(255,207,78,.42);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 18px rgba(255,211,90,.04)}
+    .v68-wallet-stats .wallet-stat span{font-size:12px;color:#aeb8cd;font-weight:1000}.v68-wallet-stats .wallet-stat b{font-size:18px;color:#25e4a9;direction:ltr;margin-top:5px;white-space:nowrap}.v68-wallet-stats .wallet-stat:nth-child(2) b{color:#ffe184}.v68-wallet-stats .wallet-stat:nth-child(3) b{color:#ffbd68}
+    .v68-wallet-card{padding:14px;border-radius:26px;overflow:visible}.v68-wallet-title{margin-bottom:10px}.v68-wallet-title h3{font-size:19px}.v68-wallet-title span{font-size:11px;color:#93a3bb}
+    .v68-wallet-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}.v68-wallet-tabs button{height:62px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,rgba(8,25,49,.82),rgba(2,10,22,.92));border:1px solid rgba(255,205,77,.34);color:#cbd5e6}.v68-wallet-tabs button i{font-style:normal;font-size:20px;line-height:1}.v68-wallet-tabs button b{font-size:13px}.v68-wallet-tabs button.active{background:linear-gradient(180deg,#fff2b4,#d89625 58%,#8f570d);border-color:#fff1aa;color:#140f06;box-shadow:0 0 22px rgba(255,190,39,.25)}
+    .v68-wallet-panel{border:1px solid rgba(255,205,77,.24);border-radius:24px;padding:12px;background:linear-gradient(180deg,rgba(4,15,33,.62),rgba(0,0,0,.18));box-shadow:inset 0 0 20px rgba(255,205,77,.03)}.v68-panel-head{border-radius:20px;border:1px solid rgba(0,201,255,.26);background:rgba(0,155,255,.07);padding:12px;margin-bottom:12px}.v68-panel-head h4{margin:0;color:#ffe184;font-size:16px}.v68-panel-head p{margin:5px 0 0;color:#b9d6ee;font-size:12px;font-weight:800;line-height:1.6}
+    .v68-method-grid{grid-template-columns:1fr;gap:9px;margin-bottom:10px}.v68-method-grid .method{min-height:62px;border-radius:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;position:relative;padding:12px 14px}.v68-method-grid .method:after{content:'فتح';font-size:11px;font-weight:1000;color:#151007;background:linear-gradient(180deg,#fff1a8,#d99924);border-radius:999px;padding:6px 10px;box-shadow:0 0 12px rgba(255,188,39,.18)}.v68-method-grid .method.active:after{content:'مختار';background:linear-gradient(180deg,#40ffd0,#14b987);color:#01140f}.v68-method-grid .method span{margin:0;color:#93a3bb;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .v68-method-details{border:1px solid rgba(255,205,77,.30);background:rgba(2,10,22,.66);border-radius:20px;padding:12px;margin:0 0 12px;color:#dbe6f7;font-size:12px;font-weight:800;line-height:1.7}.v68-method-details b{display:block;color:#ffe184;font-size:15px;margin-bottom:5px}.v68-method-details .finance-mini-grid{margin-top:9px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.v68-method-details .finance-pill{border:1px solid rgba(255,204,77,.25);border-radius:14px;padding:8px;background:rgba(0,0,0,.20);font-size:10px;text-align:center}.v68-method-details .finance-pill b{font-size:10px;color:#9fb0c8;margin:0 0 4px}.v68-method-details .copy-line{display:flex;gap:7px;margin-top:9px;align-items:center}.v68-method-details code{flex:1;min-width:0;direction:ltr;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid rgba(255,204,77,.25);border-radius:12px;padding:9px;color:#fff;background:#020914}.v68-method-details .copy-btn{border:1px solid rgba(255,204,77,.55);border-radius:12px;background:rgba(255,204,77,.12);color:#ffe184;font:inherit;font-size:11px;font-weight:1000;padding:8px 10px}
+    .v68-wallet-fields{display:grid;grid-template-columns:1fr;gap:10px}.v68-filebox{margin-top:10px}.v68-submit-btn{width:100%;margin-top:10px;height:55px;border-radius:20px;font-size:15px}.v68-history-list{margin-top:8px}.v68-history-list .hist-item{grid-template-columns:44px 1fr auto;border-radius:18px}.v68-history-list .medal{width:40px;height:40px;font-size:18px}
+    @media(min-width:620px){.v68-method-grid{grid-template-columns:1fr 1fr}.v68-wallet-fields{grid-template-columns:1fr 1fr}}
+
+  </style>
 
 
 
@@ -397,7 +429,23 @@
     #appWrap:not(.admin-layout) .v62-balance-card{height:61px!important;grid-template-columns:minmax(0,1fr) 31px 31px!important;padding:8px 10px!important}
     .v65-winner-digits span{width:31px!important;height:31px!important;font-size:18px!important}
   }
-</style>
+
+
+    /* V68 wallet clean flow */
+    .v68-wallet-page>.jackpot{display:none!important}
+    .v68-wallet-page{padding-bottom:14px}
+    .v68-wallet-stats{margin:4px 0 12px;gap:9px}
+    .v68-wallet-stats .wallet-stat{min-height:78px;border-radius:22px;background:linear-gradient(180deg,rgba(9,28,53,.90),rgba(2,9,20,.96));border-color:rgba(255,207,78,.42);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 18px rgba(255,211,90,.04)}
+    .v68-wallet-stats .wallet-stat span{font-size:12px;color:#aeb8cd;font-weight:1000}.v68-wallet-stats .wallet-stat b{font-size:18px;color:#25e4a9;direction:ltr;margin-top:5px;white-space:nowrap}.v68-wallet-stats .wallet-stat:nth-child(2) b{color:#ffe184}.v68-wallet-stats .wallet-stat:nth-child(3) b{color:#ffbd68}
+    .v68-wallet-card{padding:14px;border-radius:26px;overflow:visible}.v68-wallet-title{margin-bottom:10px}.v68-wallet-title h3{font-size:19px}.v68-wallet-title span{font-size:11px;color:#93a3bb}
+    .v68-wallet-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}.v68-wallet-tabs button{height:62px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,rgba(8,25,49,.82),rgba(2,10,22,.92));border:1px solid rgba(255,205,77,.34);color:#cbd5e6}.v68-wallet-tabs button i{font-style:normal;font-size:20px;line-height:1}.v68-wallet-tabs button b{font-size:13px}.v68-wallet-tabs button.active{background:linear-gradient(180deg,#fff2b4,#d89625 58%,#8f570d);border-color:#fff1aa;color:#140f06;box-shadow:0 0 22px rgba(255,190,39,.25)}
+    .v68-wallet-panel{border:1px solid rgba(255,205,77,.24);border-radius:24px;padding:12px;background:linear-gradient(180deg,rgba(4,15,33,.62),rgba(0,0,0,.18));box-shadow:inset 0 0 20px rgba(255,205,77,.03)}.v68-panel-head{border-radius:20px;border:1px solid rgba(0,201,255,.26);background:rgba(0,155,255,.07);padding:12px;margin-bottom:12px}.v68-panel-head h4{margin:0;color:#ffe184;font-size:16px}.v68-panel-head p{margin:5px 0 0;color:#b9d6ee;font-size:12px;font-weight:800;line-height:1.6}
+    .v68-method-grid{grid-template-columns:1fr;gap:9px;margin-bottom:10px}.v68-method-grid .method{min-height:62px;border-radius:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;position:relative;padding:12px 14px}.v68-method-grid .method:after{content:'فتح';font-size:11px;font-weight:1000;color:#151007;background:linear-gradient(180deg,#fff1a8,#d99924);border-radius:999px;padding:6px 10px;box-shadow:0 0 12px rgba(255,188,39,.18)}.v68-method-grid .method.active:after{content:'مختار';background:linear-gradient(180deg,#40ffd0,#14b987);color:#01140f}.v68-method-grid .method span{margin:0;color:#93a3bb;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .v68-method-details{border:1px solid rgba(255,205,77,.30);background:rgba(2,10,22,.66);border-radius:20px;padding:12px;margin:0 0 12px;color:#dbe6f7;font-size:12px;font-weight:800;line-height:1.7}.v68-method-details b{display:block;color:#ffe184;font-size:15px;margin-bottom:5px}.v68-method-details .finance-mini-grid{margin-top:9px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.v68-method-details .finance-pill{border:1px solid rgba(255,204,77,.25);border-radius:14px;padding:8px;background:rgba(0,0,0,.20);font-size:10px;text-align:center}.v68-method-details .finance-pill b{font-size:10px;color:#9fb0c8;margin:0 0 4px}.v68-method-details .copy-line{display:flex;gap:7px;margin-top:9px;align-items:center}.v68-method-details code{flex:1;min-width:0;direction:ltr;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid rgba(255,204,77,.25);border-radius:12px;padding:9px;color:#fff;background:#020914}.v68-method-details .copy-btn{border:1px solid rgba(255,204,77,.55);border-radius:12px;background:rgba(255,204,77,.12);color:#ffe184;font:inherit;font-size:11px;font-weight:1000;padding:8px 10px}
+    .v68-wallet-fields{display:grid;grid-template-columns:1fr;gap:10px}.v68-filebox{margin-top:10px}.v68-submit-btn{width:100%;margin-top:10px;height:55px;border-radius:20px;font-size:15px}.v68-history-list{margin-top:8px}.v68-history-list .hist-item{grid-template-columns:44px 1fr auto;border-radius:18px}.v68-history-list .medal{width:40px;height:40px;font-size:18px}
+    @media(min-width:620px){.v68-method-grid{grid-template-columns:1fr 1fr}.v68-wallet-fields{grid-template-columns:1fr 1fr}}
+
+  </style>
 
 
 <style id="adnor-v66-last-result-inside-hero">
@@ -429,7 +477,23 @@
     .v66-last-result-inline{margin-top:12px;padding:9px 8px 10px;border-radius:20px}
     .v66-last-title{font-size:15px}.v66-winner-digits{gap:4px!important}.v66-winner-digits span{width:28px!important;height:28px!important;font-size:16px!important}
   }
-</style>
+
+
+    /* V68 wallet clean flow */
+    .v68-wallet-page>.jackpot{display:none!important}
+    .v68-wallet-page{padding-bottom:14px}
+    .v68-wallet-stats{margin:4px 0 12px;gap:9px}
+    .v68-wallet-stats .wallet-stat{min-height:78px;border-radius:22px;background:linear-gradient(180deg,rgba(9,28,53,.90),rgba(2,9,20,.96));border-color:rgba(255,207,78,.42);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 18px rgba(255,211,90,.04)}
+    .v68-wallet-stats .wallet-stat span{font-size:12px;color:#aeb8cd;font-weight:1000}.v68-wallet-stats .wallet-stat b{font-size:18px;color:#25e4a9;direction:ltr;margin-top:5px;white-space:nowrap}.v68-wallet-stats .wallet-stat:nth-child(2) b{color:#ffe184}.v68-wallet-stats .wallet-stat:nth-child(3) b{color:#ffbd68}
+    .v68-wallet-card{padding:14px;border-radius:26px;overflow:visible}.v68-wallet-title{margin-bottom:10px}.v68-wallet-title h3{font-size:19px}.v68-wallet-title span{font-size:11px;color:#93a3bb}
+    .v68-wallet-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}.v68-wallet-tabs button{height:62px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,rgba(8,25,49,.82),rgba(2,10,22,.92));border:1px solid rgba(255,205,77,.34);color:#cbd5e6}.v68-wallet-tabs button i{font-style:normal;font-size:20px;line-height:1}.v68-wallet-tabs button b{font-size:13px}.v68-wallet-tabs button.active{background:linear-gradient(180deg,#fff2b4,#d89625 58%,#8f570d);border-color:#fff1aa;color:#140f06;box-shadow:0 0 22px rgba(255,190,39,.25)}
+    .v68-wallet-panel{border:1px solid rgba(255,205,77,.24);border-radius:24px;padding:12px;background:linear-gradient(180deg,rgba(4,15,33,.62),rgba(0,0,0,.18));box-shadow:inset 0 0 20px rgba(255,205,77,.03)}.v68-panel-head{border-radius:20px;border:1px solid rgba(0,201,255,.26);background:rgba(0,155,255,.07);padding:12px;margin-bottom:12px}.v68-panel-head h4{margin:0;color:#ffe184;font-size:16px}.v68-panel-head p{margin:5px 0 0;color:#b9d6ee;font-size:12px;font-weight:800;line-height:1.6}
+    .v68-method-grid{grid-template-columns:1fr;gap:9px;margin-bottom:10px}.v68-method-grid .method{min-height:62px;border-radius:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;position:relative;padding:12px 14px}.v68-method-grid .method:after{content:'فتح';font-size:11px;font-weight:1000;color:#151007;background:linear-gradient(180deg,#fff1a8,#d99924);border-radius:999px;padding:6px 10px;box-shadow:0 0 12px rgba(255,188,39,.18)}.v68-method-grid .method.active:after{content:'مختار';background:linear-gradient(180deg,#40ffd0,#14b987);color:#01140f}.v68-method-grid .method span{margin:0;color:#93a3bb;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .v68-method-details{border:1px solid rgba(255,205,77,.30);background:rgba(2,10,22,.66);border-radius:20px;padding:12px;margin:0 0 12px;color:#dbe6f7;font-size:12px;font-weight:800;line-height:1.7}.v68-method-details b{display:block;color:#ffe184;font-size:15px;margin-bottom:5px}.v68-method-details .finance-mini-grid{margin-top:9px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.v68-method-details .finance-pill{border:1px solid rgba(255,204,77,.25);border-radius:14px;padding:8px;background:rgba(0,0,0,.20);font-size:10px;text-align:center}.v68-method-details .finance-pill b{font-size:10px;color:#9fb0c8;margin:0 0 4px}.v68-method-details .copy-line{display:flex;gap:7px;margin-top:9px;align-items:center}.v68-method-details code{flex:1;min-width:0;direction:ltr;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid rgba(255,204,77,.25);border-radius:12px;padding:9px;color:#fff;background:#020914}.v68-method-details .copy-btn{border:1px solid rgba(255,204,77,.55);border-radius:12px;background:rgba(255,204,77,.12);color:#ffe184;font:inherit;font-size:11px;font-weight:1000;padding:8px 10px}
+    .v68-wallet-fields{display:grid;grid-template-columns:1fr;gap:10px}.v68-filebox{margin-top:10px}.v68-submit-btn{width:100%;margin-top:10px;height:55px;border-radius:20px;font-size:15px}.v68-history-list{margin-top:8px}.v68-history-list .hist-item{grid-template-columns:44px 1fr auto;border-radius:18px}.v68-history-list .medal{width:40px;height:40px;font-size:18px}
+    @media(min-width:620px){.v68-method-grid{grid-template-columns:1fr 1fr}.v68-wallet-fields{grid-template-columns:1fr 1fr}}
+
+  </style>
 
 </head>
 <body>
@@ -586,32 +650,52 @@
         <section class="royal-card"><div class="section-title"><h3>سجل تذاكري</h3><span>كل تذكرة وحالتها</span></div><div class="ticket-filter"><button class="active" data-ticket-filter="all">الكل</button><button data-ticket-filter="active">نشطة</button><button data-ticket-filter="winner">فائزة</button><button data-ticket-filter="moved">منقولة</button><button data-ticket-filter="lost">منتهية</button></div><div class="draw-list" id="myTicketsList"><div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر بعد</h4><p>اشترِ تذكرة من صفحة اليانصيب لتظهر هنا.</p></div><strong>0</strong></div></div></section>
       </div>
 
-      <div id="page-wallet" class="page">
-        <section class="jackpot"><div class="label">المحفظة الملكية</div><div class="amount" id="walletTotalText">$0.00</div><div class="drawname">إيداع — سحب — سجل العمليات</div></section>
-        <div class="wallet-stats"><div class="wallet-stat"><span>المتاح</span><b id="realBalanceText">$0.00</b></div><div class="wallet-stat"><span>البونص</span><b id="bonusBalanceText">$0.00</b></div><div class="wallet-stat"><span>محجوز</span><b id="reservedBalanceText">$0.00</b></div></div>
-        <section class="royal-card">
-          <div class="section-title"><h3>عمليات المحفظة</h3><span>طلبات محفوظة</span></div>
-          <div class="seg"><button class="wallet-tab active" data-wallet="deposit">إيداع</button><button class="wallet-tab" data-wallet="withdraw">سحب</button><button class="wallet-tab" data-wallet="history">السجل</button></div>
-          <div id="wallet-deposit" class="wallet-panel">
-            <div class="hint">اختر طريقة الدفع، اكتب المبلغ والمرجع، وارفع صورة الإيصال إن وجدت. الطلب يبقى قيد المراجعة حتى يقبله الأدمن.</div>
-            <div class="method-grid" id="depositMethods"></div><div class="method-details" id="depositMethodDetails">اختر طريقة دفع لعرض التفاصيل.</div>
-            <div class="fields">
+      <div id="page-wallet" class="page v68-wallet-page">
+        <div class="wallet-stats v68-wallet-stats">
+          <div class="wallet-stat"><span>المتاح</span><b id="realBalanceText">$0.00</b></div>
+          <div class="wallet-stat"><span>البونص</span><b id="bonusBalanceText">$0.00</b></div>
+          <div class="wallet-stat"><span>محجوز</span><b id="reservedBalanceText">$0.00</b></div>
+        </div>
+
+        <section class="royal-card v68-wallet-card">
+          <div class="section-title v68-wallet-title">
+            <h3>المحفظة</h3>
+            <span>اختر العملية المطلوبة فقط</span>
+          </div>
+
+          <div class="seg v68-wallet-tabs">
+            <button class="wallet-tab active" data-wallet="deposit"><i>➕</i><b>إيداع</b></button>
+            <button class="wallet-tab" data-wallet="withdraw"><i>↗</i><b>سحب</b></button>
+            <button class="wallet-tab" data-wallet="history"><i>📜</i><b>السجل</b></button>
+          </div>
+
+          <div id="wallet-deposit" class="wallet-panel v68-wallet-panel">
+            <div class="v68-panel-head"><h4>اختر طريقة الإيداع</h4><p>اختر USD أو شام كاش أو حساب بنكي حسب الطرق المفعّلة من الأدمن.</p></div>
+            <div class="method-grid v68-method-grid" id="depositMethods"></div>
+            <div class="method-details v68-method-details" id="depositMethodDetails">اختر طريقة إيداع لعرض التفاصيل.</div>
+            <div class="fields v68-wallet-fields">
               <div class="field-wrap"><label>المبلغ بالدولار</label><div class="field"><span class="ico">💵</span><input id="depositAmount" type="number" min="1" placeholder="مثال: 10"></div></div>
               <div class="field-wrap"><label>رقم/مرجع التحويل</label><div class="field"><span class="ico">#</span><input id="depositRef" placeholder="اكتب رقم العملية أو ملاحظة"></div></div>
             </div>
-            <div class="filebox">📎 رفع صورة الإيصال <input id="depositReceipt" type="file" accept="image/*"></div>
-            <button class="gold-btn" id="sendDepositBtn">إرسال طلب الإيداع</button><div class="deposit-status" id="depositStatus"></div>
+            <div class="filebox v68-filebox">📎 رفع صورة الإيصال <input id="depositReceipt" type="file" accept="image/*"></div>
+            <button class="gold-btn v68-submit-btn" id="sendDepositBtn">إرسال طلب الإيداع</button><div class="deposit-status" id="depositStatus"></div>
           </div>
-          <div id="wallet-withdraw" class="wallet-panel hidden">
-            <div class="hint danger-hint">عند إرسال طلب السحب يتم حجز المبلغ مباشرة من الرصيد المتاح حتى يقبله الأدمن أو يرفضه.</div>
-            <div class="method-grid" id="withdrawMethods"></div><div class="method-details" id="withdrawMethodDetails">اختر طريقة سحب لعرض التفاصيل.</div>
-            <div class="fields">
+
+          <div id="wallet-withdraw" class="wallet-panel v68-wallet-panel hidden">
+            <div class="v68-panel-head"><h4>اختر طريقة السحب</h4><p>اختر طريقة الاستلام: USD / شام كاش / حساب بنكي، ثم اكتب بياناتك بوضوح.</p></div>
+            <div class="method-grid v68-method-grid" id="withdrawMethods"></div>
+            <div class="method-details v68-method-details" id="withdrawMethodDetails">اختر طريقة سحب لعرض التفاصيل.</div>
+            <div class="fields v68-wallet-fields">
               <div class="field-wrap"><label>المبلغ المراد سحبه</label><div class="field"><span class="ico">💸</span><input id="withdrawAmount" type="number" min="1" placeholder="مثال: 5"></div></div>
               <div class="field-wrap"><label>بيانات حساب الاستلام</label><div class="field" style="height:96px"><span class="ico">🧾</span><textarea id="withdrawDetails" placeholder="اكتب محفظتك أو رقمك أو بيانات التحويل"></textarea></div></div>
             </div>
-            <button class="gold-btn" id="sendWithdrawBtn">إرسال طلب السحب</button><div class="deposit-status" id="withdrawStatus"></div>
+            <button class="gold-btn v68-submit-btn" id="sendWithdrawBtn">إرسال طلب السحب</button><div class="deposit-status" id="withdrawStatus"></div>
           </div>
-          <div id="wallet-history" class="wallet-panel hidden"><div class="history-list" id="historyList"><div class="hist-item"><div class="medal">⏳</div><div><h4>لا توجد عمليات بعد</h4><p>سيظهر هنا الإيداع والسحب وشراء التذاكر.</p></div><strong>$0</strong></div></div></div>
+
+          <div id="wallet-history" class="wallet-panel v68-wallet-panel hidden">
+            <div class="v68-panel-head"><h4>سجل العمليات</h4><p>كل عمليات الإيداع والسحب واللعب تظهر هنا بترتيب واضح.</p></div>
+            <div class="history-list v68-history-list" id="historyList"><div class="hist-item"><div class="medal">⏳</div><div><h4>لا توجد عمليات بعد</h4><p>سيظهر هنا الإيداع والسحب وشراء التذاكر.</p></div><strong>$0</strong></div></div>
+          </div>
         </section>
       </div>
 

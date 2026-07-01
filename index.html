@@ -473,6 +473,7 @@
 <style id="adnor-v66-last-result-inside-hero">
   /* V66: إظهار آخر نتيجة داخل بطاقة السحب نفسها تحت قيمة الجائزة */
   /* V83: ربط نتيجة السحب بمسار عام ثابت public_draw_results حتى تظهر للمستخدم فورًا */
+  /* V84: مسار عرض احتياطي داخل system_settings حتى يتغير مربع آخر نتيجة فورًا */
   #page-lottery .v63-hero-draw{padding-bottom:16px!important}
   .v66-last-result-inline{
     position:relative;z-index:2;margin:14px auto 0;width:100%;max-width:360px;
@@ -1391,7 +1392,7 @@
     const defaultWheelSettings={enabled:true,minBet:1,maxBet:500,segments:[{label:'0x',m:0,w:26},{label:'1x',m:1,w:22},{label:'2x',m:2,w:15},{label:'0x',m:0,w:24},{label:'100x',m:100,w:1},{label:'1x',m:1,w:20},{label:'10000x',m:10000,w:0.08},{label:'2x',m:2,w:13},{label:'0.5x',m:.5,w:12},{label:'5x',m:5,w:5},{label:'10x',m:10,w:2},{label:'0x',m:0,w:24}],luckyBox:{enabled:true,chance:35,min:0.10,max:1,cooldownHours:24}};
     let wheelSettings=JSON.parse(JSON.stringify(defaultWheelSettings));
     let wheelSegments=wheelSettings.segments;
-    let lotteryUnsub=null, publicDrawUnsub=null, publicDrawRoundUnsubs=[], publicDrawHistory={}, publicDrawRounds={}, publicDrawResultsUnsub=null, publicDrawResults={};
+    let lotteryUnsub=null, publicDrawUnsub=null, publicDrawRoundUnsubs=[], publicDrawHistory={}, publicDrawRounds={}, publicDrawResultsUnsub=null, publicDrawResults={}, displayDrawResultsUnsub=null, displayDrawResults={};
     function mergeLotterySettings(v){const base=JSON.parse(JSON.stringify(defaultLotterySettings));v=v||{};base.ticketPrice=Number(v.ticketPrice||base.ticketPrice);base.moveLosers=(v.moveLosers!==false);['daily','weekly','monthly','yearly'].forEach(k=>{base[k]={...base[k],...(v[k]||{})};base[k].enabled=(base[k].enabled!==false);base[k].prize=Number(base[k].prize||0);});return base}
     function prizeFor(type){return Number((lotterySettings?.[type]?.prize ?? drawMeta[type]?.jackpot ?? 0))}
     function drawLabel(type){return lotterySettings?.[type]?.label || drawMeta[type]?.label || type}
@@ -1406,6 +1407,11 @@
       (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}});
       publicDrawRoundUnsubs=[];
       if(publicDrawResultsUnsub)try{publicDrawResultsUnsub()}catch(e){};
+      if(displayDrawResultsUnsub)try{displayDrawResultsUnsub()}catch(e){};
+      displayDrawResultsUnsub=onValue(ref(db,'system_settings/latest_draw_results'),snap=>{
+        displayDrawResults=snap.val()||{};
+        renderLatestDrawPublic();
+      },err=>{console.error('system_settings/latest_draw_results read failed',err); displayDrawResults={}; renderLatestDrawPublic();});
       publicDrawResultsUnsub=onValue(ref(db,'public_draw_results'),snap=>{
         publicDrawResults=snap.val()||{};
         renderLatestDrawPublic();
@@ -1427,23 +1433,26 @@
     function publicDrawsList(type='all'){
       const now=Date.now();
       const rows=[];
+      const normalizeDrawResult=(d,extra={})=>{
+        const o={...(d||{}),...extra};
+        o.ticketNumber=String(o.ticketNumber||o.winningNumber||o.winnerNumber||o.winnerTicketNumber||o.number||'').replace(/\D/g,'').padStart(7,'0').slice(-7);
+        o.winnerName=o.winnerName||o.name||o.userName||'';
+        o.winnerEmail=o.winnerEmail||o.userEmail||o.email||'';
+        o.drawType=o.drawType||o.type||extra.drawType||currentDraw||'daily';
+        o.drawLabel=o.drawLabel||drawLabel(o.drawType);
+        return o;
+      };
+      const addResult=(d,extra={})=>{if(d&&typeof d==='object')rows.push(normalizeDrawResult(d,extra));};
+      const ddr=displayDrawResults||{};
+      Object.entries(ddr.current||{}).forEach(([roundType,d])=>addResult(d,{id:d.id||('display_'+roundType),drawType:roundType,_src:'display_current'}));
+      Object.entries(ddr.history||{}).forEach(([roundType,obj])=>Object.entries(obj||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,drawType:roundType,_src:'display_history'})));
+      addResult(ddr.latest,{id:ddr.latest?.id||'display_latest',_src:'display_latest'});
       const pdr=publicDrawResults||{};
-      Object.entries(pdr.current||{}).forEach(([roundType,d])=>{
-        if(d&&typeof d==='object')rows.push({...d,id:d.id||('current_'+roundType),drawType:d.drawType||roundType,drawLabel:d.drawLabel||drawLabel(d.drawType||roundType),_src:'public_current'});
-      });
-      Object.entries(pdr.history||{}).forEach(([roundType,obj])=>{
-        Object.entries(obj||{}).forEach(([id,d])=>{
-          if(d&&typeof d==='object')rows.push({...d,id:d.id||id,drawType:d.drawType||roundType,drawLabel:d.drawLabel||drawLabel(d.drawType||roundType),_src:'public_history'});
-        });
-      });
-      Object.entries(publicDrawHistory||{}).forEach(([id,d])=>{
-        if(d&&typeof d==='object')rows.push({...d,id:d.id||id,_src:'draw_history'});
-      });
-      Object.entries(publicDrawRounds||{}).forEach(([roundType,obj])=>{
-        Object.entries(obj||{}).forEach(([id,d])=>{
-          if(d&&typeof d==='object')rows.push({...d,id:d.id||id,drawType:d.drawType||roundType,drawLabel:d.drawLabel||drawLabel(d.drawType||roundType),_src:'draw_rounds'});
-        });
-      });
+      Object.entries(pdr.current||{}).forEach(([roundType,d])=>addResult(d,{id:d.id||('current_'+roundType),drawType:roundType,_src:'public_current'}));
+      Object.entries(pdr.history||{}).forEach(([roundType,obj])=>Object.entries(obj||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,drawType:roundType,_src:'public_history'})));
+      addResult(pdr.latest,{id:pdr.latest?.id||'public_latest',_src:'public_latest'});
+      Object.entries(publicDrawHistory||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,_src:'draw_history'}));
+      Object.entries(publicDrawRounds||{}).forEach(([roundType,obj])=>Object.entries(obj||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,drawType:roundType,_src:'draw_rounds'})));
       const seen=new Set();
       return rows.filter(d=>{
         const dType=d.drawType||d.type||'daily';
@@ -1467,10 +1476,11 @@
       }
       if(last){
         const winnerName=String(last.winnerName||'').trim() || maskEmail(last.winnerEmail||'مستخدم ADNOR');
+        const finalNumber=String(last.ticketNumber||last.winningNumber||last.winnerNumber||last.winnerTicketNumber||'0000000').replace(/\D/g,'').padStart(7,'0').slice(-7);
         setText('lastWinnerText','اسم الفائز: '+winnerName);
         setText('lastPrizeText','الجائزة: '+money(last.prize||0));
-        setLastDigits(last.ticketNumber||'0000000');
-        setText('homeLastResultTitle',(last.drawLabel||drawLabel(last.drawType||currentDraw))+' — رقم '+(last.ticketNumber||'—'));
+        setLastDigits(finalNumber);
+        setText('homeLastResultTitle',(last.drawLabel||drawLabel(last.drawType||currentDraw))+' — رقم '+(finalNumber||'—'));
         setText('homeLastResultSub','الفائز: '+winnerName+' — '+new Date(last.publishAt||last.createdAt||Date.now()).toLocaleString('ar-TR'));
         setText('homeLastResultPrize',money(last.prize||0));
       }else{
@@ -1572,7 +1582,7 @@
     function listenAiKnowledge(){if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()})}
     async function adminSaveSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl({maintenance:$('siteMaintenanceInput')?.value==='true',maintenanceMessage:$('siteMaintenanceMessageInput')?.value||'',announcement:$('siteAnnouncementInput')?.value||'',modules:{lottery:!!$('moduleLotteryInput')?.checked,results:!!$('moduleLotteryInput')?.checked,games:!!$('moduleGamesInput')?.checked,wallet:!!$('moduleWalletInput')?.checked,support:!!$('moduleSupportInput')?.checked}});data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);await set(ref(db,'finance_audit/'+Date.now()),{action:'site_control_saved',adminEmail:currentUser?.email||'',createdAt:Date.now(),note:'حفظ إعدادات تشغيل الموقع والأقسام'});toast('تم حفظ إعدادات تشغيل الموقع')}
     async function seedSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl(defaultSiteControl);data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);toast('تم استرجاع التشغيل الطبيعي')}
-    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){currentProfile=await ensureUser(user);$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);startAdminListeners()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
+    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){currentProfile=await ensureUser(user);$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);startAdminListeners()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
     $('hideBalanceBtn').onclick=()=>{balanceHidden=!balanceHidden;$('hideBalanceBtn').textContent=balanceHidden?'🙈':'👁️';renderProfile()};if($('v61AccountShortcut'))$('v61AccountShortcut').onclick=()=>showPage('account');if($('toggleLotteryTicketsBtn'))$('toggleLotteryTicketsBtn').onclick=()=>{lotteryTicketsHidden=!lotteryTicketsHidden;const card=$('lotteryActiveCard');if(card)card.classList.toggle('v61-hide-tickets',lotteryTicketsHidden);$('toggleLotteryTicketsBtn').textContent=lotteryTicketsHidden?'عرض التذاكر':'إخفاء التذاكر'};function openDrawer(){$('sideDrawer')?.classList.add('open');$('drawerOverlay')?.classList.add('open')}function closeDrawer(){$('sideDrawer')?.classList.remove('open');$('drawerOverlay')?.classList.remove('open')}$('menuBtn').onclick=openDrawer;$('drawerCloseBtn').onclick=closeDrawer;$('drawerOverlay').onclick=closeDrawer;$('drawerLogoutBtn').onclick=()=>{closeDrawer();signOut(auth)};document.querySelectorAll('[data-drawer-page]').forEach(b=>b.onclick=()=>{const p=b.dataset.drawerPage;if(p==='admin'&&!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');closeDrawer();showPage(p)});$('bellBtn').onclick=()=>{closeDrawer();showPage('notifications');};if($('markReadBtn'))$('markReadBtn').onclick=markNotificationsRead;$('depositBtn').onclick=()=>{showPage('wallet');showWalletPanel('deposit')};$('withdrawBtn').onclick=()=>{showPage('wallet');showWalletPanel('withdraw')};if($('openResultsBtn'))$('openResultsBtn').onclick=()=>showPage('results');if($('openTicketsBtn'))$('openTicketsBtn').onclick=()=>{showPage('results');currentTicketFilter='all';document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x.dataset.ticketFilter==='all'));renderUserTicketHistory(currentUserTickets)};document.querySelectorAll('[data-ticket-filter]').forEach(b=>b.onclick=()=>{currentTicketFilter=b.dataset.ticketFilter;document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x===b));renderUserTicketHistory(currentUserTickets)});
     function showPage(p){if(p==='admin'&&!isAdminUser()){toast('بوابة الإدارة للأدمن فقط');return}if(!isAdminUser()){if(siteControl.maintenance && !['account','notifications'].includes(p)){toast(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');return}if(!moduleEnabled(p)){toast('هذا القسم متوقف مؤقتًا من الإدارة');return}}const page=$('page-'+p);if(!page)return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));page.classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));if($('appWrap')){$('appWrap').classList.toggle('admin-layout',p==='admin');$('appWrap').setAttribute('data-active-page',p)}if(p==='games'&&typeof showGamesHome==='function')showGamesHome();if(p==='admin')showAdminSection('overview')}document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{if(b.dataset.page==='admin'&&(!currentProfile||!currentProfile.isAdmin))return toast('هذه الصفحة للأدمن فقط');showPage(b.dataset.page)});document.querySelectorAll('[data-home-go]').forEach(b=>b.onclick=()=>{const go=b.dataset.homeGo||'home';const parts=go.split(':');showPage(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>showWalletPanel(parts[1]),40)});if($('v52QuickDepositBtn'))$('v52QuickDepositBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('deposit'),40)};if($('v52QuickWithdrawBtn'))$('v52QuickWithdrawBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('withdraw'),40)};
     function showWalletPanel(p){document.querySelectorAll('.wallet-panel').forEach(x=>x.classList.add('hidden'));$('wallet-'+p).classList.remove('hidden');document.querySelectorAll('.wallet-tab').forEach(b=>b.classList.toggle('active',b.dataset.wallet===p));if(p==='deposit'){depositCategory='';depositMethod='';clearDepositStatus();renderMethods()}if(p==='withdraw'){withdrawCategory='';withdrawMethod='';clearWithdrawStatus();renderMethods()}}document.querySelectorAll('.wallet-tab').forEach(b=>b.onclick=()=>showWalletPanel(b.dataset.wallet));
@@ -2496,12 +2506,19 @@
       updates['public_draw_results/current/'+drawType]=publicResult;
       updates['public_draw_results/history/'+drawType+'/'+drawId]=publicResult;
       updates['public_draw_results/latest']=publicResult;
+      // V84 fallback display path: this path is already allowed by older system_settings rules.
+      updates['system_settings/latest_draw_results/current/'+drawType]=publicResult;
+      updates['system_settings/latest_draw_results/history/'+drawType+'/'+drawId]=publicResult;
+      updates['system_settings/latest_draw_results/latest']=publicResult;
       updates['admin_notifications/'+now]={type:'draw_result',text:(mode==='schedule'?'تمت جدولة ':'تم تنفيذ ')+drawLabel(drawType)+' يدويًا للبطاقة '+winner.number,createdAt:now,status:'new',drawId};
       updates['user_notifications/'+winner.uid+'/'+now]=notifObj('draw_win','مبروك! تذكرتك ربحت','تذكرتك رقم '+winner.number+' ربحت '+drawLabel(drawType)+' بقيمة '+money(prize)+'.',{amount:prize,drawId,publishAt});
       await update(ref(db),updates);
       publicDrawResults=publicDrawResults||{};
       publicDrawResults.current={...(publicDrawResults.current||{}),[drawType]:publicResult};
       publicDrawResults.latest=publicResult;
+      displayDrawResults=displayDrawResults||{};
+      displayDrawResults.current={...(displayDrawResults.current||{}),[drawType]:publicResult};
+      displayDrawResults.latest=publicResult;
       renderLatestDrawPublic();
       if(input)input.value='';
       toast((mode==='schedule'?'تمت جدولة النتيجة':'تم تنفيذ السحب مباشرة')+' — الفائز: '+(winner.userEmail||winner.number)+' — المنقول: '+moved);

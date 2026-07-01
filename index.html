@@ -522,6 +522,15 @@
     @media(max-width:430px){.v69-category-grid{gap:7px}.v69-category{min-height:82px;border-radius:19px}.v69-category b{font-size:12px}.v69-category span{font-size:8.5px}.v69-step-head{padding:9px}.v69-step-head h4{font-size:14px}}
 </style>
 
+
+  <style id="adnor-v71-drawer-clean-fix">
+    /* V71: تنظيف قائمة الثلاث خطوط — حذف التنقلات المكررة وإبقاء الاختصارات الثانوية فقط */
+    #sideDrawer .drawer-title{letter-spacing:.12em;text-align:center}
+    #sideDrawer .v71-drawer-user{margin-top:4px;margin-bottom:14px;text-align:right}
+    #sideDrawer .v71-drawer-user b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #sideDrawer .v71-drawer-user span{display:block;font-size:12px;color:#aeb8cd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+    #sideDrawer .v71-drawer-menu .drawer-link{min-height:56px}
+  </style>
 </head>
 <body>
   <div class="aurora"></div>
@@ -568,19 +577,13 @@
       <div class="drawer-overlay" id="drawerOverlay"></div>
       <aside class="side-drawer" id="sideDrawer" aria-label="قائمة ADNOR">
         <div class="drawer-head"><div class="drawer-title">ADNOR</div><button class="drawer-close" id="drawerCloseBtn">×</button></div>
-        <div class="drawer-user"><b id="drawerUserName">مستخدم ADNOR</b><span id="drawerUserEmail">نظام آمن</span><div class="admin-lock-note">زر بوابة الإدارة يظهر هنا فقط لحساب الأدمن الرئيسي.</div></div>
-        <div class="drawer-menu">
-          <button class="drawer-link v52-primary" data-drawer-page="home"><span>🏠 الرئيسية</span><span>›</span></button>
-          <button class="drawer-link v52-primary" data-drawer-page="lottery"><span>💎 اليانصيب</span><span>›</span></button>
-          <button class="drawer-link v52-primary" data-drawer-page="games"><span>🎮 الألعاب</span><span>›</span></button>
-          <button class="drawer-link v52-primary" data-drawer-page="vip"><span>👑 VIP الملكي</span><span>›</span></button>
-          <button class="drawer-link v52-primary" data-drawer-page="wallet"><span>💳 المحفظة</span><span>›</span></button>
+        <div class="drawer-user v71-drawer-user"><b id="drawerUserName">مستخدم ADNOR</b><span id="drawerUserEmail">نظام آمن</span></div>
+        <div class="drawer-menu v71-drawer-menu">
           <button class="drawer-link v52-primary" data-drawer-page="account"><span>⚙️ الضبط والإعدادات</span><span>›</span></button>
           <button class="drawer-link v52-secondary" data-drawer-page="results"><span>🏆 النتائج وتذاكري</span><span>›</span></button>
+          <button class="drawer-link v52-secondary" data-drawer-page="vip"><span>👑 VIP الملكي</span><span>›</span></button>
           <button class="drawer-link v52-secondary" data-drawer-page="support"><span>💬 الدعم الفني</span><span>›</span></button>
           <button class="drawer-link v52-secondary" data-drawer-page="ai"><span>🤖 مساعد ADNOR الذكي</span><span>›</span></button>
-          <button class="drawer-link v52-secondary" data-drawer-page="notifications"><span>🔔 الإشعارات</span><span>›</span></button>
-          <button class="drawer-link admin-entry hidden" id="drawerAdminBtn" data-drawer-page="admin"><span>🛡️ بوابة الإدارة</span><span>›</span></button>
           <button class="drawer-link" id="drawerLogoutBtn"><span>🚪 تسجيل الخروج</span><span>›</span></button>
         </div>
       </aside>

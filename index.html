@@ -2479,11 +2479,38 @@
       toast('تم ضبط وقت النشر على 8 مساءً');
     }
     function cleanTicketNumber(v){return String(v||'').replace(/\D/g,'').slice(0,12)}
+    function setCurrentPrize(type){
+      const drawType=type||($('resultBoxDrawType')?.value)||currentDraw||'daily';
+      const current=Number(prizeFor(drawType)||0);
+      const el=$('resultBoxPrize');
+      const typed=Number(el?.value||0);
+      if(el && !typed) el.value=current;
+      return Number((typed||current||0).toFixed(2));
+    }
     function prefillResultBoxPrize(){
       const type=($('resultBoxDrawType')?.value)||'daily';
       const el=$('resultBoxPrize');
-      if(el)el.value=Number(prizeFor(type)||0);
+      if(el)el.value=setCurrentPrize(type);
       toast('تمت تعبئة جائزة '+drawLabel(type));
+    }
+    async function saveLastResultBoxToLotterySettings(result){
+      // V89: حفظ آخر نتيجة داخل lottery_settings فقط لأنه المسار المضمون الموجود عندك.
+      const snap=await get(ref(db,'lottery_settings'));
+      const current=mergeLotterySettings(snap.val()||lotterySettings||{});
+      current.last_results=current.last_results||{};
+      current.last_results.current={...(current.last_results.current||{})};
+      current.last_results.history={...(current.last_results.history||{})};
+      current.last_results.history[result.drawType]={...(current.last_results.history[result.drawType]||{})};
+      current.last_results.current[result.drawType]=result;
+      current.last_results.history[result.drawType][result.id]=result;
+      current.last_results.latest=result;
+      current.updatedAt=Date.now();
+      current.updatedBy=currentUser?.email||'';
+      await set(ref(db,'lottery_settings'),current);
+      lotterySettings=mergeLotterySettings(current);
+      renderLatestDrawPublic();
+      try{await set(ref(db,'admin_notifications/'+Date.now()),{type:'draw_result_box',text:'تم تحديث مربع آخر نتيجة — '+result.ticketNumber+' — '+result.winnerName,createdAt:Date.now(),status:'new'});}catch(_e){}
+      return true;
     }
     async function adminPublishResultBox(mode='direct'){
       if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');
@@ -2491,7 +2518,7 @@
       const rawNumber=$('resultBoxTicketNumber')?.value||'';
       const ticketNumber=String(cleanTicketNumber(rawNumber)).replace(/\D/g,'').padStart(7,'0').slice(-7);
       const winnerName=String($('resultBoxWinnerName')?.value||'').trim();
-      const prize=Number($('resultBoxPrize')?.value||prizeFor(drawType)||0);
+      const prize=setCurrentPrize(drawType);
       const now=Date.now();
       let publishAt=now;
       if(mode==='schedule'){
@@ -2504,38 +2531,11 @@
       if(!winnerName)return toast('اكتب اسم الفائز كما تريد أن يظهر للمستخدمين');
       const id='box_'+drawType+'_'+now;
       const status=mode==='schedule'?'scheduled':'published';
-      const result={id,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,winnerEmail:'',prize,status,publishAt,publishedAt:status==='published'?now:0,createdAt:now,updatedAt:now,source:'result_box_direct',adminEmail:currentUser?.email||''};
-      const updates={};
-      // V86: لا نكتب في public_draw_results هنا حتى لا تفشل العملية إذا لم تكن قواعد V83 منشورة.
-      // نستخدم lottery_settings/last_results لأنه مسار موجود ومسموح للأدمن من الإصدارات القديمة.
-      updates['lottery_settings/last_results/current/'+drawType]=result;
-      updates['lottery_settings/last_results/history/'+drawType+'/'+id]=result;
-      updates['lottery_settings/last_results/latest']=result;
-      updates['system_settings/result_box_direct/current/'+drawType]=result;
-      updates['system_settings/result_box_direct/history/'+drawType+'/'+id]=result;
-      updates['system_settings/result_box_direct/latest']=result;
-      // V88: هذا هو المسار المباشر الجديد الذي يقرأ منه مربع آخر نتيجة مباشرة.
-      updates['system_settings/adnor_last_result_box/'+drawType]=result;
-      updates['system_settings/adnor_last_result_box/latest']=result;
-      updates['admin_notifications/'+now]={type:'draw_result_box',text:(status==='published'?'تم نشر ':'تمت جدولة ')+'آخر نتيجة في مربع '+drawLabel(drawType)+' — '+ticketNumber+' — '+winnerName,createdAt:now,status:'new'};
+      const result={id,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,winnerEmail:'',prize,status,publishAt,publishedAt:status==='published'?now:0,createdAt:now,updatedAt:now,source:'v89_lottery_settings_last_result',adminEmail:currentUser?.email||''};
       try{
-        await update(ref(db),updates);
-      }catch(e){
-        console.error('V86 result box save failed',e);
-        return toast('فشل حفظ نتيجة المربع: '+(e.code||e.message||e));
-      }
-      resultBoxDirect=resultBoxDirect||{};
-      resultBoxDirect.current={...(resultBoxDirect.current||{}),[drawType]:result};
-      resultBoxDirect.latest=result;
-      adnorLastResultBox=adnorLastResultBox||{};
-      adnorLastResultBox[drawType]=result;
-      adnorLastResultBox.latest=result;
-      lotterySettings=lotterySettings||{};
-      lotterySettings.last_results=lotterySettings.last_results||{};
-      lotterySettings.last_results.current={...(lotterySettings.last_results.current||{}),[drawType]:result};
-      lotterySettings.last_results.latest=result;
-      renderLatestDrawPublic();
-      toast(status==='published'?'تم نشر آخر نتيجة في المربع':'تمت جدولة آخر نتيجة في المربع');
+        await saveLastResultBoxToLotterySettings(result);
+        toast(status==='published'?'تم نشر آخر نتيجة في المربع':'تمت جدولة آخر نتيجة في المربع');
+      }catch(e){console.error('V89 result box save failed',e);toast('فشل حفظ نتيجة المربع: '+(e.code||e.message||e));}
     }
     async function adminForceLastResultBoxNow(){
       if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');
@@ -2543,18 +2543,14 @@
       const rawNumber=$('resultBoxTicketNumber')?.value||'';
       const ticketNumber=String(cleanTicketNumber(rawNumber)).replace(/\D/g,'').padStart(7,'0').slice(-7);
       const winnerName=String($('resultBoxWinnerName')?.value||'').trim()||'ADNOR';
-      const prize=Number($('resultBoxPrize')?.value||prizeFor(drawType)||0);
+      const prize=setCurrentPrize(drawType);
       const now=Date.now();
       if(!rawNumber || ticketNumber==='0000000')return toast('اكتب رقم تذكرة صحيح');
-      const result={id:'force_box_'+drawType+'_'+now,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,prize,status:'published',publishAt:now,publishedAt:now,createdAt:now,updatedAt:now,source:'v88_force_last_result_box',adminEmail:currentUser?.email||''};
+      const result={id:'force_box_'+drawType+'_'+now,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,prize,status:'published',publishAt:now,publishedAt:now,createdAt:now,updatedAt:now,source:'v89_direct_lottery_settings_box',adminEmail:currentUser?.email||''};
       try{
-        await set(ref(db,'system_settings/adnor_last_result_box/'+drawType),result);
-        await set(ref(db,'system_settings/adnor_last_result_box/latest'),result);
-        adnorLastResultBox=adnorLastResultBox||{};
-        adnorLastResultBox[drawType]=result; adnorLastResultBox.latest=result;
-        renderLatestDrawPublic();
+        await saveLastResultBoxToLotterySettings(result);
         toast('تم تحديث مربع آخر نتيجة مباشرة');
-      }catch(e){console.error('V88 force save failed',e);toast('فشل التحديث المباشر: '+(e.code||e.message||e));}
+      }catch(e){console.error('V89 force save failed',e);toast('فشل التحديث المباشر: '+(e.code||e.message||e));}
     }
     function findManualWinner(tickets,number){const clean=cleanTicketNumber(number);return tickets.find(t=>cleanTicketNumber(t.number)===clean || String(t.id||'')===String(number||'').trim())}
     async function adminManualDraw(drawType,mode){
@@ -2778,7 +2774,7 @@
 
 
     if($('adminUserSearch'))$('adminUserSearch').addEventListener('input',()=>renderAdminUsers(arrObj(adminState.users)));document.querySelectorAll('.user-chip').forEach(btn=>btn.addEventListener('click',()=>{currentUserFilter=btn.dataset.userFilter||'all';renderAdminUsers(arrObj(adminState.users))}));if($('exportUsersBtn'))$('exportUsersBtn').onclick=exportUsersCsv;if($('adminAuditSearch'))$('adminAuditSearch').addEventListener('input',renderAdminAudit);document.querySelectorAll('.audit-chip').forEach(btn=>btn.addEventListener('click',()=>{currentAuditFilter=btn.dataset.auditFilter||'all';renderAdminAudit()}));if($('auditExportBtn'))$('auditExportBtn').onclick=exportAuditCsv;if($('auditRefreshBtn'))$('auditRefreshBtn').onclick=renderAdminAudit;if($('saveSiteControlBtn'))$('saveSiteControlBtn').onclick=adminSaveSiteControl;if($('seedSiteControlBtn'))$('seedSiteControlBtn').onclick=seedSiteControl;if($('savePaymentMethodBtn'))$('savePaymentMethodBtn').onclick=adminSavePaymentMethod;if($('newPaymentMethodBtn'))$('newPaymentMethodBtn').onclick=()=>fillPaymentForm({id:'',name:'',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'',qrUrl:'',details:''});if($('resetPaymentMethodsBtn'))$('resetPaymentMethodsBtn').onclick=()=>seedPaymentMethods(true);if($('saveLotterySettingsBtn'))$('saveLotterySettingsBtn').onclick=adminSaveLotterySettings;if($('resetLotterySettingsBtn'))$('resetLotterySettingsBtn').onclick=()=>seedLotterySettings(true);if($('saveWheelSettingsBtn'))$('saveWheelSettingsBtn').onclick=adminSaveWheelSettings;if($('resetWheelSettingsBtn'))$('resetWheelSettingsBtn').onclick=()=>seedWheelSettings(true);
-    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,adminSaveSiteControl,seedSiteControl,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminPublishResultBox,adminForceLastResultBoxNow,prefillResultBoxPrize,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,saveAiKnowledgeFromForm,teachAiFromUnanswered,deleteAiKnowledge,dismissAiUnanswered,fillAiFormFromUnanswered,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
+    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,adminSaveSiteControl,seedSiteControl,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminPublishResultBox,adminForceLastResultBoxNow,prefillResultBoxPrize,setCurrentPrize,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,saveAiKnowledgeFromForm,teachAiFromUnanswered,deleteAiKnowledge,dismissAiUnanswered,fillAiFormFromUnanswered,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
     Object.defineProperty(window,'supportContacts',{get:()=>supportContacts});
 
     function tick(){const now=new Date();const target=new Date(now);target.setHours(20,0,0,0);if(now>=target)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const days=Math.floor(diff/86400000);diff%=86400000;const hours=Math.floor(diff/3600000);diff%=3600000;const mins=Math.floor(diff/60000);diff%=60000;const secs=Math.floor(diff/1000);$('d').textContent=String(days).padStart(2,'0');$('h').textContent=String(hours).padStart(2,'0');$('m').textContent=String(mins).padStart(2,'0');$('s').textContent=String(secs).padStart(2,'0')}setInterval(tick,1000);tick();$('ticketNumber').value=randomTicket();

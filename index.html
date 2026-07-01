@@ -1460,6 +1460,11 @@
         return o;
       };
       const addResult=(d,extra={})=>{if(d&&typeof d==='object')rows.push(normalizeDrawResult(d,extra));};
+      // V86: أولوية مطلقة لنتائج المربع المحفوظة داخل lottery_settings لأنها تعمل بنفس قواعد الإعدادات القديمة.
+      const ldr=(lotterySettings&&lotterySettings.last_results)||{};
+      Object.entries(ldr.current||{}).forEach(([roundType,d])=>addResult(d,{id:d.id||('lottery_last_'+roundType),drawType:roundType,_src:'lottery_settings_last_current'}));
+      Object.entries(ldr.history||{}).forEach(([roundType,obj])=>Object.entries(obj||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,drawType:roundType,_src:'lottery_settings_last_history'})));
+      addResult(ldr.latest,{id:ldr.latest?.id||'lottery_settings_last_latest',_src:'lottery_settings_last_latest'});
       const rbd=resultBoxDirect||{};
       Object.entries(rbd.current||{}).forEach(([roundType,d])=>addResult(d,{id:d.id||('box_'+roundType),drawType:roundType,_src:'result_box_current'}));
       Object.entries(rbd.history||{}).forEach(([roundType,obj])=>Object.entries(obj||{}).forEach(([id,d])=>addResult(d,{id:d.id||id,drawType:roundType,_src:'result_box_history'})));
@@ -2487,20 +2492,28 @@
       const status=mode==='schedule'?'scheduled':'published';
       const result={id,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,winnerEmail:'',prize,status,publishAt,publishedAt:status==='published'?now:0,createdAt:now,updatedAt:now,source:'result_box_direct',adminEmail:currentUser?.email||''};
       const updates={};
+      // V86: لا نكتب في public_draw_results هنا حتى لا تفشل العملية إذا لم تكن قواعد V83 منشورة.
+      // نستخدم lottery_settings/last_results لأنه مسار موجود ومسموح للأدمن من الإصدارات القديمة.
+      updates['lottery_settings/last_results/current/'+drawType]=result;
+      updates['lottery_settings/last_results/history/'+drawType+'/'+id]=result;
+      updates['lottery_settings/last_results/latest']=result;
       updates['system_settings/result_box_direct/current/'+drawType]=result;
       updates['system_settings/result_box_direct/history/'+drawType+'/'+id]=result;
       updates['system_settings/result_box_direct/latest']=result;
-      updates['public_draw_results/current/'+drawType]=result;
-      updates['public_draw_results/history/'+drawType+'/'+id]=result;
-      updates['public_draw_results/latest']=result;
       updates['admin_notifications/'+now]={type:'draw_result_box',text:(status==='published'?'تم نشر ':'تمت جدولة ')+'آخر نتيجة في مربع '+drawLabel(drawType)+' — '+ticketNumber+' — '+winnerName,createdAt:now,status:'new'};
-      await update(ref(db),updates);
+      try{
+        await update(ref(db),updates);
+      }catch(e){
+        console.error('V86 result box save failed',e);
+        return toast('فشل حفظ نتيجة المربع: '+(e.code||e.message||e));
+      }
       resultBoxDirect=resultBoxDirect||{};
       resultBoxDirect.current={...(resultBoxDirect.current||{}),[drawType]:result};
       resultBoxDirect.latest=result;
-      publicDrawResults=publicDrawResults||{};
-      publicDrawResults.current={...(publicDrawResults.current||{}),[drawType]:result};
-      publicDrawResults.latest=result;
+      lotterySettings=lotterySettings||{};
+      lotterySettings.last_results=lotterySettings.last_results||{};
+      lotterySettings.last_results.current={...(lotterySettings.last_results.current||{}),[drawType]:result};
+      lotterySettings.last_results.latest=result;
       renderLatestDrawPublic();
       toast(status==='published'?'تم نشر آخر نتيجة في المربع':'تمت جدولة آخر نتيجة في المربع');
     }
@@ -2568,19 +2581,20 @@
       updates['draw_history/'+drawId]={id:drawId,drawType,drawLabel:drawLabel(drawType),prize,winnerUid:winner.uid,winnerEmail:winner.userEmail||'',winnerName:winner.userName||'',winnerTicketId:winner.id,ticketNumber:winner.number,totalTickets:tickets.length,movedTickets:moved,seed,drawMode:'manual_admin',status:mode==='schedule'?'scheduled':'published',publishAt,publishedAt:mode==='schedule'?0:now,createdAt:now,adminEmail:currentUser.email};
       updates['draw_rounds/'+drawType+'/'+drawId]={id:drawId,drawType,drawLabel:drawLabel(drawType),prize,winnerUid:winner.uid,winnerEmail:winner.userEmail||'',winnerName:winner.userName||'',winnerTicketId:winner.id,ticketNumber:winner.number,totalTickets:tickets.length,movedTickets:moved,seed,drawMode:'manual_admin',status:mode==='schedule'?'scheduled':'published',publishAt,publishedAt:mode==='schedule'?0:now,createdAt:now,adminEmail:currentUser.email};
       const publicResult={id:drawId,drawType,drawLabel:drawLabel(drawType),prize,winnerName:(winner.userName||''),winnerEmail:(winner.userEmail||''),winnerTicketId:winner.id,ticketNumber:winner.number,totalTickets:tickets.length,movedTickets:moved,status:mode==='schedule'?'scheduled':'published',publishAt,publishedAt:mode==='schedule'?0:now,createdAt:now,updatedAt:now};
-      updates['public_draw_results/current/'+drawType]=publicResult;
-      updates['public_draw_results/history/'+drawType+'/'+drawId]=publicResult;
-      updates['public_draw_results/latest']=publicResult;
-      // V84 fallback display path: this path is already allowed by older system_settings rules.
+      // V86: نحفظ آخر نتيجة في lottery_settings حتى تظهر في مربع السحب بدون الاعتماد على مسارات جديدة.
+      updates['lottery_settings/last_results/current/'+drawType]=publicResult;
+      updates['lottery_settings/last_results/history/'+drawType+'/'+drawId]=publicResult;
+      updates['lottery_settings/last_results/latest']=publicResult;
       updates['system_settings/latest_draw_results/current/'+drawType]=publicResult;
       updates['system_settings/latest_draw_results/history/'+drawType+'/'+drawId]=publicResult;
       updates['system_settings/latest_draw_results/latest']=publicResult;
       updates['admin_notifications/'+now]={type:'draw_result',text:(mode==='schedule'?'تمت جدولة ':'تم تنفيذ ')+drawLabel(drawType)+' يدويًا للبطاقة '+winner.number,createdAt:now,status:'new',drawId};
       updates['user_notifications/'+winner.uid+'/'+now]=notifObj('draw_win','مبروك! تذكرتك ربحت','تذكرتك رقم '+winner.number+' ربحت '+drawLabel(drawType)+' بقيمة '+money(prize)+'.',{amount:prize,drawId,publishAt});
       await update(ref(db),updates);
-      publicDrawResults=publicDrawResults||{};
-      publicDrawResults.current={...(publicDrawResults.current||{}),[drawType]:publicResult};
-      publicDrawResults.latest=publicResult;
+      lotterySettings=lotterySettings||{};
+      lotterySettings.last_results=lotterySettings.last_results||{};
+      lotterySettings.last_results.current={...(lotterySettings.last_results.current||{}),[drawType]:publicResult};
+      lotterySettings.last_results.latest=publicResult;
       displayDrawResults=displayDrawResults||{};
       displayDrawResults.current={...(displayDrawResults.current||{}),[drawType]:publicResult};
       displayDrawResults.latest=publicResult;

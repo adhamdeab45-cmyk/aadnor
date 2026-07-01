@@ -277,6 +277,14 @@
     .v68-wallet-fields{display:grid;grid-template-columns:1fr;gap:10px}.v68-filebox{margin-top:10px}.v68-submit-btn{width:100%;margin-top:10px;height:55px;border-radius:20px;font-size:15px}.v68-history-list{margin-top:8px}.v68-history-list .hist-item{grid-template-columns:44px 1fr auto;border-radius:18px}.v68-history-list .medal{width:40px;height:40px;font-size:18px}
     @media(min-width:620px){.v68-method-grid{grid-template-columns:1fr 1fr}.v68-wallet-fields{grid-template-columns:1fr 1fr}}
 
+  
+    /* V70 withdraw step flow fix */
+    .v70-withdraw-guide{border:1px solid rgba(0,201,255,.34);background:linear-gradient(180deg,rgba(0,147,255,.11),rgba(2,10,22,.62));border-radius:18px;padding:12px;margin:0 0 12px;color:#dff4ff;font-size:12px;font-weight:900;line-height:1.7;text-align:right}
+    .v70-withdraw-guide b{display:block;color:#ffe184;font-size:14px;margin-bottom:3px}.v70-withdraw-guide strong{color:#2ff0b3;direction:ltr}
+    .v70-selected-withdraw{border:1px solid rgba(255,207,78,.52);background:linear-gradient(180deg,rgba(9,28,53,.88),rgba(2,9,20,.95));border-radius:20px;padding:12px;margin:0 0 12px;box-shadow:inset 0 0 18px rgba(255,211,90,.04)}
+    .v70-selected-withdraw h4{margin:0;color:#ffe184;font-size:15px}.v70-selected-withdraw p{margin:6px 0 0;color:#c4d1e6;font-size:12px;font-weight:800;line-height:1.65}
+    .v70-withdraw-form-title{border:1px solid rgba(255,207,78,.35);background:rgba(0,0,0,.20);border-radius:18px;padding:10px;margin:0 0 10px;color:#ffe184;font-weight:1000;text-align:center}
+    .v70-wallet-fields .field-wrap label{font-size:13px;color:#ffe184}.v70-wallet-fields textarea{min-height:86px;line-height:1.55}
   </style>
 
 
@@ -712,12 +720,13 @@
             <div class="method-grid v68-method-grid v69-specific-methods hidden" id="withdrawMethods"></div>
             <div class="method-details v68-method-details v69-method-details hidden" id="withdrawMethodDetails">اختر طريقة سحب لعرض التفاصيل.</div>
             <div class="v69-form-block hidden" id="withdrawFormBlock">
-              <div class="v69-step-head"><b>3</b><div><h4>أدخل بيانات السحب</h4><p>اكتب المبلغ وبيانات الاستلام بوضوح حتى تتم المراجعة بدون تأخير.</p></div></div>
-              <div class="fields v68-wallet-fields v69-wallet-fields">
+              <div class="v69-step-head"><b>3</b><div><h4>أدخل بيانات الاستلام</h4><p>هنا تكتب عنوانك أنت أو رقمك أو حسابك البنكي ليصل الطلب للأدمن/المالية.</p></div></div>
+              <div class="v70-withdraw-guide" id="withdrawReceiverHint"><b>اختر طريقة السحب أولًا</b>بعد اختيار USD أو ShamCash أو حساب بنكي ستظهر هنا التعليمات الدقيقة للبيانات المطلوبة.</div>
+              <div class="fields v68-wallet-fields v69-wallet-fields v70-wallet-fields">
                 <div class="field-wrap"><label>المبلغ المراد سحبه</label><div class="field"><span class="ico">💸</span><input id="withdrawAmount" type="number" min="1" placeholder="مثال: 5"></div></div>
-                <div class="field-wrap"><label>بيانات حساب الاستلام</label><div class="field" style="height:96px"><span class="ico">🧾</span><textarea id="withdrawDetails" placeholder="اكتب محفظتك أو رقمك أو بيانات التحويل"></textarea></div></div>
+                <div class="field-wrap"><label id="withdrawDetailsLabel">عنوان/بيانات الاستلام</label><div class="field" style="height:116px"><span class="ico">🧾</span><textarea id="withdrawDetails" placeholder="اكتب بيانات الاستلام هنا"></textarea></div></div>
               </div>
-              <button class="gold-btn v68-submit-btn v69-submit-btn" id="sendWithdrawBtn">إرسال طلب السحب</button><div class="deposit-status" id="withdrawStatus"></div>
+              <button class="gold-btn v68-submit-btn v69-submit-btn" id="sendWithdrawBtn">إرسال طلب السحب للأدمن</button><div class="deposit-status" id="withdrawStatus"></div>
             </div>
           </div>
 
@@ -1430,8 +1439,51 @@
     function methodCategory(m){const t=((m?.id||'')+' '+(m?.name||'')+' '+(m?.details||'')+' '+(m?.hint||'')).toLowerCase();if(t.includes('sham')||t.includes('شام'))return 'sham';if(t.includes('bank')||t.includes('iban')||t.includes('بنك')||t.includes('بنكي')||t.includes('حساب'))return 'bank';return 'usd'}
     function catInfo(cat){return {usd:{icon:'💎',title:'USD',sub:'USDT TRC20 / عملات رقمية'},sham:{icon:'💚',title:'ShamCash',sub:'شام كاش'},bank:{icon:'🏦',title:'حساب بنكي',sub:'IBAN / تحويل بنكي'}}[cat]||{icon:'💳',title:cat,sub:'طريقة دفع'}}
     function catsFor(list){return ['usd','sham','bank'].map(cat=>({cat,items:list.filter(m=>methodCategory(m)===cat)}))}
-    function renderCategoryGrid(mode,list){const box=$(mode+'CategoryGrid');if(!box)return;const current=mode==='deposit'?depositCategory:withdrawCategory;box.innerHTML=catsFor(list).map(c=>{const info=catInfo(c.cat);const disabled=!c.items.length;return '<button class="v69-category '+(current===c.cat?'active':'')+'" data-mode="'+mode+'" data-cat="'+c.cat+'" '+(disabled?'disabled':'')+'><i>'+info.icon+'</i><b>'+info.title+'</b><span>'+(disabled?'غير مفعّل':info.sub)+'</span></button>'}).join('');box.querySelectorAll('.v69-category').forEach(btn=>btn.onclick=()=>{if(btn.disabled)return;if(mode==='deposit'){depositCategory=btn.dataset.cat;depositMethod=''}else{withdrawCategory=btn.dataset.cat;withdrawMethod=''}renderMethods()})}
-    function renderMethodDetails(mode){const id=mode==='deposit'?depositMethod:withdrawMethod;const m=getMethod(id);const box=$(mode==='deposit'?'depositMethodDetails':'withdrawMethodDetails');const form=$(mode==='deposit'?'depositFormBlock':'withdrawFormBlock');if(!box)return;if(!m){box.classList.add('hidden');if(form)form.classList.add('hidden');box.innerHTML='اختر طريقة لعرض التفاصيل.';return}const min=mode==='deposit'?Number(m.minDeposit||0):Number(m.minWithdraw||0);box.classList.remove('hidden');if(form)form.classList.remove('hidden');box.innerHTML='<div class="v69-address-card"><div class="v69-address-title"><b>'+escapeHtml(m.name)+'</b><span>'+paymentTypeLabel(m.type)+'</span></div><p>'+escapeHtml(m.details||m.hint||'')+'</p><div class="finance-mini-grid"><div class="finance-pill"><b>الحالة</b>'+(m.active!==false?'مفعلة':'متوقفة')+'</div><div class="finance-pill"><b>الحد الأدنى</b>'+money(min)+'</div><div class="finance-pill"><b>الطريقة</b>'+escapeHtml(catInfo(methodCategory(m)).title)+'</div></div>'+(m.address?'<div class="copy-line"><code>'+escapeHtml(m.address)+'</code><button class="copy-btn" data-copy="'+escapeHtml(m.address)+'" onclick="copyText(this.dataset.copy)">نسخ</button></div>':'<div class="v69-no-address">لا يوجد عنوان مضاف من الأدمن لهذه الطريقة.</div>')+(m.qrUrl?'<img class="qr-preview" src="'+escapeHtml(m.qrUrl)+'" alt="QR">':'')+'</div>'}
+    function renderCategoryGrid(mode,list){const box=$(mode+'CategoryGrid');if(!box)return;const current=mode==='deposit'?depositCategory:withdrawCategory;box.innerHTML=catsFor(list).map(c=>{const info=catInfo(c.cat);const disabled=!c.items.length;return '<button class="v69-category '+(current===c.cat?'active':'')+'" data-mode="'+mode+'" data-cat="'+c.cat+'" '+(disabled?'disabled':'')+'><i>'+info.icon+'</i><b>'+info.title+'</b><span>'+(disabled?'غير مفعّل':info.sub)+'</span></button>'}).join('');box.querySelectorAll('.v69-category').forEach(btn=>btn.onclick=()=>{if(btn.disabled)return;const cat=btn.dataset.cat;const one=list.filter(m=>methodCategory(m)===cat);if(mode==='deposit'){depositCategory=cat;depositMethod=(one.length===1?one[0].id:'')}else{withdrawCategory=cat;withdrawMethod=(one.length===1?one[0].id:'')}renderMethods()})}
+    function updateWithdrawReceiverFields(m){
+      const label=$('withdrawDetailsLabel'), area=$('withdrawDetails'), hint=$('withdrawReceiverHint');
+      if(!m)return;
+      const cat=methodCategory(m);
+      let title='عنوان/بيانات الاستلام', ph='اكتب بيانات الاستلام كاملة هنا', msg='اكتب بيانات الاستلام بوضوح حتى يقدر الأدمن يراجع طلب السحب ويرسل لك المبلغ.';
+      if(cat==='usd'){
+        title='عنوان محفظتك USDT TRC20';
+        ph='مثال: TQxxxxxxxxxxxxxxxxxxxxxxxxxxxx  — شبكة TRC20 فقط';
+        msg='اكتب عنوان محفظتك USDT TRC20 الخاص بك. انتبه: العنوان لازم يكون TRC20 فقط، وأي شبكة ثانية قد تسبب ضياع التحويل.';
+      }else if(cat==='sham'){
+        title='رقم ShamCash واسم صاحب الحساب';
+        ph='مثال: رقم شام كاش + اسم صاحب الحساب + أي ملاحظة مهمة';
+        msg='اكتب رقم ShamCash واسم صاحب الحساب بوضوح حتى يتم إرسال السحب عليه.';
+      }else if(cat==='bank'){
+        title='بيانات الحساب البنكي / IBAN';
+        ph='اكتب IBAN + اسم صاحب الحساب + اسم البنك + الدولة';
+        msg='اكتب بيانات الحساب البنكي كاملة: IBAN، اسم صاحب الحساب، اسم البنك، والدولة.';
+      }
+      if(label)label.textContent=title;
+      if(area)area.placeholder=ph;
+      if(hint)hint.innerHTML='<b>'+escapeHtml(m.name)+' جاهز للسحب</b>'+escapeHtml(msg)+'<br><strong>بعد كتابة المبلغ والبيانات اضغط إرسال طلب السحب للأدمن.</strong>';
+    }
+    function renderMethodDetails(mode){
+      const id=mode==='deposit'?depositMethod:withdrawMethod;
+      const m=getMethod(id);
+      const box=$(mode==='deposit'?'depositMethodDetails':'withdrawMethodDetails');
+      const form=$(mode==='deposit'?'depositFormBlock':'withdrawFormBlock');
+      if(!box)return;
+      if(!m){
+        box.classList.add('hidden');
+        if(form)form.classList.add('hidden');
+        box.innerHTML='اختر طريقة لعرض التفاصيل.';
+        return;
+      }
+      const min=mode==='deposit'?Number(m.minDeposit||0):Number(m.minWithdraw||0);
+      box.classList.remove('hidden');
+      if(form)form.classList.remove('hidden');
+      if(mode==='withdraw'){
+        updateWithdrawReceiverFields(m);
+        box.innerHTML='<div class="v70-selected-withdraw"><h4>طريقة السحب المختارة: '+escapeHtml(m.name)+'</h4><p>الحد الأدنى: '+money(min)+' — الحالة: '+(m.active!==false?'مفعلة':'متوقفة')+'<br>الخطوة التالية: اكتب بيانات الاستلام الخاصة بك بالأسفل ثم اضغط إرسال طلب السحب للأدمن.</p></div>';
+        return;
+      }
+      box.innerHTML='<div class="v69-address-card"><div class="v69-address-title"><b>'+escapeHtml(m.name)+'</b><span>'+paymentTypeLabel(m.type)+'</span></div><p>'+escapeHtml(m.details||m.hint||'')+'</p><div class="finance-mini-grid"><div class="finance-pill"><b>الحالة</b>'+(m.active!==false?'مفعلة':'متوقفة')+'</div><div class="finance-pill"><b>الحد الأدنى</b>'+money(min)+'</div><div class="finance-pill"><b>الطريقة</b>'+escapeHtml(catInfo(methodCategory(m)).title)+'</div></div>'+(m.address?'<div class="copy-line"><code>'+escapeHtml(m.address)+'</code><button class="copy-btn" data-copy="'+escapeHtml(m.address)+'" onclick="copyText(this.dataset.copy)">نسخ</button></div>':'<div class="v69-no-address">لا يوجد عنوان مضاف من الأدمن لهذه الطريقة.</div>')+(m.qrUrl?'<img class="qr-preview" src="'+escapeHtml(m.qrUrl)+'" alt="QR">':'')+'</div>';
+    }
     function renderSpecificMethods(mode,list){const grid=$(mode==='deposit'?'depositMethods':'withdrawMethods');const step=$(mode==='deposit'?'depositMethodStep':'withdrawMethodStep');const details=$(mode==='deposit'?'depositMethodDetails':'withdrawMethodDetails');const form=$(mode==='deposit'?'depositFormBlock':'withdrawFormBlock');if(!grid)return;const cat=mode==='deposit'?depositCategory:withdrawCategory;const selected=mode==='deposit'?depositMethod:withdrawMethod;grid.innerHTML='';if(!cat){grid.classList.add('hidden');if(step)step.classList.add('hidden');if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}const list2=list.filter(m=>methodCategory(m)===cat);if(step)step.classList.remove('hidden');grid.classList.remove('hidden');if(!list2.length){grid.innerHTML='<div class="admin-empty">لا توجد طريقة مفعّلة ضمن هذا الخيار.</div>';if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}list2.forEach(m=>{const b=document.createElement('button');b.className='method v69-method '+(selected===m.id?'active':'');b.innerHTML='<strong>'+escapeHtml(m.name)+'</strong><span>'+escapeHtml(methodHint(m,mode))+'</span>';b.onclick=()=>{if(mode==='deposit')depositMethod=m.id;else withdrawMethod=m.id;renderMethods()};grid.appendChild(b)});renderMethodDetails(mode)}
     function renderMethods(){const d=$('depositMethods'),w=$('withdrawMethods');if(!d||!w)return;const deps=methods.filter(m=>methodAllowed(m,'deposit'));const withs=methods.filter(m=>methodAllowed(m,'withdraw'));if(depositCategory&&!deps.some(m=>methodCategory(m)===depositCategory))depositCategory='';if(withdrawCategory&&!withs.some(m=>methodCategory(m)===withdrawCategory))withdrawCategory='';if(depositMethod&&!deps.some(m=>m.id===depositMethod))depositMethod='';if(withdrawMethod&&!withs.some(m=>m.id===withdrawMethod))withdrawMethod='';renderCategoryGrid('deposit',deps);renderCategoryGrid('withdraw',withs);renderSpecificMethods('deposit',deps);renderSpecificMethods('withdraw',withs)}
     function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val);methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)})}
@@ -1597,7 +1649,7 @@
       if(!wm){setWithdrawStatus('اختر نوع السحب ثم افتح طريقة الاستلام أولًا.','err');return}
       if(wm.minWithdraw&&amount<Number(wm.minWithdraw)){setWithdrawStatus('أقل سحب عبر '+wm.name+' هو '+wm.minWithdraw+' USD.','err');return}
       if(amount>bal){setWithdrawStatus('الرصيد المتاح غير كافٍ. المتاح الآن: '+money(bal),'err');return}
-      if(!details||details.length<5){setWithdrawStatus('اكتب بيانات الاستلام بشكل واضح: المحفظة/الرقم/الاسم أو أي تفاصيل تحويل مطلوبة.','err');return}
+      if(!details||details.length<8){setWithdrawStatus('اكتب عنوان/بيانات الاستلام كاملة قبل الإرسال. مثال USDT: عنوان TRC20، أو ShamCash: الرقم والاسم، أو البنك: IBAN واسم صاحب الحساب.','err');return}
       if(!confirm('سيتم حجز '+money(amount)+' من رصيدك حتى يراجع الأدمن الطلب. هل تريد المتابعة؟')){setWithdrawStatus('تم إلغاء طلب السحب قبل الإرسال.','err');return}
       btn.disabled=true;
       setWithdrawStatus('جاري حجز المبلغ وتجهيز طلب السحب...','work');

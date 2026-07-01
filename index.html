@@ -474,6 +474,7 @@
   /* V66: إظهار آخر نتيجة داخل بطاقة السحب نفسها تحت قيمة الجائزة */
   /* V87: إصلاح دمج last_results حتى يتغير مربع آخر نتيجة فعليًا */
   /* V83: ربط نتيجة السحب بمسار عام ثابت public_draw_results حتى تظهر للمستخدم فورًا */
+  /* V88: آخر نتيجة مباشر من system_settings/adnor_last_result_box بدون الاعتماد على المسارات القديمة */
   /* V84: مسار عرض احتياطي داخل system_settings حتى يتغير مربع آخر نتيجة فورًا */
   #page-lottery .v63-hero-draw{padding-bottom:16px!important}
   .v66-last-result-inline{
@@ -1035,7 +1036,7 @@
                     <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="resultBoxPrize" type="number" min="0" step="0.01" placeholder="4500"></div></div>
                     <div class="field-wrap"><label>وقت النشر الاختياري</label><div class="field"><span class="ico">⏰</span><input id="resultBoxPublishAt" type="datetime-local"></div></div>
                   </div>
-                  <div class="admin-actions"><button class="bad" onclick="adminPublishResultBox('direct')">نشر الآن في المربع</button><button class="ok" onclick="adminPublishResultBox('schedule')">جدولة للمربع</button><button class="blue" onclick="prefillResultBoxPrize()">تعبئة الجائزة الحالية</button></div>
+                  <div class="admin-actions"><button class="bad" onclick="adminForceLastResultBoxNow()">تحديث المربع مباشرة</button><button class="ok" onclick="adminPublishResultBox('direct')">نشر + حفظ بالسجل</button><button class="blue" onclick="adminPublishResultBox('schedule')">جدولة للمربع</button><button class="blue" onclick="prefillResultBoxPrize()">تعبئة الجائزة الحالية</button></div>
                 </div>
                 <div class="admin-table" id="adminDrawHistory"><div class="admin-empty">لا يوجد سجل سحوبات بعد</div></div>
               </div>
@@ -1405,7 +1406,7 @@
     const defaultWheelSettings={enabled:true,minBet:1,maxBet:500,segments:[{label:'0x',m:0,w:26},{label:'1x',m:1,w:22},{label:'2x',m:2,w:15},{label:'0x',m:0,w:24},{label:'100x',m:100,w:1},{label:'1x',m:1,w:20},{label:'10000x',m:10000,w:0.08},{label:'2x',m:2,w:13},{label:'0.5x',m:.5,w:12},{label:'5x',m:5,w:5},{label:'10x',m:10,w:2},{label:'0x',m:0,w:24}],luckyBox:{enabled:true,chance:35,min:0.10,max:1,cooldownHours:24}};
     let wheelSettings=JSON.parse(JSON.stringify(defaultWheelSettings));
     let wheelSegments=wheelSettings.segments;
-    let lotteryUnsub=null, publicDrawUnsub=null, publicDrawRoundUnsubs=[], publicDrawHistory={}, publicDrawRounds={}, publicDrawResultsUnsub=null, publicDrawResults={}, displayDrawResultsUnsub=null, displayDrawResults={}, resultBoxDirectUnsub=null, resultBoxDirect={};
+    let lotteryUnsub=null, publicDrawUnsub=null, publicDrawRoundUnsubs=[], publicDrawHistory={}, publicDrawRounds={}, publicDrawResultsUnsub=null, publicDrawResults={}, displayDrawResultsUnsub=null, displayDrawResults={}, resultBoxDirectUnsub=null, resultBoxDirect={}, adnorLastResultUnsub=null, adnorLastResultBox={};
     function mergeLotterySettings(v){const base=JSON.parse(JSON.stringify(defaultLotterySettings));v=v||{};base.ticketPrice=Number(v.ticketPrice||base.ticketPrice);base.moveLosers=(v.moveLosers!==false);['daily','weekly','monthly','yearly'].forEach(k=>{base[k]={...base[k],...(v[k]||{})};base[k].enabled=(base[k].enabled!==false);base[k].prize=Number(base[k].prize||0);});
       // V87: لا نحذف last_results عند دمج إعدادات اليانصيب. هذا كان سبب بقاء مربع آخر نتيجة على 0000000.
       if(v.last_results && typeof v.last_results==='object') base.last_results=v.last_results;
@@ -1425,6 +1426,11 @@
       if(publicDrawResultsUnsub)try{publicDrawResultsUnsub()}catch(e){};
       if(displayDrawResultsUnsub)try{displayDrawResultsUnsub()}catch(e){};
       if(resultBoxDirectUnsub)try{resultBoxDirectUnsub()}catch(e){};
+      if(adnorLastResultUnsub)try{adnorLastResultUnsub()}catch(e){};
+      adnorLastResultUnsub=onValue(ref(db,'system_settings/adnor_last_result_box'),snap=>{
+        adnorLastResultBox=snap.val()||{};
+        renderLatestDrawPublic();
+      },err=>{console.error('system_settings/adnor_last_result_box read failed',err); adnorLastResultBox={}; renderLatestDrawPublic();});
       resultBoxDirectUnsub=onValue(ref(db,'system_settings/result_box_direct'),snap=>{
         resultBoxDirect=snap.val()||{};
         renderLatestDrawPublic();
@@ -1464,6 +1470,10 @@
         return o;
       };
       const addResult=(d,extra={})=>{if(d&&typeof d==='object')rows.push(normalizeDrawResult(d,extra));};
+      // V88: المسار المباشر الجديد لمربع آخر نتيجة. هذا أول مصدر للقراءة.
+      const alb=adnorLastResultBox||{};
+      ['daily','weekly','monthly','yearly'].forEach(rt=>{ if(alb[rt]) addResult(alb[rt],{id:alb[rt].id||('adnor_last_'+rt),drawType:rt,_src:'adnor_last_result_box'}); });
+      addResult(alb.latest,{id:alb.latest?.id||'adnor_last_result_latest',_src:'adnor_last_result_latest'});
       // V86: أولوية مطلقة لنتائج المربع المحفوظة داخل lottery_settings لأنها تعمل بنفس قواعد الإعدادات القديمة.
       const ldr=(lotterySettings&&lotterySettings.last_results)||{};
       Object.entries(ldr.current||{}).forEach(([roundType,d])=>addResult(d,{id:d.id||('lottery_last_'+roundType),drawType:roundType,_src:'lottery_settings_last_current'}));
@@ -1612,7 +1622,7 @@
     function listenAiKnowledge(){if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()})}
     async function adminSaveSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl({maintenance:$('siteMaintenanceInput')?.value==='true',maintenanceMessage:$('siteMaintenanceMessageInput')?.value||'',announcement:$('siteAnnouncementInput')?.value||'',modules:{lottery:!!$('moduleLotteryInput')?.checked,results:!!$('moduleLotteryInput')?.checked,games:!!$('moduleGamesInput')?.checked,wallet:!!$('moduleWalletInput')?.checked,support:!!$('moduleSupportInput')?.checked}});data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);await set(ref(db,'finance_audit/'+Date.now()),{action:'site_control_saved',adminEmail:currentUser?.email||'',createdAt:Date.now(),note:'حفظ إعدادات تشغيل الموقع والأقسام'});toast('تم حفظ إعدادات تشغيل الموقع')}
     async function seedSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl(defaultSiteControl);data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);toast('تم استرجاع التشغيل الطبيعي')}
-    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){currentProfile=await ensureUser(user);$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);startAdminListeners()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
+    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){currentProfile=await ensureUser(user);$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);startAdminListeners()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}} if(adnorLastResultUnsub){try{adnorLastResultUnsub()}catch(e){} adnorLastResultUnsub=null; adnorLastResultBox={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
     $('hideBalanceBtn').onclick=()=>{balanceHidden=!balanceHidden;$('hideBalanceBtn').textContent=balanceHidden?'🙈':'👁️';renderProfile()};if($('v61AccountShortcut'))$('v61AccountShortcut').onclick=()=>showPage('account');if($('toggleLotteryTicketsBtn'))$('toggleLotteryTicketsBtn').onclick=()=>{lotteryTicketsHidden=!lotteryTicketsHidden;const card=$('lotteryActiveCard');if(card)card.classList.toggle('v61-hide-tickets',lotteryTicketsHidden);$('toggleLotteryTicketsBtn').textContent=lotteryTicketsHidden?'عرض التذاكر':'إخفاء التذاكر'};function openDrawer(){$('sideDrawer')?.classList.add('open');$('drawerOverlay')?.classList.add('open')}function closeDrawer(){$('sideDrawer')?.classList.remove('open');$('drawerOverlay')?.classList.remove('open')}$('menuBtn').onclick=openDrawer;$('drawerCloseBtn').onclick=closeDrawer;$('drawerOverlay').onclick=closeDrawer;$('drawerLogoutBtn').onclick=()=>{closeDrawer();signOut(auth)};document.querySelectorAll('[data-drawer-page]').forEach(b=>b.onclick=()=>{const p=b.dataset.drawerPage;if(p==='admin'&&!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');closeDrawer();showPage(p)});$('bellBtn').onclick=()=>{closeDrawer();showPage('notifications');};if($('markReadBtn'))$('markReadBtn').onclick=markNotificationsRead;$('depositBtn').onclick=()=>{showPage('wallet');showWalletPanel('deposit')};$('withdrawBtn').onclick=()=>{showPage('wallet');showWalletPanel('withdraw')};if($('openResultsBtn'))$('openResultsBtn').onclick=()=>showPage('results');if($('openTicketsBtn'))$('openTicketsBtn').onclick=()=>{showPage('results');currentTicketFilter='all';document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x.dataset.ticketFilter==='all'));renderUserTicketHistory(currentUserTickets)};document.querySelectorAll('[data-ticket-filter]').forEach(b=>b.onclick=()=>{currentTicketFilter=b.dataset.ticketFilter;document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x===b));renderUserTicketHistory(currentUserTickets)});
     function showPage(p){if(p==='admin'&&!isAdminUser()){toast('بوابة الإدارة للأدمن فقط');return}if(!isAdminUser()){if(siteControl.maintenance && !['account','notifications'].includes(p)){toast(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');return}if(!moduleEnabled(p)){toast('هذا القسم متوقف مؤقتًا من الإدارة');return}}const page=$('page-'+p);if(!page)return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));page.classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));if($('appWrap')){$('appWrap').classList.toggle('admin-layout',p==='admin');$('appWrap').setAttribute('data-active-page',p)}if(p==='games'&&typeof showGamesHome==='function')showGamesHome();if(p==='admin')showAdminSection('overview')}document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{if(b.dataset.page==='admin'&&(!currentProfile||!currentProfile.isAdmin))return toast('هذه الصفحة للأدمن فقط');showPage(b.dataset.page)});document.querySelectorAll('[data-home-go]').forEach(b=>b.onclick=()=>{const go=b.dataset.homeGo||'home';const parts=go.split(':');showPage(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>showWalletPanel(parts[1]),40)});if($('v52QuickDepositBtn'))$('v52QuickDepositBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('deposit'),40)};if($('v52QuickWithdrawBtn'))$('v52QuickWithdrawBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('withdraw'),40)};
     function showWalletPanel(p){document.querySelectorAll('.wallet-panel').forEach(x=>x.classList.add('hidden'));$('wallet-'+p).classList.remove('hidden');document.querySelectorAll('.wallet-tab').forEach(b=>b.classList.toggle('active',b.dataset.wallet===p));if(p==='deposit'){depositCategory='';depositMethod='';clearDepositStatus();renderMethods()}if(p==='withdraw'){withdrawCategory='';withdrawMethod='';clearWithdrawStatus();renderMethods()}}document.querySelectorAll('.wallet-tab').forEach(b=>b.onclick=()=>showWalletPanel(b.dataset.wallet));
@@ -2504,6 +2514,9 @@
       updates['system_settings/result_box_direct/current/'+drawType]=result;
       updates['system_settings/result_box_direct/history/'+drawType+'/'+id]=result;
       updates['system_settings/result_box_direct/latest']=result;
+      // V88: هذا هو المسار المباشر الجديد الذي يقرأ منه مربع آخر نتيجة مباشرة.
+      updates['system_settings/adnor_last_result_box/'+drawType]=result;
+      updates['system_settings/adnor_last_result_box/latest']=result;
       updates['admin_notifications/'+now]={type:'draw_result_box',text:(status==='published'?'تم نشر ':'تمت جدولة ')+'آخر نتيجة في مربع '+drawLabel(drawType)+' — '+ticketNumber+' — '+winnerName,createdAt:now,status:'new'};
       try{
         await update(ref(db),updates);
@@ -2514,12 +2527,34 @@
       resultBoxDirect=resultBoxDirect||{};
       resultBoxDirect.current={...(resultBoxDirect.current||{}),[drawType]:result};
       resultBoxDirect.latest=result;
+      adnorLastResultBox=adnorLastResultBox||{};
+      adnorLastResultBox[drawType]=result;
+      adnorLastResultBox.latest=result;
       lotterySettings=lotterySettings||{};
       lotterySettings.last_results=lotterySettings.last_results||{};
       lotterySettings.last_results.current={...(lotterySettings.last_results.current||{}),[drawType]:result};
       lotterySettings.last_results.latest=result;
       renderLatestDrawPublic();
       toast(status==='published'?'تم نشر آخر نتيجة في المربع':'تمت جدولة آخر نتيجة في المربع');
+    }
+    async function adminForceLastResultBoxNow(){
+      if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');
+      const drawType=($('resultBoxDrawType')?.value)||currentDraw||'daily';
+      const rawNumber=$('resultBoxTicketNumber')?.value||'';
+      const ticketNumber=String(cleanTicketNumber(rawNumber)).replace(/\D/g,'').padStart(7,'0').slice(-7);
+      const winnerName=String($('resultBoxWinnerName')?.value||'').trim()||'ADNOR';
+      const prize=Number($('resultBoxPrize')?.value||prizeFor(drawType)||0);
+      const now=Date.now();
+      if(!rawNumber || ticketNumber==='0000000')return toast('اكتب رقم تذكرة صحيح');
+      const result={id:'force_box_'+drawType+'_'+now,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,prize,status:'published',publishAt:now,publishedAt:now,createdAt:now,updatedAt:now,source:'v88_force_last_result_box',adminEmail:currentUser?.email||''};
+      try{
+        await set(ref(db,'system_settings/adnor_last_result_box/'+drawType),result);
+        await set(ref(db,'system_settings/adnor_last_result_box/latest'),result);
+        adnorLastResultBox=adnorLastResultBox||{};
+        adnorLastResultBox[drawType]=result; adnorLastResultBox.latest=result;
+        renderLatestDrawPublic();
+        toast('تم تحديث مربع آخر نتيجة مباشرة');
+      }catch(e){console.error('V88 force save failed',e);toast('فشل التحديث المباشر: '+(e.code||e.message||e));}
     }
     function findManualWinner(tickets,number){const clean=cleanTicketNumber(number);return tickets.find(t=>cleanTicketNumber(t.number)===clean || String(t.id||'')===String(number||'').trim())}
     async function adminManualDraw(drawType,mode){
@@ -2743,7 +2778,7 @@
 
 
     if($('adminUserSearch'))$('adminUserSearch').addEventListener('input',()=>renderAdminUsers(arrObj(adminState.users)));document.querySelectorAll('.user-chip').forEach(btn=>btn.addEventListener('click',()=>{currentUserFilter=btn.dataset.userFilter||'all';renderAdminUsers(arrObj(adminState.users))}));if($('exportUsersBtn'))$('exportUsersBtn').onclick=exportUsersCsv;if($('adminAuditSearch'))$('adminAuditSearch').addEventListener('input',renderAdminAudit);document.querySelectorAll('.audit-chip').forEach(btn=>btn.addEventListener('click',()=>{currentAuditFilter=btn.dataset.auditFilter||'all';renderAdminAudit()}));if($('auditExportBtn'))$('auditExportBtn').onclick=exportAuditCsv;if($('auditRefreshBtn'))$('auditRefreshBtn').onclick=renderAdminAudit;if($('saveSiteControlBtn'))$('saveSiteControlBtn').onclick=adminSaveSiteControl;if($('seedSiteControlBtn'))$('seedSiteControlBtn').onclick=seedSiteControl;if($('savePaymentMethodBtn'))$('savePaymentMethodBtn').onclick=adminSavePaymentMethod;if($('newPaymentMethodBtn'))$('newPaymentMethodBtn').onclick=()=>fillPaymentForm({id:'',name:'',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'',qrUrl:'',details:''});if($('resetPaymentMethodsBtn'))$('resetPaymentMethodsBtn').onclick=()=>seedPaymentMethods(true);if($('saveLotterySettingsBtn'))$('saveLotterySettingsBtn').onclick=adminSaveLotterySettings;if($('resetLotterySettingsBtn'))$('resetLotterySettingsBtn').onclick=()=>seedLotterySettings(true);if($('saveWheelSettingsBtn'))$('saveWheelSettingsBtn').onclick=adminSaveWheelSettings;if($('resetWheelSettingsBtn'))$('resetWheelSettingsBtn').onclick=()=>seedWheelSettings(true);
-    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,adminSaveSiteControl,seedSiteControl,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminPublishResultBox,prefillResultBoxPrize,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,saveAiKnowledgeFromForm,teachAiFromUnanswered,deleteAiKnowledge,dismissAiUnanswered,fillAiFormFromUnanswered,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
+    Object.assign(window,{copyText,markNotificationsRead,showAdminSection,adminSaveSiteControl,seedSiteControl,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminPublishResultBox,adminForceLastResultBoxNow,prefillResultBoxPrize,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,saveAiKnowledgeFromForm,teachAiFromUnanswered,deleteAiKnowledge,dismissAiUnanswered,fillAiFormFromUnanswered,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
     Object.defineProperty(window,'supportContacts',{get:()=>supportContacts});
 
     function tick(){const now=new Date();const target=new Date(now);target.setHours(20,0,0,0);if(now>=target)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const days=Math.floor(diff/86400000);diff%=86400000;const hours=Math.floor(diff/3600000);diff%=3600000;const mins=Math.floor(diff/60000);diff%=60000;const secs=Math.floor(diff/1000);$('d').textContent=String(days).padStart(2,'0');$('h').textContent=String(hours).padStart(2,'0');$('m').textContent=String(mins).padStart(2,'0');$('s').textContent=String(secs).padStart(2,'0')}setInterval(tick,1000);tick();$('ticketNumber').value=randomTicket();

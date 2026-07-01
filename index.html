@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR | V62 Royal Lottery Top Fix</title>
+  <title>ADNOR | V63 Supreme Lottery Design</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -214,7 +214,40 @@
     .v62-last-winner{margin-top:-2px!important;text-align:center;padding:13px!important}.v62-last-winner .section-title{justify-content:center;margin-bottom:9px}.v62-last-winner .section-title span{display:none}.v62-winner-digits{direction:ltr;display:flex;justify-content:center;gap:7px;margin:4px 0 8px}.v62-winner-digits span{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 38% 28%,#1a3969,#041226 68%);border:1.5px solid rgba(255,205,76,.80);color:#fff;font-size:24px;font-weight:900;box-shadow:0 0 13px rgba(255,197,46,.22),inset 0 0 9px rgba(0,188,255,.13)}.v62-winner-text{margin:0;color:#cfd7e8;font-size:12px;font-weight:800}.v62-winner-prize{display:block;color:#ffdd7a;font-size:16px;margin-top:4px}.v61-ticket-picker{padding:13px!important}.v61-ticket-picker .number-box{height:58px}.v61-ticket-picker .number-box input{font-size:26px}.v61-ticket-picker .gold-btn.buy{height:60px;border-radius:20px}.v61-active-card{padding:13px!important}.ticket-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ticket-actions-row button{height:42px;border-radius:14px;border:1px solid rgba(255,205,76,.42);background:rgba(2,10,22,.72);color:#ffe184;font:inherit;font-weight:900}
     @media(max-width:390px){.app-wrap{padding-inline:9px}.v62-royal-head{grid-template-columns:122px 40px 68px 78px 44px;gap:5px}.v62-balance-card{height:66px;padding:7px 8px;grid-template-columns:1fr 28px 28px}.v62-balance-card .cw-money{font-size:19px}.v62-balance-card button{width:28px;height:28px}.v62-settings-btn,.v62-menu-btn,.v62-user-card,.v62-logo{height:66px}.v62-settings-btn{width:40px}.v62-menu-btn{width:44px;font-size:25px}.v62-user-card b{font-size:11px}.v62-user-card span{font-size:10px}.v62-logo .mini-logo{font-size:27px}#page-lottery .jackpot .drawname{font-size:29px}#page-lottery .jackpot .amount{font-size:38px}.v62-winner-digits{gap:5px}.v62-winner-digits span{width:33px;height:33px;font-size:20px}#page-lottery .tab{font-size:13px}.v62-countdown{padding:7px 9px;gap:5px!important}.v62-countdown .timebox b{font-size:18px!important}.v62-countdown .remain-label{font-size:13px}}
 
-  </style>
+  
+
+    /* V63 — Supreme Lottery UI based on uploaded Gemini interface, wired to current Firebase logic */
+    .v63-lottery-page{padding-top:2px}
+    .v62-royal-head{grid-template-columns:minmax(128px,1.2fr) 44px minmax(74px,.72fr) minmax(86px,.85fr) 50px!important;gap:7px!important;margin:2px 0 12px!important;align-items:center!important;direction:ltr!important}
+    .v62-royal-head>*{direction:rtl!important}
+    .v62-balance-card,.v62-settings-btn,.v62-user-card,.v62-menu-btn{background:linear-gradient(145deg,rgba(15,22,47,.78),rgba(3,5,13,.96))!important;border:1px solid rgba(212,175,55,.50)!important;border-top-color:rgba(255,253,240,.30)!important;box-shadow:0 14px 30px rgba(0,0,0,.45),inset 0 1px 2px rgba(255,255,255,.05),0 0 24px rgba(43,92,252,.10)!important}
+    .v62-balance-card{border-radius:22px!important;grid-template-columns:1fr 31px 31px!important;height:70px!important;padding:8px 9px!important}
+    .v62-balance-card .cw-title{font-size:11px!important;color:#dbe4f6!important}
+    .v62-balance-card .cw-money{color:#20e9a8!important;font-size:21px!important;text-shadow:0 0 18px rgba(32,233,168,.30)!important}
+    .v62-balance-card button{width:30px!important;height:30px!important;border-color:rgba(255,232,147,.70)!important}
+    .v62-user-card{border-radius:18px!important;height:70px!important}.v62-user-card b{font-size:12px!important}.v62-user-card span{font-size:10px!important}
+    .v62-settings-btn,.v62-menu-btn{border-radius:18px!important;height:70px!important}.v62-menu-btn{font-size:28px!important}.v62-logo{height:70px!important}.v62-logo .mini-logo{font-size:31px!important}.v62-logo .mini-crown{font-size:30px!important}
+    .v61-top-ticker{border-radius:20px!important;background:linear-gradient(180deg,rgba(17,18,22,.88),rgba(4,7,16,.95))!important;border:1px solid rgba(212,175,55,.62)!important;box-shadow:0 0 22px rgba(212,175,55,.12),inset 0 1px 1px rgba(255,255,255,.08)!important;color:#ffd56d!important}
+
+    .v63-tabs{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:0!important;margin:4px 0 12px!important;border:1px solid rgba(212,175,55,.35)!important;border-radius:18px!important;overflow:hidden!important;background:linear-gradient(180deg,rgba(6,14,31,.96),rgba(1,5,12,.98))!important;box-shadow:0 0 22px rgba(0,0,0,.42)!important}
+    .v63-tabs .tab{height:56px!important;border:0!important;border-left:1px solid rgba(212,175,55,.20)!important;border-radius:0!important;background:transparent!important;color:#d7deee!important;font-size:14px!important;font-weight:900!important;box-shadow:none!important}
+    .v63-tabs .tab.active{color:#fff!important;background:linear-gradient(180deg,rgba(0,174,255,.74),rgba(11,43,92,.94))!important;box-shadow:inset 0 0 18px rgba(99,208,255,.35),0 0 18px rgba(0,174,255,.24)!important;border:1px solid rgba(144,219,255,.65)!important;border-radius:17px!important}
+
+    .v63-hero-draw{position:relative;overflow:hidden;text-align:center;border-radius:32px;padding:24px 14px 18px;margin-bottom:13px;background:radial-gradient(circle at 50% 0,rgba(30,112,255,.38),transparent 38%),radial-gradient(circle at 15% 25%,rgba(0,210,255,.15),transparent 34%),linear-gradient(180deg,rgba(14,29,61,.92),rgba(3,7,18,.98));border:1px solid rgba(212,175,55,.50);border-top-color:rgba(255,253,240,.28);box-shadow:0 25px 50px -18px rgba(0,0,0,.85),0 0 38px rgba(43,92,252,.14),inset 0 0 30px rgba(212,175,55,.06)}
+    .v63-hero-draw:before{content:"";position:absolute;inset:8px;border-radius:25px;border:1px solid rgba(255,238,172,.10);pointer-events:none}.v63-hero-glow{position:absolute;inset:-80px -20px auto;height:180px;background:radial-gradient(circle,rgba(255,222,107,.20),transparent 58%);filter:blur(18px);pointer-events:none}.v63-crown-stage{position:relative;z-index:1;text-align:center;margin-bottom:2px}.v63-crown-stage span{font-size:54px;line-height:1;color:#f1c453;filter:drop-shadow(0 0 24px rgba(212,175,55,.90))}.v63-crown-stage:after{content:"";display:block;width:145px;height:2px;margin:-2px auto 2px;background:linear-gradient(90deg,transparent,#d4af37,transparent);filter:drop-shadow(0 0 8px #d4af37)}
+    .v63-hero-draw .drawname{position:relative;z-index:1;font-size:42px!important;line-height:1.12!important;margin:0 0 13px!important;font-weight:900!important;background:linear-gradient(135deg,#fffdf0,#f1c453 35%,#b8860b 60%,#fbf1a9 80%,#fffdf0);-webkit-background-clip:text;background-clip:text;color:transparent!important;filter:drop-shadow(0 2px 10px rgba(184,134,11,.40))}
+    .v63-countdown{position:relative;z-index:1;display:grid!important;grid-template-columns:1.05fr repeat(4,1fr)!important;align-items:center!important;gap:6px!important;margin:0 auto 13px!important;width:100%!important;max-width:360px!important;padding:8px!important;border-radius:18px!important;background:linear-gradient(180deg,rgba(2,7,16,.74),rgba(2,5,12,.90))!important;border:1px solid rgba(212,175,55,.38)!important;box-shadow:inset 0 4px 14px rgba(0,0,0,.80)!important}.v63-countdown .remain-label{display:flex!important;align-items:center;justify-content:center;color:#fff!important;font-size:13px!important;font-weight:900!important;white-space:nowrap}.v63-countdown .timebox{padding:6px 3px!important;border-radius:12px!important;border:1px solid rgba(212,175,55,.33)!important;background:linear-gradient(180deg,#010205,#080d21)!important}.v63-countdown .timebox b{font-size:19px!important;color:#fff2b2!important}.v63-countdown .timebox span{font-size:8px!important;color:#cbd4e8!important}
+    .v63-prize-label{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 26px!important;margin:0 0 11px!important;border:1px solid rgba(212,175,55,.46);background:linear-gradient(180deg,rgba(8,12,25,.90),rgba(1,5,12,.98));color:#f6d978!important;font-size:18px!important;font-weight:900!important}.v63-prize-label:before{content:"💰"}.v63-prize-amount{position:relative;z-index:1;direction:ltr;font-size:52px!important;line-height:1!important;padding:18px 6px!important;border-radius:22px!important;background:linear-gradient(180deg,rgba(1,5,12,.72),rgba(0,0,0,.86));border:1px solid rgba(212,175,55,.28);color:#20e9a8!important;text-shadow:0 0 26px rgba(32,233,168,.38)!important;box-shadow:inset 0 0 18px rgba(0,0,0,.72)}
+
+    .v63-card{position:relative;overflow:hidden;border-radius:28px!important;background:linear-gradient(145deg,rgba(15,22,47,.75),rgba(3,5,13,.95))!important;border:1px solid rgba(212,175,55,.35)!important;border-top-color:rgba(255,253,240,.28)!important;box-shadow:0 20px 45px -20px rgba(0,0,0,.86),inset 0 1px 2px rgba(255,255,255,.06)!important}.v63-card:before{content:"";position:absolute;inset:8px;border-radius:21px;border:1px solid rgba(255,255,255,.05);pointer-events:none}.v63-title{position:relative;z-index:1}.v63-title h3{color:#f6d978!important}.v63-title span{color:#aeb8cd!important}
+    .v63-last-card{text-align:center!important;padding:15px 12px!important}.v63-winner-digits{position:relative;z-index:1;justify-content:center!important;gap:6px!important;margin:10px 0 8px!important}.v63-winner-digits span{width:38px!important;height:38px!important;border-radius:50%!important;background:linear-gradient(180deg,#111827,#030712)!important;border:1px solid rgba(212,175,55,.55)!important;color:#fff!important;font-size:22px!important;box-shadow:0 0 16px rgba(212,175,55,.16),inset 0 3px 10px rgba(0,0,0,.8)!important}.v63-winner-text{font-size:12px!important;color:#bfc7d8!important}.v63-winner-prize{color:#20e9a8!important;font-size:18px!important;direction:ltr!important}
+
+    .v63-ticket-card{padding:15px 12px!important}.v63-ticket-input{display:grid!important;grid-template-columns:55px 1fr 55px!important;gap:9px!important;align-items:center!important;margin:12px 0!important}.v63-side-action{height:56px!important;border-radius:18px!important;display:grid!important;place-items:center!important;gap:1px!important;padding:3px!important;color:#f6d978!important;border-color:rgba(212,175,55,.35)!important;background:linear-gradient(180deg,rgba(5,13,28,.92),rgba(1,5,12,.98))!important}.v63-side-action i{font-style:normal;font-size:19px}.v63-side-action span{font-size:9px;font-weight:900}.v63-number-box{height:58px!important;border-radius:18px!important;background:linear-gradient(180deg,#010205,#080d21)!important;border:1px solid rgba(212,175,55,.45)!important;border-bottom:2px solid rgba(212,175,55,.70)!important;box-shadow:inset 0 5px 15px rgba(0,0,0,.92),0 2px 4px rgba(255,255,255,.02)!important}.v63-number-box input{font-family:'Cinzel',serif!important;font-size:25px!important;letter-spacing:8px!important;color:#f6d978!important;text-align:center!important;padding:0 4px!important;direction:ltr!important}.v63-ticket-price{border-radius:16px!important;border:1px solid rgba(212,175,55,.35)!important;background:rgba(1,7,17,.60)!important;color:#e8edf8!important}.v63-ticket-price b{color:#f6d978!important}.v63-buy-btn{height:62px!important;border-radius:20px!important;font-size:23px!important;background:linear-gradient(180deg,#fff2cc,#d4af37 42%,#aa7c11 75%,#6a4e06)!important;border:1px solid rgba(255,255,255,.45)!important;box-shadow:0 12px 28px rgba(212,175,55,.28),inset 0 1px 2px rgba(255,255,255,.55),inset 0 -2px 4px rgba(0,0,0,.30)!important;color:#100c05!important}.v63-buy-btn:after{content:" 🛒"}
+
+    .v63-active-card{padding:15px 12px 13px!important}.v63-active-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important}.v63-active-head button{min-width:88px;border-radius:999px!important;border:1px solid rgba(212,175,55,.40)!important;background:rgba(2,8,18,.75)!important;color:#f6d978!important;font-size:11px!important;font-weight:900!important;padding:7px 10px!important}.v63-active-list{display:grid!important;gap:8px!important;margin-top:9px!important}.v63-active-list .draw-item,.v63-active-list>div:not(.v61-mini-empty){border-radius:16px!important;border:1px solid rgba(212,175,55,.22)!important;background:rgba(1,6,16,.70)!important}.v63-ticket-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin-top:11px!important}.v63-ticket-actions button{height:42px!important;border-radius:14px!important;border:1px solid rgba(212,175,55,.35)!important;background:rgba(5,13,28,.82)!important;color:#f6d978!important;font:inherit!important;font-weight:900!important}
+    .bottom-nav{border-radius:22px!important;background:rgba(2,9,21,.92)!important}.bottom-nav .nav-btn.active{background:linear-gradient(180deg,#fff2cc,#d4af37 46%,#aa7c11 82%)!important;color:#100c05!important}
+    @media(max-width:390px){.v62-royal-head{grid-template-columns:minmax(116px,1.2fr) 38px minmax(62px,.70fr) minmax(72px,.82fr) 43px!important;gap:5px!important}.v62-balance-card{height:64px!important}.v62-settings-btn,.v62-user-card,.v62-menu-btn,.v62-logo{height:64px!important}.v62-logo .mini-logo{font-size:26px!important}.v63-hero-draw .drawname{font-size:34px!important}.v63-prize-amount{font-size:42px!important}.v63-countdown{grid-template-columns:1fr repeat(4,.9fr)!important}.v63-ticket-input{grid-template-columns:50px 1fr 50px!important}.v63-number-box input{font-size:22px!important;letter-spacing:6px!important}.v63-winner-digits span{width:33px!important;height:33px!important;font-size:19px!important}}
+</style>
 </head>
 <body>
   <div class="aurora"></div>
@@ -302,13 +335,57 @@
         <section class="royal-card home-section-clean"><div class="section-title"><h3>اختصارات منظمة</h3><span>كل شيء صار في مكانه الصحيح</span></div><div class="feature-grid"><button class="feature vip-home-highlight" data-home-go="vip"><div>👑</div><b>VIP الملكي</b><span>مستويات، مهام يومية، وصندوق جوائز</span></button><button class="feature" data-home-go="results"><div>🏆</div><b>النتائج وتذاكري</b><span>سجل التذاكر والنتائج</span></button><button class="feature" data-home-go="support"><div>💬</div><b>الدعم الفني</b><span>واتساب، تليجرام، وتذاكر الدعم</span></button></div></section>
       </div>
 
-      <div id="page-lottery" class="page">
-        <div class="tabs"><button class="tab active" data-draw="daily">اليومي 💎</button><button class="tab" data-draw="weekly">الأسبوعي 💎</button><button class="tab" data-draw="monthly">الشهري 💎</button><button class="tab" data-draw="yearly">السنوي 👑</button></div>
-        <section class="jackpot"><div class="drawname" id="drawName">السحب اليومي</div><div class="countdown v62-countdown"><span class="remain-label">متبقي ⏳</span><div class="timebox"><b id="d">00</b><span>يوم</span></div><div class="timebox"><b id="h">00</b><span>ساعة</span></div><div class="timebox"><b id="m">00</b><span>دقيقة</span></div><div class="timebox"><b id="s">00</b><span>ثانية</span></div></div><div class="label" id="jackpotLabelText">الجائزة اليومية</div><div class="amount" id="jackpotText">$4,500</div></section>
-        <section class="royal-card v61-last-card v62-last-winner"><div class="section-title"><h3>آخر فائز 🏆</h3><span>نتيجة منشورة من الإدارة</span></div><div class="v62-winner-digits" id="lastWinnerDigits"><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></div><p id="lastWinnerText" class="v62-winner-text">الفائز: بانتظار أول سحب رسمي</p><strong id="lastPrizeText" class="v62-winner-prize">$0</strong></section>
-        <section class="royal-card v61-ticket-picker"><div class="section-title"><h3>اختر أرقامك ✨</h3><span>7 خانات</span></div><div class="ticket-input"><div class="number-box"><input id="ticketNumber" inputmode="numeric" maxlength="7" placeholder="0000000"></div><div class="lottery-actions"><button class="dark-btn" id="randomBtn">🎲 عشوائي</button><button class="dark-btn" id="clearBtn">✎ تعديل</button></div></div><div class="ticket-price"><span>شراء تذكرة</span><b id="ticketPriceText">$1.00</b></div><button class="gold-btn buy" id="buyTicketBtn">شراء تذكرة</button></section>
-        <section class="royal-card v61-active-card" id="lotteryActiveCard"><div class="section-title v61-active-head"><h3>تذاكري النشطة 🎟️</h3><button id="toggleLotteryTicketsBtn" type="button">إخفاء التذاكر</button></div><p class="hint" id="ticketsCountText">لا توجد تذاكر بعد</p><div class="v61-active-list" id="lotteryActiveTicketsList"><div class="v61-mini-empty">لا توجد تذاكر نشطة بعد</div></div><div class="ticket-actions-row"><button id="openResultsBtn" type="button">عرض النتائج</button><button id="openTicketsBtn" type="button">كل تذاكري</button></div><strong class="hidden" id="activeTicketsText">0</strong></section>
-        <div class="feature-grid"><div class="feature"><div>🛡️</div><b>آمن وموثوق</b><span>كل عملية محفوظة داخل Firebase.</span></div><div class="feature"><div>💰</div><b>جوائز ضخمة</b><span>سحوبات يومية وأسبوعية وشهرية.</span></div><div class="feature"><div>⚡</div><b>نتائج فورية</b><span>الأدمن ينشر النتيجة من لوحة الإدارة.</span></div><div class="feature"><div>🎟️</div><b>تذاكرك</b><span>كل تذكرة تحفظ برقمها ووقتها.</span></div></div>
+      <div id="page-lottery" class="page v63-lottery-page">
+        <nav class="tabs v63-tabs" aria-label="أنواع السحب">
+          <button class="tab active" data-draw="daily">اليومي 💎</button>
+          <button class="tab" data-draw="weekly">الأسبوعي 💎</button>
+          <button class="tab" data-draw="monthly">الشهري 💎</button>
+          <button class="tab" data-draw="yearly">السنوي 👑</button>
+        </nav>
+
+        <section class="v63-hero-draw" aria-label="بطاقة السحب">
+          <div class="v63-hero-glow"></div>
+          <div class="v63-crown-stage"><span>♛</span></div>
+          <div class="drawname" id="drawName">السحب اليومي</div>
+          <div class="countdown v63-countdown v62-countdown">
+            <span class="remain-label">متبقي ⏳</span>
+            <div class="timebox"><b id="d">00</b><span>يوم</span></div>
+            <div class="timebox"><b id="h">00</b><span>ساعة</span></div>
+            <div class="timebox"><b id="m">00</b><span>دقيقة</span></div>
+            <div class="timebox"><b id="s">00</b><span>ثانية</span></div>
+          </div>
+          <div class="label v63-prize-label" id="jackpotLabelText">الجائزة اليومية</div>
+          <div class="amount v63-prize-amount" id="jackpotText">$4,500</div>
+        </section>
+
+        <section class="royal-card v63-card v63-last-card v61-last-card v62-last-winner">
+          <div class="section-title v63-title"><h3>آخر فائز 🏆</h3><span>نتيجة رسمية منشورة من الإدارة</span></div>
+          <div class="v62-winner-digits v63-winner-digits" id="lastWinnerDigits"><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></div>
+          <p id="lastWinnerText" class="v62-winner-text v63-winner-text">الفائز: بانتظار أول سحب رسمي</p>
+          <strong id="lastPrizeText" class="v62-winner-prize v63-winner-prize">$0</strong>
+        </section>
+
+        <section class="royal-card v63-card v63-ticket-card v61-ticket-picker">
+          <div class="section-title v63-title"><h3>اختر رقمك المحظوظ ✨</h3><span>تذكرة من 7 أرقام</span></div>
+          <div class="ticket-input v63-ticket-input">
+            <button class="dark-btn v63-side-action" id="randomBtn" type="button"><i>🎲</i><span>عشوائي</span></button>
+            <div class="number-box v63-number-box"><input id="ticketNumber" inputmode="numeric" maxlength="7" placeholder="0000000" autocomplete="off"></div>
+            <button class="dark-btn v63-side-action" id="clearBtn" type="button"><i>✎</i><span>تعديل</span></button>
+          </div>
+          <div class="ticket-price v63-ticket-price"><span>قيمة التذكرة</span><b id="ticketPriceText">$1.00</b></div>
+          <button class="gold-btn buy v63-buy-btn" id="buyTicketBtn">شراء تذكرة</button>
+        </section>
+
+        <section class="royal-card v63-card v63-active-card v61-active-card" id="lotteryActiveCard">
+          <div class="section-title v61-active-head v63-title v63-active-head">
+            <h3>تذاكري النشطة 🎟️</h3>
+            <button id="toggleLotteryTicketsBtn" type="button">إخفاء التذاكر</button>
+          </div>
+          <p class="hint" id="ticketsCountText">لا توجد تذاكر بعد</p>
+          <div class="v61-active-list v63-active-list" id="lotteryActiveTicketsList"><div class="v61-mini-empty">لا توجد تذاكر نشطة بعد</div></div>
+          <div class="ticket-actions-row v63-ticket-actions"><button id="openResultsBtn" type="button">عرض النتائج</button><button id="openTicketsBtn" type="button">كل تذاكري</button></div>
+          <strong class="hidden" id="activeTicketsText">0</strong>
+        </section>
       </div>
 
       <div id="page-results" class="page">

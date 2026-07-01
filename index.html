@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR | V59 Royal VIP System</title>
+  <title>ADNOR | V60 VIP Admin Menu Fix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -483,6 +483,7 @@
                   <button onclick="showAdminSection('support')"><span><b>الدعم الفني</b><small>الرد على التذاكر وإغلاق الطلبات</small></span><i>💬</i></button>
                   <button onclick="showAdminSection('draws')"><span><b>السحوبات / اليانصيب</b><small>تنفيذ السحب اليومي والأسبوعي والشهري والسنوي</small></span><i>🎟️</i></button>
                   <button onclick="showAdminSection('games')"><span><b>الألعاب والعجلة</b><small>سجل العجلة وإعدادات المضاعفات</small></span><i>🎡</i></button>
+                  <button onclick="showAdminSection('vipadmin')"><span><b>VIP والمهام</b><small>المستويات، نقاط VIP، الصندوق الملكي والمهام اليومية</small></span><i>👑</i></button>
                   <button onclick="showAdminSection('payments')"><span><b>طرق الدفع</b><small>USDT، شام كاش، بنك، واتساب، تيليجرام</small></span><i>💳</i></button>
                   <button onclick="showAdminSection('notifications')"><span><b>الإشعارات</b><small>آخر الأحداث والتنبيهات المهمة</small></span><i>🔔</i></button>
                   <button onclick="showAdminSection('aiadmin')"><span><b>المساعد الذكي</b><small>أسئلة جديدة، أجوبة محفوظة، وتعليم المساعد</small></span><i>🤖</i></button>
@@ -1525,7 +1526,7 @@
     if($('campaignSearchInput'))$('campaignSearchInput').oninput=renderAdminCampaigns;
     if($('exportCampaignsCsvBtn'))$('exportCampaignsCsvBtn').onclick=exportCampaignsCsv;
 
-    function showAdminSection(sec){if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');const adminPage=$('page-admin');adminPage?.classList.toggle('admin-overview',sec==='overview');adminPage?.classList.toggle('admin-section-mode',sec!=='overview');document.querySelectorAll('.admin-section').forEach(x=>x.classList.toggle('active',x.id==='admin-section-'+sec));document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===sec));if(sec==='users'&&$('adminUserSearch'))setTimeout(()=>$('adminUserSearch').focus(),120);if(sec!=='overview')window.scrollTo({top:0,behavior:'smooth'})}
+    function showAdminSection(sec){if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');const adminPage=$('page-admin');adminPage?.classList.toggle('admin-overview',sec==='overview');adminPage?.classList.toggle('admin-section-mode',sec!=='overview');document.querySelectorAll('.admin-section').forEach(x=>x.classList.toggle('active',x.id==='admin-section-'+sec));document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===sec));if(sec==='users'&&$('adminUserSearch'))setTimeout(()=>$('adminUserSearch').focus(),120);if(sec==='vipadmin'&&typeof renderVipAdmin==='function')setTimeout(renderVipAdmin,80);if(sec!=='overview')window.scrollTo({top:0,behavior:'smooth'})}
     document.querySelectorAll('.admin-menu-btn').forEach(b=>b.onclick=()=>showAdminSection(b.dataset.adminSection));if($('accountOpenAdminBtn'))$('accountOpenAdminBtn').onclick=()=>showPage('admin');
     document.querySelectorAll('#page-admin .admin-section:not(#admin-section-overview) .admin-section-head').forEach(head=>{if(!head.querySelector('.admin-back-btn')){const title=document.createElement('div');title.className='head-title';const children=[...head.childNodes];children.forEach(n=>title.appendChild(n));const btn=document.createElement('button');btn.className='admin-back-btn';btn.type='button';btn.textContent='← رجوع للقائمة';btn.onclick=()=>showAdminSection('overview');head.appendChild(title);head.appendChild(btn);}});
 

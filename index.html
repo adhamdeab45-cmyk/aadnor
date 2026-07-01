@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR | V56 Admin Trainable AI Assistant</title>
+  <title>ADNOR | V57 AI Unanswered Fix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -833,7 +833,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-    import { getDatabase, ref, set, update, get, onValue, push } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
+    import { getDatabase, ref, set, update, get, onValue, push, increment } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js';
 
     const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
@@ -1725,7 +1725,28 @@
     function aiKnowledgeList(){const base=aiAnswers.map((a,i)=>({id:'base_'+i,question:a.title||a.keys?.[0]||'سؤال ADNOR',answer:a.answer,keys:a.keys||[],source:'base'}));const trained=Object.entries(aiKnowledgeCache||{}).map(([id,k])=>({id,question:k.question||'',answer:k.answer||'',keys:k.keys||[],source:'trained',createdAt:k.createdAt,updatedAt:k.updatedAt}));return [...trained,...base]}
     function aiScoreQuestion(q,item){const qn=normalizeAiText(q);const tokens=aiTokens(q);let score=0;const question=normalizeAiText(item.question||'');const answer=normalizeAiText(item.answer||'');if(question && (qn===question || qn.includes(question) || question.includes(qn)))score+=8;for(const k of (item.keys||[])){const kk=normalizeAiText(k);if(!kk)continue;if(qn.includes(kk))score+=4;}for(const t of tokens){if(question.includes(t))score+=2;if(answer.includes(t))score+=0.5;for(const k of (item.keys||[])){if(normalizeAiText(k).includes(t))score+=1.5}}return score}
     function findAiBestAnswer(q){let best=null,score=0;for(const item of aiKnowledgeList()){const s=aiScoreQuestion(q,item);if(s>score){score=s;best=item}}return score>=3?best:null}
-    async function saveUnansweredAiQuestion(question){if(!currentUser||!question)return;const qNorm=normalizeAiText(question);const id='q_'+qNorm.slice(0,80).replace(/\s+/g,'_')+'_'+String(Math.abs([...qNorm].reduce((a,c)=>((a*31+c.charCodeAt(0))|0),7))).replace('-','');try{const r=ref(db,'ai_unanswered/'+id);const oldSnap=await get(r);const old=oldSnap.val()||{};const now=Date.now();await update(ref(db),{['ai_unanswered/'+id]:{id,question,questionNorm:qNorm,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile?.name||'',count:Number(old.count||0)+1,status:old.status||'new',answer:old.answer||'',createdAt:old.createdAt||now,lastAskedAt:now},['admin_notifications/'+now]:{type:'ai_unanswered',uid:currentUser.uid,email:currentUser.email||'',text:'سؤال جديد للمساعد الذكي يحتاج جواب: '+question,createdAt:now,status:'new'}})}catch(e){console.warn('saveUnansweredAiQuestion failed',e)}}
+    async function saveUnansweredAiQuestion(question){
+      if(!currentUser||!question)return false;
+      const qNorm=normalizeAiText(question);
+      const hash=String(Math.abs([...qNorm].reduce((a,c)=>((a*31+c.charCodeAt(0))|0),7))).replace('-','');
+      const id='q_'+qNorm.slice(0,70).replace(/\s+/g,'_')+'_'+hash;
+      const now=Date.now();
+      const updates={};
+      // V57 FIX: لا نقرأ ai_unanswered من حساب المستخدم، لأن القراءة مسموحة للأدمن فقط.
+      // لذلك نحفظ السؤال مباشرة ونزيد العداد بخاصية increment بدون أي تدخل بشري.
+      updates['ai_unanswered/'+id+'/id']=id;
+      updates['ai_unanswered/'+id+'/question']=question;
+      updates['ai_unanswered/'+id+'/questionNorm']=qNorm;
+      updates['ai_unanswered/'+id+'/uid']=currentUser.uid;
+      updates['ai_unanswered/'+id+'/email']=currentUser.email||'';
+      updates['ai_unanswered/'+id+'/name']=currentProfile?.name||'';
+      updates['ai_unanswered/'+id+'/count']=increment(1);
+      updates['ai_unanswered/'+id+'/status']='new';
+      updates['ai_unanswered/'+id+'/lastAskedAt']=now;
+      updates['ai_unanswered_events/'+id+'/'+now]={id:String(now),question,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile?.name||'',createdAt:now};
+      updates['admin_notifications/'+now]={type:'ai_unanswered',uid:currentUser.uid,email:currentUser.email||'',text:'سؤال جديد للمساعد الذكي يحتاج جواب: '+question,createdAt:now,status:'new'};
+      try{await update(ref(db),updates);return true}catch(e){console.error('saveUnansweredAiQuestion failed',e);toast('لم يتم حفظ السؤال في الأدمن. تأكد من نشر قواعد Firebase V57.');return false}
+    }
     async function saveAiKnowledgeFromForm(){if(!isAdminUser())return;const q=($('aiAdminQuestionInput')?.value||'').trim();const ans=($('aiAdminAnswerInput')?.value||'').trim();const keys=($('aiAdminKeysInput')?.value||'').split(',').map(x=>x.trim()).filter(Boolean);if(!q||!ans)return toast('اكتب السؤال والجواب أولًا');const id='k_'+Date.now();const now=Date.now();await set(ref(db,'ai_knowledge/'+id),{id,question:q,answer:ans,keys:keys.length?keys:aiTokens(q),active:true,createdAt:now,updatedAt:now,adminEmail:currentUser.email||''});await update(ref(db),{['finance_audit/'+now]:{action:'ai_answer_saved',question:q,adminEmail:currentUser.email||'',createdAt:now}});clearAiForm();toast('تم تعليم المساعد وحفظ الجواب')}
     function clearAiForm(){if($('aiAdminQuestionInput'))$('aiAdminQuestionInput').value='';if($('aiAdminKeysInput'))$('aiAdminKeysInput').value='';if($('aiAdminAnswerInput'))$('aiAdminAnswerInput').value=''}
     async function teachAiFromUnanswered(id){const q=(adminState.aiUnanswered||{})[id];if(!q)return toast('السؤال غير موجود');const ans=prompt('اكتب الجواب الرسمي لهذا السؤال:\n'+(q.question||''),q.answer||'');if(!ans)return;const now=Date.now();const keys=aiTokens(q.question||'').slice(0,12);const kid='k_'+now;const updates={};updates['ai_knowledge/'+kid]={id:kid,question:q.question||'',answer:ans,keys,active:true,createdAt:now,updatedAt:now,adminEmail:currentUser.email||'',fromUnanswered:id};updates['ai_unanswered/'+id+'/status']='answered';updates['ai_unanswered/'+id+'/answer']=ans;updates['ai_unanswered/'+id+'/answeredAt']=now;updates['ai_unanswered/'+id+'/answeredBy']=currentUser.email||'';updates['finance_audit/'+now]={action:'ai_unanswered_answered',question:q.question||'',adminEmail:currentUser.email||'',createdAt:now};await update(ref(db),updates);toast('تم حفظ الجواب وتعليم المساعد')}
@@ -1741,7 +1762,7 @@
     function tick(){const now=new Date();const target=new Date(now);target.setHours(20,0,0,0);if(now>=target)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const days=Math.floor(diff/86400000);diff%=86400000;const hours=Math.floor(diff/3600000);diff%=3600000;const mins=Math.floor(diff/60000);diff%=60000;const secs=Math.floor(diff/1000);$('d').textContent=String(days).padStart(2,'0');$('h').textContent=String(hours).padStart(2,'0');$('m').textContent=String(mins).padStart(2,'0');$('s').textContent=String(secs).padStart(2,'0')}setInterval(tick,1000);tick();$('ticketNumber').value=randomTicket();
   
 
-    /* V56 — ADNOR Admin Trainable AI Assistant */
+    /* V57 — ADNOR Admin Trainable AI Assistant / Unanswered Questions Save Fix */
     const aiAnswers=[
       {title:'كيف يصير السحب؟',keys:['سحب','اليانصيب','السحوبات','بطاقة','تذكرة','نتيجة'],answer:'السحب في ADNOR يتم عبر نظام تذاكر داخل المنصة. تختار رقم تذكرة من 7 خانات، وتتم متابعة النتيجة من قسم النتائج وتذاكري. السحوبات تشمل اليومي والأسبوعي والشهري والسنوي حسب إعدادات الإدارة.'},
       {title:'كيف أعمل إيداع؟',keys:['إيداع','ايداع','اشحن','رصيد','تحويل','إيصال'],answer:'لعمل إيداع: ادخل إلى المحفظة، اختر تبويب الإيداع، اختر طريقة الدفع، اكتب المبلغ ورقم المرجع، ثم ارفع صورة الإيصال. بعد المراجعة من الإدارة يتم قبول الرصيد أو رفضه مع سبب واضح.'},
@@ -1754,7 +1775,7 @@
       {title:'الدعم الفني',keys:['دعم','مشكلة','تذكرة','مساعدة'],answer:'إذا واجهتك مشكلة، افتح صفحة الدعم الفني، اختر القسم، اكتب عنوان الطلب والتفاصيل، ثم أرسل التذكرة. يمكن متابعة الرد من صفحة الدعم والإشعارات.'}
     ];
     function aiEscape(s){return String(s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
-    async function aiReply(q){const text=(q||'').trim();if(!text)return 'اكتب سؤالك أولًا.';const best=findAiBestAnswer(text);if(best)return best.answer;await saveUnansweredAiQuestion(text);return 'هذا سؤال جديد ولم أجد له جوابًا محفوظًا بعد. تم حفظ السؤال داخل لوحة الإدارة في قسم المساعد الذكي، وبعد أن تضيف الإدارة الجواب مرة واحدة سأجيب عليه تلقائيًا في المرات القادمة.'}
+    async function aiReply(q){const text=(q||'').trim();if(!text)return 'اكتب سؤالك أولًا.';const best=findAiBestAnswer(text);if(best)return best.answer;const saved=await saveUnansweredAiQuestion(text);return saved?'هذا سؤال جديد ولم أجد له جوابًا محفوظًا بعد. تم حفظ السؤال داخل لوحة الإدارة في قسم المساعد الذكي، وبعد أن تضيف الإدارة الجواب مرة واحدة سأجيب عليه تلقائيًا في المرات القادمة.':'هذا سؤال جديد، لكن لم أستطع حفظه الآن داخل الأدمن. يرجى المحاولة بعد تحديث قواعد Firebase.'}
     function aiAddMessage(type,msg){const log=$('aiChatLog');if(!log)return;const div=document.createElement('div');div.className='ai-msg '+type;div.innerHTML=aiEscape(msg);log.appendChild(div);log.scrollTop=log.scrollHeight}
     async function aiAsk(q){const question=(q||$('aiQuestionInput')?.value||'').trim();if(!question)return toast('اكتب سؤالًا أولًا');aiAddMessage('user',question);if($('aiQuestionInput'))$('aiQuestionInput').value='';aiAddMessage('bot','جاري تحليل السؤال داخل مساعد ADNOR...');const log=$('aiChatLog');const pending=log?.lastElementChild;try{const ans=await aiReply(question);if(pending)pending.innerHTML=aiEscape(ans);else aiAddMessage('bot',ans)}catch(e){console.error(e);if(pending)pending.innerHTML=aiEscape('تعذر حفظ السؤال الآن. حاول مرة ثانية أو افتح تذكرة دعم.');}}
     if($('aiAskBtn'))$('aiAskBtn').onclick=()=>aiAsk();

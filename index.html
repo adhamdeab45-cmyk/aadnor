@@ -472,6 +472,7 @@
 
 <style id="adnor-v66-last-result-inside-hero">
   /* V66: إظهار آخر نتيجة داخل بطاقة السحب نفسها تحت قيمة الجائزة */
+  /* V87: إصلاح دمج last_results حتى يتغير مربع آخر نتيجة فعليًا */
   /* V83: ربط نتيجة السحب بمسار عام ثابت public_draw_results حتى تظهر للمستخدم فورًا */
   /* V84: مسار عرض احتياطي داخل system_settings حتى يتغير مربع آخر نتيجة فورًا */
   #page-lottery .v63-hero-draw{padding-bottom:16px!important}
@@ -1405,7 +1406,10 @@
     let wheelSettings=JSON.parse(JSON.stringify(defaultWheelSettings));
     let wheelSegments=wheelSettings.segments;
     let lotteryUnsub=null, publicDrawUnsub=null, publicDrawRoundUnsubs=[], publicDrawHistory={}, publicDrawRounds={}, publicDrawResultsUnsub=null, publicDrawResults={}, displayDrawResultsUnsub=null, displayDrawResults={}, resultBoxDirectUnsub=null, resultBoxDirect={};
-    function mergeLotterySettings(v){const base=JSON.parse(JSON.stringify(defaultLotterySettings));v=v||{};base.ticketPrice=Number(v.ticketPrice||base.ticketPrice);base.moveLosers=(v.moveLosers!==false);['daily','weekly','monthly','yearly'].forEach(k=>{base[k]={...base[k],...(v[k]||{})};base[k].enabled=(base[k].enabled!==false);base[k].prize=Number(base[k].prize||0);});return base}
+    function mergeLotterySettings(v){const base=JSON.parse(JSON.stringify(defaultLotterySettings));v=v||{};base.ticketPrice=Number(v.ticketPrice||base.ticketPrice);base.moveLosers=(v.moveLosers!==false);['daily','weekly','monthly','yearly'].forEach(k=>{base[k]={...base[k],...(v[k]||{})};base[k].enabled=(base[k].enabled!==false);base[k].prize=Number(base[k].prize||0);});
+      // V87: لا نحذف last_results عند دمج إعدادات اليانصيب. هذا كان سبب بقاء مربع آخر نتيجة على 0000000.
+      if(v.last_results && typeof v.last_results==='object') base.last_results=v.last_results;
+      return base}
     function prizeFor(type){return Number((lotterySettings?.[type]?.prize ?? drawMeta[type]?.jackpot ?? 0))}
     function drawLabel(type){return lotterySettings?.[type]?.label || drawMeta[type]?.label || type}
     function drawEnabled(type){return lotterySettings?.[type]?.enabled !== false}

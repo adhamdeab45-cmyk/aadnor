@@ -3125,6 +3125,52 @@ function setCurrentPrize(type){
     setInterval(()=>{try{renderV91LastResult()}catch(e){}},3000);
     Object.assign(window,{adminV91PublishResult,adminV91FillPrize,adminV92Set8Pm,adminV92ScheduleResult,renderV91LastResult});
 
+
+
+    /* V93: ربط الشريط العلوي بنتيجة السحب المنشورة أو المجدولة الساعة 8 */
+    function v93GetVisibleTickerResult(){
+      try{
+        const r=(typeof v91PickResult==='function')?v91PickResult():null;
+        if(!r)return null;
+        const publishAt=Number(r.publishAt||0);
+        if(r.status==='scheduled' && publishAt && publishAt>Date.now())return null;
+        const n=String(r.ticketNumber||r.winningNumber||r.number||'').replace(/\D/g,'');
+        if(!n)return null;
+        return r;
+      }catch(e){return null;}
+    }
+    function v93ResultTickerMessage(r){
+      const drawName=drawLabel(r.drawType||currentDraw||'daily');
+      const winner=String(r.winnerName||r.winnerEmail||'مستخدم ADNOR').trim();
+      const ticket=String(r.ticketNumber||r.winningNumber||r.number||'').replace(/\D/g,'').padStart(7,'0').slice(-7);
+      const prizeText=money(r.prize||0);
+      return 'مبروك للفائز '+winner+' في '+drawName+' — رقم التذكرة '+ticket+' — الجائزة '+prizeText+' 🎉';
+    }
+    function v93RenderTopWinnerTicker(){
+      const alert=$('siteControlAlert'), sub=$('siteControlAlertSub');
+      if(!alert)return;
+      let msg='';
+      if(siteControl&&siteControl.maintenance){
+        msg='⚠️ '+(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');
+      }else{
+        const r=v93GetVisibleTickerResult();
+        msg=r?v93ResultTickerMessage(r):(siteControl?.announcement||'مبروك للفائزين بسحب أمس، ترقبوا السحب الكبير القادم.');
+      }
+      alert.classList.toggle('show',!!msg);
+      if(alert.firstChild) alert.firstChild.nodeValue=msg; else alert.textContent=msg;
+      if(sub)sub.textContent='';
+    }
+    try{
+      const __v93RenderSiteControl=renderSiteControl;
+      renderSiteControl=function(){__v93RenderSiteControl();v93RenderTopWinnerTicker();};
+    }catch(_e){}
+    try{
+      const __v93RenderV91LastResult=renderV91LastResult;
+      renderV91LastResult=function(){__v93RenderV91LastResult();v93RenderTopWinnerTicker();};
+    }catch(_e){}
+    setInterval(()=>{try{v93RenderTopWinnerTicker()}catch(e){}},3000);
+    Object.assign(window,{v93RenderTopWinnerTicker});
+
     /* V81: تحديث تلقائي لنتيجة السحب عند وصول وقت النشر بدون ما يحتاج المستخدم يعمل Refresh */
     let __v81DrawRefreshTimer=null;
     function startV81DrawAutoRefresh(){

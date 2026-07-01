@@ -545,6 +545,17 @@
     #sideDrawer .v71-drawer-user span{display:block;font-size:12px;color:#aeb8cd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
     #sideDrawer .v71-drawer-menu .drawer-link{min-height:56px}
   </style>
+
+
+  <style id="adnor-v76-daily-login-7-boxes">
+    /* V76 — Daily Login 7 Boxes controlled from admin */
+    .v76-daily-launcher{position:relative;z-index:9;display:flex;align-items:center;justify-content:center;gap:10px;margin:8px auto 12px;width:max-content;max-width:100%;border:1px solid rgba(255,205,74,.55);border-radius:999px;padding:8px 13px;background:radial-gradient(circle at 50% 0,rgba(255,218,94,.18),transparent 55%),linear-gradient(180deg,rgba(8,24,48,.92),rgba(2,9,20,.96));box-shadow:0 0 22px rgba(255,188,39,.14),inset 0 0 14px rgba(255,205,76,.04);color:#ffe184;font:inherit;font-weight:1000;cursor:pointer;min-height:52px}
+    .v76-daily-launcher .orb{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#fff3b8,#d99a20 58%,#8a5410);color:#170f04;box-shadow:0 0 20px rgba(255,201,55,.38),inset 0 1px 0 rgba(255,255,255,.7);font-size:20px}.v76-daily-launcher small{display:block;color:#9fb1cb;font-size:10px;font-weight:900;margin-top:1px}.v76-daily-launcher.ready{animation:v76Pulse 1.8s infinite ease-in-out}.v76-daily-launcher.done{opacity:.78}.v76-daily-launcher.done .orb{filter:saturate(.55)}@keyframes v76Pulse{0%,100%{box-shadow:0 0 20px rgba(255,188,39,.13)}50%{box-shadow:0 0 34px rgba(255,188,39,.34)}}
+    .v76-daily-modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.76);backdrop-filter:blur(12px);padding:18px}.v76-daily-modal.show{display:flex}.v76-daily-card{width:min(96vw,430px);max-height:88vh;overflow:auto;border-radius:32px;border:1px solid rgba(255,205,74,.68);background:radial-gradient(circle at 50% 0,rgba(255,215,92,.22),transparent 40%),linear-gradient(180deg,rgba(8,22,45,.98),rgba(1,7,18,.99));box-shadow:0 0 42px rgba(0,0,0,.82),0 0 30px rgba(255,188,39,.18),inset 0 1px 0 rgba(255,255,255,.10);padding:16px;color:#fff}.v76-daily-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.v76-daily-head h3{margin:0;color:#ffe184;font-size:22px}.v76-daily-head p{margin:3px 0 0;color:#aebbd1;font-size:12px;font-weight:900}.v76-daily-close{width:42px;height:42px;border-radius:15px;border:1px solid rgba(255,205,74,.38);background:rgba(3,11,25,.8);color:#ffe184;font-size:24px;font-weight:900}.v76-week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0 14px}.v76-day-box{min-height:78px;border:1px solid rgba(255,205,74,.28);border-radius:18px;background:linear-gradient(180deg,rgba(8,25,49,.74),rgba(2,10,22,.92));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px 4px;gap:3px;position:relative;overflow:hidden}.v76-day-box .gift{font-size:24px;filter:drop-shadow(0 0 8px rgba(255,202,55,.28))}.v76-day-box b{font-size:10px;color:#fff;font-weight:1000}.v76-day-box span{font-size:8px;color:#9fb0c8;font-weight:900;line-height:1.25}.v76-day-box.ready{border-color:rgba(255,232,139,.82);background:linear-gradient(180deg,#fff2b4,#d89824 58%,#8c5510);box-shadow:0 0 18px rgba(255,190,39,.27);color:#130d05}.v76-day-box.ready b,.v76-day-box.ready span{color:#140f06}.v76-day-box.done{border-color:rgba(35,226,164,.44);background:linear-gradient(180deg,rgba(20,110,85,.5),rgba(2,14,22,.88))}.v76-day-box.locked{opacity:.50;filter:grayscale(.4)}.v76-reward-current{border:1px solid rgba(255,205,74,.35);border-radius:22px;padding:12px;text-align:center;background:rgba(1,7,17,.58);margin-bottom:12px}.v76-reward-current b{display:block;color:#ffe184;font-size:16px;margin-bottom:4px}.v76-reward-current span{display:block;color:#c8d4e5;font-size:12px;font-weight:900;line-height:1.55}.v76-claim-btn{width:100%;height:58px;border-radius:20px;border:1px solid rgba(255,239,169,.9);background:linear-gradient(180deg,#fff0a5 0,#edbd43 32%,#b97918 68%,#f7d978 100%);color:#151007;font:inherit;font-weight:1000;font-size:18px;box-shadow:0 0 22px rgba(255,188,45,.25);cursor:pointer}.v76-claim-btn:disabled{opacity:.55;filter:saturate(.45);cursor:not-allowed}.v76-daily-note{text-align:center;color:#8fa2bd;font-size:11px;font-weight:900;margin-top:10px}
+    .admin-daily-grid{display:grid;gap:10px}.admin-dl-day{border:1px solid rgba(255,204,77,.32);border-radius:20px;padding:12px;background:linear-gradient(180deg,rgba(4,15,33,.70),rgba(0,0,0,.18))}.admin-dl-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.admin-dl-title b{color:#ffe184}.admin-dl-title span{color:#aeb8cd;font-size:12px;font-weight:900}.admin-dl-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.admin-dl-fields .field-wrap.full{grid-column:1/-1}.admin-dl-fields .field{height:50px}.admin-dl-fields textarea{height:74px!important}.daily-login-admin-save{margin-top:12px}.v76-hidden-game-box{display:none!important}
+    @media(max-width:390px){.v76-week-grid{gap:4px}.v76-day-box{min-height:68px;border-radius:14px}.v76-day-box .gift{font-size:20px}.v76-day-box b{font-size:9px}.v76-day-box span{font-size:7.5px}.admin-dl-fields{grid-template-columns:1fr}}
+  </style>
+
 </head>
 <body>
   <div class="aurora"></div>
@@ -588,6 +599,10 @@
         <button class="v62-menu-btn" id="menuBtn" aria-label="القائمة">☰</button>
         <button class="hidden" id="bellBtn" type="button" aria-label="الإشعارات"><span class="notif-badge" id="notifBadge">0</span></button>
       </section>
+      <button class="v76-daily-launcher" id="dailyLoginLauncher" type="button" aria-label="التسجيل اليومي">
+        <span class="orb">🎁</span>
+        <span>تسجيل يومي<small id="dailyLoginLauncherSub">7 صناديق أسبوعية</small></span>
+      </button>
       <div class="drawer-overlay" id="drawerOverlay"></div>
       <aside class="side-drawer" id="sideDrawer" aria-label="قائمة ADNOR">
         <div class="drawer-head"><div class="drawer-title">ADNOR</div><button class="drawer-close" id="drawerCloseBtn">×</button></div>
@@ -602,6 +617,18 @@
         </div>
       </aside>
 
+      <div class="v76-daily-modal" id="dailyLoginModal" aria-hidden="true">
+        <div class="v76-daily-card">
+          <div class="v76-daily-head">
+            <div><h3>🎁 التسجيل اليومي</h3><p>افتح صندوق واحد كل يوم، والمكافآت يحددها الأدمن.</p></div>
+            <button class="v76-daily-close" id="dailyLoginCloseBtn" type="button">×</button>
+          </div>
+          <div class="v76-week-grid" id="dailyLoginBoxes"></div>
+          <div class="v76-reward-current"><b id="dailyLoginCurrentTitle">صندوق اليوم</b><span id="dailyLoginCurrentReward">بانتظار تحميل المكافأة...</span></div>
+          <button class="v76-claim-btn" id="dailyLoginClaimBtn" type="button">فتح صندوق اليوم</button>
+          <div class="v76-daily-note" id="dailyLoginNote">كل حساب يستطيع فتح صندوق واحد فقط يوميًا.</div>
+        </div>
+      </div>
 
       <div id="page-home" class="page active">
         <section class="home-hero">
@@ -759,7 +786,7 @@
           <section class="jackpot games-hero-clean"><div class="label">صالة الألعاب الملكية</div><div class="amount">10,000x</div><div class="drawname">اختر لعبتك فقط — بدون زحمة وبدون خيارات زيادة</div></section>
           <div class="game-grid games-two-only">
             <section class="game-card games-choice-card"><div class="game-icon">🎡</div><div><h3>عجلة الحظ الملكية</h3><p>افتح العجلة لحالها، اختر الرهان، وشاهد النتيجة مباشرة. الرصيد يظهر داخل اللعبة.</p><button class="dark-btn" id="openWheelBtn">افتح العجلة</button></div></section>
-            <section class="game-card games-choice-card"><div class="game-icon">🎁</div><div><h3>صندوق الحظ اليومي</h3><p>افتح الصندوق مرة كل 24 ساعة. الجائزة تضاف كبونص قابل للعب داخل ADNOR.</p><button class="dark-btn" id="dailyBoxBtn">افتح الصندوق</button><div class="wheel-result games-box-status" id="dailyBoxText">جاهز للاختبار. افتح الصندوق من هنا.</div></div></section>
+            <section class="game-card games-choice-card v76-hidden-game-box"><div class="game-icon">🎁</div><div><h3>صندوق الحظ اليومي</h3><p>تم نقله إلى زر التسجيل اليومي فوق الموقع.</p><button class="dark-btn" id="dailyBoxBtn">افتح الصندوق</button><div class="wheel-result games-box-status" id="dailyBoxText">صندوق الحظ صار ضمن التسجيل اليومي.</div></div></section>
           </div>
         </div>
         <section class="royal-card hidden wheel-only-card" id="wheelPlayCard">
@@ -895,6 +922,7 @@
             <button class="admin-menu-btn" data-admin-section="draws"><span><i>🎟️</i> اليانصيب</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="games"><span><i>🎡</i> الألعاب والعجلة</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="vipadmin"><span><i>👑</i> VIP والمهام</span><span>›</span></button>
+            <button class="admin-menu-btn" data-admin-section="dailylogin"><span><i>🎁</i> التسجيل اليومي</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="payments"><span><i>💳</i> طرق الدفع</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="notifications"><span><i>🔔</i> الإشعارات</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="aiadmin"><span><i>🤖</i> المساعد الذكي</span><span>›</span></button>
@@ -913,6 +941,7 @@
                   <button onclick="showAdminSection('draws')"><span><b>السحوبات / اليانصيب</b><small>تنفيذ السحب اليومي والأسبوعي والشهري والسنوي</small></span><i>🎟️</i></button>
                   <button onclick="showAdminSection('games')"><span><b>الألعاب والعجلة</b><small>سجل العجلة وإعدادات المضاعفات</small></span><i>🎡</i></button>
                   <button onclick="showAdminSection('vipadmin')"><span><b>VIP والمهام</b><small>المستويات، نقاط VIP، الصندوق الملكي والمهام اليومية</small></span><i>👑</i></button>
+                  <button onclick="showAdminSection('dailylogin')"><span><b>التسجيل اليومي</b><small>7 صناديق، بونص، رصيد، VIP، قسائم ولفات مجانية</small></span><i>🎁</i></button>
                   <button onclick="showAdminSection('payments')"><span><b>طرق الدفع</b><small>USDT، شام كاش، بنك، واتساب، تيليجرام</small></span><i>💳</i></button>
                   <button onclick="showAdminSection('notifications')"><span><b>الإشعارات</b><small>آخر الأحداث والتنبيهات المهمة</small></span><i>🔔</i></button>
                   <button onclick="showAdminSection('aiadmin')"><span><b>المساعد الذكي</b><small>أسئلة جديدة، أجوبة محفوظة، وتعليم المساعد</small></span><i>🤖</i></button>
@@ -1043,6 +1072,26 @@
                 </div>
                 <div class="admin-section-head" style="margin-top:14px"><h3>معاينة المستويات</h3><span>حسب الإعدادات الحالية</span></div>
                 <div class="admin-table" id="adminVipPreview"><div class="admin-empty">جارٍ تحميل إعدادات VIP...</div></div>
+              </div>
+            </section>
+
+            <section class="admin-section" id="admin-section-dailylogin">
+              <div class="admin-wide-card">
+                <div class="admin-section-head"><div class="head-title"><h3>التسجيل اليومي — 7 صناديق</h3><span>تحكم كامل بالمكافآت اليومية من الأدمن</span></div><button class="blue" id="saveDailyLoginSettingsBtn" type="button">حفظ التسجيل اليومي</button></div>
+                <div class="hint">كل صندوق له نوع جائزة وقيمة ورسالة. المستخدم يفتح صندوق واحد فقط كل يوم. البونص قابل للعب، الرصيد الحقيقي قابل للسحب، VIP يضيف نقاط، واللفّة المجانية تضاف للعجلة.</div>
+                <div class="admin-form-grid compact" style="margin-top:12px">
+                  <div class="field-wrap"><label>تشغيل التسجيل اليومي</label><div class="field"><span class="ico">🎁</span><select id="dailyLoginEnabledInput"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div></div>
+                  <div class="field-wrap"><label>عنوان الزر للمستخدم</label><div class="field"><span class="ico">🏷️</span><input id="dailyLoginTitleInput" placeholder="تسجيل يومي"></div></div>
+                </div>
+              </div>
+              <div class="admin-wide-card">
+                <div class="admin-section-head"><h3>إعدادات الصناديق السبعة</h3><span>اليوم 1 إلى اليوم 7</span></div>
+                <div class="admin-daily-grid" id="dailyLoginAdminDays"><div class="admin-empty">جارٍ تحميل الصناديق...</div></div>
+                <button class="gold-btn daily-login-admin-save" id="saveDailyLoginSettingsBtn2" type="button">حفظ كل الصناديق</button>
+              </div>
+              <div class="admin-wide-card">
+                <div class="admin-section-head"><h3>معاينة سريعة</h3><span>كيف ستظهر للمستخدم</span></div>
+                <div class="admin-table" id="dailyLoginAdminPreview"><div class="admin-empty">بانتظار الإعدادات...</div></div>
               </div>
             </section>
 
@@ -2599,7 +2648,100 @@
     const __v59RenderAdmin=renderAdmin;renderAdmin=function(){__v59RenderAdmin();renderVipAdmin();};
     const __v59ShowPage=showPage;showPage=function(p){__v59ShowPage(p);if(p==='vip'){renderVipRoyal()} if(p==='results'||p==='support'){if(currentUser)update(ref(db,'users/'+currentUser.uid),{vipVisitedInfoToday:true}).catch(()=>{})}};
     const __v59AiAsk=aiAsk;aiAsk=async function(q){if(currentUser)update(ref(db,'users/'+currentUser.uid),{vipUsedAiToday:true}).catch(()=>{});return __v59AiAsk(q)};
-    Object.assign(window,{claimVipTask,openVipDailyBox,adminSaveVipSettings});
+
+
+    /* V76 — Daily Login 7 Boxes, full admin control */
+    const defaultDailyLoginSettings={
+      enabled:true,
+      title:'تسجيل يومي',
+      days:[
+        {enabled:true,title:'اليوم 1',type:'bonus',value:0.05,coupon:'',message:'بونص بداية الأسبوع'},
+        {enabled:true,title:'اليوم 2',type:'vip',value:10,coupon:'',message:'نقاط VIP'},
+        {enabled:true,title:'اليوم 3',type:'bonus',value:0.10,coupon:'',message:'بونص قابل للعب'},
+        {enabled:true,title:'اليوم 4',type:'freeSpin',value:1,coupon:'',message:'لفة مجانية للعجلة'},
+        {enabled:true,title:'اليوم 5',type:'coupon',value:0,coupon:'ADNOR-DAY5',message:'قسيمة خاصة من ADNOR'},
+        {enabled:true,title:'اليوم 6',type:'vip',value:25,coupon:'',message:'دفعة VIP قوية'},
+        {enabled:true,title:'اليوم 7',type:'real',value:0.50,coupon:'',message:'رصيد حقيقي مكافأة الأسبوع'}
+      ]
+    };
+    let dailyLoginSettings=JSON.parse(JSON.stringify(defaultDailyLoginSettings));
+    let dailyLoginSettingsUnsub=null;
+    function dlDaysArray(v){const arr=Array.isArray(v)?v:Object.values(v||{});const base=defaultDailyLoginSettings.days;return Array.from({length:7},(_,i)=>Object.assign({},base[i],arr[i]||{}, {value:Number((arr[i]||{}).value??base[i].value??0), enabled:(arr[i]||{}).enabled!==false}))}
+    function mergeDailyLoginSettings(v){v=v||{};return {enabled:v.enabled!==false,title:String(v.title||defaultDailyLoginSettings.title),days:dlDaysArray(v.days)}}
+    function listenDailyLoginSettings(){if(dailyLoginSettingsUnsub)try{dailyLoginSettingsUnsub()}catch(e){};dailyLoginSettingsUnsub=onValue(ref(db,'system_settings/daily_login'),snap=>{dailyLoginSettings=mergeDailyLoginSettings(snap.val());renderDailyLogin();renderDailyLoginAdmin()})}
+    onAuthStateChanged(auth,user=>{if(user)listenDailyLoginSettings()});
+    function dlTodayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+    function dlData(){return currentProfile?.dailyLogin||{}}
+    function dlNextIndex(){return Math.max(0,Math.min(6,Number(dlData().nextIndex||0)%7))}
+    function dlClaimedToday(){return dlData().lastDate===dlTodayKey()}
+    function dlTypeLabel(t){return {bonus:'بونص',real:'رصيد حقيقي',vip:'نقاط VIP',freeSpin:'لفة مجانية',coupon:'قسيمة / كود',none:'حظ أوفر'}[t]||'جائزة'}
+    function dlRewardText(day){day=day||{};const t=day.type||'bonus',v=Number(day.value||0);if(t==='bonus')return money(v)+' بونص قابل للعب';if(t==='real')return money(v)+' رصيد حقيقي';if(t==='vip')return v+' نقطة VIP';if(t==='freeSpin')return v+' لفة مجانية';if(t==='coupon')return 'قسيمة: '+(day.coupon||'ADNOR');return 'حظ أوفر'}
+    function renderDailyLogin(){
+      const btn=$('dailyLoginLauncher');if(!btn)return;
+      const title=dailyLoginSettings.title||'تسجيل يومي';
+      const span=btn.querySelector('span:not(.orb)');if(span)span.childNodes[0].nodeValue=title;
+      const done=dlClaimedToday();btn.classList.toggle('ready',dailyLoginSettings.enabled&&!done);btn.classList.toggle('done',done);
+      setText('dailyLoginLauncherSub',!dailyLoginSettings.enabled?'متوقف مؤقتًا':(done?'تم فتح صندوق اليوم':'افتح صندوق اليوم'));
+      renderDailyLoginModal();
+    }
+    function openDailyLoginModal(){renderDailyLoginModal();$('dailyLoginModal')?.classList.add('show')}
+    function closeDailyLoginModal(){$('dailyLoginModal')?.classList.remove('show')}
+    function renderDailyLoginModal(){
+      const box=$('dailyLoginBoxes');if(!box)return;
+      const idx=dlNextIndex(),done=dlClaimedToday(),lastIdx=Number(dlData().lastDayIndex??-1),days=dailyLoginSettings.days||defaultDailyLoginSettings.days;
+      box.innerHTML=days.map((d,i)=>{const state=done?(i===lastIdx?'done':'locked'):(i===idx?'ready':'locked');const icon=state==='done'?'✅':(state==='ready'?'🎁':'🔒');return '<div class="v76-day-box '+state+'"><div class="gift">'+icon+'</div><b>اليوم '+(i+1)+'</b><span>'+escapeHtml(dlRewardText(d))+'</span></div>'}).join('');
+      const day=days[idx]||days[0];setText('dailyLoginCurrentTitle',done?'تم فتح صندوق اليوم':(day.title||('اليوم '+(idx+1))));setText('dailyLoginCurrentReward',dailyLoginSettings.enabled?(done?'ارجع غدًا لفتح الصندوق التالي.':'مكافأة اليوم: '+dlRewardText(day)+' — '+(day.message||'')):'التسجيل اليومي متوقف مؤقتًا من الإدارة.');
+      const claim=$('dailyLoginClaimBtn');if(claim){claim.disabled=!dailyLoginSettings.enabled||done;claim.textContent=done?'تم فتح صندوق اليوم':'فتح صندوق اليوم'}
+    }
+    async function claimDailyLogin(){
+      if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');
+      if(!dailyLoginSettings.enabled)return toast('التسجيل اليومي متوقف مؤقتًا');
+      if(dlClaimedToday())return toast('فتحت صندوق اليوم مسبقًا');
+      const idx=dlNextIndex(),day=(dailyLoginSettings.days||defaultDailyLoginSettings.days)[idx]||{},now=Date.now(),today=dlTodayKey();
+      const t=day.enabled===false?'none':(day.type||'bonus'),val=Number(day.value||0),coupon=String(day.coupon||'').trim();
+      const updates={};
+      updates['users/'+currentUser.uid+'/dailyLogin/lastDate']=today;
+      updates['users/'+currentUser.uid+'/dailyLogin/lastAt']=now;
+      updates['users/'+currentUser.uid+'/dailyLogin/lastDayIndex']=idx;
+      updates['users/'+currentUser.uid+'/dailyLogin/nextIndex']=(idx+1)%7;
+      updates['users/'+currentUser.uid+'/dailyLogin/totalClaims']=increment(1);
+      updates['users/'+currentUser.uid+'/updatedAt']=now;
+      let title='مكافأة التسجيل اليومي', text='فتحت صندوق اليوم '+(idx+1)+'. ', amount=0, vipPts=0, freeSpin=0, couponCode='';
+      if(t==='bonus'&&val>0){updates['users/'+currentUser.uid+'/bonusBalance']=increment(val);amount=val;text+='ربحت '+money(val)+' بونص قابل للعب.'}
+      else if(t==='real'&&val>0){updates['users/'+currentUser.uid+'/realBalance']=increment(val);amount=val;text+='ربحت '+money(val)+' رصيد حقيقي.'}
+      else if(t==='vip'&&val>0){updates['users/'+currentUser.uid+'/vipPoints']=increment(val);vipPts=val;text+='ربحت '+val+' نقطة VIP.'}
+      else if(t==='freeSpin'&&val>0){updates['users/'+currentUser.uid+'/freeSpins']=increment(val);freeSpin=val;text+='ربحت '+val+' لفة مجانية.'}
+      else if(t==='coupon'){couponCode=coupon||('ADNOR-DAY'+(idx+1));updates['users/'+currentUser.uid+'/coupons/daily_'+now]={code:couponCode,title:day.title||'قسيمة يومية',createdAt:now,used:false};text+='ربحت قسيمة: '+couponCode+'.'}
+      else{text+='حظ أوفر في الصندوق القادم.'}
+      updates['transactions/'+currentUser.uid+'/daily_login_'+now]={type:'daily_login',dayIndex:idx+1,rewardType:t,amount,vipPoints:vipPts,freeSpin,coupon:couponCode,status:'approved',note:day.message||'',createdAt:now};
+      updates['user_notifications/'+currentUser.uid+'/daily_login_'+now]=notifObj('daily_login',title,text);
+      try{await update(ref(db),updates);renderDailyLogin();await uiAlert(text,'🎁 صندوق التسجيل اليومي');closeDailyLoginModal()}catch(e){console.error(e);toast('فشل فتح صندوق اليوم: '+(e.code||e.message))}
+    }
+    function renderDailyLoginAdmin(){
+      if(!isAdminUser())return;const v=dailyLoginSettings;
+      if($('dailyLoginEnabledInput'))$('dailyLoginEnabledInput').value=v.enabled?'true':'false';
+      if($('dailyLoginTitleInput'))$('dailyLoginTitleInput').value=v.title||'تسجيل يومي';
+      const box=$('dailyLoginAdminDays');if(box){box.innerHTML=(v.days||defaultDailyLoginSettings.days).map((d,i)=>'<div class="admin-dl-day"><div class="admin-dl-title"><b>🎁 صندوق اليوم '+(i+1)+'</b><span>'+escapeHtml(dlRewardText(d))+'</span></div><div class="admin-dl-fields"><div class="field-wrap"><label>تشغيل الصندوق</label><div class="field"><span class="ico">✅</span><select id="dlDayEnabled_'+i+'"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div></div><div class="field-wrap"><label>اسم الجائزة</label><div class="field"><span class="ico">🏷️</span><input id="dlDayTitle_'+i+'" placeholder="اليوم '+(i+1)+'"></div></div><div class="field-wrap"><label>نوع الجائزة</label><div class="field"><span class="ico">🎯</span><select id="dlDayType_'+i+'"><option value="bonus">بونص</option><option value="real">رصيد حقيقي</option><option value="vip">نقاط VIP</option><option value="freeSpin">لفة مجانية</option><option value="coupon">قسيمة / كود</option><option value="none">حظ أوفر</option></select></div></div><div class="field-wrap"><label>القيمة</label><div class="field"><span class="ico">#</span><input id="dlDayValue_'+i+'" type="number" step="0.01" min="0" placeholder="0.50"></div></div><div class="field-wrap"><label>كود القسيمة اختياري</label><div class="field"><span class="ico">🎫</span><input id="dlDayCoupon_'+i+'" placeholder="ADNOR-DAY'+(i+1)+'"></div></div><div class="field-wrap full"><label>رسالة تظهر للمستخدم</label><div class="field"><span class="ico">💬</span><textarea id="dlDayMessage_'+i+'" placeholder="اكتب رسالة الجائزة"></textarea></div></div></div></div>').join('');(v.days||[]).forEach((d,i)=>{if($('dlDayEnabled_'+i))$('dlDayEnabled_'+i).value=d.enabled!==false?'true':'false';if($('dlDayTitle_'+i))$('dlDayTitle_'+i).value=d.title||('اليوم '+(i+1));if($('dlDayType_'+i))$('dlDayType_'+i).value=d.type||'bonus';if($('dlDayValue_'+i))$('dlDayValue_'+i).value=Number(d.value||0);if($('dlDayCoupon_'+i))$('dlDayCoupon_'+i).value=d.coupon||'';if($('dlDayMessage_'+i))$('dlDayMessage_'+i).value=d.message||'';});}
+      const prev=$('dailyLoginAdminPreview');if(prev){const opened=Object.values(adminState.users||{}).filter(u=>u.dailyLogin?.lastDate===dlTodayKey()).length;prev.innerHTML='<div class="admin-row"><div><h4>إحصائيات اليوم</h4><p>عدد المستخدمين الذين فتحوا صندوق اليوم: '+opened+'</p></div><strong>'+opened+'</strong></div>'+(v.days||[]).map((d,i)=>'<div class="admin-row"><div><h4>اليوم '+(i+1)+' — '+escapeHtml(d.title||'')+'</h4><p>النوع: '+dlTypeLabel(d.type)+' — المكافأة: '+escapeHtml(dlRewardText(d))+'<br>'+escapeHtml(d.message||'')+'</p></div><span class="admin-badge '+(d.enabled!==false?'approved':'rejected')+'">'+(d.enabled!==false?'مفعّل':'متوقف')+'</span></div>').join('')}
+    }
+    async function adminSaveDailyLoginSettings(){
+      if(!isAdminUser())return toast('للأدمن فقط');
+      const days=Array.from({length:7},(_,i)=>({enabled:$('dlDayEnabled_'+i)?.value!=='false',title:$('dlDayTitle_'+i)?.value||('اليوم '+(i+1)),type:$('dlDayType_'+i)?.value||'bonus',value:Number($('dlDayValue_'+i)?.value||0),coupon:$('dlDayCoupon_'+i)?.value||'',message:$('dlDayMessage_'+i)?.value||''}));
+      const data={enabled:$('dailyLoginEnabledInput')?.value!=='false',title:$('dailyLoginTitleInput')?.value||'تسجيل يومي',days,updatedAt:Date.now(),updatedBy:currentUser?.email||''};
+      try{await set(ref(db,'system_settings/daily_login'),data);await set(ref(db,'finance_audit/'+Date.now()),{action:'daily_login_settings_saved',adminEmail:currentUser?.email||'',createdAt:Date.now(),note:'حفظ إعدادات التسجيل اليومي 7 صناديق'});toast('تم حفظ إعدادات التسجيل اليومي')}catch(e){console.error(e);toast('فشل حفظ التسجيل اليومي: '+(e.code||e.message))}
+    }
+    if($('dailyLoginLauncher'))$('dailyLoginLauncher').onclick=openDailyLoginModal;
+    if($('dailyLoginCloseBtn'))$('dailyLoginCloseBtn').onclick=closeDailyLoginModal;
+    if($('dailyLoginModal'))$('dailyLoginModal').addEventListener('click',e=>{if(e.target===$('dailyLoginModal'))closeDailyLoginModal()});
+    if($('dailyLoginClaimBtn'))$('dailyLoginClaimBtn').onclick=claimDailyLogin;
+    if($('saveDailyLoginSettingsBtn'))$('saveDailyLoginSettingsBtn').onclick=adminSaveDailyLoginSettings;
+    if($('saveDailyLoginSettingsBtn2'))$('saveDailyLoginSettingsBtn2').onclick=adminSaveDailyLoginSettings;
+    const __v76RenderProfile=renderProfile;renderProfile=function(){__v76RenderProfile();renderDailyLogin();};
+    const __v76RenderAdmin=renderAdmin;renderAdmin=function(){__v76RenderAdmin();renderDailyLoginAdmin();};
+    const __v76ShowAdminSection=showAdminSection;showAdminSection=function(sec){__v76ShowAdminSection(sec);if(sec==='dailylogin')setTimeout(renderDailyLoginAdmin,50)};
+    Object.assign(window,{claimDailyLogin,adminSaveDailyLoginSettings,openDailyLoginModal,closeDailyLoginModal});
+
+        Object.assign(window,{claimVipTask,openVipDailyBox,adminSaveVipSettings});
 
   </script>
 </body>

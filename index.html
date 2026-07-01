@@ -1666,7 +1666,8 @@
       updates['users/'+currentUser.uid+'/reservedWithdrawalBalance']=afterReserved;
       updates['users/'+currentUser.uid+'/updatedAt']=now;
       updates['transactions/'+currentUser.uid+'/'+now]={type:'withdraw_request',amount:-amount,status:'pending',note:'طلب سحب قيد المراجعة — المبلغ محجوز حتى قرار الأدمن',balanceBefore:bal,balanceAfter:afterReal,reservedBefore:res,reservedAfter:afterReserved,requestId:id,methodName:wm.name,createdAt:now};
-      updates['finance_audit/'+now]={action:'withdraw_request_reserved',requestId:id,uid:currentUser.uid,email:currentUser.email||'',amount,beforeReal:bal,afterReal,beforeReserved:res,afterReserved,methodName:wm.name,createdAt:now};
+      // V73: لا نكتب finance_audit من حساب المستخدم لأن قواعد Firebase تسمح للأدمن فقط.
+      // طلب السحب نفسه يصل للأدمن عبر finance/withdrawals + admin_notifications، والأدمن يولّد التدقيق عند القبول/الرفض.
       updates['admin_notifications/'+now]={type:'withdraw',uid:currentUser.uid,email:currentUser.email||'',text:'طلب سحب جديد بقيمة '+money(amount)+' عبر '+wm.name,createdAt:now,status:'new',requestId:id};
       queueGmailAlert(updates,'withdraw_'+id,'withdraw_new','طلب سحب جديد','وصل طلب سحب جديد بقيمة '+money(amount)+' من '+(currentUser.email||'مستخدم')+' عبر '+wm.name+'. افتح لوحة ADNOR للمراجعة.',{requestId:id,uid:currentUser.uid,email:currentUser.email||'',amount,method:wm.name});
       try{

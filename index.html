@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR | V57 AI Unanswered Fix</title>
+  <title>ADNOR | V58 AI Inbox Hard Fix</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -1728,32 +1728,133 @@
     async function saveUnansweredAiQuestion(question){
       if(!currentUser||!question)return false;
       const qNorm=normalizeAiText(question);
-      const hash=String(Math.abs([...qNorm].reduce((a,c)=>((a*31+c.charCodeAt(0))|0),7))).replace('-','');
-      const id='q_'+qNorm.slice(0,70).replace(/\s+/g,'_')+'_'+hash;
       const now=Date.now();
-      const updates={};
-      // V57 FIX: لا نقرأ ai_unanswered من حساب المستخدم، لأن القراءة مسموحة للأدمن فقط.
-      // لذلك نحفظ السؤال مباشرة ونزيد العداد بخاصية increment بدون أي تدخل بشري.
-      updates['ai_unanswered/'+id+'/id']=id;
-      updates['ai_unanswered/'+id+'/question']=question;
-      updates['ai_unanswered/'+id+'/questionNorm']=qNorm;
-      updates['ai_unanswered/'+id+'/uid']=currentUser.uid;
-      updates['ai_unanswered/'+id+'/email']=currentUser.email||'';
-      updates['ai_unanswered/'+id+'/name']=currentProfile?.name||'';
-      updates['ai_unanswered/'+id+'/count']=increment(1);
-      updates['ai_unanswered/'+id+'/status']='new';
-      updates['ai_unanswered/'+id+'/lastAskedAt']=now;
-      updates['ai_unanswered_events/'+id+'/'+now]={id:String(now),question,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile?.name||'',createdAt:now};
-      updates['admin_notifications/'+now]={type:'ai_unanswered',uid:currentUser.uid,email:currentUser.email||'',text:'سؤال جديد للمساعد الذكي يحتاج جواب: '+question,createdAt:now,status:'new'};
-      try{await update(ref(db),updates);return true}catch(e){console.error('saveUnansweredAiQuestion failed',e);toast('لم يتم حفظ السؤال في الأدمن. تأكد من نشر قواعد Firebase V57.');return false}
+      const id=(push(ref(db,'ai_unanswered')).key)||('q_'+now);
+      const data={id,question,questionNorm:qNorm,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile?.name||'',count:1,status:'new',createdAt:now,lastAskedAt:now,source:'ai_assistant_v58'};
+      const notif={type:'ai_unanswered',uid:currentUser.uid,email:currentUser.email||'',text:'سؤال جديد للمساعد الذكي يحتاج جواب: '+question,createdAt:now,status:'new',questionId:id};
+      let savedMain=false, savedFallback=false;
+      try{
+        // V58 HARD FIX: كتابة مباشرة على عقدة السؤال بدل update متعدد المسارات.
+        await set(ref(db,'ai_unanswered/'+id),data);
+        await set(ref(db,'ai_unanswered_events/'+id+'/'+now),{id:String(now),question,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile?.name||'',createdAt:now});
+        await set(ref(db,'admin_notifications/'+now),notif);
+        savedMain=true;
+      }catch(e){
+        console.error('ai_unanswered direct save failed',e);
+      }
+      try{
+        // Fallback مضمون أكثر لأنه يستخدم نفس مسار تذاكر الدعم الذي كان يعمل سابقًا.
+        // يظهر داخل قسم المساعد الذكي أيضًا، وليس فقط الدعم.
+        const sid='ai_'+now+'_'+Math.random().toString(36).slice(2,8);
+        const ticket={id:sid,uid:currentUser.uid,email:currentUser.email||'',name:currentProfile?.name||'',category:'ai_question',categoryLabel:'المساعد الذكي',title:'سؤال جديد للمساعد الذكي',message:question,question,questionNorm:qNorm,status:'open',adminReply:'',aiUnanswered:true,createdAt:now,updatedAt:now,source:'ai_assistant_v58_fallback'};
+        await set(ref(db,'support_tickets/'+currentUser.uid+'/'+sid),ticket);
+        await set(ref(db,'admin_support_tickets/'+sid),ticket);
+        savedFallback=true;
+      }catch(e2){
+        console.error('ai fallback support save failed',e2);
+      }
+      if(savedMain||savedFallback)return true;
+      toast('لم يتم حفظ السؤال. تأكد من نشر قواعد Firebase V58 ثم جرّب مرة ثانية.');
+      return false;
     }
     async function saveAiKnowledgeFromForm(){if(!isAdminUser())return;const q=($('aiAdminQuestionInput')?.value||'').trim();const ans=($('aiAdminAnswerInput')?.value||'').trim();const keys=($('aiAdminKeysInput')?.value||'').split(',').map(x=>x.trim()).filter(Boolean);if(!q||!ans)return toast('اكتب السؤال والجواب أولًا');const id='k_'+Date.now();const now=Date.now();await set(ref(db,'ai_knowledge/'+id),{id,question:q,answer:ans,keys:keys.length?keys:aiTokens(q),active:true,createdAt:now,updatedAt:now,adminEmail:currentUser.email||''});await update(ref(db),{['finance_audit/'+now]:{action:'ai_answer_saved',question:q,adminEmail:currentUser.email||'',createdAt:now}});clearAiForm();toast('تم تعليم المساعد وحفظ الجواب')}
     function clearAiForm(){if($('aiAdminQuestionInput'))$('aiAdminQuestionInput').value='';if($('aiAdminKeysInput'))$('aiAdminKeysInput').value='';if($('aiAdminAnswerInput'))$('aiAdminAnswerInput').value=''}
-    async function teachAiFromUnanswered(id){const q=(adminState.aiUnanswered||{})[id];if(!q)return toast('السؤال غير موجود');const ans=prompt('اكتب الجواب الرسمي لهذا السؤال:\n'+(q.question||''),q.answer||'');if(!ans)return;const now=Date.now();const keys=aiTokens(q.question||'').slice(0,12);const kid='k_'+now;const updates={};updates['ai_knowledge/'+kid]={id:kid,question:q.question||'',answer:ans,keys,active:true,createdAt:now,updatedAt:now,adminEmail:currentUser.email||'',fromUnanswered:id};updates['ai_unanswered/'+id+'/status']='answered';updates['ai_unanswered/'+id+'/answer']=ans;updates['ai_unanswered/'+id+'/answeredAt']=now;updates['ai_unanswered/'+id+'/answeredBy']=currentUser.email||'';updates['finance_audit/'+now]={action:'ai_unanswered_answered',question:q.question||'',adminEmail:currentUser.email||'',createdAt:now};await update(ref(db),updates);toast('تم حفظ الجواب وتعليم المساعد')}
     async function deleteAiKnowledge(id){if(!isAdminUser())return;if(!confirm('حذف هذا الجواب من قاعدة المساعد؟'))return;await set(ref(db,'ai_knowledge/'+id),null);toast('تم حذف الجواب')}
-    async function dismissAiUnanswered(id){if(!isAdminUser())return;await update(ref(db,'ai_unanswered/'+id),{status:'ignored',ignoredAt:Date.now(),ignoredBy:currentUser.email||''});toast('تم تجاهل السؤال')}
-    function fillAiFormFromUnanswered(id){const q=(adminState.aiUnanswered||{})[id];if(!q)return;if($('aiAdminQuestionInput'))$('aiAdminQuestionInput').value=q.question||'';if($('aiAdminKeysInput'))$('aiAdminKeysInput').value=aiTokens(q.question||'').slice(0,10).join(', ');if($('aiAdminAnswerInput'))$('aiAdminAnswerInput').focus();}
-    function renderAdminAi(){if(!isAdminUser())return;const know=Object.entries(adminState.aiKnowledge||{}).map(([id,x])=>({...x,id})).filter(x=>x.active!==false);const unanswered=Object.entries(adminState.aiUnanswered||{}).map(([id,x])=>({...x,id})).sort((a,b)=>Number(b.lastAskedAt||b.createdAt||0)-Number(a.lastAskedAt||a.createdAt||0));const pending=unanswered.filter(x=>x.status!=='answered'&&x.status!=='ignored');setText('aiKnowledgeCount',know.length);setText('aiUnansweredCount',pending.length);setText('aiRepeatCount',unanswered.reduce((a,x)=>a+Number(x.count||1),0));const uq=($('aiUnansweredSearch')?.value||'').toLowerCase();const kq=($('aiKnowledgeSearch')?.value||'').toLowerCase();const ubox=$('aiUnansweredList');if(ubox){const list=pending.filter(x=>!uq||String(x.question||'').toLowerCase().includes(uq)||String(x.email||'').toLowerCase().includes(uq));ubox.innerHTML=list.length?list.slice(0,80).map(x=>'<div class="admin-row"><div><h4>'+escapeHtml(x.question||'')+' <span class="admin-badge pending">'+Number(x.count||1)+' مرة</span></h4><p>'+escapeHtml(x.email||x.uid||'مستخدم')+'<br>آخر سؤال: '+new Date(x.lastAskedAt||x.createdAt||Date.now()).toLocaleString('ar-TR')+'</p></div><div class="admin-actions"><button class="ok" onclick="teachAiFromUnanswered(\''+escapeHtml(x.id)+'\')">جاوب وعلّم</button><button class="blue" onclick="fillAiFormFromUnanswered(\''+escapeHtml(x.id)+'\')">نسخ للخانات</button><button class="bad" onclick="dismissAiUnanswered(\''+escapeHtml(x.id)+'\')">تجاهل</button></div></div>').join(''):'<div class="admin-empty">لا توجد أسئلة غير مجابة</div>'}const kbox=$('aiKnowledgeList');if(kbox){const list=know.filter(x=>!kq||String(x.question||'').toLowerCase().includes(kq)||String(x.answer||'').toLowerCase().includes(kq)||String((x.keys||[]).join(' ')).toLowerCase().includes(kq));kbox.innerHTML=list.length?list.slice(0,80).map(x=>'<div class="admin-row"><div><h4>'+escapeHtml(x.question||'')+' <span class="admin-badge approved">محفوظ</span></h4><p>'+escapeHtml((x.answer||'').slice(0,180))+(String(x.answer||'').length>180?'...':'')+'<br>كلمات: '+escapeHtml((x.keys||[]).join(', '))+'</p></div><div class="admin-actions"><button class="warn" onclick="deleteAiKnowledge(\''+escapeHtml(x.id)+'\')">حذف</button></div></div>').join(''):'<div class="admin-empty">لا توجد أجوبة محفوظة بعد</div>'}}
+    function aiAdminGetQuestion(id){
+      if((adminState.aiUnanswered||{})[id])return {...adminState.aiUnanswered[id],id,sourceType:'ai_unanswered'};
+      if(String(id).startsWith('support_')){
+        const sid=String(id).replace(/^support_/,'');
+        const t=(adminState.support||{})[sid];
+        if(t)return {id:'support_'+sid,rawId:sid,sourceType:'support_fallback',question:t.question||t.message||t.title||'',email:t.email||'',uid:t.uid||'',name:t.name||'',count:1,status:t.aiAnswered?'answered':(t.status==='closed'?'ignored':'new'),lastAskedAt:t.updatedAt||t.createdAt||0,createdAt:t.createdAt||0};
+      }
+      return null;
+    }
+    function aiAdminUnansweredList(){
+      const fromMain=Object.entries(adminState.aiUnanswered||{}).map(([id,x])=>({...x,id,sourceType:'ai_unanswered'}));
+      const fromSupport=Object.entries(adminState.support||{}).filter(([id,x])=>x?.aiUnanswered===true||x?.category==='ai_question'||x?.source==='ai_assistant_v58_fallback').map(([id,x])=>({id:'support_'+id,rawId:id,sourceType:'support_fallback',question:x.question||x.message||x.title||'',email:x.email||'',uid:x.uid||'',name:x.name||'',count:1,status:x.aiAnswered?'answered':(x.status==='closed'?'ignored':'new'),lastAskedAt:x.updatedAt||x.createdAt||0,createdAt:x.createdAt||0}));
+      const merged=[...fromMain,...fromSupport];
+      const seen=new Set();
+      return merged.filter(x=>{const key=normalizeAiText(x.question||'')+'_'+(x.email||x.uid||''); if(seen.has(key))return false; seen.add(key); return true;}).sort((a,b)=>Number(b.lastAskedAt||b.createdAt||0)-Number(a.lastAskedAt||a.createdAt||0));
+    }
+    async function teachAiFromUnanswered(id){
+      if(!isAdminUser())return;
+      const q=aiAdminGetQuestion(id);
+      if(!q)return toast('السؤال غير موجود');
+      const ans=prompt('اكتب الجواب الرسمي لهذا السؤال:\n'+(q.question||''),q.answer||'');
+      if(!ans)return;
+      const now=Date.now();
+      const keys=aiTokens(q.question||'').slice(0,12);
+      const kid='k_'+now;
+      const updates={};
+      updates['ai_knowledge/'+kid]={id:kid,question:q.question||'',answer:ans,keys,active:true,createdAt:now,updatedAt:now,adminEmail:currentUser.email||'',fromUnanswered:id};
+      if(q.sourceType==='support_fallback'){
+        const sid=q.rawId;
+        updates['admin_support_tickets/'+sid+'/aiAnswered']=true;
+        updates['admin_support_tickets/'+sid+'/adminReply']=ans;
+        updates['admin_support_tickets/'+sid+'/status']='closed';
+        updates['admin_support_tickets/'+sid+'/updatedAt']=now;
+        if(q.uid){
+          updates['support_tickets/'+q.uid+'/'+sid+'/aiAnswered']=true;
+          updates['support_tickets/'+q.uid+'/'+sid+'/adminReply']=ans;
+          updates['support_tickets/'+q.uid+'/'+sid+'/status']='closed';
+          updates['support_tickets/'+q.uid+'/'+sid+'/updatedAt']=now;
+        }
+      }else{
+        updates['ai_unanswered/'+id+'/status']='answered';
+        updates['ai_unanswered/'+id+'/answer']=ans;
+        updates['ai_unanswered/'+id+'/answeredAt']=now;
+        updates['ai_unanswered/'+id+'/answeredBy']=currentUser.email||'';
+      }
+      updates['finance_audit/'+now]={action:'ai_unanswered_answered',question:q.question||'',adminEmail:currentUser.email||'',createdAt:now};
+      await update(ref(db),updates);
+      toast('تم حفظ الجواب وتعليم المساعد');
+    }
+    async function dismissAiUnanswered(id){
+      if(!isAdminUser())return;
+      const q=aiAdminGetQuestion(id);
+      if(!q)return toast('السؤال غير موجود');
+      const now=Date.now();
+      if(q.sourceType==='support_fallback'){
+        const updates={};
+        updates['admin_support_tickets/'+q.rawId+'/status']='closed';
+        updates['admin_support_tickets/'+q.rawId+'/aiIgnored']=true;
+        updates['admin_support_tickets/'+q.rawId+'/updatedAt']=now;
+        if(q.uid){updates['support_tickets/'+q.uid+'/'+q.rawId+'/status']='closed';updates['support_tickets/'+q.uid+'/'+q.rawId+'/aiIgnored']=true;updates['support_tickets/'+q.uid+'/'+q.rawId+'/updatedAt']=now;}
+        await update(ref(db),updates);
+      }else{
+        await update(ref(db,'ai_unanswered/'+id),{status:'ignored',ignoredAt:now,ignoredBy:currentUser.email||''});
+      }
+      toast('تم تجاهل السؤال');
+    }
+    function fillAiFormFromUnanswered(id){
+      const q=aiAdminGetQuestion(id);
+      if(!q)return;
+      if($('aiAdminQuestionInput'))$('aiAdminQuestionInput').value=q.question||'';
+      if($('aiAdminKeysInput'))$('aiAdminKeysInput').value=aiTokens(q.question||'').slice(0,10).join(', ');
+      if($('aiAdminAnswerInput'))$('aiAdminAnswerInput').focus();
+    }
+    function renderAdminAi(){
+      if(!isAdminUser())return;
+      const know=Object.entries(adminState.aiKnowledge||{}).map(([id,x])=>({...x,id})).filter(x=>x.active!==false);
+      const unanswered=aiAdminUnansweredList();
+      const pending=unanswered.filter(x=>x.status!=='answered'&&x.status!=='ignored');
+      setText('aiKnowledgeCount',know.length);
+      setText('aiUnansweredCount',pending.length);
+      setText('aiRepeatCount',unanswered.reduce((a,x)=>a+Number(x.count||1),0));
+      const uq=($('aiUnansweredSearch')?.value||'').toLowerCase();
+      const kq=($('aiKnowledgeSearch')?.value||'').toLowerCase();
+      const ubox=$('aiUnansweredList');
+      if(ubox){
+        const list=pending.filter(x=>!uq||String(x.question||'').toLowerCase().includes(uq)||String(x.email||'').toLowerCase().includes(uq));
+        ubox.innerHTML=list.length?list.slice(0,100).map(x=>'<div class="admin-row"><div><h4>'+escapeHtml(x.question||'')+' <span class="admin-badge pending">'+Number(x.count||1)+' مرة</span></h4><p>'+escapeHtml(x.email||x.uid||'مستخدم')+'<br>آخر سؤال: '+new Date(x.lastAskedAt||x.createdAt||Date.now()).toLocaleString('ar-TR')+'<br>'+(x.sourceType==='support_fallback'?'حفظ احتياطي مضمون':'حفظ مباشر')+'</p></div><div class="admin-actions"><button class="ok" onclick="teachAiFromUnanswered(\''+escapeHtml(x.id)+'\')">جاوب وعلّم</button><button class="blue" onclick="fillAiFormFromUnanswered(\''+escapeHtml(x.id)+'\')">نسخ للخانات</button><button class="bad" onclick="dismissAiUnanswered(\''+escapeHtml(x.id)+'\')">تجاهل</button></div></div>').join(''):'<div class="admin-empty">لا توجد أسئلة غير مجابة</div>';
+      }
+      const kbox=$('aiKnowledgeList');
+      if(kbox){
+        const list=know.filter(x=>!kq||String(x.question||'').toLowerCase().includes(kq)||String(x.answer||'').toLowerCase().includes(kq)||String((x.keys||[]).join(' ')).toLowerCase().includes(kq));
+        kbox.innerHTML=list.length?list.slice(0,100).map(x=>'<div class="admin-row"><div><h4>'+escapeHtml(x.question||'')+' <span class="admin-badge approved">محفوظ</span></h4><p>'+escapeHtml((x.answer||'').slice(0,180))+(String(x.answer||'').length>180?'...':'')+'<br>كلمات: '+escapeHtml((x.keys||[]).join(', '))+'</p></div><div class="admin-actions"><button class="warn" onclick="deleteAiKnowledge(\''+escapeHtml(x.id)+'\')">حذف</button></div></div>').join(''):'<div class="admin-empty">لا توجد أجوبة محفوظة بعد</div>';
+      }
+    }
+
 
     if($('adminUserSearch'))$('adminUserSearch').addEventListener('input',()=>renderAdminUsers(arrObj(adminState.users)));document.querySelectorAll('.user-chip').forEach(btn=>btn.addEventListener('click',()=>{currentUserFilter=btn.dataset.userFilter||'all';renderAdminUsers(arrObj(adminState.users))}));if($('exportUsersBtn'))$('exportUsersBtn').onclick=exportUsersCsv;if($('adminAuditSearch'))$('adminAuditSearch').addEventListener('input',renderAdminAudit);document.querySelectorAll('.audit-chip').forEach(btn=>btn.addEventListener('click',()=>{currentAuditFilter=btn.dataset.auditFilter||'all';renderAdminAudit()}));if($('auditExportBtn'))$('auditExportBtn').onclick=exportAuditCsv;if($('auditRefreshBtn'))$('auditRefreshBtn').onclick=renderAdminAudit;if($('saveSiteControlBtn'))$('saveSiteControlBtn').onclick=adminSaveSiteControl;if($('seedSiteControlBtn'))$('seedSiteControlBtn').onclick=seedSiteControl;if($('savePaymentMethodBtn'))$('savePaymentMethodBtn').onclick=adminSavePaymentMethod;if($('newPaymentMethodBtn'))$('newPaymentMethodBtn').onclick=()=>fillPaymentForm({id:'',name:'',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'',qrUrl:'',details:''});if($('resetPaymentMethodsBtn'))$('resetPaymentMethodsBtn').onclick=()=>seedPaymentMethods(true);if($('saveLotterySettingsBtn'))$('saveLotterySettingsBtn').onclick=adminSaveLotterySettings;if($('resetLotterySettingsBtn'))$('resetLotterySettingsBtn').onclick=()=>seedLotterySettings(true);if($('saveWheelSettingsBtn'))$('saveWheelSettingsBtn').onclick=adminSaveWheelSettings;if($('resetWheelSettingsBtn'))$('resetWheelSettingsBtn').onclick=()=>seedWheelSettings(true);
     Object.assign(window,{copyText,markNotificationsRead,showAdminSection,adminSaveSiteControl,seedSiteControl,openAdminUserCard,openUserGameProfit,fillPromoCodeForm,togglePromoCode,savePromoCode,seedPromoCodes,redeemPromoCode,adminGrantSpecialOffer,exportUsersCsv,adminAdjustBalance,adminToggleFreeze,adminToggleVip,adminApproveDeposit,adminRejectDeposit,adminApproveWithdraw,adminRejectWithdraw,adminReplySupport,adminCloseSupport,adminManualDraw,setDrawPublishToday,adminEditPaymentMethod,adminTogglePaymentMethod,adminSavePaymentMethod,seedPaymentMethods,saveAiKnowledgeFromForm,teachAiFromUnanswered,deleteAiKnowledge,dismissAiUnanswered,fillAiFormFromUnanswered,adminSaveLotterySettings,seedLotterySettings,saveReferralAdminSettings,seedReferralSettings,applyReferralCode,fillSupportContactForm,adminToggleSupportContact,adminDeleteSupportContact,adminSaveSupportContact,seedSupportContacts,newSupportContactForm,adminSaveWheelSettings,seedWheelSettings});
@@ -1762,7 +1863,7 @@
     function tick(){const now=new Date();const target=new Date(now);target.setHours(20,0,0,0);if(now>=target)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const days=Math.floor(diff/86400000);diff%=86400000;const hours=Math.floor(diff/3600000);diff%=3600000;const mins=Math.floor(diff/60000);diff%=60000;const secs=Math.floor(diff/1000);$('d').textContent=String(days).padStart(2,'0');$('h').textContent=String(hours).padStart(2,'0');$('m').textContent=String(mins).padStart(2,'0');$('s').textContent=String(secs).padStart(2,'0')}setInterval(tick,1000);tick();$('ticketNumber').value=randomTicket();
   
 
-    /* V57 — ADNOR Admin Trainable AI Assistant / Unanswered Questions Save Fix */
+    /* V58 — ADNOR AI Inbox Hard Fix + Support Fallback */
     const aiAnswers=[
       {title:'كيف يصير السحب؟',keys:['سحب','اليانصيب','السحوبات','بطاقة','تذكرة','نتيجة'],answer:'السحب في ADNOR يتم عبر نظام تذاكر داخل المنصة. تختار رقم تذكرة من 7 خانات، وتتم متابعة النتيجة من قسم النتائج وتذاكري. السحوبات تشمل اليومي والأسبوعي والشهري والسنوي حسب إعدادات الإدارة.'},
       {title:'كيف أعمل إيداع؟',keys:['إيداع','ايداع','اشحن','رصيد','تحويل','إيصال'],answer:'لعمل إيداع: ادخل إلى المحفظة، اختر تبويب الإيداع، اختر طريقة الدفع، اكتب المبلغ ورقم المرجع، ثم ارفع صورة الإيصال. بعد المراجعة من الإدارة يتم قبول الرصيد أو رفضه مع سبب واضح.'},

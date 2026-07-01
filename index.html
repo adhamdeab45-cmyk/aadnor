@@ -332,6 +332,59 @@
   }
 </style>
 
+
+
+<style id="adnor-v65-header-result-fix">
+  /* V65: حذف بطاقة الاسم/ID من الهيدر وترتيب آخر نتيجة السحب */
+  #appWrap:not(.admin-layout) .v62-royal-head{
+    display:grid!important;
+    grid-template-columns:54px minmax(0,1fr) 54px!important;
+    grid-template-areas:
+      "bell logo menu"
+      "balance balance balance"!important;
+    gap:10px!important;
+    align-items:center!important;
+    margin:0 0 13px!important;
+    direction:ltr!important;
+  }
+  #appWrap:not(.admin-layout) .v62-user-card,
+  #appWrap:not(.admin-layout) .v62-settings-btn{display:none!important}
+  #appWrap:not(.admin-layout) #bellBtn.hidden,
+  #appWrap:not(.admin-layout) #bellBtn{grid-area:bell!important;display:grid!important}
+  #appWrap:not(.admin-layout) .v62-logo{grid-area:logo!important;justify-self:center!important;width:100%!important}
+  #appWrap:not(.admin-layout) .v62-menu-btn{grid-area:menu!important}
+  #appWrap:not(.admin-layout) .v62-balance-card{
+    grid-area:balance!important;
+    width:100%!important;
+    height:64px!important;
+    border-radius:20px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 34px 34px!important;
+    gap:9px!important;
+    padding:9px 12px!important;
+    overflow:hidden!important;
+  }
+  #appWrap:not(.admin-layout) .v62-balance-card .cw-money{font-size:clamp(20px,6vw,26px)!important;letter-spacing:.2px!important}
+  #appWrap:not(.admin-layout) .v62-balance-card #hideBalanceBtn::before{content:""!important}
+
+  .v65-last-result-card{padding:14px 12px 16px!important;text-align:center!important;margin-top:0!important}
+  .v65-last-result-card .section-title{justify-content:center!important;margin-bottom:10px!important}
+  .v65-last-result-card .section-title h3{font-size:18px!important;color:#ffe184!important}
+  .v65-last-result-card .section-title span{display:none!important}
+  .v65-result-paper{position:relative;z-index:1;margin:0 auto 10px;width:min(92%,310px);padding:13px 12px;border-radius:20px;border:1px solid rgba(212,175,55,.45);background:linear-gradient(180deg,rgba(8,18,36,.88),rgba(1,6,15,.96));box-shadow:inset 0 0 18px rgba(255,211,90,.05),0 0 18px rgba(0,174,255,.10)}
+  .v65-result-paper .paper-label{display:block;color:#aeb8cd;font-size:11px;font-weight:900;margin-bottom:8px}
+  .v65-winner-digits{direction:ltr;display:flex!important;justify-content:center!important;gap:6px!important;margin:0!important}
+  .v65-winner-digits span{width:35px!important;height:35px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:radial-gradient(circle at 35% 25%,#244b83,#041226 70%)!important;border:1.5px solid rgba(255,205,76,.78)!important;color:#fff!important;font-size:21px!important;font-weight:900!important;box-shadow:0 0 13px rgba(255,197,46,.22),inset 0 0 9px rgba(0,188,255,.13)!important}
+  .v65-winner-text{margin:0!important;color:#f2f6ff!important;font-size:13px!important;font-weight:900!important;line-height:1.65!important}
+  .v65-winner-text b{color:#ffe184!important}
+  .v65-winner-prize{display:inline-flex!important;margin-top:8px!important;padding:6px 14px;border-radius:999px;border:1px solid rgba(35,226,164,.35);background:rgba(35,226,164,.07);color:#20e9a8!important;font-size:15px!important;direction:ltr!important}
+  @media(max-width:390px){
+    #appWrap:not(.admin-layout) .v62-royal-head{grid-template-columns:50px minmax(0,1fr) 50px!important;grid-template-areas:"bell logo menu" "balance balance balance"!important;gap:8px!important}
+    #appWrap:not(.admin-layout) .v62-balance-card{height:61px!important;grid-template-columns:minmax(0,1fr) 31px 31px!important;padding:8px 10px!important}
+    .v65-winner-digits span{width:31px!important;height:31px!important;font-size:18px!important}
+  }
+</style>
+
 </head>
 <body>
   <div class="aurora"></div>
@@ -442,11 +495,14 @@
           <div class="amount v63-prize-amount" id="jackpotText">$4,500</div>
         </section>
 
-        <section class="royal-card v63-card v63-last-card v61-last-card v62-last-winner">
-          <div class="section-title v63-title"><h3>آخر فائز 🏆</h3><span>نتيجة رسمية منشورة من الإدارة</span></div>
-          <div class="v62-winner-digits v63-winner-digits" id="lastWinnerDigits"><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></div>
-          <p id="lastWinnerText" class="v62-winner-text v63-winner-text">الفائز: بانتظار أول سحب رسمي</p>
-          <strong id="lastPrizeText" class="v62-winner-prize v63-winner-prize">$0</strong>
+        <section class="royal-card v63-card v63-last-card v61-last-card v62-last-winner v65-last-result-card">
+          <div class="section-title v63-title"><h3>آخر نتيجة سحب 🏆</h3><span>رقم التذكرة واسم الفائز من الأدمن</span></div>
+          <div class="v65-result-paper">
+            <span class="paper-label">رقم التذكرة الرابحة</span>
+            <div class="v62-winner-digits v63-winner-digits v65-winner-digits" id="lastWinnerDigits"><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></div>
+          </div>
+          <p id="lastWinnerText" class="v62-winner-text v63-winner-text v65-winner-text">اسم الفائز: بانتظار أول سحب رسمي</p>
+          <strong id="lastPrizeText" class="v62-winner-prize v63-winner-prize v65-winner-prize">$0</strong>
         </section>
 
         <section class="royal-card v63-card v63-ticket-card v61-ticket-picker">
@@ -1122,15 +1178,15 @@
         if(digitBox)digitBox.innerHTML=clean.split('').map(x=>'<span>'+x+'</span>').join('');
       }
       if(last){
-        const masked=maskEmail(last.winnerEmail||last.winnerName||'مستخدم');
-        setText('lastWinnerText','الفائز: '+masked+' — رقم '+(last.ticketNumber||''));
-        setText('lastPrizeText',money(last.prize||0));
+        const winnerName=String(last.winnerName||'').trim() || maskEmail(last.winnerEmail||'مستخدم ADNOR');
+        setText('lastWinnerText','اسم الفائز: '+winnerName);
+        setText('lastPrizeText','الجائزة: '+money(last.prize||0));
         setLastDigits(last.ticketNumber||'0000000');
         setText('homeLastResultTitle',(last.drawLabel||drawLabel(last.drawType||currentDraw))+' — رقم '+(last.ticketNumber||'—'));
         setText('homeLastResultSub','الفائز: '+masked+' — '+new Date(last.publishAt||last.createdAt||Date.now()).toLocaleString('ar-TR'));
         setText('homeLastResultPrize',money(last.prize||0));
       }else{
-        setText('lastWinnerText','الفائز: بانتظار أول سحب رسمي');
+        setText('lastWinnerText','اسم الفائز: بانتظار أول سحب رسمي');
         setText('lastPrizeText','$0');
         setLastDigits('0000000');
         setText('homeLastResultTitle','بانتظار أول نتيجة');

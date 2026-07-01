@@ -299,7 +299,18 @@
 .royal-dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}.royal-dialog-actions.one{grid-template-columns:1fr}
 .royal-dialog-btn{height:50px;border-radius:17px;border:1px solid rgba(255,205,74,.45);font-family:inherit;font-weight:1000;cursor:pointer}.royal-dialog-ok{background:linear-gradient(180deg,#fff2b4,#d99a21 62%,#8c5a10);color:#1b1204;box-shadow:0 10px 24px rgba(216,149,36,.20),inset 0 1px 0 rgba(255,255,255,.65)}.royal-dialog-cancel{background:rgba(8,17,34,.82);color:#ffe082}.royal-dialog-note{font-size:11px;color:#8fa2bd;margin-top:10px;font-weight:800}
 
-</style>
+
+
+    /* V91: بطاقة نتيجة مستقلة خارج كرت السحب القديم */
+    .v91-independent-result{margin:14px 0 16px;border-radius:26px;padding:15px;border:1px solid rgba(255,206,92,.62);background:radial-gradient(circle at 20% 0,rgba(34,197,255,.16),transparent 34%),linear-gradient(180deg,rgba(6,19,39,.94),rgba(1,8,18,.96));box-shadow:0 0 26px rgba(255,190,48,.14),inset 0 0 26px rgba(255,206,92,.05)}
+    .v91-result-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.v91-result-head h3{margin:0;color:#ffe28a;font-size:19px;font-weight:900}.v91-result-head span{font-size:12px;color:#8fe7ff;font-weight:800;border:1px solid rgba(143,231,255,.38);border-radius:999px;padding:5px 10px;background:rgba(0,160,255,.08)}
+    .v91-result-paper{border-radius:22px;padding:14px;background:linear-gradient(180deg,rgba(0,5,13,.9),rgba(0,10,24,.96));border:1px solid rgba(255,213,109,.32);text-align:center}.v91-result-label{font-size:12px;color:#cbd5e1;font-weight:800;margin-bottom:8px}
+    .v91-result-digits{display:flex;direction:ltr;justify-content:center;gap:6px;margin:9px 0 10px}.v91-result-digits span{width:34px;height:40px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#1d4b78,#061425 66%);border:1px solid rgba(255,217,116,.78);box-shadow:0 0 11px rgba(255,191,55,.22);color:#fff;font-size:22px;font-weight:900;font-family:'Cinzel',serif}
+    .v91-result-winner{margin:8px 0 0;color:#fff;font-weight:900;font-size:15px}.v91-result-prize{display:inline-flex;margin-top:10px;color:#20e6a3;border:1px solid rgba(32,230,163,.38);background:rgba(32,230,163,.08);padding:7px 14px;border-radius:999px;font-weight:900;font-size:16px}.v91-result-wait{color:#b8c2d9;font-size:13px;font-weight:800;line-height:1.6;margin-top:8px}
+    .v66-last-result-inline{display:none!important}
+    .admin-v91-result-box{margin-top:18px;padding:16px;border:1px solid rgba(32,230,163,.35);border-radius:22px;background:linear-gradient(145deg,rgba(4,22,32,.88),rgba(0,0,0,.72));box-shadow:0 0 18px rgba(32,230,163,.08)}
+
+  </style>
 
 
 <style id="adnor-v64-header-real-fix">
@@ -690,6 +701,17 @@
           </div>
         </section>
 
+        <section class="v91-independent-result" id="v91LatestResultCard" aria-label="النتيجة الرسمية الأخيرة">
+          <div class="v91-result-head"><h3>🏆 النتيجة الرسمية الأخيرة</h3><span id="v91ResultDrawLabel">اليومي</span></div>
+          <div class="v91-result-paper">
+            <div class="v91-result-label">رقم التذكرة الرابحة</div>
+            <div class="v91-result-digits" id="v91ResultDigits"><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></div>
+            <div class="v91-result-winner" id="v91ResultWinner">بانتظار نشر نتيجة رسمية من الإدارة</div>
+            <div class="v91-result-prize" id="v91ResultPrize">$0.00</div>
+            <div class="v91-result-wait" id="v91ResultNote">هذه البطاقة مستقلة عن مربع النتيجة القديم وتقرأ من مسار جديد خاص بها.</div>
+          </div>
+        </section>
+
         <section class="royal-card v63-card v63-ticket-card v61-ticket-picker">
           <div class="section-title v63-title"><h3>اختر رقمك المحظوظ ✨</h3><span>تذكرة من 7 أرقام</span></div>
           <div class="ticket-input v63-ticket-input">
@@ -1037,6 +1059,17 @@
                     <div class="field-wrap"><label>وقت النشر الاختياري</label><div class="field"><span class="ico">⏰</span><input id="resultBoxPublishAt" type="datetime-local"></div></div>
                   </div>
                   <div class="admin-actions"><button class="bad" onclick="adminForceLastResultBoxNow()">تحديث المربع مباشرة</button><button class="ok" onclick="adminPublishResultBox('direct')">نشر + حفظ بالسجل</button><button class="blue" onclick="adminPublishResultBox('schedule')">جدولة للمربع</button><button class="blue" onclick="prefillResultBoxPrize()">تعبئة الجائزة الحالية</button></div>
+                </div>
+                <div class="admin-v91-result-box">
+                  <div class="admin-section-head"><h3>V91 — نشر النتيجة في مكان جديد</h3><span>بطاقة مستقلة تحت كرت الجائزة</span></div>
+                  <div class="hint">استعمل هذا القسم بدل المربع القديم. هذه النتيجة تظهر في بطاقة جديدة داخل صفحة اليانصيب، ولا تعتمد على الكود القديم الذي كان معلّقًا.</div>
+                  <div class="admin-form-grid">
+                    <div class="field-wrap"><label>نوع السحب</label><div class="field"><span class="ico">🏆</span><select id="v91DrawType"><option value="daily">اليومي</option><option value="weekly">الأسبوعي</option><option value="monthly">الشهري</option><option value="yearly">السنوي</option></select></div></div>
+                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v91TicketNumber" inputmode="numeric" maxlength="7" placeholder="مثال: 5173406"></div></div>
+                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v91WinnerName" placeholder="مثال: ADHAM"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v91PrizeValue" type="number" min="0" step="0.01" placeholder="4500"></div></div>
+                  </div>
+                  <div class="admin-actions"><button class="ok" id="v91PublishResultBtn" type="button">نشر النتيجة في المكان الجديد</button><button class="blue" id="v91FillPrizeBtn" type="button">تعبئة الجائزة الحالية</button></div>
                 </div>
                 <div class="admin-table" id="adminDrawHistory"><div class="admin-empty">لا يوجد سجل سحوبات بعد</div></div>
               </div>
@@ -2950,6 +2983,81 @@ function setCurrentPrize(type){
     const __v76RenderAdmin=renderAdmin;renderAdmin=function(){__v76RenderAdmin();renderDailyLoginAdmin();};
     const __v76ShowAdminSection=showAdminSection;showAdminSection=function(sec){__v76ShowAdminSection(sec);if(sec==='dailylogin')setTimeout(renderDailyLoginAdmin,50)};
 
+
+
+
+    /* V91: نتيجة سحب مستقلة بمكان جديد، بدون الاعتماد على مربع النتيجة القديم */
+    let v91LastResults={current:{},latest:null};
+    let v91LastResultUnsub=null;
+    function v91CleanNumber(v){return String(v||'').replace(/\D/g,'').padStart(7,'0').slice(-7)}
+    function v91SetDigits(id,num){
+      const box=$(id); if(!box)return;
+      const clean=v91CleanNumber(num||'0000000');
+      box.innerHTML=clean.split('').map(n=>'<span>'+n+'</span>').join('');
+    }
+    function v91PickResult(){
+      const cur=(v91LastResults&&v91LastResults.current)||{};
+      return cur[currentDraw] || v91LastResults.latest || cur.daily || cur.weekly || cur.monthly || cur.yearly || null;
+    }
+    function renderV91LastResult(){
+      const r=v91PickResult();
+      setText('v91ResultDrawLabel',drawLabel(currentDraw||'daily'));
+      if(!r){
+        v91SetDigits('v91ResultDigits','0000000');
+        setText('v91ResultWinner','بانتظار نشر نتيجة رسمية من الإدارة');
+        setText('v91ResultPrize','$0.00');
+        setText('v91ResultNote','من الأدمن افتح السحوبات ثم V91 — نشر النتيجة في مكان جديد.');
+        return;
+      }
+      const num=v91CleanNumber(r.ticketNumber||r.winningNumber||r.number);
+      v91SetDigits('v91ResultDigits',num);
+      setText('v91ResultWinner','الفائز: '+(r.winnerName||'مستخدم ADNOR'));
+      setText('v91ResultPrize',money(r.prize||0));
+      setText('v91ResultNote','آخر تحديث: '+new Date(r.updatedAt||r.createdAt||Date.now()).toLocaleString('ar-TR'));
+    }
+    function startV91LastResultWatch(){
+      if(v91LastResultUnsub || !currentUser) return;
+      v91LastResultUnsub=onValue(ref(db,'lottery_settings/v91_last_results'),snap=>{
+        v91LastResults=snap.val()||{current:{},latest:null};
+        renderV91LastResult();
+      },err=>{console.warn('V91 result read failed',err); renderV91LastResult();});
+    }
+    async function adminV91PublishResult(){
+      if(!isAdminUser())return toast('للأدمن فقط');
+      const drawType=$('v91DrawType')?.value||'daily';
+      const raw=$('v91TicketNumber')?.value||'';
+      const ticketNumber=v91CleanNumber(raw);
+      const winnerName=String($('v91WinnerName')?.value||'').trim();
+      const prize=Number(Number($('v91PrizeValue')?.value||0).toFixed(2));
+      if(!raw || ticketNumber==='0000000')return toast('اكتب رقم تذكرة صحيح');
+      if(!winnerName)return toast('اكتب اسم الفائز');
+      if(!prize)return toast('اكتب قيمة الجائزة');
+      const now=Date.now();
+      const result={id:'v91_'+drawType+'_'+now,drawType,drawLabel:drawLabel(drawType),ticketNumber,winnerName,prize,status:'published',createdAt:now,updatedAt:now,adminEmail:currentUser?.email||'',source:'v91_new_result_card'};
+      const updates={};
+      updates['lottery_settings/v91_last_results/current/'+drawType]=result;
+      updates['lottery_settings/v91_last_results/latest']=result;
+      updates['lottery_settings/v91_last_results/history/'+drawType+'/'+result.id]=result;
+      updates['lottery_settings/updatedAt']=now;
+      updates['lottery_settings/updatedBy']=currentUser?.email||'';
+      try{
+        await update(ref(db),updates);
+        toast('تم نشر النتيجة في المكان الجديد');
+        v91LastResults.current=v91LastResults.current||{};
+        v91LastResults.current[drawType]=result; v91LastResults.latest=result;
+        renderV91LastResult();
+      }catch(e){console.error('V91 publish failed',e);toast('فشل نشر V91: '+(e.code||e.message||e));}
+    }
+    function adminV91FillPrize(){
+      const drawType=$('v91DrawType')?.value||currentDraw||'daily';
+      if($('v91PrizeValue'))$('v91PrizeValue').value=Number(prizeFor(drawType)||0).toFixed(2);
+      toast('تمت تعبئة جائزة '+drawLabel(drawType));
+    }
+    if($('v91PublishResultBtn'))$('v91PublishResultBtn').onclick=adminV91PublishResult;
+    if($('v91FillPrizeBtn'))$('v91FillPrizeBtn').onclick=adminV91FillPrize;
+    const __v91RenderProfile=renderProfile;renderProfile=function(){__v91RenderProfile();startV91LastResultWatch();renderV91LastResult();};
+    const __v91ShowPage=showPage;showPage=function(p){__v91ShowPage(p);if(p==='lottery')setTimeout(renderV91LastResult,50)};
+    Object.assign(window,{adminV91PublishResult,adminV91FillPrize,renderV91LastResult});
 
     /* V81: تحديث تلقائي لنتيجة السحب عند وصول وقت النشر بدون ما يحتاج المستخدم يعمل Refresh */
     let __v81DrawRefreshTimer=null;

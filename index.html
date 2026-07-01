@@ -1068,8 +1068,9 @@
                     <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v91TicketNumber" inputmode="numeric" maxlength="7" placeholder="مثال: 5173406"></div></div>
                     <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v91WinnerName" placeholder="مثال: ADHAM"></div></div>
                     <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v91PrizeValue" type="number" min="0" step="0.01" placeholder="4500"></div></div>
+                    <div class="field-wrap"><label>وقت النشر</label><div class="field"><span class="ico">⏰</span><input id="v92PublishAt" type="datetime-local"></div></div>
                   </div>
-                  <div class="admin-actions"><button class="ok" id="v91PublishResultBtn" type="button">نشر النتيجة في المكان الجديد</button><button class="blue" id="v91FillPrizeBtn" type="button">تعبئة الجائزة الحالية</button></div>
+                  <div class="admin-actions"><button class="ok" id="v91PublishResultBtn" type="button">نشر الآن في المكان الجديد</button><button class="blue" id="v92Set8PmBtn" type="button">ضبط اليوم 8 مساءً</button><button class="blue" id="v92ScheduleResultBtn" type="button">جدولة النتيجة للوقت المحدد</button><button class="blue" id="v91FillPrizeBtn" type="button">تعبئة الجائزة الحالية</button></div>
                 </div>
                 <div class="admin-table" id="adminDrawHistory"><div class="admin-empty">لا يوجد سجل سحوبات بعد</div></div>
               </div>
@@ -2995,7 +2996,23 @@ function setCurrentPrize(type){
       const clean=v91CleanNumber(num||'0000000');
       box.innerHTML=clean.split('').map(n=>'<span>'+n+'</span>').join('');
     }
+    function v92ScheduledDueResult(){
+      const sched=(v91LastResults&&v91LastResults.scheduled)||{};
+      const order=[currentDraw,'daily','weekly','monthly','yearly'];
+      let best=null;
+      order.forEach(k=>{
+        const r=sched[k];
+        if(!r)return;
+        const t=Number(r.publishAt||0);
+        if(t && t<=Date.now()){
+          if(!best || Number(r.publishAt||0)>Number(best.publishAt||0)) best=r;
+        }
+      });
+      return best;
+    }
     function v91PickResult(){
+      const due=v92ScheduledDueResult();
+      if(due)return due;
       const cur=(v91LastResults&&v91LastResults.current)||{};
       return cur[currentDraw] || v91LastResults.latest || cur.daily || cur.weekly || cur.monthly || cur.yearly || null;
     }
@@ -3013,7 +3030,8 @@ function setCurrentPrize(type){
       v91SetDigits('v91ResultDigits',num);
       setText('v91ResultWinner','الفائز: '+(r.winnerName||'مستخدم ADNOR'));
       setText('v91ResultPrize',money(r.prize||0));
-      setText('v91ResultNote','آخر تحديث: '+new Date(r.updatedAt||r.createdAt||Date.now()).toLocaleString('ar-TR'));
+      const when=r.status==='scheduled'&&r.publishAt?new Date(r.publishAt).toLocaleString('ar-TR'):new Date(r.updatedAt||r.createdAt||Date.now()).toLocaleString('ar-TR');
+      setText('v91ResultNote',(r.status==='scheduled'?'تم النشر المجدول: ':'آخر تحديث: ')+when);
     }
     function startV91LastResultWatch(){
       if(v91LastResultUnsub || !currentUser) return;
@@ -3048,16 +3066,64 @@ function setCurrentPrize(type){
         renderV91LastResult();
       }catch(e){console.error('V91 publish failed',e);toast('فشل نشر V91: '+(e.code||e.message||e));}
     }
+    function v92ReadResultForm(){
+      const drawType=$('v91DrawType')?.value||'daily';
+      const raw=$('v91TicketNumber')?.value||'';
+      const ticketNumber=v91CleanNumber(raw);
+      const winnerName=String($('v91WinnerName')?.value||'').trim();
+      const prize=Number(Number($('v91PrizeValue')?.value||0).toFixed(2));
+      if(!raw || ticketNumber==='0000000') throw new Error('اكتب رقم تذكرة صحيح');
+      if(!winnerName) throw new Error('اكتب اسم الفائز');
+      if(!prize) throw new Error('اكتب قيمة الجائزة');
+      return {drawType,ticketNumber,winnerName,prize};
+    }
+    function v92LocalDateTimeValue(d){
+      const pad=n=>String(n).padStart(2,'0');
+      return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+    }
+    function adminV92Set8Pm(){
+      const d=new Date();
+      d.setHours(20,0,0,0);
+      if(d.getTime()<=Date.now()) d.setDate(d.getDate()+1);
+      if($('v92PublishAt')) $('v92PublishAt').value=v92LocalDateTimeValue(d);
+      toast('تم ضبط وقت النشر على 8 مساءً');
+    }
+    async function adminV92ScheduleResult(){
+      if(!isAdminUser())return toast('للأدمن فقط');
+      let data;
+      try{data=v92ReadResultForm();}catch(e){return toast(e.message||String(e));}
+      const val=$('v92PublishAt')?.value||'';
+      if(!val)return toast('حدد وقت النشر أولًا أو اضغط ضبط اليوم 8 مساءً');
+      const publishAt=new Date(val).getTime();
+      if(!publishAt || isNaN(publishAt))return toast('وقت النشر غير صحيح');
+      const now=Date.now();
+      const result={id:'v92_scheduled_'+data.drawType+'_'+now,drawType:data.drawType,drawLabel:drawLabel(data.drawType),ticketNumber:data.ticketNumber,winnerName:data.winnerName,prize:data.prize,status:'scheduled',publishAt,createdAt:now,updatedAt:now,adminEmail:currentUser?.email||'',source:'v92_scheduled_new_result_card'};
+      const updates={};
+      updates['lottery_settings/v91_last_results/scheduled/'+data.drawType]=result;
+      updates['lottery_settings/v91_last_results/history/'+data.drawType+'/'+result.id]=result;
+      updates['lottery_settings/updatedAt']=now;
+      updates['lottery_settings/updatedBy']=currentUser?.email||'';
+      try{
+        await update(ref(db),updates);
+        toast('تمت جدولة النتيجة: '+new Date(publishAt).toLocaleString('ar-TR'));
+        v91LastResults.scheduled=v91LastResults.scheduled||{};
+        v91LastResults.scheduled[data.drawType]=result;
+        renderV91LastResult();
+      }catch(e){console.error('V92 schedule failed',e);toast('فشل جدولة النتيجة: '+(e.code||e.message||e));}
+    }
     function adminV91FillPrize(){
       const drawType=$('v91DrawType')?.value||currentDraw||'daily';
       if($('v91PrizeValue'))$('v91PrizeValue').value=Number(prizeFor(drawType)||0).toFixed(2);
       toast('تمت تعبئة جائزة '+drawLabel(drawType));
     }
     if($('v91PublishResultBtn'))$('v91PublishResultBtn').onclick=adminV91PublishResult;
+    if($('v92Set8PmBtn'))$('v92Set8PmBtn').onclick=adminV92Set8Pm;
+    if($('v92ScheduleResultBtn'))$('v92ScheduleResultBtn').onclick=adminV92ScheduleResult;
     if($('v91FillPrizeBtn'))$('v91FillPrizeBtn').onclick=adminV91FillPrize;
     const __v91RenderProfile=renderProfile;renderProfile=function(){__v91RenderProfile();startV91LastResultWatch();renderV91LastResult();};
     const __v91ShowPage=showPage;showPage=function(p){__v91ShowPage(p);if(p==='lottery')setTimeout(renderV91LastResult,50)};
-    Object.assign(window,{adminV91PublishResult,adminV91FillPrize,renderV91LastResult});
+    setInterval(()=>{try{renderV91LastResult()}catch(e){}},3000);
+    Object.assign(window,{adminV91PublishResult,adminV91FillPrize,adminV92Set8Pm,adminV92ScheduleResult,renderV91LastResult});
 
     /* V81: تحديث تلقائي لنتيجة السحب عند وصول وقت النشر بدون ما يحتاج المستخدم يعمل Refresh */
     let __v81DrawRefreshTimer=null;

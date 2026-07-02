@@ -1503,7 +1503,27 @@
   <div class="modal" id="infoModal"><div class="sheet"><h3 id="modalTitle">ADNOR</h3><p id="modalBody">قريبًا</p><button class="close" id="closeModal">إغلاق</button></div></div>
   <div class="toast" id="toast"></div>
 
-  
+<style id="adnor-v97-sounds-ui">
+  /* ADNOR V97 - Sounds + Royal Result Modals */
+  .adnor-v97-event-layer{position:fixed;inset:0;z-index:220;background:radial-gradient(circle at 50% 20%,rgba(255,215,92,.18),rgba(0,0,0,.78) 58%,rgba(0,0,0,.88));display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}
+  .adnor-v97-event-layer.show{display:flex;animation:adnorV97Fade .18s ease-out both}
+  .adnor-v97-card{width:min(94vw,430px);border-radius:28px;border:1px solid rgba(255,214,93,.72);background:linear-gradient(180deg,rgba(12,17,29,.98),rgba(5,8,15,.99));box-shadow:0 0 46px rgba(255,190,38,.18),0 18px 60px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.06);padding:20px;position:relative;overflow:hidden;text-align:center;color:#fff3bf;direction:rtl}
+  .adnor-v97-card:before{content:"";position:absolute;inset:-80px;background:conic-gradient(from 90deg,transparent,rgba(255,215,92,.16),transparent,rgba(255,255,255,.08),transparent);animation:adnorV97Spin 7s linear infinite;pointer-events:none}
+  .adnor-v97-card>*{position:relative;z-index:1}
+  .adnor-v97-icon{width:78px;height:78px;margin:0 auto 10px;border-radius:26px;display:grid;place-items:center;font-size:42px;background:radial-gradient(circle at 30% 22%,#fff7b8,#d4af37 52%,#6f3e08);box-shadow:0 0 24px rgba(255,210,70,.38);color:#140d03}
+  .adnor-v97-title{margin:0;color:#ffe58b;font-size:24px;font-weight:1000;text-shadow:0 0 18px rgba(255,200,63,.22)}
+  .adnor-v97-sub{margin:8px 0 14px;color:#cfd8ea;line-height:1.8;font-weight:800}
+  .adnor-v97-list{display:grid;gap:8px;margin:14px 0;text-align:right}
+  .adnor-v97-row{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid rgba(255,214,93,.18);border-radius:16px;background:rgba(255,255,255,.045);padding:10px 12px}
+  .adnor-v97-row span{color:#bfc8dc;font-size:13px;font-weight:800}.adnor-v97-row b{color:#fff5bf;font-size:14px;font-weight:1000;word-break:break-word;text-align:left}
+  .adnor-v97-ok{width:100%;height:50px;border:0;border-radius:17px;background:linear-gradient(180deg,#fff3ac,#d7a52d 58%,#8c540a);color:#130d03;font:inherit;font-weight:1000;cursor:pointer;box-shadow:0 0 22px rgba(255,190,37,.2)}
+  .adnor-v97-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}.adnor-v97-confetti i{position:absolute;top:-22px;width:8px;height:14px;border-radius:4px;background:#ffd84d;animation:adnorV97Confetti 1.8s linear infinite;opacity:.9}.adnor-v97-confetti i:nth-child(2n){background:#fff1a8}.adnor-v97-confetti i:nth-child(3n){background:#2fe6a4}.adnor-v97-confetti i:nth-child(4n){background:#58d4ff}
+  @keyframes adnorV97Fade{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+  @keyframes adnorV97Spin{to{transform:rotate(360deg)}}
+  @keyframes adnorV97Confetti{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(560px) rotate(360deg);opacity:0}}
+</style>
+<div class="adnor-v97-event-layer" id="adnorV97EventLayer" aria-hidden="true"></div>
+
 <script id="adnor-v90-emergency-result-prize-fallback">
 // V90 fallback: يمنع خطأ setCurrentPrize is not defined إذا كان الكود القديم مستدعى من زر الأدمن
 function setCurrentPrize(type){
@@ -1676,6 +1696,59 @@ function setCurrentPrize(type){
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){await uiPrompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
+
+    /* ADNOR V97 - Sounds + Royal Result Popups */
+    let adnorV97AudioCtx=null;
+    let adnorV97SpinTimer=null;
+    function adnorV97GetAudio(){
+      try{
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(!AC)return null;
+        if(!adnorV97AudioCtx)adnorV97AudioCtx=new AC();
+        if(adnorV97AudioCtx.state==='suspended')adnorV97AudioCtx.resume().catch(()=>{});
+        return adnorV97AudioCtx;
+      }catch(e){return null}
+    }
+    function adnorV97Tone(freq=440,duration=.12,type='sine',gain=.045,delay=0){
+      const ctx=adnorV97GetAudio(); if(!ctx)return;
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type=type; o.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+      g.gain.setValueAtTime(0.0001,ctx.currentTime+delay);
+      g.gain.exponentialRampToValueAtTime(Math.max(.0002,gain),ctx.currentTime+delay+.015);
+      g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+delay+duration);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime+delay); o.stop(ctx.currentTime+delay+duration+.03);
+    }
+    function adnorV97Sound(name){
+      if(name==='ticket'){adnorV97Tone(660,.09,'triangle',.05,0);adnorV97Tone(920,.11,'triangle',.045,.08);adnorV97Tone(1180,.13,'sine',.04,.16);return}
+      if(name==='tap'){adnorV97Tone(420,.055,'square',.025,0);adnorV97Tone(620,.07,'triangle',.025,.045);return}
+      if(name==='game'){adnorV97Tone(520,.08,'triangle',.04,0);adnorV97Tone(760,.10,'triangle',.035,.08);return}
+      if(name==='spinStart'){adnorV97Tone(180,.12,'sawtooth',.035,0);adnorV97Tone(260,.16,'sawtooth',.032,.08);adnorV97Tone(360,.18,'sawtooth',.03,.16);return}
+      if(name==='tick'){adnorV97Tone(520+Math.floor(Math.random()*220),.045,'square',.018,0);return}
+      if(name==='win'){[523,659,784,1046,1318].forEach((f,i)=>adnorV97Tone(f,.16,'triangle',.055,i*.11));adnorV97Tone(1568,.28,'sine',.04,.54);return}
+      if(name==='lose'){adnorV97Tone(330,.12,'sine',.035,0);adnorV97Tone(250,.16,'sine',.03,.13);return}
+    }
+    function adnorV97StartSpinSound(){
+      adnorV97StopSpinSound(false);
+      adnorV97Sound('spinStart');
+      let count=0;
+      adnorV97SpinTimer=setInterval(()=>{count++;adnorV97Sound('tick');if(count>32)adnorV97StopSpinSound(false)},115);
+    }
+    function adnorV97StopSpinSound(playEnd=true,won=false){
+      if(adnorV97SpinTimer){clearInterval(adnorV97SpinTimer);adnorV97SpinTimer=null}
+      if(playEnd)adnorV97Sound(won?'win':'lose');
+    }
+    function adnorV97ShowEventModal(opts={}){
+      const layer=document.getElementById('adnorV97EventLayer'); if(!layer)return;
+      const rows=(opts.rows||[]).filter(Boolean).map(r=>'<div class="adnor-v97-row"><span>'+royalEscape(r.label||'')+'</span><b>'+royalEscape(r.value||'')+'</b></div>').join('');
+      const confetti=opts.confetti?'<div class="adnor-v97-confetti">'+Array.from({length:22},(_,i)=>'<i style="left:'+((i*13)%100)+'%;animation-delay:'+(i*.075)+'s;animation-duration:'+(1.35+(i%5)*.16)+'s"></i>').join('')+'</div>':'';
+      layer.innerHTML='<div class="adnor-v97-card">'+confetti+'<div class="adnor-v97-icon">'+royalEscape(opts.icon||'👑')+'</div><h3 class="adnor-v97-title">'+royalEscape(opts.title||'ADNOR')+'</h3><p class="adnor-v97-sub">'+royalEscape(opts.message||'')+'</p><div class="adnor-v97-list">'+rows+'</div><button class="adnor-v97-ok" id="adnorV97CloseEvent">'+royalEscape(opts.okText||'تمام')+'</button></div>';
+      layer.classList.add('show'); layer.setAttribute('aria-hidden','false');
+      const close=()=>{layer.classList.remove('show');layer.setAttribute('aria-hidden','true');layer.innerHTML=''};
+      const btn=document.getElementById('adnorV97CloseEvent'); if(btn)btn.onclick=close;
+      layer.onclick=e=>{if(e.target===layer)close()};
+    }
+
     function royalEscape(x){return String(x??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
     function royalDialog(opts={}){
       return new Promise(resolve=>{
@@ -1838,7 +1911,7 @@ function setCurrentPrize(type){
       updates['users/'+currentUser.uid+'/updatedAt']=now;
       updates['transactions/'+currentUser.uid+'/'+now]={type:'ticket_purchase',amount:-TICKET_PRICE,balanceBefore:pay.playable,balanceAfter:Number((pay.newReal+pay.newBonus).toFixed(2)),realBefore:pay.real,realAfter:pay.newReal,bonusBefore:pay.bonus,bonusAfter:pay.newBonus,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,note:'شراء تذكرة '+num+' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus),createdAt:now};
       updates['admin_notifications/'+now]={type:'ticket_purchase',uid:currentUser.uid,email:currentUser.email||'',text:'شراء تذكرة جديدة رقم '+num+' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus),createdAt:now,status:'new'};
-      try{await update(ref(db),updates);toast('تم شراء التذكرة بنجاح — تم استخدام '+paymentSourceText(pay.useReal,pay.useBonus)+' 👑');$('ticketNumber').value=randomTicket()}catch(e){console.error(e);toast('تعذر حفظ التذكرة: '+(e.code||e.message))}
+      try{await update(ref(db),updates);adnorV97Sound('ticket');toast('تم شراء البطاقة بنجاح — تم استخدام '+paymentSourceText(pay.useReal,pay.useBonus)+' 👑');adnorV97ShowEventModal({icon:'🎟️',title:'تم شراء البطاقة',message:'بطاقتك دخلت السحب الرسمي بنجاح.',confetti:true,rows:[{label:'رقم البطاقة',value:num},{label:'نوع السحب',value:drawLabel(currentDraw)},{label:'قيمة البطاقة',value:money(TICKET_PRICE)},{label:'الدفع من',value:paymentSourceText(pay.useReal,pay.useBonus)},{label:'الحالة',value:'نشطة ومحفوظة'}],okText:'تمام'});$('ticketNumber').value=randomTicket()}catch(e){console.error(e);toast('تعذر حفظ التذكرة: '+(e.code||e.message))}
     }
     $('buyTicketBtn').onclick=buyTicket;
     
@@ -1904,12 +1977,12 @@ function setCurrentPrize(type){
       isSpinning=true;
       $('spinWheelBtn').disabled=true;
       $('wheelResultText').className='wheel-result';
-      $('wheelResultText').textContent=promoSpin?'لفة مجانية دعائية قيد التشغيل...':'العجلة تدور... — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus);
+      $('wheelResultText').textContent=promoSpin?'لفة مجانية دعائية قيد التشغيل...':'العجلة تدور... — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus);adnorV97StartSpinSound();
       let v96Round;
       try{
         v96Round=await v96CreateGameRound({uid:currentUser.uid,email:currentUser.email||'',playerName:currentProfile.name||currentUser.displayName||currentUser.email||'مستخدم',gameId:'wheel',gameName:'عجلة الحظ',bet,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,promoSpin,segments:wheelSegments});
       }catch(e){
-        console.error(e);toast('تعذر تجهيز نتيجة العجلة من صندوق الألعاب: '+(e.code||e.message));isSpinning=false;$('spinWheelBtn').disabled=false;return;
+        console.error(e);adnorV97StopSpinSound(false);toast('تعذر تجهيز نتيجة العجلة من صندوق الألعاب: '+(e.code||e.message));isSpinning=false;$('spinWheelBtn').disabled=false;return;
       }
       const pick={seg:{m:Number(v96Round.multiplier||0),label:v96Round.label||((Number(v96Round.multiplier||0))+'x')},idx:Number(v96Round.segmentIndex||0)};
       const angle=360/wheelSegments.length;
@@ -1936,8 +2009,8 @@ function setCurrentPrize(type){
         updates['wheel_logs/'+currentUser.uid+'/'+id]=log;
         updates['transactions/'+currentUser.uid+'/'+now]={type:promoSpin?'promo_free_spin':'wheel_spin',amount:amountDelta,balanceBefore:pay.playable,balanceAfter:newPlayable,realBefore:real,realAfter:newReal,bonusBefore:bonus,bonusAfter:newBonus,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,note:(promoSpin?'لفة دعائية مجانية: ':'عجلة الحظ V96: ')+pick.seg.label+(promoSpin?'':' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus)),createdAt:now};
         updates['admin_notifications/'+now]={type:'wheel_spin',uid:currentUser.uid,email:currentUser.email||'',text:(promoSpin?'لفة دعائية مجانية: ':'دوران عجلة V96: ')+'رهان '+money(bet)+' / نتيجة '+pick.seg.label+' / ربح '+money(win)+(promoSpin?'':' / الدفع من '+paymentSourceText(pay.useReal,pay.useBonus)),createdAt:now,status:'new'};
-        try{await update(ref(db),updates);$('wheelResultText').className='wheel-result '+(win>bet?'win':'lose');$('wheelResultText').textContent=win>0?'النتيجة '+pick.seg.label+' — الربح '+money(win)+' — الرصيد القابل للعب الجديد '+money(newPlayable)+(promoSpin?' — لفة مجانية دعائية':''):'النتيجة '+pick.seg.label+' — لم تربح هذه الجولة.'+(promoSpin?' — لفة مجانية دعائية':'')}
-        catch(e){console.error(e);toast('فشل حفظ نتيجة العجلة: '+(e.code||e.message))}
+        try{await update(ref(db),updates);adnorV97StopSpinSound(true,win>0);$('wheelResultText').className='wheel-result '+(win>bet?'win':'lose');$('wheelResultText').textContent=win>0?'النتيجة '+pick.seg.label+' — الربح '+money(win)+' — الرصيد القابل للعب الجديد '+money(newPlayable)+(promoSpin?' — لفة مجانية دعائية':''):'النتيجة '+pick.seg.label+' — لم تربح هذه الجولة.'+(promoSpin?' — لفة مجانية دعائية':'');if(win>0){adnorV97ShowEventModal({icon:'🏆',title:'مبروك! فزت في العجلة',message:'تمت إضافة الربح إلى رصيدك الحقيقي.',confetti:true,rows:[{label:'النتيجة',value:pick.seg.label},{label:'قيمة اللعب',value:money(bet)},{label:'الربح',value:money(win)},{label:'الرصيد الجديد',value:money(newPlayable)},{label:'نوع الجولة',value:promoSpin?'لفة مجانية دعائية':'مدفوعة'}],okText:'استلام'});}}
+        catch(e){console.error(e);adnorV97StopSpinSound(false);toast('فشل حفظ نتيجة العجلة: '+(e.code||e.message))}
         isSpinning=false;
         $('spinWheelBtn').disabled=false;
       },4300)
@@ -3296,8 +3369,53 @@ function setCurrentPrize(type){
     function openV94Game(id){const g=v94NormalizeGame(v94Games[id]);if(!g||g.enabled===false)return toast('اللعبة غير متاحة الآن');v94SelectedGameId=g.id;const home=$('gamesHomePanel'),wheel=$('wheelPlayCard'),card=$('v94CustomGamePlayCard');if(home)home.classList.add('hidden');if(wheel)wheel.classList.add('hidden');if(card)card.classList.remove('hidden');setText('v94PlayTitle',g.name);setText('v94PlayDesc',g.desc);setText('v94PlayIcon',g.icon);$('v94GameBet').min=g.minBet;$('v94GameBet').max=g.maxBet;$('v94GameBet').value=g.minBet;v94UpdatePlayCard();}
     function v94UpdatePlayCard(){const g=v94NormalizeGame(v94Games[v94SelectedGameId]||v94DefaultGame);const real=Number(currentProfile?.realBalance||0),bonus=Number(currentProfile?.bonusBalance||0);let playable=0;if(g.acceptReal)playable+=real;if(g.acceptBonus)playable+=bonus;setText('v94PlayBalance',money(playable));setText('v94PlayPrice',money(Number($('v94GameBet')?.value||g.minBet)));setText('v94PlayMaxWin',money(Number($('v94GameBet')?.value||g.minBet)*Number(g.multiplier||0)));setText('v94GameRulesText','من '+money(g.minBet)+' إلى '+money(g.maxBet)+' — البونص '+(g.acceptBonus?'مقبول':'غير مقبول')+' — الرصيد الحقيقي '+(g.acceptReal?'مقبول':'غير مقبول'));}
     function v94SplitPayment(amount,g){const real=Number(currentProfile?.realBalance||0),bonus=Number(currentProfile?.bonusBalance||0);let useBonus=0,useReal=0;if(g.acceptBonus)useBonus=Math.min(bonus,amount);let rest=Number((amount-useBonus).toFixed(2));if(rest>0&&g.acceptReal)useReal=Math.min(real,rest);if(Number((useBonus+useReal).toFixed(2))<amount)return null;return {real,bonus,useBonus,useReal,newBonus:Number((bonus-useBonus).toFixed(2)),newReal:Number((real-useReal).toFixed(2)),playable:Number(((g.acceptReal?real:0)+(g.acceptBonus?bonus:0)).toFixed(2))}}
-    async function v94PlayGame(){if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');const g=v94NormalizeGame(v94Games[v94SelectedGameId]);if(!g||g.enabled===false)return toast('اللعبة غير متاحة الآن');let bet=Math.max(g.minBet,Number($('v94GameBet').value||g.minBet));bet=Math.min(g.maxBet,bet);$('v94GameBet').value=bet;if(!(await checkSpendAllowed(bet)))return;const pay=v94SplitPayment(bet,g);if(!pay){toast('الرصيد غير كافٍ لهذه اللعبة حسب إعداداتها');return}const chanceRoll=v96Random()*100;const forceLose=chanceRoll>=Number(g.winChance||0);let v96Round;try{v96Round=await v96CreateGameRound({uid:currentUser.uid,email:currentUser.email||'',playerName:currentProfile.name||currentUser.displayName||currentUser.email||'مستخدم',gameId:g.id,gameName:g.name,bet,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,forceLose,maxMultiplier:Number(g.multiplier||0)});}catch(e){console.error(e);toast('تعذر تجهيز نتيجة اللعبة من صندوق الألعاب: '+(e.code||e.message));return}const win=Number(v96Money(v96Round.payout||0));const won=win>0;const now=Date.now();const id=push(ref(db,'custom_game_logs/'+currentUser.uid)).key;const newReal=Number((pay.newReal+win).toFixed(2));const newBonus=pay.newBonus;const after=Number((newReal+newBonus).toFixed(2));const log={id,v96RoundId:v96Round.id||'',uid:currentUser.uid,email:currentUser.email||'',gameId:g.id,gameName:g.name,bet,win,won,multiplier:Number(v96Round.multiplier||0),paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,balanceBefore:pay.playable,balanceAfter:after,realBefore:pay.real,realAfter:newReal,bonusBefore:pay.bonus,bonusAfter:newBonus,createdAt:now};const updates={};updates['users/'+currentUser.uid+'/realBalance']=newReal;updates['users/'+currentUser.uid+'/bonusBalance']=newBonus;updates['users/'+currentUser.uid+'/updatedAt']=now;updates['custom_game_logs/'+currentUser.uid+'/'+id]=log;updates['transactions/'+currentUser.uid+'/'+now]={type:'custom_game',amount:Number((win-bet).toFixed(2)),balanceBefore:pay.playable,balanceAfter:after,realBefore:pay.real,realAfter:newReal,bonusBefore:pay.bonus,bonusAfter:newBonus,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,note:'لعبة '+g.name+' V96 — '+(won?'ربح X'+Number(v96Round.multiplier||0):'خسارة')+' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus),createdAt:now};updates['admin_notifications/'+now]={type:'custom_game',uid:currentUser.uid,email:currentUser.email||'',text:'لعبة '+g.name+' V96 — رهان '+money(bet)+' — ربح '+money(win),createdAt:now,status:'new'};try{await update(ref(db),updates);const res=$('v94GameResultText');res.className='v94-game-result '+(won?'':'lose');res.textContent=won?'مبروك! النتيجة X'+Number(v96Round.multiplier||0)+' وربحت '+money(win)+' — الرصيد الجديد '+money(after):'حظ أوفر — خسرت هذه الجولة، الرصيد الجديد '+money(after)}catch(e){console.error(e);toast('فشل حفظ اللعبة: '+(e.code||e.message))}}
-    function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v94GamesUnsub=onValue(ref(db,'game_center/games'),snap=>{v94Games=snap.val()||{};adminState.gameCenter=v94Games;v94RenderGames()},err=>{console.error('game_center read failed',err);v94Games={};v94RenderGames()});if(isAdminUser()){if(v94LogsUnsub)try{v94LogsUnsub()}catch(e){};v94LogsUnsub=onValue(ref(db,'custom_game_logs'),snap=>{adminState.customGameLogs=snap.val()||{};v94RenderAdminGameLogs();renderAdminGameProfitSummary()},err=>console.error('custom_game_logs read failed',err));}}
+    async function v94PlayGame(){
+      if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');
+      const g=v94NormalizeGame(v94Games[v94SelectedGameId]);
+      if(!g||g.enabled===false)return toast('اللعبة غير متاحة الآن');
+      let bet=Math.max(g.minBet,Number($('v94GameBet').value||g.minBet));
+      bet=Math.min(g.maxBet,bet);
+      $('v94GameBet').value=bet;
+      if(!(await checkSpendAllowed(bet)))return;
+      const pay=v94SplitPayment(bet,g);
+      if(!pay){toast('الرصيد غير كافٍ لهذه اللعبة حسب إعداداتها');return}
+      adnorV97Sound('game');
+      const chanceRoll=v96Random()*100;
+      const forceLose=chanceRoll>=Number(g.winChance||0);
+      let v96Round;
+      try{
+        v96Round=await v96CreateGameRound({uid:currentUser.uid,email:currentUser.email||'',playerName:currentProfile.name||currentUser.displayName||currentUser.email||'مستخدم',gameId:g.id,gameName:g.name,bet,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,forceLose,maxMultiplier:Number(g.multiplier||0)});
+      }catch(e){
+        console.error(e);toast('تعذر تجهيز نتيجة اللعبة من صندوق الألعاب: '+(e.code||e.message));return;
+      }
+      const win=Number(v96Money(v96Round.payout||0));
+      const won=win>0;
+      const now=Date.now();
+      const id=push(ref(db,'custom_game_logs/'+currentUser.uid)).key;
+      const newReal=Number((pay.newReal+win).toFixed(2));
+      const newBonus=pay.newBonus;
+      const after=Number((newReal+newBonus).toFixed(2));
+      const log={id,v96RoundId:v96Round.id||'',uid:currentUser.uid,email:currentUser.email||'',gameId:g.id,gameName:g.name,bet,win,won,multiplier:Number(v96Round.multiplier||0),paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,balanceBefore:pay.playable,balanceAfter:after,realBefore:pay.real,realAfter:newReal,bonusBefore:pay.bonus,bonusAfter:newBonus,createdAt:now};
+      const updates={};
+      updates['users/'+currentUser.uid+'/realBalance']=newReal;
+      updates['users/'+currentUser.uid+'/bonusBalance']=newBonus;
+      updates['users/'+currentUser.uid+'/updatedAt']=now;
+      updates['custom_game_logs/'+currentUser.uid+'/'+id]=log;
+      updates['transactions/'+currentUser.uid+'/'+now]={type:'custom_game',amount:Number((win-bet).toFixed(2)),balanceBefore:pay.playable,balanceAfter:after,realBefore:pay.real,realAfter:newReal,bonusBefore:pay.bonus,bonusAfter:newBonus,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,note:'لعبة '+g.name+' V96 — '+(won?'ربح X'+Number(v96Round.multiplier||0):'خسارة')+' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus),createdAt:now};
+      updates['admin_notifications/'+now]={type:'custom_game',uid:currentUser.uid,email:currentUser.email||'',text:'لعبة '+g.name+' V96 — رهان '+money(bet)+' — ربح '+money(win),createdAt:now,status:'new'};
+      try{
+        await update(ref(db),updates);
+        adnorV97Sound(won?'win':'lose');
+        const res=$('v94GameResultText');
+        res.className='v94-game-result '+(won?'':'lose');
+        res.textContent=won?'مبروك! النتيجة X'+Number(v96Round.multiplier||0)+' وربحت '+money(win)+' — الرصيد الجديد '+money(after):'حظ أوفر — خسرت هذه الجولة، الرصيد الجديد '+money(after);
+        if(won){
+          adnorV97ShowEventModal({icon:g.icon||'🎮',title:'مبروك! فزت في اللعبة',message:'تمت إضافة الربح إلى رصيدك الحقيقي.',confetti:true,rows:[{label:'اللعبة',value:g.name},{label:'قيمة اللعب',value:money(bet)},{label:'المضاعف',value:'X'+Number(v96Round.multiplier||0)},{label:'الربح',value:money(win)},{label:'الرصيد الجديد',value:money(after)}],okText:'استلام'});
+        }
+      }catch(e){console.error(e);toast('فشل حفظ اللعبة: '+(e.code||e.message))}
+    }
+    
+function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v94GamesUnsub=onValue(ref(db,'game_center/games'),snap=>{v94Games=snap.val()||{};adminState.gameCenter=v94Games;v94RenderGames()},err=>{console.error('game_center read failed',err);v94Games={};v94RenderGames()});if(isAdminUser()){if(v94LogsUnsub)try{v94LogsUnsub()}catch(e){};v94LogsUnsub=onValue(ref(db,'custom_game_logs'),snap=>{adminState.customGameLogs=snap.val()||{};v94RenderAdminGameLogs();renderAdminGameProfitSummary()},err=>console.error('custom_game_logs read failed',err));}}
     if($('v94SaveGameBtn'))$('v94SaveGameBtn').onclick=v94SaveGame;
     if($('v94SeedGameBtn'))$('v94SeedGameBtn').onclick=v94SeedGame;
     if($('v94DeleteGameBtn'))$('v94DeleteGameBtn').onclick=v94DeleteGame;

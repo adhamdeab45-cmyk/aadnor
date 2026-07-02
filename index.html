@@ -862,19 +862,18 @@
 
 
 
-<style id="adnor-v106-official-results-style">
-/* ADNOR V106 - Official scheduled results only */
-.v66-last-result-inline{display:none!important}
-.admin-direct-result-box,.admin-v91-result-box{display:none!important}
-.v106-official-draw-admin{border-color:rgba(70,220,255,.34)!important;background:radial-gradient(circle at 10% 0,rgba(77,214,255,.12),transparent 34%),linear-gradient(145deg,rgba(7,18,37,.92),rgba(0,0,0,.78))!important}
-.v106-draw-admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
-.v106-draw-card{position:relative;overflow:hidden;border:1px solid rgba(212,175,55,.32);border-radius:22px;padding:14px;background:linear-gradient(180deg,rgba(4,15,32,.88),rgba(0,0,0,.68));box-shadow:0 0 18px rgba(212,175,55,.08)}
-.v106-draw-card:before{content:"";position:absolute;inset:-1px;background:linear-gradient(110deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(120%);animation:v106AdminShine 5.8s linear infinite;pointer-events:none}
-@keyframes v106AdminShine{0%{transform:translateX(120%)}100%{transform:translateX(-120%)}}
-.v106-draw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px;position:relative;z-index:1}.v106-draw-head h4{margin:0;color:#ffe28a;font-size:17px;font-weight:1000}.v106-draw-head span{font-size:11px;color:#8fe7ff;border:1px solid rgba(143,231,255,.35);border-radius:999px;padding:5px 9px;background:rgba(0,160,255,.08);font-weight:900}
-.v106-status{margin-top:10px;padding:9px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-size:12px;font-weight:900;color:#cbd5e1;line-height:1.7;position:relative;z-index:1}.v106-status.published{color:#98ffd9;border-color:rgba(34,224,162,.38);background:rgba(34,224,162,.07)}.v106-status.scheduled{color:#ffe7a1;border-color:rgba(255,205,74,.38);background:rgba(255,205,74,.07)}.v106-status.hidden{color:#ffb6c0;border-color:rgba(255,92,105,.38);background:rgba(255,92,105,.07)}
-.v106-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;position:relative;z-index:1}.v106-actions button{min-height:39px;border-radius:13px;border:1px solid rgba(255,205,74,.36);font-family:inherit;font-weight:1000;cursor:pointer}.v106-actions .ok{background:linear-gradient(180deg,#fff0a5,#d89524);color:#161007}.v106-actions .blue{background:linear-gradient(180deg,#2dd4ff,#0b69a3);color:#fff}.v106-actions .bad{background:linear-gradient(180deg,#ff7480,#8d1825);color:#fff}.v106-actions .dark{background:rgba(2,10,22,.8);color:#ffe28a}
-.v106-public-empty{color:#cbd5e1!important}.v106-official-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,205,74,.38);background:rgba(255,205,74,.08);border-radius:999px;padding:4px 9px;color:#ffe28a;font-size:11px;font-weight:1000}.v106-ticker-kind{color:#ffe28a;font-weight:1000;text-shadow:0 0 12px rgba(255,205,74,.28)}
+<style id="adnor-v108-official-results-safe-style">
+/* ADNOR V108 - Safe official scheduled results; admin users untouched */
+.v108-official-draw-admin{border-color:rgba(70,220,255,.34)!important;background:radial-gradient(circle at 10% 0,rgba(77,214,255,.12),transparent 34%),linear-gradient(145deg,rgba(7,18,37,.92),rgba(0,0,0,.78))!important}
+.v108-draw-admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+.v108-draw-card{position:relative;overflow:hidden;border:1px solid rgba(212,175,55,.32);border-radius:22px;padding:14px;background:linear-gradient(180deg,rgba(4,15,32,.88),rgba(0,0,0,.68));box-shadow:0 0 18px rgba(212,175,55,.08)}
+.v108-draw-card:before{content:"";position:absolute;inset:-1px;background:linear-gradient(110deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(120%);animation:v108AdminShine 5.8s linear infinite;pointer-events:none}
+@keyframes v108AdminShine{0%{transform:translateX(120%)}100%{transform:translateX(-120%)}}
+.v108-draw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px;position:relative;z-index:1}.v108-draw-head h4{margin:0;color:#ffe28a;font-size:17px;font-weight:1000}.v108-draw-head span{font-size:11px;color:#8fe7ff;border:1px solid rgba(143,231,255,.35);border-radius:999px;padding:5px 9px;background:rgba(0,160,255,.08);font-weight:900}
+.v108-status{margin-top:10px;padding:9px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-size:12px;font-weight:900;color:#cbd5e1;line-height:1.7;position:relative;z-index:1}.v108-status.published{color:#98ffd9;border-color:rgba(34,224,162,.38);background:rgba(34,224,162,.07)}.v108-status.scheduled{color:#ffe7a1;border-color:rgba(255,205,74,.38);background:rgba(255,205,74,.07)}.v108-status.hidden{color:#ffb6c0;border-color:rgba(255,92,105,.38);background:rgba(255,92,105,.07)}
+.v108-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;position:relative;z-index:1}.v108-actions button{min-height:39px;border-radius:13px;border:1px solid rgba(255,205,74,.36);font-family:inherit;font-weight:1000;cursor:pointer}.v108-actions .ok{background:linear-gradient(180deg,#fff0a5,#d89524);color:#161007}.v108-actions .blue{background:linear-gradient(180deg,#2dd4ff,#0b69a3);color:#fff}.v108-actions .bad{background:linear-gradient(180deg,#ff7480,#8d1825);color:#fff}.v108-actions .dark{background:rgba(2,10,22,.8);color:#ffe28a}
+.v108-ticker-kind{color:#ffe28a;font-weight:1000;text-shadow:0 0 12px rgba(255,205,74,.28)}
+.v108-old-result-note{border:1px dashed rgba(255,205,74,.28);border-radius:18px;padding:10px;margin-top:12px;color:#cbd5e1;background:rgba(255,205,74,.04);font-size:12px;font-weight:900;line-height:1.7}
 </style>
 
 </head>
@@ -1053,13 +1052,13 @@
         </section>
 
         <section class="v91-independent-result" id="v91LatestResultCard" aria-label="النتيجة الرسمية الأخيرة">
-          <div class="v91-result-head"><h3>🏆 نتيجة السحب الرسمية</h3><span id="v91ResultDrawLabel">اليومي</span></div>
+          <div class="v91-result-head"><h3>🏆 النتيجة الرسمية الأخيرة</h3><span id="v91ResultDrawLabel">اليومي</span></div>
           <div class="v91-result-paper">
             <div class="v91-result-label">رقم التذكرة الرابحة</div>
             <div class="v91-result-digits" id="v91ResultDigits"><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></div>
             <div class="v91-result-winner" id="v91ResultWinner">بانتظار نشر نتيجة رسمية من الإدارة</div>
             <div class="v91-result-prize" id="v91ResultPrize">$0.00</div>
-            <div class="v91-result-wait" id="v91ResultNote">النتيجة تظهر هنا فقط بعد موعد العرض الرسمي.</div>
+            <div class="v91-result-wait" id="v91ResultNote">هذه البطاقة مستقلة عن مربع النتيجة القديم وتقرأ من مسار جديد خاص بها.</div>
           </div>
         </section>
 
@@ -1395,49 +1394,50 @@
                 </div>
                 <div class="admin-actions"><button class="ok" id="saveLotterySettingsBtn">حفظ إعدادات اليانصيب</button><button class="blue" id="resetLotterySettingsBtn">استرجاع الافتراضي</button></div>
               </div>
-              <div class="admin-wide-card v106-official-draw-admin" id="v106OfficialDrawAdmin">
-                <div class="admin-section-head"><h3>إدارة نتائج السحب الرسمية V106</h3><span>مصدر واحد نظيف للنتائج — يومي / أسبوعي / شهري / سنوي</span></div>
+              <div class="admin-wide-card v108-official-draw-admin" id="v108OfficialDrawAdmin">
+                <div class="admin-section-head"><h3>إدارة نتائج السحب الرسمية V108</h3><span>مصدر واحد نظيف للنتائج — يومي / أسبوعي / شهري / سنوي</span></div>
                 <div class="hint">اكتب النتيجة قبل ساعة أو قبل عشر ساعات، واحفظها بوقت نشر محدد. النتيجة تبقى مخفية عن المستخدمين ولا تظهر في صفحة اليانصيب أو الشريط الرسمي إلا عند وقت النشر، والوقت الافتراضي 8:00 مساءً بتوقيت تركيا.</div>
-                <div class="v106-draw-admin-grid">
-                  <div class="v106-draw-card" data-v106-type="daily">
-                    <div class="v106-draw-head"><h4>☀️ السحب اليومي</h4><span>افتراضي 8 مساءً</span></div>
-                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v106Winner_daily" placeholder="مثال: أبو خالد"></div></div>
-                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v106Ticket_daily" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
-                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v106Prize_daily" type="number" min="0" step="0.01" placeholder="4500"></div></div>
-                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v106Publish_daily" type="datetime-local"></div></div>
-                    <div class="v106-actions"><button class="dark" type="button" data-v106-set8="daily">ضبط 8 مساءً</button><button class="ok" type="button" data-v106-save="daily">حفظ وجدولة</button><button class="blue" type="button" data-v106-now="daily">عرض الآن</button><button class="bad" type="button" data-v106-hide="daily">إخفاء النتيجة</button></div>
-                    <div class="v106-status" id="v106Status_daily">لم يتم تحميل الحالة بعد.</div>
+                <div class="v108-draw-admin-grid">
+                  <div class="v108-draw-card" data-v108-type="daily">
+                    <div class="v108-draw-head"><h4>☀️ السحب اليومي</h4><span>افتراضي 8 مساءً</span></div>
+                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v108Winner_daily" placeholder="مثال: أبو خالد"></div></div>
+                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v108Ticket_daily" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_daily" type="number" min="0" step="0.01" placeholder="4500"></div></div>
+                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v108Publish_daily" type="datetime-local"></div></div>
+                    <div class="v108-actions"><button class="dark" type="button" data-v108-set8="daily">ضبط 8 مساءً</button><button class="ok" type="button" data-v108-save="daily">حفظ وجدولة</button><button class="blue" type="button" data-v108-now="daily">عرض الآن</button><button class="bad" type="button" data-v108-hide="daily">إخفاء النتيجة</button></div>
+                    <div class="v108-status" id="v108Status_daily">لم يتم تحميل الحالة بعد.</div>
                   </div>
-                  <div class="v106-draw-card" data-v106-type="weekly">
-                    <div class="v106-draw-head"><h4>📅 السحب الأسبوعي</h4><span>افتراضي 8 مساءً</span></div>
-                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v106Winner_weekly" placeholder="مثال: محمد علي"></div></div>
-                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v106Ticket_weekly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
-                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v106Prize_weekly" type="number" min="0" step="0.01" placeholder="15000"></div></div>
-                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v106Publish_weekly" type="datetime-local"></div></div>
-                    <div class="v106-actions"><button class="dark" type="button" data-v106-set8="weekly">ضبط 8 مساءً</button><button class="ok" type="button" data-v106-save="weekly">حفظ وجدولة</button><button class="blue" type="button" data-v106-now="weekly">عرض الآن</button><button class="bad" type="button" data-v106-hide="weekly">إخفاء النتيجة</button></div>
-                    <div class="v106-status" id="v106Status_weekly">لم يتم تحميل الحالة بعد.</div>
+                  <div class="v108-draw-card" data-v108-type="weekly">
+                    <div class="v108-draw-head"><h4>📅 السحب الأسبوعي</h4><span>افتراضي 8 مساءً</span></div>
+                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v108Winner_weekly" placeholder="مثال: محمد علي"></div></div>
+                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v108Ticket_weekly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_weekly" type="number" min="0" step="0.01" placeholder="15000"></div></div>
+                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v108Publish_weekly" type="datetime-local"></div></div>
+                    <div class="v108-actions"><button class="dark" type="button" data-v108-set8="weekly">ضبط 8 مساءً</button><button class="ok" type="button" data-v108-save="weekly">حفظ وجدولة</button><button class="blue" type="button" data-v108-now="weekly">عرض الآن</button><button class="bad" type="button" data-v108-hide="weekly">إخفاء النتيجة</button></div>
+                    <div class="v108-status" id="v108Status_weekly">لم يتم تحميل الحالة بعد.</div>
                   </div>
-                  <div class="v106-draw-card" data-v106-type="monthly">
-                    <div class="v106-draw-head"><h4>🌙 السحب الشهري</h4><span>افتراضي 8 مساءً</span></div>
-                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v106Winner_monthly" placeholder="مثال: ADNOR Winner"></div></div>
-                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v106Ticket_monthly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
-                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v106Prize_monthly" type="number" min="0" step="0.01" placeholder="50000"></div></div>
-                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v106Publish_monthly" type="datetime-local"></div></div>
-                    <div class="v106-actions"><button class="dark" type="button" data-v106-set8="monthly">ضبط 8 مساءً</button><button class="ok" type="button" data-v106-save="monthly">حفظ وجدولة</button><button class="blue" type="button" data-v106-now="monthly">عرض الآن</button><button class="bad" type="button" data-v106-hide="monthly">إخفاء النتيجة</button></div>
-                    <div class="v106-status" id="v106Status_monthly">لم يتم تحميل الحالة بعد.</div>
+                  <div class="v108-draw-card" data-v108-type="monthly">
+                    <div class="v108-draw-head"><h4>🌙 السحب الشهري</h4><span>افتراضي 8 مساءً</span></div>
+                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v108Winner_monthly" placeholder="مثال: ADNOR Winner"></div></div>
+                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v108Ticket_monthly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_monthly" type="number" min="0" step="0.01" placeholder="50000"></div></div>
+                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v108Publish_monthly" type="datetime-local"></div></div>
+                    <div class="v108-actions"><button class="dark" type="button" data-v108-set8="monthly">ضبط 8 مساءً</button><button class="ok" type="button" data-v108-save="monthly">حفظ وجدولة</button><button class="blue" type="button" data-v108-now="monthly">عرض الآن</button><button class="bad" type="button" data-v108-hide="monthly">إخفاء النتيجة</button></div>
+                    <div class="v108-status" id="v108Status_monthly">لم يتم تحميل الحالة بعد.</div>
                   </div>
-                  <div class="v106-draw-card" data-v106-type="yearly">
-                    <div class="v106-draw-head"><h4>👑 السحب السنوي</h4><span>افتراضي 8 مساءً</span></div>
-                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v106Winner_yearly" placeholder="مثال: الفائز الملكي"></div></div>
-                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v106Ticket_yearly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
-                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v106Prize_yearly" type="number" min="0" step="0.01" placeholder="250000"></div></div>
-                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v106Publish_yearly" type="datetime-local"></div></div>
-                    <div class="v106-actions"><button class="dark" type="button" data-v106-set8="yearly">ضبط 8 مساءً</button><button class="ok" type="button" data-v106-save="yearly">حفظ وجدولة</button><button class="blue" type="button" data-v106-now="yearly">عرض الآن</button><button class="bad" type="button" data-v106-hide="yearly">إخفاء النتيجة</button></div>
-                    <div class="v106-status" id="v106Status_yearly">لم يتم تحميل الحالة بعد.</div>
+                  <div class="v108-draw-card" data-v108-type="yearly">
+                    <div class="v108-draw-head"><h4>👑 السحب السنوي</h4><span>افتراضي 8 مساءً</span></div>
+                    <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v108Winner_yearly" placeholder="مثال: الفائز الملكي"></div></div>
+                    <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v108Ticket_yearly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_yearly" type="number" min="0" step="0.01" placeholder="250000"></div></div>
+                    <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v108Publish_yearly" type="datetime-local"></div></div>
+                    <div class="v108-actions"><button class="dark" type="button" data-v108-set8="yearly">ضبط 8 مساءً</button><button class="ok" type="button" data-v108-save="yearly">حفظ وجدولة</button><button class="blue" type="button" data-v108-now="yearly">عرض الآن</button><button class="bad" type="button" data-v108-hide="yearly">إخفاء النتيجة</button></div>
+                    <div class="v108-status" id="v108Status_yearly">لم يتم تحميل الحالة بعد.</div>
                   </div>
                 </div>
-                <div class="admin-section-head" style="margin-top:18px"><h3>سجل نتائج V106</h3><span>آخر النتائج المجدولة والمنشورة</span></div>
-                <div class="admin-table" id="v106AdminResultsList"><div class="admin-empty">لا يوجد سجل V106 بعد</div></div>
+                <div class="admin-section-head" style="margin-top:18px"><h3>سجل نتائج V108</h3><span>آخر النتائج المجدولة والمنشورة</span></div>
+                <div class="admin-table" id="v108AdminResultsList"><div class="admin-empty">لا يوجد سجل V108 بعد</div></div>
+                <div class="v108-old-result-note">تم إلغاء عرض النتائج القديم من هذا القسم. المصدر الرسمي الآن هو V108 فقط.</div>
               </div>
             </section>
             <section class="admin-section" id="admin-section-games">
@@ -3844,163 +3844,151 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 
 
 
-    /* V106 — Official Scheduled Draw Results: مصدر واحد نظيف للنتائج */
-    const V106_DRAW_TYPES=['daily','weekly','monthly','yearly'];
-    const V106_RESULTS_PATH='system_settings/v106_official_draw_results';
-    let v106Results={current:{},history:{},latest:null};
-    let v106ResultsUnsub=null;
-    function v106Label(type){return drawLabel(type)||({daily:'السحب اليومي',weekly:'السحب الأسبوعي',monthly:'السحب الشهري',yearly:'السحب السنوي'}[type]||type)}
-    function v106CleanTicket(v){return String(v||'').replace(/\D/g,'').padStart(7,'0').slice(-7)}
-    function v106Pad(n){return String(n).padStart(2,'0')}
-    function v106LocalInputValue(d){return d.getFullYear()+'-'+v106Pad(d.getMonth()+1)+'-'+v106Pad(d.getDate())+'T'+v106Pad(d.getHours())+':'+v106Pad(d.getMinutes())}
-    function v106Default8PmDate(){const d=new Date();d.setHours(20,0,0,0);if(d.getTime()<=Date.now())d.setDate(d.getDate()+1);return d}
-    function v106FormatTime(ms){return ms?new Date(Number(ms)).toLocaleString('ar-TR',{timeZone:'Europe/Istanbul',hour12:false}):'غير محدد'}
-    function v106IsVisible(r){if(!r||typeof r!=='object')return false;const st=String(r.status||'').toLowerCase();const p=Number(r.publishAt||0);if(st==='hidden')return false;if(st==='published')return true;if(st==='scheduled')return !!p && p<=Date.now();return !!p && p<=Date.now()}
-    function v106Current(type){return (v106Results.current||{})[type]||null}
-    function v106Visible(type){const r=v106Current(type);return v106IsVisible(r)?r:null}
-    function v106VisibleList(){return V106_DRAW_TYPES.map(t=>v106Visible(t)).filter(Boolean).sort((a,b)=>Number(b.publishAt||b.publishedAt||b.updatedAt||0)-Number(a.publishAt||a.publishedAt||a.updatedAt||0))}
-    function v106LatestVisibleResult(){return v106VisibleList()[0]||null}
-    function v106SetDigits(id,num){const box=$(id);if(!box)return;box.innerHTML=v106CleanTicket(num).split('').map(n=>'<span>'+n+'</span>').join('')}
-    function v106PlaceResultCard(){const card=$('v91LatestResultCard');const tabs=document.querySelector('#page-lottery .tabs');if(card&&tabs&&card.previousElementSibling!==tabs){tabs.insertAdjacentElement('afterend',card)}}
-    function v106RenderPublicResult(){
-      v106PlaceResultCard();
-      setText('homeJackpotText',money(getCurrentPrize()));
-      const type=currentDraw||'daily';
-      const r=v106Visible(type);
-      setText('v91ResultDrawLabel',v106Label(type));
-      if(r){
-        const ticket=v106CleanTicket(r.ticketNumber);
-        const winner=String(r.winnerName||'مستخدم ADNOR').trim();
-        v106SetDigits('v91ResultDigits',ticket);
-        setText('v91ResultWinner','الفائز: '+winner);
-        setText('v91ResultPrize',money(r.prize||0));
-        setText('v91ResultNote','تم عرض نتيجة '+v106Label(type)+' رسميًا عند: '+v106FormatTime(r.publishAt||r.publishedAt||r.updatedAt));
-        setText('homeLastResultTitle',v106Label(r.drawType||type)+' — رقم '+ticket);
-        setText('homeLastResultSub','الفائز: '+winner+' — '+v106FormatTime(r.publishAt||r.publishedAt||r.updatedAt));
-        setText('homeLastResultPrize',money(r.prize||0));
-      }else{
-        v106SetDigits('v91ResultDigits','0000000');
-        setText('v91ResultWinner','بانتظار عرض نتيجة '+v106Label(type));
-        setText('v91ResultPrize','$0.00');
-        const scheduled=v106Current(type);
-        const waitText=scheduled&&String(scheduled.status||'').toLowerCase()==='scheduled'&&Number(scheduled.publishAt||0)>Date.now()
-          ? 'تم تجهيز النتيجة من الإدارة، وستظهر عند: '+v106FormatTime(scheduled.publishAt)
-          : 'لم يتم عرض نتيجة '+v106Label(type)+' بعد. وقت العرض الرسمي 8:00 مساءً بتوقيت تركيا.';
-        setText('v91ResultNote',waitText);
-        const latest=v106LatestVisibleResult();
-        if(latest){
-          const lt=v106CleanTicket(latest.ticketNumber);
-          setText('homeLastResultTitle',v106Label(latest.drawType)+' — رقم '+lt);
-          setText('homeLastResultSub','الفائز: '+(latest.winnerName||'مستخدم ADNOR')+' — '+v106FormatTime(latest.publishAt||latest.publishedAt||latest.updatedAt));
-          setText('homeLastResultPrize',money(latest.prize||0));
-        }else{
-          setText('homeLastResultTitle','بانتظار أول نتيجة رسمية');
-          setText('homeLastResultSub','النتائج تظهر بعد موعد العرض فقط.');
-          setText('homeLastResultPrize','$0');
-        }
-      }
-      v106RenderAllResultsPublic();
-      try{v93RenderTopWinnerTicker()}catch(e){}
+    /* V108 — Safe Official Scheduled Draw Results. Does not touch admin users or balances. */
+    const V108_DRAW_TYPES=['daily','weekly','monthly','yearly'];
+    const V108_RESULTS_PATH='system_settings/v108_official_draw_results';
+    let v108Results={current:{},history:{},latest:null};
+    let v108ResultsUnsub=null;
+    function v108Label(type){return {daily:'السحب اليومي',weekly:'السحب الأسبوعي',monthly:'السحب الشهري',yearly:'السحب السنوي'}[type]||'السحب'}
+    function v108Prize(type){return {daily:4500,weekly:15000,monthly:50000,yearly:250000}[type]||4500}
+    function v108CleanTicket(v){return String(v||'').replace(/\D/g,'').slice(0,7).padStart(7,'0')}
+    function v108IstanbulParts(date=new Date()){
+      const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(date).reduce((a,p)=>(a[p.type]=p.value,a),{});
+      return {y:parts.year,m:parts.month,d:parts.day,h:parts.hour,min:parts.minute};
     }
-    function v106RenderAllResultsPublic(){
-      const list=v106VisibleList().slice(0,20);
+    function v108Default8PmDate(){const p=v108IstanbulParts(new Date());return new Date(`${p.y}-${p.m}-${p.d}T20:00:00+03:00`)}
+    function v108LocalInputValue(date){const d=date||v108Default8PmDate();const p=v108IstanbulParts(d);return `${p.y}-${p.m}-${p.d}T${p.h}:${p.min}`}
+    function v108FormatTime(ts){if(!ts)return '8:00 مساءً بتوقيت تركيا';return new Date(Number(ts)).toLocaleString('ar-TR',{timeZone:'Europe/Istanbul',hour12:false})}
+    function v108Current(type){return (v108Results.current||{})[type]||null}
+    function v108IsVisible(r){if(!r)return false;const st=String(r.status||'').toLowerCase();if(st==='hidden')return false;if(st==='published')return true;if(st==='scheduled'&&Number(r.publishAt||0)<=Date.now())return true;return false}
+    function v108Visible(type){const r=v108Current(type);return v108IsVisible(r)?r:null}
+    function v108VisibleList(){return V108_DRAW_TYPES.map(t=>v108Visible(t)).filter(Boolean).sort((a,b)=>Number(b.publishAt||b.publishedAt||b.updatedAt||0)-Number(a.publishAt||a.publishedAt||a.updatedAt||0))}
+    function v108LatestVisibleResult(){return v108VisibleList()[0]||null}
+    function v108SetDigits(id,num){const box=$(id);if(!box)return;box.innerHTML=v108CleanTicket(num).split('').map(n=>'<span>'+n+'</span>').join('')}
+    function v108PlaceResultCard(){const card=$('v91LatestResultCard');const tabs=document.querySelector('#page-lottery .tabs');if(card&&tabs&&card.previousElementSibling!==tabs){tabs.insertAdjacentElement('afterend',card)}}
+    function v108RenderPublicResult(){
+      try{
+        v108PlaceResultCard();
+        const type=currentDraw||'daily';
+        const r=v108Visible(type);
+        setText('v91ResultDrawLabel',v108Label(type));
+        if(r){
+          const ticket=v108CleanTicket(r.ticketNumber);const winner=r.winnerName||'مستخدم ADNOR';
+          v108SetDigits('v91ResultDigits',ticket);
+          setText('v91ResultWinner','الفائز: '+winner);
+          setText('v91ResultPrize',money(r.prize||v108Prize(type)));
+          setText('v91ResultNote','تم عرض نتيجة '+v108Label(type)+' رسميًا عند: '+v108FormatTime(r.publishAt||r.publishedAt||r.updatedAt));
+          setText('homeLastResultTitle',v108Label(r.drawType||type)+' — رقم '+ticket);
+          setText('homeLastResultSub','الفائز: '+winner+' — '+v108FormatTime(r.publishAt||r.publishedAt||r.updatedAt));
+          setText('homeLastResultPrize',money(r.prize||0));
+        }else{
+          v108SetDigits('v91ResultDigits','0000000');
+          setText('v91ResultWinner','بانتظار عرض نتيجة '+v108Label(type));
+          setText('v91ResultPrize',money(v108Prize(type)));
+          const scheduled=v108Current(type);
+          const msg=scheduled&&String(scheduled.status)!=='hidden'&&Number(scheduled.publishAt||0)>Date.now()
+            ? 'تم تجهيز النتيجة من الإدارة، وستظهر عند: '+v108FormatTime(scheduled.publishAt)
+            : 'لم يتم عرض نتيجة '+v108Label(type)+' بعد. وقت العرض الرسمي 8:00 مساءً بتوقيت تركيا.';
+          setText('v91ResultNote',msg);
+          const latest=v108LatestVisibleResult();
+          if(latest){const lt=v108CleanTicket(latest.ticketNumber);setText('homeLastResultTitle',v108Label(latest.drawType)+' — رقم '+lt);setText('homeLastResultSub','الفائز: '+(latest.winnerName||'مستخدم ADNOR')+' — '+v108FormatTime(latest.publishAt||latest.publishedAt||latest.updatedAt));setText('homeLastResultPrize',money(latest.prize||0));}
+          else{setText('homeLastResultTitle','بانتظار أول نتيجة رسمية');setText('homeLastResultSub','النتائج تظهر بعد موعد العرض فقط.');setText('homeLastResultPrize','$0');}
+        }
+        v108RenderAllResultsPublic();
+        try{v93RenderTopWinnerTicker()}catch(e){}
+      }catch(e){console.warn('V108 public render skipped',e)}
+    }
+    function v108RenderAllResultsPublic(){
+      const list=v108VisibleList().slice(0,20);
       setText('resultsPublishedCount',list.length);
       const box=$('allDrawResultsList'); if(!box)return;
       if(!list.length){box.innerHTML='<div class="draw-item"><div class="medal">🏆</div><div><h4>لا توجد نتائج منشورة بعد</h4><p>النتائج المجدولة لا تظهر هنا إلا بعد وقت النشر الرسمي.</p></div><strong>$0</strong></div>';return}
-      box.innerHTML=list.map((d,i)=>'<div class="draw-item"><div class="medal">'+(i+1)+'</div><div><h4>'+escapeHtml(v106Label(d.drawType))+' <span class="ticket-mini win">منشور</span></h4><p>رقم التذكرة الرابحة: '+escapeHtml(v106CleanTicket(d.ticketNumber))+'<br>الفائز: '+escapeHtml(d.winnerName||'مستخدم ADNOR')+' — الوقت: '+escapeHtml(v106FormatTime(d.publishAt||d.publishedAt||d.updatedAt))+'</p></div><strong>'+money(d.prize||0)+'</strong></div>').join('')
+      box.innerHTML=list.map((d,i)=>'<div class="draw-item"><div class="medal">'+(i+1)+'</div><div><h4>'+escapeHtml(v108Label(d.drawType))+' <span class="ticket-mini win">منشور</span></h4><p>رقم التذكرة الرابحة: '+escapeHtml(v108CleanTicket(d.ticketNumber))+'<br>الفائز: '+escapeHtml(d.winnerName||'مستخدم ADNOR')+' — الوقت: '+escapeHtml(v108FormatTime(d.publishAt||d.publishedAt||d.updatedAt))+'</p></div><strong>'+money(d.prize||0)+'</strong></div>').join('')
     }
-    function v106ReadAdminForm(type,forceNow=false){
-      const winner=String($('v106Winner_'+type)?.value||'').trim();
-      const raw=String($('v106Ticket_'+type)?.value||'').trim();
-      const ticket=v106CleanTicket(raw);
-      const prize=Number(Number($('v106Prize_'+type)?.value||prizeFor(type)||0).toFixed(2));
+    function v108ReadAdminForm(type,forceNow=false){
+      const winner=String($('v108Winner_'+type)?.value||'').trim();
+      const raw=String($('v108Ticket_'+type)?.value||'').trim();
+      const ticket=v108CleanTicket(raw);
+      const prize=Number(Number($('v108Prize_'+type)?.value||v108Prize(type)||0).toFixed(2));
       let publishAt=Date.now();
-      if(!forceNow){
-        const val=$('v106Publish_'+type)?.value||'';
-        publishAt=val?new Date(val).getTime():v106Default8PmDate().getTime();
-      }
-      if(!winner)throw new Error('اكتب اسم الفائز في '+v106Label(type));
-      if(!raw||ticket==='0000000')throw new Error('اكتب رقم تذكرة صحيح في '+v106Label(type));
-      if(!prize||prize<=0)throw new Error('اكتب قيمة الجائزة في '+v106Label(type));
-      if(!publishAt||Number.isNaN(publishAt))throw new Error('وقت العرض غير صحيح في '+v106Label(type));
+      if(!forceNow){const val=$('v108Publish_'+type)?.value||'';publishAt=val?new Date(val).getTime():v108Default8PmDate().getTime();}
+      if(!winner)throw new Error('اكتب اسم الفائز في '+v108Label(type));
+      if(!raw||ticket==='0000000')throw new Error('اكتب رقم تذكرة صحيح في '+v108Label(type));
+      if(!prize||prize<=0)throw new Error('اكتب قيمة الجائزة في '+v108Label(type));
+      if(!publishAt||Number.isNaN(publishAt))throw new Error('وقت العرض غير صحيح في '+v108Label(type));
       return {winnerName:winner,ticketNumber:ticket,prize,publishAt};
     }
-    function v106FillForm(type,r){
-      r=r||v106Current(type)||{};
-      const winner=$('v106Winner_'+type), ticket=$('v106Ticket_'+type), prize=$('v106Prize_'+type), pub=$('v106Publish_'+type);
+    function v108FillForm(type,r){
+      r=r||v108Current(type)||{};
+      const winner=$('v108Winner_'+type), ticket=$('v108Ticket_'+type), prize=$('v108Prize_'+type), pub=$('v108Publish_'+type);
       if(winner&&!winner.value)winner.value=r.winnerName||'';
-      if(ticket&&!ticket.value)ticket.value=r.ticketNumber?v106CleanTicket(r.ticketNumber):'';
-      if(prize&&!prize.value)prize.value=Number(r.prize||prizeFor(type)||0).toFixed(2);
-      if(pub&&!pub.value)pub.value=r.publishAt?v106LocalInputValue(new Date(Number(r.publishAt))):v106LocalInputValue(v106Default8PmDate());
+      if(ticket&&!ticket.value)ticket.value=r.ticketNumber?v108CleanTicket(r.ticketNumber):'';
+      if(prize&&!prize.value)prize.value=Number(r.prize||v108Prize(type)||0).toFixed(2);
+      if(pub&&!pub.value)pub.value=r.publishAt?v108LocalInputValue(new Date(Number(r.publishAt))):v108LocalInputValue(v108Default8PmDate());
     }
-    async function v106SaveScheduled(type,forceNow=false){
+    async function v108SaveScheduled(type,forceNow=false){
       if(!isAdminUser())return toast('للأدمن فقط');
-      let data;try{data=v106ReadAdminForm(type,forceNow)}catch(e){return toast(e.message||String(e))}
+      let data;try{data=v108ReadAdminForm(type,forceNow)}catch(e){return toast(e.message||String(e))}
       const now=Date.now();
-      const status=forceNow?'published':'scheduled';
-      const result={id:'v106_'+type+'_'+now,drawType:type,drawLabel:v106Label(type),winnerName:data.winnerName,ticketNumber:data.ticketNumber,prize:data.prize,status,publishAt:forceNow?now:data.publishAt,publishedAt:forceNow?now:0,createdAt:now,updatedAt:now,adminEmail:currentUser?.email||'',source:'v106_official_scheduled_results'};
+      const result={id:'v108_'+type+'_'+now,drawType:type,drawLabel:v108Label(type),winnerName:data.winnerName,ticketNumber:data.ticketNumber,prize:data.prize,status:forceNow?'published':'scheduled',publishAt:forceNow?now:data.publishAt,publishedAt:forceNow?now:0,createdAt:now,updatedAt:now,adminEmail:currentUser?.email||'',source:'v108_official_scheduled_results'};
       const updates={};
-      updates[V106_RESULTS_PATH+'/current/'+type]=result;
-      updates[V106_RESULTS_PATH+'/history/'+type+'/'+result.id]=result;
-      updates[V106_RESULTS_PATH+'/latest']=result;
-      try{
-        await update(ref(db),updates);
-        toast(forceNow?'تم عرض نتيجة '+v106Label(type)+' الآن':'تم حفظ وجدولة نتيجة '+v106Label(type)+' للعرض عند '+v106FormatTime(result.publishAt));
-        v106Results.current=v106Results.current||{};v106Results.current[type]=result;v106Results.latest=result;
-        v106RenderAdmin();v106RenderPublicResult();
-      }catch(e){console.error('V106 save failed',e);toast('فشل حفظ النتيجة: '+(e.code||e.message||e));}
+      updates[V108_RESULTS_PATH+'/current/'+type]=result;
+      updates[V108_RESULTS_PATH+'/history/'+type+'/'+result.id]=result;
+      updates[V108_RESULTS_PATH+'/latest']=result;
+      try{await update(ref(db),updates);toast(forceNow?'تم عرض نتيجة '+v108Label(type)+' الآن':'تم حفظ وجدولة نتيجة '+v108Label(type)+' للعرض عند '+v108FormatTime(result.publishAt));v108Results.current=v108Results.current||{};v108Results.current[type]=result;v108Results.latest=result;v108RenderAdmin();v108RenderPublicResult();}
+      catch(e){console.error('V108 save failed',e);toast('فشل حفظ النتيجة: '+(e.code||e.message||e));}
     }
-    async function v106Hide(type){
+    async function v108Hide(type){
       if(!isAdminUser())return toast('للأدمن فقط');
-      const r=v106Current(type);if(!r)return toast('لا توجد نتيجة لإخفائها في '+v106Label(type));
+      const r=v108Current(type);if(!r)return toast('لا توجد نتيجة لإخفائها في '+v108Label(type));
       const now=Date.now();const next={...r,status:'hidden',hiddenAt:now,updatedAt:now,adminEmail:currentUser?.email||''};
-      try{await update(ref(db),{[V106_RESULTS_PATH+'/current/'+type]:next,[V106_RESULTS_PATH+'/history/'+type+'/'+(next.id||('hidden_'+now))]:next});toast('تم إخفاء نتيجة '+v106Label(type));v106Results.current[type]=next;v106RenderAdmin();v106RenderPublicResult();}catch(e){toast('فشل الإخفاء: '+(e.code||e.message||e))}
+      try{await update(ref(db),{[V108_RESULTS_PATH+'/current/'+type]:next,[V108_RESULTS_PATH+'/history/'+type+'/'+(next.id||('hidden_'+now))]:next});toast('تم إخفاء نتيجة '+v108Label(type));v108Results.current[type]=next;v108RenderAdmin();v108RenderPublicResult();}catch(e){toast('فشل الإخفاء: '+(e.code||e.message||e))}
     }
-    function v106Set8(type){const el=$('v106Publish_'+type);if(el)el.value=v106LocalInputValue(v106Default8PmDate());toast('تم ضبط '+v106Label(type)+' على 8:00 مساءً بتوقيت تركيا')}
-    function v106StatusText(r,type){
+    function v108Set8(type){const el=$('v108Publish_'+type);if(el)el.value=v108LocalInputValue(v108Default8PmDate());toast('تم ضبط '+v108Label(type)+' على 8:00 مساءً بتوقيت تركيا')}
+    function v108StatusText(r,type){
       if(!r)return {cls:'hidden',text:'لا توجد نتيجة محفوظة لهذا السحب بعد.'};
       const st=String(r.status||'').toLowerCase();
       if(st==='hidden')return {cls:'hidden',text:'النتيجة مخفية عن المستخدمين.'};
-      if(st==='published')return {cls:'published',text:'منشورة الآن — الفائز: '+(r.winnerName||'')+' — التذكرة: #'+v106CleanTicket(r.ticketNumber)+' — الجائزة: '+money(r.prize||0)};
-      if(st==='scheduled'&&Number(r.publishAt||0)>Date.now())return {cls:'scheduled',text:'مجدولة ومخفية حتى: '+v106FormatTime(r.publishAt)+' — التذكرة محفوظة ولن تظهر قبل الوقت.'};
+      if(st==='published')return {cls:'published',text:'منشورة الآن — الفائز: '+(r.winnerName||'')+' — التذكرة: #'+v108CleanTicket(r.ticketNumber)+' — الجائزة: '+money(r.prize||0)};
+      if(st==='scheduled'&&Number(r.publishAt||0)>Date.now())return {cls:'scheduled',text:'مجدولة ومخفية حتى: '+v108FormatTime(r.publishAt)+' — التذكرة محفوظة ولن تظهر قبل الوقت.'};
       if(st==='scheduled')return {cls:'published',text:'وصل وقت العرض — النتيجة ظاهرة للمستخدمين الآن.'};
       return {cls:'scheduled',text:'حالة النتيجة: '+st};
     }
-    function v106RenderAdmin(){
-      V106_DRAW_TYPES.forEach(type=>{v106FillForm(type);const st=$('v106Status_'+type);if(st){const s=v106StatusText(v106Current(type),type);st.className='v106-status '+s.cls;st.textContent=s.text}});
-      const box=$('v106AdminResultsList');if(box){
-        const rows=[];const hist=v106Results.history||{};V106_DRAW_TYPES.forEach(type=>Object.values(hist[type]||{}).forEach(r=>rows.push(r)));Object.values(v106Results.current||{}).forEach(r=>{if(r&&!rows.find(x=>x.id===r.id))rows.push(r)});
-        rows.sort((a,b)=>Number(b.updatedAt||b.createdAt||0)-Number(a.updatedAt||a.createdAt||0));
-        if(!rows.length){box.innerHTML='<div class="admin-empty">لا يوجد سجل V106 بعد</div>'}else{box.innerHTML=rows.slice(0,40).map(r=>{const s=v106StatusText(r,r.drawType);return '<div class="admin-row"><div><h4>'+escapeHtml(v106Label(r.drawType))+' <span class="admin-badge '+(s.cls==='published'?'approved':(s.cls==='scheduled'?'pending':'rejected'))+'">'+escapeHtml(s.cls==='published'?'منشور':(s.cls==='scheduled'?'مجدول':'مخفي'))+'</span></h4><p>الفائز: '+escapeHtml(r.winnerName||'')+'<br>التذكرة: #'+escapeHtml(v106CleanTicket(r.ticketNumber))+' — الجائزة: '+escapeHtml(money(r.prize||0))+'<br>وقت العرض: '+escapeHtml(v106FormatTime(r.publishAt))+'</p></div><strong>'+escapeHtml(v106Label(r.drawType))+'</strong></div>'}).join('')}
-      }
+    function v108RenderAdmin(){
+      try{
+        V108_DRAW_TYPES.forEach(type=>{v108FillForm(type);const st=$('v108Status_'+type);if(st){const s=v108StatusText(v108Current(type),type);st.className='v108-status '+s.cls;st.textContent=s.text}});
+        const box=$('v108AdminResultsList');if(box){
+          const rows=[];const hist=v108Results.history||{};V108_DRAW_TYPES.forEach(type=>Object.values(hist[type]||{}).forEach(r=>rows.push(r)));Object.values(v108Results.current||{}).forEach(r=>{if(r&&!rows.find(x=>x.id===r.id))rows.push(r)});
+          rows.sort((a,b)=>Number(b.updatedAt||b.createdAt||0)-Number(a.updatedAt||a.createdAt||0));
+          if(!rows.length){box.innerHTML='<div class="admin-empty">لا يوجد سجل V108 بعد</div>'}else{box.innerHTML=rows.slice(0,40).map(r=>{const s=v108StatusText(r,r.drawType);return '<div class="admin-row"><div><h4>'+escapeHtml(v108Label(r.drawType))+' <span class="admin-badge '+(s.cls==='published'?'approved':(s.cls==='scheduled'?'pending':'rejected'))+'">'+escapeHtml(s.cls==='published'?'منشور':(s.cls==='scheduled'?'مجدول':'مخفي'))+'</span></h4><p>الفائز: '+escapeHtml(r.winnerName||'')+'<br>التذكرة: #'+escapeHtml(v108CleanTicket(r.ticketNumber))+' — الجائزة: '+escapeHtml(money(r.prize||0))+'<br>وقت العرض: '+escapeHtml(v108FormatTime(r.publishAt))+'</p></div><strong>'+escapeHtml(v108Label(r.drawType))+'</strong></div>'}).join('')}
+        }
+      }catch(e){console.warn('V108 admin render skipped',e)}
     }
-    function v106AttachAdminButtons(){
-      document.querySelectorAll('[data-v106-set8]').forEach(b=>{b.onclick=()=>v106Set8(b.dataset.v106Set8)});
-      document.querySelectorAll('[data-v106-save]').forEach(b=>{b.onclick=()=>v106SaveScheduled(b.dataset.v106Save,false)});
-      document.querySelectorAll('[data-v106-now]').forEach(b=>{b.onclick=()=>v106SaveScheduled(b.dataset.v106Now,true)});
-      document.querySelectorAll('[data-v106-hide]').forEach(b=>{b.onclick=()=>v106Hide(b.dataset.v106Hide)});
+    function v108AttachAdminButtons(){
+      document.querySelectorAll('[data-v108-set8]').forEach(b=>{b.onclick=()=>v108Set8(b.dataset.v108Set8)});
+      document.querySelectorAll('[data-v108-save]').forEach(b=>{b.onclick=()=>v108SaveScheduled(b.dataset.v108Save,false)});
+      document.querySelectorAll('[data-v108-now]').forEach(b=>{b.onclick=()=>v108SaveScheduled(b.dataset.v108Now,true)});
+      document.querySelectorAll('[data-v108-hide]').forEach(b=>{b.onclick=()=>v108Hide(b.dataset.v108Hide)});
     }
-    function v106Listen(){
-      if(v106ResultsUnsub)try{v106ResultsUnsub()}catch(e){}
-      v106ResultsUnsub=onValue(ref(db,V106_RESULTS_PATH),snap=>{v106Results=snap.val()||{current:{},history:{},latest:null};v106RenderAdmin();v106RenderPublicResult();},err=>{console.warn('V106 official results read failed',err);v106Results={current:{},history:{},latest:null};v106RenderAdmin();v106RenderPublicResult();});
+    function v108Listen(){
+      if(v108ResultsUnsub)try{v108ResultsUnsub()}catch(e){}
+      v108ResultsUnsub=onValue(ref(db,V108_RESULTS_PATH),snap=>{v108Results=snap.val()||{current:{},history:{},latest:null};v108RenderAdmin();v108RenderPublicResult();},err=>{console.warn('V108 official results read failed',err);v108Results={current:{},history:{},latest:null};v108RenderAdmin();v108RenderPublicResult();});
     }
-    function v106TickerMessage(r){
-      const drawName=v106Label(r.drawType||'daily');const winner=String(r.winnerName||'مستخدم ADNOR').trim();const ticket=v106CleanTicket(r.ticketNumber);const prizeText=money(r.prize||0);
-      return '<div class="v104-ticker-track"><span class="v106-ticker-kind">🏆 '+escapeHtml(drawName)+'</span><span>مبروك للفائز: <b class="v104-ticker-name">'+escapeHtml(winner)+'</b></span><span>رقم التذكرة: <b class="v104-ticker-ticket">#'+escapeHtml(ticket)+'</b></span><span>الجائزة: <b class="v104-ticker-prize">'+escapeHtml(prizeText)+'</b></span><span class="v104-ticker-muted">ADNOR — إعلان رسمي</span></div>';
+    function v108TickerMessage(r){
+      const drawName=v108Label(r.drawType||'daily');const winner=String(r.winnerName||'مستخدم ADNOR').trim();const ticket=v108CleanTicket(r.ticketNumber);const prizeText=money(r.prize||0);
+      return '<div class="v104-ticker-track"><span class="v108-ticker-kind">🏆 '+escapeHtml(drawName)+'</span><span>مبروك للفائز: <b class="v104-ticker-name">'+escapeHtml(winner)+'</b></span><span>رقم التذكرة: <b class="v104-ticker-ticket">#'+escapeHtml(ticket)+'</b></span><span>الجائزة: <b class="v104-ticker-prize">'+escapeHtml(prizeText)+'</b></span><span class="v104-ticker-muted">ADNOR — إعلان رسمي</span></div>';
     }
-    // Override old/duplicate result renderers so the public site reads only V106.
-    try{listenPublicDrawHistory=function(){v106Listen();};}catch(e){}
-    renderLatestDrawPublic=v106RenderPublicResult;
-    renderAllDrawResultsPublic=v106RenderAllResultsPublic;
-    renderV91LastResult=v106RenderPublicResult;
-    try{v93GetVisibleTickerResult=function(){return v106LatestVisibleResult()};v93ResultTickerMessage=v106TickerMessage;}catch(e){}
-    const __v106RenderAdminBase=renderAdmin;renderAdmin=function(){__v106RenderAdminBase();v106AttachAdminButtons();v106RenderAdmin();};
-    const __v106ShowPageBase=showPage;showPage=function(p){__v106ShowPageBase(p);if(p==='lottery'||p==='results')setTimeout(v106RenderPublicResult,40);if(p==='admin')setTimeout(()=>{v106AttachAdminButtons();v106RenderAdmin();},80)};
-    document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>setTimeout(v106RenderPublicResult,60)));
-    v106AttachAdminButtons();
-    onAuthStateChanged(auth,user=>{if(user)setTimeout(v106Listen,700)});
-    setInterval(()=>{try{v106RenderPublicResult();v106RenderAdmin();}catch(e){}},5000);
-    Object.assign(window,{v106SaveScheduled,v106Hide,v106Set8,v106RenderPublicResult,v106RenderAdmin});
+    try{listenPublicDrawHistory=function(){v108Listen();};}catch(e){}
+    try{renderLatestDrawPublic=v108RenderPublicResult;}catch(e){}
+    try{renderAllDrawResultsPublic=v108RenderAllResultsPublic;}catch(e){}
+    try{renderV91LastResult=v108RenderPublicResult;}catch(e){}
+    try{v93GetVisibleTickerResult=function(){return v108LatestVisibleResult()};v93ResultTickerMessage=v108TickerMessage;}catch(e){}
+    const __v108ShowPageBase=showPage;showPage=function(p){__v108ShowPageBase(p);if(p==='lottery'||p==='results')setTimeout(v108RenderPublicResult,40);if(p==='admin')setTimeout(()=>{v108AttachAdminButtons();v108RenderAdmin();},80)};
+    document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>setTimeout(v108RenderPublicResult,60)));
+    v108AttachAdminButtons();
+    onAuthStateChanged(auth,user=>{if(user)setTimeout(v108Listen,700)});
+    setInterval(()=>{try{v108RenderPublicResult();v108RenderAdmin();}catch(e){}},5000);
+    Object.assign(window,{v108SaveScheduled,v108Hide,v108Set8,v108RenderPublicResult,v108RenderAdmin});
 
 
     Object.assign(window,{claimDailyLogin,adminSaveDailyLoginSettings,openDailyLoginModal,closeDailyLoginModal});

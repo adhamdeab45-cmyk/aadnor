@@ -737,9 +737,10 @@
     animation:v105TickerMove 34s linear infinite!important;
     will-change:transform!important;
   }
+  /* V116: true reverse for the visible official ticker — moves left to right */
   @keyframes v105TickerMove{
-    0%{transform:translateX(0)}
-    100%{transform:translateX(-100%)}
+    0%{transform:translateX(-100%)}
+    100%{transform:translateX(0)}
   }
 
   /* 2) Header: balance becomes a small capsule beside the bell and before ADNOR. */
@@ -877,7 +878,7 @@
 .v108-old-result-note{border:1px dashed rgba(255,205,74,.28);border-radius:18px;padding:10px;margin-top:12px;color:#cbd5e1;background:rgba(255,205,74,.04);font-size:12px;font-weight:900;line-height:1.7}
 </style>
 
-  <meta name="adnor-version" content="V114_CLEAN_STABLE_RESCUE">
+  <meta name="adnor-version" content="V116_TOP_TICKER_TRUE_REVERSE">
 </head>
 <body>
   <div class="aurora"></div>

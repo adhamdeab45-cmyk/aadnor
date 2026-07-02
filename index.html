@@ -605,7 +605,7 @@
         <button class="gold-btn big" id="continueBtn">المتابعة الآمنة</button>
         <div class="or">أو</div>
         <button class="google-btn" id="googleBtn"><span class="g-logo"></span><span>المتابعة عبر Google</span></button>
-        <div class="secure"><div class="shield">🛡️</div><div><h3>ADNOR Secure</h3><p>جميع البيانات والأرصدة محفوظة داخل Firebase بشكل آمن ومنظم.</p></div><div class="lock">🔒</div></div>
+        <div class="secure"><div class="shield">🛡️</div><div><h3>ADNOR Secure</h3><p>جميع البيانات والأرصدة محفوظة داخل نظام ADNOR الآمن.</p></div><div class="lock">🔒</div></div>
       </section>
     </div>
   </main>
@@ -677,7 +677,7 @@
           <div class="home-tile"><span>إشعارات جديدة</span><b id="homeNotifText">0</b></div>
           <div class="home-tile"><span>حالة الحساب</span><b id="homeStatusText">نشط</b></div>
         </div>
-        <section class="royal-card home-section-clean"><div class="section-title"><h3>آخر نتيجة</h3><span>تظهر النتائج المنشورة فقط</span></div><div class="draw-list"><div class="draw-item"><div class="medal">🏆</div><div><h4 id="homeLastResultTitle">بانتظار أول نتيجة</h4><p id="homeLastResultSub">بعد نشر السحب من الإدارة ستظهر هنا.</p></div><strong id="homeLastResultPrize">$0</strong></div></div></section>
+        <section class="royal-card home-section-clean"><div class="section-title"><h3>آخر نتيجة</h3><span>تظهر النتائج المنشورة فقط</span></div><div class="draw-list"><div class="draw-item"><div class="medal">🏆</div><div><h4 id="homeLastResultTitle">بانتظار أول نتيجة</h4><p id="homeLastResultSub">بانتظار نشر النتيجة الرسمية.</p></div><strong id="homeLastResultPrize">$0</strong></div></div></section>
         <section class="royal-card home-section-clean"><div class="section-title"><h3>اختصارات منظمة</h3><span>كل شيء صار في مكانه الصحيح</span></div><div class="feature-grid"><button class="feature vip-home-highlight" data-home-go="vip"><div>👑</div><b>VIP الملكي</b><span>مستويات، مهام يومية، وصندوق جوائز</span></button><button class="feature" data-home-go="results"><div>🏆</div><b>النتائج وتذاكري</b><span>سجل التذاكر والنتائج</span></button><button class="feature" data-home-go="support"><div>💬</div><b>الدعم الفني</b><span>واتساب، تليجرام، وتذاكر الدعم</span></button></div></section>
       </div>
 
@@ -749,14 +749,14 @@
       </div>
 
       <div id="page-results" class="page">
-        <section class="jackpot"><div class="label">نتائج ADNOR الرسمية</div><div class="amount">RESULTS</div><div class="drawname">آخر النتائج وتذاكرك محفوظة داخل Firebase</div></section>
+        <section class="jackpot"><div class="label">نتائج ADNOR الرسمية</div><div class="amount">RESULTS</div><div class="drawname">آخر النتائج وتذاكرك محفوظة داخل نظام ADNOR</div></section>
         <div class="result-summary-grid">
           <div class="result-summary"><b id="resultsPublishedCount">0</b><span>نتائج منشورة</span></div>
           <div class="result-summary"><b id="myTicketsTotalText">0</b><span>إجمالي تذاكري</span></div>
           <div class="result-summary"><b id="myTicketsActiveText">0</b><span>تذاكر نشطة</span></div>
           <div class="result-summary"><b id="myTicketsWonText">0</b><span>تذاكر رابحة</span></div>
         </div>
-        <section class="royal-card"><div class="section-title"><h3>آخر نتائج السحوبات</h3><span>المنشورة فقط</span></div><div class="draw-list" id="allDrawResultsList"><div class="draw-item"><div class="medal">🏆</div><div><h4>لا توجد نتائج بعد</h4><p>عند نشر نتيجة من الأدمن ستظهر هنا.</p></div><strong>$0</strong></div></div></section>
+        <section class="royal-card"><div class="section-title"><h3>آخر نتائج السحوبات</h3><span>المنشورة فقط</span></div><div class="draw-list" id="allDrawResultsList"><div class="draw-item"><div class="medal">🏆</div><div><h4>لا توجد نتائج بعد</h4><p>بانتظار نشر النتيجة الرسمية.</p></div><strong>$0</strong></div></div></section>
         <section class="royal-card"><div class="section-title"><h3>سجل تذاكري</h3><span>كل تذكرة وحالتها</span></div><div class="ticket-filter"><button class="active" data-ticket-filter="all">الكل</button><button data-ticket-filter="active">نشطة</button><button data-ticket-filter="winner">فائزة</button><button data-ticket-filter="moved">منقولة</button><button data-ticket-filter="lost">منتهية</button></div><div class="draw-list" id="myTicketsList"><div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر بعد</h4><p>اشترِ تذكرة من صفحة اليانصيب لتظهر هنا.</p></div><strong>0</strong></div></div></section>
       </div>
 
@@ -804,7 +804,7 @@
             <div class="method-details v68-method-details v69-method-details hidden" id="withdrawMethodDetails">اختر طريقة سحب لعرض التفاصيل.</div>
             <div class="v69-form-block hidden" id="withdrawFormBlock">
               <div class="v69-step-head"><b>3</b><div><h4>أدخل بيانات الاستلام</h4><p>هنا تكتب عنوانك أنت أو رقمك أو حسابك البنكي ليصل الطلب للأدمن/المالية.</p></div></div>
-              <div class="v70-withdraw-guide" id="withdrawReceiverHint"><b>اختر طريقة السحب أولًا</b>بعد اختيار USD أو ShamCash أو حساب بنكي ستظهر هنا التعليمات الدقيقة للبيانات المطلوبة.</div>
+              <div class="v70-withdraw-guide" id="withdrawReceiverHint"><b>اختر طريقة السحب أولًا</b>بعد اختيار طريقة السحب تظهر التعليمات الدقيقة للبيانات المطلوبة.</div>
               <div class="fields v68-wallet-fields v69-wallet-fields v70-wallet-fields">
                 <div class="field-wrap"><label>المبلغ المراد سحبه</label><div class="field"><span class="ico">💸</span><input id="withdrawAmount" type="number" min="1" placeholder="مثال: 5"></div></div>
                 <div class="field-wrap"><label id="withdrawDetailsLabel">عنوان/بيانات الاستلام</label><div class="field" style="height:116px"><span class="ico">🧾</span><textarea id="withdrawDetails" placeholder="اكتب بيانات الاستلام هنا"></textarea></div></div>
@@ -828,8 +828,8 @@
             <section class="game-card games-choice-card v76-hidden-game-box"><div class="game-icon">🎁</div><div><h3>صندوق الحظ اليومي</h3><p>تم نقله إلى زر التسجيل اليومي فوق الموقع.</p><button class="dark-btn" id="dailyBoxBtn">افتح الصندوق</button><div class="wheel-result games-box-status" id="dailyBoxText">صندوق الحظ صار ضمن التسجيل اليومي.</div></div></section>
           </div>
           <section class="v94-game-center-card" id="v94GameCenterSection">
-            <div class="section-title"><h3>ألعاب ADNOR الإضافية</h3><span>تظهر هنا الألعاب التي تضيفها الإدارة</span></div>
-            <div class="v94-game-grid" id="v94CustomGamesGrid"><div class="admin-empty">جارٍ تحميل الألعاب...</div></div>
+            <div class="section-title"><h3>ألعاب ADNOR الإضافية</h3><span>الألعاب المتاحة داخل ADNOR</span></div>
+            <div class="v94-game-grid" id="v94CustomGamesGrid"><div class="admin-empty">جارٍ تجهيز الألعاب...</div></div>
           </section>
         </div>
         <section class="royal-card hidden wheel-only-card" id="wheelPlayCard">
@@ -882,7 +882,7 @@
       </div>
 
       <div id="page-support" class="page">
-        <section class="support-hero"><div class="big-icon">💬</div><h2>الدعم الفني الملكي</h2><p>ارسل مشكلتك أو طلبك للإدارة، وسيتم حفظ التذكرة داخل Firebase مع إشعار للأدمن.</p></section>
+        <section class="support-hero"><div class="big-icon">💬</div><h2>الدعم الفني الملكي</h2><p>أرسل مشكلتك أو طلبك للإدارة، وسيتم حفظ التذكرة وإشعار الأدمن مباشرة.</p></section>
         <div class="contact-grid" id="supportContactsGrid"><a class="contact-card" href="https://wa.me/905359334785" target="_blank" rel="noopener"><i>🟢</i><b>WhatsApp</b><span>0535 933 47 85</span></a><a class="contact-card" href="https://t.me/ADNOR1" target="_blank" rel="noopener"><i>🔵</i><b>Telegram</b><span>@ADNOR1</span></a></div>
         <section class="royal-card">
           <div class="section-title"><h3>إرسال تذكرة دعم جديدة</h3><span>حفظ مباشر</span></div>
@@ -894,7 +894,7 @@
           <button class="gold-btn" id="sendSupportBtn">إرسال التذكرة</button>
         </section>
         <section class="royal-card"><div class="section-title"><h3>تذاكري السابقة</h3><span id="supportCountText">0</span></div><div class="support-ticket-list" id="supportTicketsList"><div class="ticket-card"><div class="ticket-top"><h4>لا توجد تذاكر بعد</h4><span class="badge">فارغ</span></div><p>أي طلب دعم ترسله سيظهر هنا مع حالته.</p></div></div></section>
-        <section class="royal-card"><div class="section-title"><h3>أسئلة مهمة</h3><span>اللعب المسؤول</span></div><div class="faq-list"><div class="faq-item"><b>هل يمكن تعديل الرصيد من F12؟</b><p>لا. الرصيد الحقيقي محفوظ داخل Firebase وليس داخل المتصفح فقط، وأي عملية يتم تسجيلها في سجل العمليات.</p></div><div class="faq-item"><b>هل المنصة مناسبة لمن هم دون 18؟</b><p>لا. ADNOR مخصص لمن هم 18 عامًا أو أكثر فقط، مع قواعد لعب مسؤول وحدود استخدام.</p></div><div class="faq-item"><b>هل البونص قابل للسحب؟</b><p>البونص مخصص للعب فقط. الأرباح الناتجة عنه تتبع قواعد الإدارة قبل التحويل إلى رصيد حقيقي.</p></div><div class="faq-item"><b>متى تتم مراجعة الإيداع والسحب؟</b><p>كل طلب يظهر للأدمن داخل لوحة الإدارة، ويتم قبوله أو رفضه مع سبب واضح.</p></div></div></section>
+        <section class="royal-card"><div class="section-title"><h3>أسئلة مهمة</h3><span>اللعب المسؤول</span></div><div class="faq-list"><div class="faq-item"><b>هل يمكن تعديل الرصيد من F12؟</b><p>لا. الرصيد الحقيقي محفوظ داخل نظام ADNOR وليس داخل المتصفح فقط، وكل عملية يتم تسجيلها في سجل العمليات.</p></div><div class="faq-item"><b>هل المنصة مناسبة لمن هم دون 18؟</b><p>لا. ADNOR مخصص لمن هم 18 عامًا أو أكثر فقط، مع قواعد لعب مسؤول وحدود استخدام.</p></div><div class="faq-item"><b>هل البونص قابل للسحب؟</b><p>البونص مخصص للعب فقط. الأرباح الناتجة عنه تتبع قواعد الإدارة قبل التحويل إلى رصيد حقيقي.</p></div><div class="faq-item"><b>متى تتم مراجعة الإيداع والسحب؟</b><p>كل طلب يظهر للأدمن داخل لوحة الإدارة، ويتم قبوله أو رفضه مع سبب واضح.</p></div></div></section>
       </div>
       <div id="page-account" class="page">
         <section class="jackpot"><div class="label">حسابي</div><div class="amount">MY ADNOR</div><div class="drawname" id="accountInfo">ملفك الملكي، الدعوات، والحماية.</div></section>
@@ -922,7 +922,7 @@
               <button class="copy-btn" id="copyRefLinkTopBtn">نسخ رابط الدعوة</button>
               <button class="account-danger-btn" id="logoutAccountBtn">تسجيل الخروج</button>
             </div>
-            <div class="admin-lock-note">يتم حفظ الاسم في Firebase ويظهر في التذاكر، الدعم، والإيداع والسحب.</div>
+            <div class="admin-lock-note">يتم حفظ الاسم في حسابك ويظهر في التذاكر، الدعم، والإيداع والسحب.</div>
           </section>
         </div>
         <section class="royal-card">
@@ -1042,7 +1042,7 @@
             <section class="admin-section" id="admin-section-draws">
               <div class="admin-wide-card">
                 <div class="admin-section-head"><h3>السحوبات / اليانصيب</h3><span>تحكم كامل بالسعر والجوائز والتنفيذ</span></div>
-                <div class="hint">هنا تتحكم بسعر التذكرة، قيمة جوائز اليومي/الأسبوعي/الشهري/السنوي، ونقل التذاكر غير الرابحة للسحب التالي. كل نتيجة تحفظ داخل Firebase بسجل إداري واضح، ولا يوجد اختيار عشوائي.</div>
+                <div class="hint">هنا تتحكم بسعر التذكرة، قيمة جوائز اليومي/الأسبوعي/الشهري/السنوي، ونقل التذاكر غير الرابحة للسحب التالي. كل نتيجة تحفظ بسجل إداري واضح ومنظم.</div>
                 <div class="admin-mini-stats" id="adminDrawStats"></div>
               </div>
               <div class="admin-wide-card">
@@ -1090,7 +1090,7 @@
                   <div class="admin-actions"><button class="bad" onclick="adminForceLastResultBoxNow()">تحديث المربع مباشرة</button><button class="ok" onclick="adminPublishResultBox('direct')">نشر + حفظ بالسجل</button><button class="blue" onclick="adminPublishResultBox('schedule')">جدولة للمربع</button><button class="blue" onclick="prefillResultBoxPrize()">تعبئة الجائزة الحالية</button></div>
                 </div>
                 <div class="admin-v91-result-box">
-                  <div class="admin-section-head"><h3>V91 — نشر النتيجة في مكان جديد</h3><span>بطاقة مستقلة تحت كرت الجائزة</span></div>
+                  <div class="admin-section-head"><h3>نشر نتيجة السحب الرسمية</h3><span>تظهر النتيجة للمستخدم بعد النشر أو عند موعد الجدولة</span></div>
                   <div class="hint">استعمل هذا القسم بدل المربع القديم. هذه النتيجة تظهر في بطاقة جديدة داخل صفحة اليانصيب، ولا تعتمد على الكود القديم الذي كان معلّقًا.</div>
                   <div class="admin-form-grid">
                     <div class="field-wrap"><label>نوع السحب</label><div class="field"><span class="ico">🏆</span><select id="v91DrawType"><option value="daily">اليومي</option><option value="weekly">الأسبوعي</option><option value="monthly">الشهري</option><option value="yearly">السنوي</option></select></div></div>
@@ -1107,7 +1107,7 @@
             <section class="admin-section" id="admin-section-games">
               <div class="admin-wide-card">
                 <div class="admin-section-head"><h3>الألعاب والعجلة</h3><span>تحكم كامل بالعجلة وصندوق الحظ</span></div>
-                <div class="hint">V94 — مركز الألعاب: أضف ألعاب جديدة تظهر في صفحة الألعاب وتلعب من الرصيد الحقيقي أو البونص مثل عجلة الحظ.</div>
+                <div class="hint">أضف ألعابًا جديدة تظهر في صفحة الألعاب وتلعب من الرصيد الحقيقي أو البونص مثل عجلة الحظ.</div>
                 <div class="admin-section-head" style="margin-top:14px"><h3>إضافة / تعديل لعبة</h3><span>اللعبة تظهر للمستخدم فور حفظها إذا كانت مفعلة</span></div>
                 <div class="admin-form-grid">
                   <div class="field-wrap"><label>معرّف اللعبة</label><div class="field"><span class="ico">🆔</span><input id="v94GameIdInput" placeholder="cake_luck"></div></div>
@@ -1122,7 +1122,7 @@
                   <div class="field-wrap"><label>قبول الرصيد الحقيقي</label><div class="field"><span class="ico">💵</span><select id="v94GameRealInput"><option value="true">نعم</option><option value="false">لا</option></select></div></div>
                 </div>
                 <div class="field-wrap"><label>وصف اللعبة</label><div class="field"><span class="ico">📝</span><input id="v94GameDescInput" placeholder="لعبة حظ بسيطة مربوطة بالمحفظة"></div></div>
-                <div class="admin-actions"><button class="ok" id="v94SaveGameBtn" type="button">حفظ اللعبة</button><button class="blue" id="v94SeedGameBtn" type="button">إضافة لعبة كيك الحظ كتجربة</button><button class="bad" id="v94DeleteGameBtn" type="button">حذف اللعبة</button></div>
+                <div class="admin-actions"><button class="ok" id="v94SaveGameBtn" type="button">حفظ اللعبة</button><button class="blue" id="v94SeedGameBtn" type="button">إضافة لعبة جاهزة</button><button class="bad" id="v94DeleteGameBtn" type="button">حذف اللعبة</button></div>
                 <div class="admin-section-head" style="margin-top:14px"><h3>الألعاب المضافة</h3><span>تشغيل — إيقاف — تعديل</span></div>
                 <div class="admin-table v94-admin-list" id="v94AdminGamesList"><div class="admin-empty">لا توجد ألعاب مضافة بعد.</div></div>
                 <div class="admin-section-head" style="margin-top:14px"><h3>سجل الألعاب الإضافية</h3><span>آخر جولات اللاعبين</span></div>
@@ -1156,7 +1156,7 @@
             <section class="admin-section" id="admin-section-vipadmin">
               <div class="admin-wide-card">
                 <div class="admin-section-head"><div class="head-title"><h3>نظام VIP الملكي</h3><span>مستويات — نقاط — مهام يومية — صندوق جوائز</span></div><button class="blue" id="saveVipSettingsBtn">حفظ إعدادات VIP</button></div>
-                <div class="hint">هذه الإعدادات محفوظة داخل Firebase. المستخدم يشاهد مستواه، يفتح الصندوق اليومي، ويطالب بمكافآت المهام حسب هذه القيم.</div>
+                <div class="hint">هذه الإعدادات محفوظة داخل نظام ADNOR. المستخدم يشاهد مستواه ويفتح الصندوق اليومي ويطالب بمكافآت المهام حسب هذه القيم.</div>
                 <div class="fields vip-admin-grid">
                   <div class="field-wrap"><label>تشغيل نظام VIP</label><div class="field"><span class="ico">👑</span><select id="vipEnabledInput"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div></div>
                   <div class="field-wrap"><label>نقاط مهمة يومية</label><div class="field"><span class="ico">⭐</span><input id="vipTaskPointsInput" type="number" min="0" step="1"></div></div>
@@ -1221,7 +1221,7 @@
               </div>
             </section>
             <section class="admin-section" id="admin-section-notifications">
-              <div class="admin-wide-card"><div class="admin-section-head"><h3>الإشعارات</h3><span>آخر الأحداث + Gmail Queue</span></div><p class="hint">طلبات الإيداع والسحب والدعم تُحفظ أيضًا داخل gmail_alerts ليتم إرسالها إلى Gmail عبر Firebase Function.</p><div class="admin-note-list" id="adminNotificationsList"><div class="admin-empty">لا توجد إشعارات بعد</div></div></div>
+              <div class="admin-wide-card"><div class="admin-section-head"><h3>الإشعارات</h3><span>آخر الأحداث + Gmail Queue</span></div><p class="hint">طلبات الإيداع والسحب والدعم تُحفظ في مركز الإشعارات الإداري.</p><div class="admin-note-list" id="adminNotificationsList"><div class="admin-empty">لا توجد إشعارات بعد</div></div></div>
             </section>
             <section class="admin-section" id="admin-section-aiadmin">
               <div class="admin-wide-card">
@@ -1387,7 +1387,7 @@
             <section class="admin-section" id="admin-section-backups">
               <div class="admin-wide-card">
                 <div class="admin-section-head"><div class="head-title"><h3>النسخ الاحتياطي والاستيراد</h3><span>حفظ نسخة آمنة من بيانات ADNOR قبل أي تحديث كبير</span></div></div>
-                <div class="hint">هذه الصفحة للأدمن فقط. استخدمها قبل رفع أي نسخة جديدة: نزّل نسخة JSON واحفظ نسخة داخل Firebase. الاستيراد هنا يحفظ نسخة للمراجعة داخل مسار آمن ولا يستبدل بيانات الموقع مباشرة.</div>
+                <div class="hint">هذه الصفحة للأدمن فقط. استخدمها قبل رفع أي نسخة جديدة: نزّل نسخة JSON واحفظ نسخة داخل نظام ADNOR. الاستيراد هنا يحفظ نسخة للمراجعة داخل مسار آمن ولا يستبدل بيانات الموقع مباشرة.</div>
                 <div class="admin-grid" style="margin-bottom:12px">
                   <div class="admin-stat"><span>آخر نسخة</span><b id="backupLastAt">—</b></div>
                   <div class="admin-stat"><span>عدد النسخ</span><b id="backupCount">0</b></div>
@@ -1395,7 +1395,7 @@
                   <div class="admin-stat"><span>حالة الأمان</span><b>أدمن فقط</b></div>
                 </div>
                 <div class="admin-form-actions">
-                  <button class="gold-btn" id="createBackupBtn" type="button">حفظ نسخة داخل Firebase</button>
+                  <button class="gold-btn" id="createBackupBtn" type="button">حفظ نسخة داخل النظام</button>
                   <button class="copy-btn" id="downloadBackupBtn" type="button">تنزيل نسخة JSON الآن</button>
                   <label class="copy-btn" style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer">اختيار ملف JSON للاستيراد<input id="backupImportFile" type="file" accept="application/json,.json" style="display:none"></label>
                   <button class="admin-mini-btn" id="importBackupBtn" type="button">استيراد للمراجعة</button>
@@ -1452,8 +1452,8 @@
           <div class="result-summary"><b id="notifUnreadCount">0</b><span>غير مقروءة</span></div>
           <div class="result-summary"><b id="notifTodayCount">0</b><span>اليوم</span></div>
         </div>
-        <section class="royal-card"><div class="section-title"><h3>إشعاراتي</h3><span>مباشر من Firebase</span></div>
-          <div class="notification-actions"><span class="hint" style="margin:0;flex:1">ستظهر هنا نتائج الإيداع والسحب والدعم والفوز والبونص.</span><button class="mini-btn" id="markReadBtn" type="button">تحديد الكل كمقروء</button></div>
+        <section class="royal-card"><div class="section-title"><h3>إشعاراتي</h3><span>مباشر من النظام</span></div>
+          <div class="notification-actions"><span class="hint" style="margin:0;flex:1">تظهر هنا إشعارات الإيداع والسحب والدعم والفوز والبونص.</span><button class="mini-btn" id="markReadBtn" type="button">تحديد الكل كمقروء</button></div>
           <div class="notification-list" id="userNotificationsList"><div class="admin-empty">لا توجد إشعارات بعد</div></div>
         </section>
       </div>
@@ -1626,7 +1626,7 @@ function setCurrentPrize(type){
         setText('lastPrizeText','$0');
         setLastDigits('0000000');
         setText('homeLastResultTitle','بانتظار أول نتيجة');
-        setText('homeLastResultSub','بعد نشر السحب من الإدارة ستظهر هنا.');
+        setText('homeLastResultSub','بانتظار نشر النتيجة الرسمية.');
         setText('homeLastResultPrize','$0');
       }
       renderAllDrawResultsPublic()
@@ -2769,7 +2769,7 @@ function setCurrentPrize(type){
         console.error('ai fallback support save failed',e2);
       }
       if(savedMain||savedFallback)return true;
-      toast('لم يتم حفظ السؤال. تأكد من نشر قواعد Firebase V58 ثم جرّب مرة ثانية.');
+      toast('لم يتم حفظ السؤال. تأكد من تحديث قواعد قاعدة البيانات ثم جرّب مرة ثانية.');
       return false;
     }
     async function saveAiKnowledgeFromForm(){if(!isAdminUser())return;const q=($('aiAdminQuestionInput')?.value||'').trim();const ans=($('aiAdminAnswerInput')?.value||'').trim();const keys=($('aiAdminKeysInput')?.value||'').split(',').map(x=>x.trim()).filter(Boolean);if(!q||!ans)return toast('اكتب السؤال والجواب أولًا');const id='k_'+Date.now();const now=Date.now();await set(ref(db,'ai_knowledge/'+id),{id,question:q,answer:ans,keys:keys.length?keys:aiTokens(q),active:true,createdAt:now,updatedAt:now,adminEmail:currentUser.email||''});await update(ref(db),{['finance_audit/'+now]:{action:'ai_answer_saved',question:q,adminEmail:currentUser.email||'',createdAt:now}});clearAiForm();toast('تم تعليم المساعد وحفظ الجواب')}
@@ -2891,7 +2891,7 @@ function setCurrentPrize(type){
       {title:'الدعم الفني',keys:['دعم','مشكلة','تذكرة','مساعدة'],answer:'إذا واجهتك مشكلة، افتح صفحة الدعم الفني، اختر القسم، اكتب عنوان الطلب والتفاصيل، ثم أرسل التذكرة. يمكن متابعة الرد من صفحة الدعم والإشعارات.'}
     ];
     function aiEscape(s){return String(s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
-    async function aiReply(q){const text=(q||'').trim();if(!text)return 'اكتب سؤالك أولًا.';const best=findAiBestAnswer(text);if(best)return best.answer;const saved=await saveUnansweredAiQuestion(text);return saved?'هذا سؤال جديد ولم أجد له جوابًا محفوظًا بعد. تم حفظ السؤال داخل لوحة الإدارة في قسم المساعد الذكي، وبعد أن تضيف الإدارة الجواب مرة واحدة سأجيب عليه تلقائيًا في المرات القادمة.':'هذا سؤال جديد، لكن لم أستطع حفظه الآن داخل الأدمن. يرجى المحاولة بعد تحديث قواعد Firebase.'}
+    async function aiReply(q){const text=(q||'').trim();if(!text)return 'اكتب سؤالك أولًا.';const best=findAiBestAnswer(text);if(best)return best.answer;const saved=await saveUnansweredAiQuestion(text);return saved?'هذا سؤال جديد ولم أجد له جوابًا محفوظًا بعد. تم حفظ السؤال داخل لوحة الإدارة في قسم المساعد الذكي، وبعد أن تضيف الإدارة الجواب مرة واحدة سأجيب عليه تلقائيًا في المرات القادمة.':'هذا سؤال جديد، لكن لم أستطع حفظه الآن داخل الأدمن. يرجى المحاولة بعد تحديث قواعد قاعدة البيانات.'}
     function aiAddMessage(type,msg){const log=$('aiChatLog');if(!log)return;const div=document.createElement('div');div.className='ai-msg '+type;div.innerHTML=aiEscape(msg);log.appendChild(div);log.scrollTop=log.scrollHeight}
     async function aiAsk(q){const question=(q||$('aiQuestionInput')?.value||'').trim();if(!question)return toast('اكتب سؤالًا أولًا');aiAddMessage('user',question);if($('aiQuestionInput'))$('aiQuestionInput').value='';aiAddMessage('bot','جاري تحليل السؤال داخل مساعد ADNOR...');const log=$('aiChatLog');const pending=log?.lastElementChild;try{const ans=await aiReply(question);if(pending)pending.innerHTML=aiEscape(ans);else aiAddMessage('bot',ans)}catch(e){console.error(e);if(pending)pending.innerHTML=aiEscape('تعذر حفظ السؤال الآن. حاول مرة ثانية أو افتح تذكرة دعم.');}}
     if($('aiAskBtn'))$('aiAskBtn').onclick=()=>aiAsk();
@@ -3072,7 +3072,7 @@ function setCurrentPrize(type){
         v91SetDigits('v91ResultDigits','0000000');
         setText('v91ResultWinner','بانتظار نشر نتيجة رسمية من الإدارة');
         setText('v91ResultPrize','$0.00');
-        setText('v91ResultNote','من الأدمن افتح السحوبات ثم V91 — نشر النتيجة في مكان جديد.');
+        setText('v91ResultNote','من الأدمن افتح السحوبات ثم نشر نتيجة السحب الرسمية.');
         return;
       }
       const num=v91CleanNumber(r.ticketNumber||r.winningNumber||r.number);
@@ -3113,7 +3113,7 @@ function setCurrentPrize(type){
         v91LastResults.current=v91LastResults.current||{};
         v91LastResults.current[drawType]=result; v91LastResults.latest=result;
         renderV91LastResult();
-      }catch(e){console.error('V91 publish failed',e);toast('فشل نشر V91: '+(e.code||e.message||e));}
+      }catch(e){console.error('V91 publish failed',e);toast('فشل نشر النتيجة: '+(e.code||e.message||e));}
     }
     function v92ReadResultForm(){
       const drawType=$('v91DrawType')?.value||'daily';
@@ -3176,7 +3176,7 @@ function setCurrentPrize(type){
 
 
 
-    /* V93: ربط الشريط العلوي بنتيجة السحب المنشورة أو المجدولة الساعة 8 */
+    /* ربط الشريط العلوي بنتيجة السحب المنشورة أو المجدولة */
     function v93GetVisibleTickerResult(){
       try{
         const r=(typeof v91PickResult==='function')?v91PickResult():null;
@@ -3242,7 +3242,7 @@ function setCurrentPrize(type){
     function v94GamesArray(){return Object.values(v94Games||{}).filter(g=>g&&typeof g==='object').sort((a,b)=>Number(a.order||0)-Number(b.order||0)||String(a.name||'').localeCompare(String(b.name||''),'ar'))}
     function v94NormalizeGame(g){g=g||{};return {id:v94CleanGameId(g.id||g.key),name:String(g.name||'لعبة ADNOR'),icon:String(g.icon||'🎮').slice(0,4),desc:String(g.desc||'لعبة مربوطة بالرصيد داخل ADNOR'),enabled:g.enabled!==false,minBet:Math.max(.1,Number(g.minBet||1)),maxBet:Math.max(.1,Number(g.maxBet||100)),winChance:Math.max(0,Math.min(100,Number(g.winChance??35))),multiplier:Math.max(0,Number(g.multiplier||2)),acceptBonus:g.acceptBonus!==false,acceptReal:g.acceptReal!==false,order:Number(g.order||10),updatedAt:g.updatedAt||Date.now(),updatedBy:g.updatedBy||''}}
     function v94RenderGames(){
-      const grid=$('v94CustomGamesGrid'); if(grid){const list=v94GamesArray().filter(g=>g.enabled!==false); if(!list.length){grid.innerHTML='<div class="admin-empty">لا توجد ألعاب مفعلة من الإدارة بعد.</div>'}else{grid.innerHTML=list.map(g=>'<section class="v94-game-card"><div class="v94-icon">'+escapeHtml(g.icon||'🎮')+'</div><div><h3>'+escapeHtml(g.name||'لعبة')+'</h3><p>'+escapeHtml(g.desc||'لعبة ADNOR')+'<br>اللعب من '+(g.acceptBonus?'البونص ':'')+(g.acceptReal?'والرصيد الحقيقي':'')+' — من '+money(g.minBet)+' إلى '+money(g.maxBet)+'</p><button class="dark-btn" onclick="openV94Game(\''+escapeHtml(g.id)+'\')">افتح اللعبة</button></div></section>').join('')}}
+      const grid=$('v94CustomGamesGrid'); if(grid){const list=v94GamesArray().filter(g=>g.enabled!==false); if(!list.length){grid.innerHTML='<div class="admin-empty">لا توجد ألعاب متاحة حاليًا.</div>'}else{grid.innerHTML=list.map(g=>'<section class="v94-game-card"><div class="v94-icon">'+escapeHtml(g.icon||'🎮')+'</div><div><h3>'+escapeHtml(g.name||'لعبة')+'</h3><p>'+escapeHtml(g.desc||'لعبة ADNOR')+'<br>اللعب من '+(g.acceptBonus?'البونص ':'')+(g.acceptReal?'والرصيد الحقيقي':'')+' — من '+money(g.minBet)+' إلى '+money(g.maxBet)+'</p><button class="dark-btn" onclick="openV94Game(\''+escapeHtml(g.id)+'\')">افتح اللعبة</button></div></section>').join('')}}
       v94RenderAdminGames();
     }
     function v94FillAdminForm(g){g=v94NormalizeGame(g||v94DefaultGame);$('v94GameIdInput').value=g.id;$('v94GameNameInput').value=g.name;$('v94GameIconInput').value=g.icon;$('v94GameDescInput').value=g.desc;$('v94GameEnabledInput').value=g.enabled?'true':'false';$('v94GameMinBetInput').value=g.minBet;$('v94GameMaxBetInput').value=g.maxBet;$('v94GameChanceInput').value=g.winChance;$('v94GameMultiplierInput').value=g.multiplier;$('v94GameBonusInput').value=g.acceptBonus?'true':'false';$('v94GameRealInput').value=g.acceptReal?'true':'false'}
@@ -3250,7 +3250,7 @@ function setCurrentPrize(type){
     async function v94SaveGame(){if(!isAdminUser())return toast('للأدمن فقط');const g=v94ReadAdminForm();try{await set(ref(db,'game_center/games/'+g.id),g);toast('تم حفظ اللعبة: '+g.name)}catch(e){console.error(e);toast('فشل حفظ اللعبة: '+(e.code||e.message))}}
     async function v94DeleteGame(){if(!isAdminUser())return toast('للأدمن فقط');const id=v94CleanGameId($('v94GameIdInput')?.value);if(!id)return;const ok=await uiConfirm('حذف اللعبة؟','سيتم حذف اللعبة من صفحة الألعاب. سجلات اللعب تبقى محفوظة.');if(!ok)return;try{await set(ref(db,'game_center/games/'+id),null);toast('تم حذف اللعبة')}catch(e){toast('فشل الحذف: '+(e.code||e.message))}}
     async function v94SeedGame(){v94FillAdminForm(v94DefaultGame);await v94SaveGame()}
-    function v94RenderAdminGames(){const box=$('v94AdminGamesList'); if(!box)return;const list=v94GamesArray();if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد ألعاب مضافة بعد. اضغط إضافة لعبة كيك الحظ كتجربة.</div>';return}box.innerHTML=list.map(g=>'<div class="admin-row"><div><h4><span class="v94-game-mini">'+escapeHtml(g.icon||'🎮')+'</span>'+escapeHtml(g.name||'لعبة')+' <span class="admin-badge '+(g.enabled?'approved':'rejected')+'">'+(g.enabled?'شغالة':'متوقفة')+'</span></h4><p>'+escapeHtml(g.desc||'')+'<br>أقل/أعلى لعب: '+money(g.minBet)+' / '+money(g.maxBet)+' — الفوز: '+Number(g.winChance||0)+'% — المضاعف: '+Number(g.multiplier||0)+'x<br>البونص: '+(g.acceptBonus?'مقبول':'مرفوض')+' — الرصيد الحقيقي: '+(g.acceptReal?'مقبول':'مرفوض')+'</p></div><div class="admin-actions"><button class="blue" onclick="v94EditGame(\''+escapeHtml(g.id)+'\')">تعديل</button><button class="'+(g.enabled?'warn':'ok')+'" onclick="v94ToggleGame(\''+escapeHtml(g.id)+'\')">'+(g.enabled?'إيقاف':'تشغيل')+'</button></div></div>').join('')}
+    function v94RenderAdminGames(){const box=$('v94AdminGamesList'); if(!box)return;const list=v94GamesArray();if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد ألعاب مضافة بعد. اضغط إضافة لعبة جاهزة.</div>';return}box.innerHTML=list.map(g=>'<div class="admin-row"><div><h4><span class="v94-game-mini">'+escapeHtml(g.icon||'🎮')+'</span>'+escapeHtml(g.name||'لعبة')+' <span class="admin-badge '+(g.enabled?'approved':'rejected')+'">'+(g.enabled?'شغالة':'متوقفة')+'</span></h4><p>'+escapeHtml(g.desc||'')+'<br>أقل/أعلى لعب: '+money(g.minBet)+' / '+money(g.maxBet)+' — الفوز: '+Number(g.winChance||0)+'% — المضاعف: '+Number(g.multiplier||0)+'x<br>البونص: '+(g.acceptBonus?'مقبول':'مرفوض')+' — الرصيد الحقيقي: '+(g.acceptReal?'مقبول':'مرفوض')+'</p></div><div class="admin-actions"><button class="blue" onclick="v94EditGame(\''+escapeHtml(g.id)+'\')">تعديل</button><button class="'+(g.enabled?'warn':'ok')+'" onclick="v94ToggleGame(\''+escapeHtml(g.id)+'\')">'+(g.enabled?'إيقاف':'تشغيل')+'</button></div></div>').join('')}
     function v94EditGame(id){const g=v94Games[id];if(!g)return toast('اللعبة غير موجودة');v94FillAdminForm(g);toast('تم تحميل اللعبة للتعديل')}
     async function v94ToggleGame(id){if(!isAdminUser())return;const g=v94NormalizeGame(v94Games[id]);g.enabled=!g.enabled;g.updatedAt=Date.now();g.updatedBy=currentUser?.email||'';try{await set(ref(db,'game_center/games/'+g.id),g);toast(g.enabled?'تم تشغيل اللعبة':'تم إيقاف اللعبة')}catch(e){toast('فشل التعديل: '+(e.code||e.message))}}
     function v94RenderAdminGameLogs(){const box=$('v94AdminGameLogs');if(!box)return;let logs=[];Object.values(adminState.customGameLogs||{}).forEach(byUser=>{Object.values(byUser||{}).forEach(l=>logs.push(l))});logs=logs.sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0)).slice(0,35);if(!logs.length){box.innerHTML='<div class="admin-empty">لا يوجد سجل ألعاب إضافية بعد.</div>';return}box.innerHTML=logs.map(l=>'<div class="admin-row"><div><h4>'+escapeHtml(l.gameName||'لعبة')+' <span class="admin-badge '+(Number(l.win)>Number(l.bet)?'approved':'rejected')+'">'+(Number(l.win)>0?'ربح':'خسارة')+'</span></h4><p>'+escapeHtml(l.email||'مستخدم')+'<br>الرهان: '+money(l.bet)+' — الربح: '+money(l.win)+' — الدفع من '+paymentSourceText(Number(l.paidFromReal||0),Number(l.paidFromBonus||0))+'<br>'+new Date(Number(l.createdAt||Date.now())).toLocaleString('ar-TR')+'</p></div><strong>'+money(Number(l.win||0)-Number(l.bet||0))+'</strong></div>').join('')}

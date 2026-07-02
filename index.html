@@ -876,6 +876,7 @@
 .v108-old-result-note{border:1px dashed rgba(255,205,74,.28);border-radius:18px;padding:10px;margin-top:12px;color:#cbd5e1;background:rgba(255,205,74,.04);font-size:12px;font-weight:900;line-height:1.7}
 </style>
 
+  <meta name="adnor-version" content="V114_CLEAN_STABLE_RESCUE">
 </head>
 <body>
   <div class="aurora"></div>
@@ -1314,7 +1315,7 @@
             <button class="admin-menu-btn" data-admin-section="draws"><span><i>🎟️</i> اليانصيب</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="games"><span><i>🎡</i> الألعاب والعجلة</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="vipadmin"><span><i>👑</i> VIP والمهام</span><span>›</span></button>
-            <button class="admin-menu-btn" data-admin-section="dailylogin"><span><i>🎁</i> التسجيل اليومي</span><span>›</span></button>
+            <button class="admin-menu-btn" data-admin-section="dailylogin"><span><i>🎁</i> الصندوق اليومي</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="payments"><span><i>💳</i> طرق الدفع</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="notifications"><span><i>🔔</i> الإشعارات</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="aiadmin"><span><i>🤖</i> المساعد الذكي</span><span>›</span></button>
@@ -4346,7 +4347,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     var side=document.querySelector('#page-admin .admin-side-menu'); if(!side) return;
     ensureMenuButton('finance','💰','المالية','users');
     ensureMenuButton('referrals','🤝','الدعوات','games');
-    var hide=['deposits','withdrawals','payments','vipadmin','dailylogin','campaigns','logs','backups'];
+    var hide=['deposits','withdrawals','payments','vipadmin','campaigns','logs','backups'];
     hide.forEach(function(sec){ var b=side.querySelector('[data-admin-section="'+sec+'"]'); if(b) b.classList.add('v111-submenu-hidden'); });
     var keepTitles={overview:'الرئيسية',users:'المستخدمين',finance:'المالية',draws:'يا نصيب',games:'الألعاب',referrals:'الدعوات',support:'الدعم',aiadmin:'المساعد',notifications:'التنبيهات',settings:'الإعدادات'};
     Object.keys(keepTitles).forEach(function(sec){ var b=side.querySelector('[data-admin-section="'+sec+'"]'); if(b){ var ico=(b.querySelector('i')||{}).textContent||''; b.innerHTML='<span><i>'+ico+'</i> '+keepTitles[sec]+'</span><span>›</span>'; b.onclick=function(){openSection(sec);}; }});

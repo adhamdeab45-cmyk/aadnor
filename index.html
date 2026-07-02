@@ -3468,5 +3468,71 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         Object.assign(window,{claimVipTask,openVipDailyBox,adminSaveVipSettings});
 
   </script>
+
+<!-- ADNOR V98 SOUND FIX READY -->
+<style id="adnor-v98-sound-fix-ui">
+  .adnor-v98-sound-btn{position:fixed;right:14px;bottom:84px;z-index:9999;border:1px solid rgba(255,220,110,.85);border-radius:999px;background:linear-gradient(135deg,#fff2a8,#d6a735 55%,#7a4c09);color:#120c02;font-weight:1000;font-family:inherit;padding:10px 14px;box-shadow:0 0 22px rgba(255,203,66,.35),0 10px 30px rgba(0,0,0,.35);cursor:pointer;display:flex;align-items:center;gap:7px;direction:rtl}
+  .adnor-v98-sound-btn.hide{display:none!important}
+  .adnor-v98-layer{position:fixed;inset:0;z-index:9998;display:none;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 50% 16%,rgba(255,215,92,.20),rgba(0,0,0,.78) 56%,rgba(0,0,0,.91));backdrop-filter:blur(8px);direction:rtl}
+  .adnor-v98-layer.show{display:flex;animation:adnorV98In .18s ease-out both}
+  .adnor-v98-card{width:min(94vw,440px);position:relative;overflow:hidden;text-align:center;border-radius:28px;border:1px solid rgba(255,222,112,.72);background:linear-gradient(180deg,rgba(13,18,30,.98),rgba(4,7,14,.99));box-shadow:0 0 50px rgba(255,190,38,.2),0 22px 70px rgba(0,0,0,.72);padding:22px;color:#fff1b6;font-family:inherit}
+  .adnor-v98-card:before{content:"";position:absolute;inset:-90px;background:conic-gradient(from 0deg,transparent,rgba(255,220,95,.18),transparent,rgba(255,255,255,.08),transparent);animation:adnorV98Spin 8s linear infinite;pointer-events:none}.adnor-v98-card>*{position:relative;z-index:1}
+  .adnor-v98-icon{width:82px;height:82px;border-radius:28px;margin:0 auto 10px;display:grid;place-items:center;font-size:43px;background:radial-gradient(circle at 30% 20%,#fff7bc,#d4af37 54%,#704006);box-shadow:0 0 28px rgba(255,208,62,.38);color:#150e03}
+  .adnor-v98-title{font-size:24px;font-weight:1000;margin:0;color:#ffe487;text-shadow:0 0 18px rgba(255,203,66,.28)}
+  .adnor-v98-msg{font-weight:900;color:#d9e2f2;line-height:1.8;margin:8px 0 14px}.adnor-v98-rows{display:grid;gap:8px;margin:12px 0;text-align:right}
+  .adnor-v98-row{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid rgba(255,218,93,.18);border-radius:16px;background:rgba(255,255,255,.045);padding:10px 12px}.adnor-v98-row span{color:#bfc9dd;font-size:13px;font-weight:900}.adnor-v98-row b{color:#fff5bf;font-size:14px;font-weight:1000;text-align:left;word-break:break-word;direction:ltr}
+  .adnor-v98-ok{width:100%;height:50px;border:0;border-radius:17px;background:linear-gradient(180deg,#fff3ac,#d7a52d 58%,#8c540a);color:#130d03;font:inherit;font-weight:1000;cursor:pointer;box-shadow:0 0 22px rgba(255,190,37,.22)}
+  .adnor-v98-mini{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9999;min-width:220px;max-width:92vw;text-align:center;padding:12px 16px;border-radius:999px;border:1px solid rgba(255,222,112,.65);background:rgba(5,9,18,.94);color:#ffe896;font-weight:1000;box-shadow:0 0 22px rgba(255,202,55,.18);display:none;direction:rtl}.adnor-v98-mini.show{display:block;animation:adnorV98In .16s ease-out both}
+  .adnor-v98-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none}.adnor-v98-confetti i{position:absolute;top:-22px;width:8px;height:14px;border-radius:4px;background:#ffd84d;animation:adnorV98Confetti 1.8s linear infinite;opacity:.9}.adnor-v98-confetti i:nth-child(2n){background:#fff1a8}.adnor-v98-confetti i:nth-child(3n){background:#2fe6a4}.adnor-v98-confetti i:nth-child(4n){background:#58d4ff}
+  @keyframes adnorV98In{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}@keyframes adnorV98Spin{to{transform:rotate(360deg)}}@keyframes adnorV98Confetti{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(560px) rotate(360deg);opacity:0}}
+</style>
+<div class="adnor-v98-layer" id="adnorV98Layer" aria-hidden="true"></div>
+<div class="adnor-v98-mini" id="adnorV98Mini"></div>
+<button class="adnor-v98-sound-btn" id="adnorV98SoundBtn" type="button">🔊 تفعيل الصوت</button>
+<script id="adnor-v98-sound-fix-script">
+(function(){
+  if(window.__ADNOR_V98_SOUND_FIX__) return;
+  window.__ADNOR_V98_SOUND_FIX__ = true;
+
+  var ctx=null, unlocked=false, spinTimer=null, lastSpinText='', lastGameText='', lastToastText='', lastTicketNumber='';
+  function q(id){return document.getElementById(id)}
+  function esc(x){return String(x==null?'':x).replace(/[&<>\"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]||m})}
+  function moneyFromText(t){var m=String(t||'').match(/\$\s*([0-9,]+(?:\.\d+)?)/);return m?('$'+m[1]):''}
+  function getCtx(){try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume().catch(function(){});return ctx}catch(e){return null}}
+  function vibrate(ms){try{if(navigator.vibrate)navigator.vibrate(ms||25)}catch(e){}}
+  function tone(f,d,type,gain,delay){var c=getCtx();if(!c)return;try{var o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,c.currentTime+(delay||0));g.gain.setValueAtTime(0.0001,c.currentTime+(delay||0));g.gain.exponentialRampToValueAtTime(Math.max(.0002,gain||.12),c.currentTime+(delay||0)+.015);g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+(delay||0)+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+(delay||0));o.stop(c.currentTime+(delay||0)+d+.04)}catch(e){}}
+  function play(name){
+    getCtx();
+    if(name==='tap'){tone(500,.06,'square',.08,0);tone(750,.07,'triangle',.07,.05);vibrate(15);return}
+    if(name==='ticket'){tone(650,.10,'triangle',.14,0);tone(920,.12,'triangle',.13,.08);tone(1240,.15,'sine',.11,.17);vibrate(35);return}
+    if(name==='spinStart'){tone(170,.13,'sawtooth',.12,0);tone(260,.16,'sawtooth',.115,.08);tone(380,.20,'sawtooth',.10,.18);vibrate(22);return}
+    if(name==='tick'){tone(520+Math.floor(Math.random()*260),.045,'square',.055,0);return}
+    if(name==='game'){tone(520,.09,'triangle',.13,0);tone(760,.11,'triangle',.11,.09);vibrate(25);return}
+    if(name==='win'){[523,659,784,1046,1318].forEach(function(f,i){tone(f,.18,'triangle',.15,i*.11)});tone(1568,.34,'sine',.13,.55);vibrate([45,40,70]);return}
+    if(name==='lose'){tone(330,.13,'sine',.10,0);tone(250,.18,'sine',.08,.14);vibrate(20);return}
+  }
+  function unlock(showMsg){getCtx();unlocked=true;var b=q('adnorV98SoundBtn');if(b)b.classList.add('hide');play('tap');if(showMsg!==false)mini('تم تفعيل الصوت ✅')}
+  function startSpin(){stopSpin(false);play('spinStart');var n=0;spinTimer=setInterval(function(){n++;play('tick');if(n>42)stopSpin(false)},95)}
+  function stopSpin(end,won){if(spinTimer){clearInterval(spinTimer);spinTimer=null}if(end)play(won?'win':'lose')}
+  function mini(msg){var m=q('adnorV98Mini');if(!m)return;m.textContent=msg;m.classList.add('show');clearTimeout(m._t);m._t=setTimeout(function(){m.classList.remove('show')},2300)}
+  function modal(opts){opts=opts||{};var layer=q('adnorV98Layer');if(!layer)return;var rows=(opts.rows||[]).filter(Boolean).map(function(r){return '<div class="adnor-v98-row"><span>'+esc(r.label)+'</span><b>'+esc(r.value)+'</b></div>'}).join('');var conf=opts.confetti?'<div class="adnor-v98-confetti">'+Array.from({length:24},function(_,i){return '<i style="left:'+((i*13)%100)+'%;animation-delay:'+(i*.07)+'s;animation-duration:'+(1.25+(i%5)*.16)+'s"></i>'}).join('')+'</div>':'';layer.innerHTML='<div class="adnor-v98-card">'+conf+'<div class="adnor-v98-icon">'+esc(opts.icon||'👑')+'</div><h3 class="adnor-v98-title">'+esc(opts.title||'ADNOR')+'</h3><div class="adnor-v98-msg">'+esc(opts.message||'')+'</div><div class="adnor-v98-rows">'+rows+'</div><button class="adnor-v98-ok" type="button" id="adnorV98Close">'+esc(opts.okText||'تمام')+'</button></div>';layer.classList.add('show');layer.setAttribute('aria-hidden','false');function close(){layer.classList.remove('show');layer.setAttribute('aria-hidden','true');layer.innerHTML=''}q('adnorV98Close').onclick=close;layer.onclick=function(e){if(e.target===layer)close()}}
+  function buttonText(el){return (el && (el.innerText||el.textContent||el.id||el.className)||'').toString().trim()}
+  function isAdminWheelButton(el){var t=buttonText(el);return /إدارة العجلة|العجلة|wheel/i.test(t) && !/أدر|spin/i.test(t)}
+  function handleClick(e){var el=e.target && e.target.closest && e.target.closest('button,a,.game-card,[role="button"],.v94-game-card');if(!el)return;var id=el.id||'', t=buttonText(el);if(!unlocked)unlock(false);
+    if(id==='buyTicketBtn' || /شراء تذكرة|شراء بطاقة/.test(t)){lastTicketNumber=(q('ticketNumber')&&q('ticketNumber').value)||'';play('ticket');mini('جاري شراء البطاقة 🎟️');return}
+    if(id==='spinWheelBtn' || /أدر العجلة|دور العجلة|لف العجلة/.test(t)){startSpin();mini('العجلة بدأت تدور 🎡');return}
+    if(id==='v94PlayBtn' || /ابدأ اللعبة|العب|تشغيل اللعبة/.test(t)){play('game');mini('بدأت اللعبة 🎮');return}
+    if(isAdminWheelButton(el)){play('tap');mini('تم فتح إدارة العجلة ⚙️');return}
+  }
+  function watchText(id,cb){var el=q(id);if(!el)return;var obs=new MutationObserver(function(){cb(el.textContent||'')});obs.observe(el,{childList:true,subtree:true,characterData:true});cb(el.textContent||'')}
+  function analyzeWheel(txt){txt=String(txt||'');if(!txt || txt===lastSpinText)return;lastSpinText=txt;if(/العجلة تدور|قيد التشغيل/.test(txt)){startSpin();return}if(/الربح|فزت|مبروك/.test(txt)){stopSpin(true,true);var win=moneyFromText(txt);modal({icon:'🏆',title:'مبروك! فزت في العجلة',message:'تمت إضافة الربح إلى رصيدك الحقيقي.',confetti:true,rows:[{label:'النتيجة',value:txt.slice(0,90)},{label:'الربح',value:win||'تم تسجيل الربح'}],okText:'استلام'});return}if(/لم تربح|خسرت|لم تفز/.test(txt)){stopSpin(true,false);mini('هذه الجولة بدون ربح، جرّب مرة ثانية')}}
+  function analyzeGame(txt){txt=String(txt||'');if(!txt || txt===lastGameText)return;lastGameText=txt;if(/ربحت|الربح|مبروك/.test(txt)){play('win');modal({icon:'🎮',title:'مبروك! فزت في اللعبة',message:'تمت إضافة الربح إلى رصيدك الحقيقي.',confetti:true,rows:[{label:'نتيجة اللعبة',value:txt.slice(0,110)},{label:'الربح',value:moneyFromText(txt)||'تم تسجيل الربح'}],okText:'استلام'});return}if(/لم تربح|خسرت|لم تفز/.test(txt)){play('lose');mini('اللعبة انتهت بدون ربح')}}
+  function analyzeToast(txt){txt=String(txt||'');if(!txt || txt===lastToastText)return;lastToastText=txt;if(/تم شراء|شراء البطاقة|شراء التذكرة|تم حفظ التذكرة/.test(txt)){play('ticket');modal({icon:'🎟️',title:'تم شراء البطاقة',message:'بطاقتك دخلت السحب الرسمي بنجاح.',confetti:true,rows:[{label:'رقم البطاقة',value:lastTicketNumber||'محفوظة في تذاكري'},{label:'الحالة',value:'نشطة ومحفوظة'}],okText:'تمام'});return}if(/فزت|ربحت|مبروك/.test(txt)){play('win')}}
+  function init(){var b=q('adnorV98SoundBtn');if(b)b.onclick=function(e){e.preventDefault();unlock(true)};document.addEventListener('pointerdown',function(){if(!unlocked)unlock(false)},{capture:true,passive:true});document.addEventListener('click',handleClick,true);watchText('wheelResultText',analyzeWheel);watchText('v94GameResultText',analyzeGame);watchText('toast',analyzeToast);mini('اضغط 🔊 مرة واحدة لتفعيل الصوت')}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  window.ADNOR_V98_SOUND={play:play,unlock:unlock,modal:modal,mini:mini,startSpin:startSpin,stopSpin:stopSpin};
+})();
+</script>
+
 </body>
 </html>

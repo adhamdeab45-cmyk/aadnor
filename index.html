@@ -878,7 +878,238 @@
 .v108-old-result-note{border:1px dashed rgba(255,205,74,.28);border-radius:18px;padding:10px;margin-top:12px;color:#cbd5e1;background:rgba(255,205,74,.04);font-size:12px;font-weight:900;line-height:1.7}
 </style>
 
-  <meta name="adnor-version" content="V116_TOP_TICKER_TRUE_REVERSE">
+  <meta name="adnor-version" content="V120_LOTTERY_RESULT_LAYOUT_FIX">
+
+
+<style id="adnor-v120-lottery-result-layout-fix">
+/* ADNOR V120 — Lottery result layout fix only. No Firebase/game/admin logic touched. */
+#page-lottery{
+  --v120-gold:#ffe184;
+  --v120-cyan:#8fe7ff;
+  --v120-green:#35ffc4;
+  --v120-soft:rgba(205,216,232,.88);
+}
+
+/* Keep the official result card as a clean standalone block under the draw tabs. */
+#page-lottery .v91-independent-result{
+  position:relative!important;
+  z-index:4!important;
+  display:block!important;
+  margin:10px 0 18px!important;
+  padding:13px!important;
+  border-radius:24px!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+  clear:both!important;
+}
+#page-lottery .v91-independent-result *{box-sizing:border-box!important;}
+#page-lottery .v91-independent-result:before{z-index:0!important;opacity:.65!important;}
+#page-lottery .v91-independent-result:after{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border-radius:19px;
+  border:1px solid rgba(255,230,150,.08);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Header: no clipping, no big overflowing title. */
+#page-lottery .v91-result-head{
+  position:relative!important;
+  z-index:2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  min-height:34px!important;
+  margin:0 0 10px!important;
+  padding:0 2px!important;
+  overflow:visible!important;
+}
+#page-lottery .v91-result-head h3{
+  min-width:0!important;
+  margin:0!important;
+  font-size:clamp(17px,4.25vw,20px)!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  color:var(--v120-gold)!important;
+  text-shadow:0 0 12px rgba(255,205,74,.26)!important;
+}
+#page-lottery .v91-result-head span{
+  flex:0 0 auto!important;
+  max-width:104px!important;
+  padding:6px 12px!important;
+  border-radius:999px!important;
+  font-size:12px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  color:#bff5ff!important;
+  border:1px solid rgba(0,201,255,.42)!important;
+  background:rgba(0,201,255,.10)!important;
+}
+
+/* Paper content: stacked, readable, no overlap between ticket/name/prize/note. */
+#page-lottery .v91-result-paper{
+  position:relative!important;
+  z-index:2!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+  padding:13px 11px 14px!important;
+  border-radius:20px!important;
+  min-height:auto!important;
+  overflow:hidden!important;
+}
+#page-lottery .v91-result-label{
+  order:1!important;
+  margin:0!important;
+  font-size:12px!important;
+  line-height:1.25!important;
+  color:var(--v120-soft)!important;
+  font-weight:1000!important;
+  white-space:nowrap!important;
+}
+#page-lottery .v91-result-digits{
+  order:2!important;
+  width:100%!important;
+  max-width:342px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:clamp(4px,1.2vw,7px)!important;
+  margin:0 auto 2px!important;
+  direction:ltr!important;
+  flex-wrap:nowrap!important;
+  overflow:visible!important;
+}
+#page-lottery .v91-result-digits span{
+  flex:0 0 clamp(32px,8.5vw,39px)!important;
+  width:clamp(32px,8.5vw,39px)!important;
+  height:clamp(36px,9vw,43px)!important;
+  font-size:clamp(20px,5.6vw,25px)!important;
+  line-height:1!important;
+  margin:0!important;
+}
+#page-lottery .v91-result-winner{
+  order:3!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  max-width:92%!important;
+  min-height:34px!important;
+  margin:3px auto 0!important;
+  padding:7px 15px!important;
+  border-radius:999px!important;
+  color:var(--v120-cyan)!important;
+  background:rgba(0,201,255,.08)!important;
+  border:1px solid rgba(0,201,255,.34)!important;
+  box-shadow:0 0 14px rgba(0,201,255,.12)!important;
+  font-size:clamp(13px,3.8vw,16px)!important;
+  line-height:1.25!important;
+  font-weight:1000!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  text-align:center!important;
+}
+#page-lottery .v91-result-prize{
+  order:4!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:150px!important;
+  width:auto!important;
+  max-width:90%!important;
+  min-height:46px!important;
+  margin:2px auto 0!important;
+  padding:10px 22px!important;
+  border-radius:999px!important;
+  font-size:clamp(21px,5.9vw,27px)!important;
+  line-height:1!important;
+  direction:ltr!important;
+  white-space:nowrap!important;
+  color:var(--v120-green)!important;
+}
+#page-lottery .v91-result-wait{
+  order:5!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:5px 0 0!important;
+  padding:8px 9px 0!important;
+  border-top:1px solid rgba(255,214,107,.16)!important;
+  color:rgba(215,224,239,.88)!important;
+  font-size:clamp(11px,3vw,13px)!important;
+  line-height:1.55!important;
+  font-weight:900!important;
+  text-align:center!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* Keep the daily prize hero below the result card and make its animation stay in its own card. */
+#page-lottery .v63-hero-draw{
+  position:relative!important;
+  z-index:1!important;
+  margin-top:0!important;
+  margin-bottom:14px!important;
+  clear:both!important;
+  overflow:hidden!important;
+}
+#page-lottery .v104-lottery-balls{
+  z-index:0!important;
+  opacity:.55!important;
+  transform:none!important;
+  pointer-events:none!important;
+}
+#page-lottery .v104-ball{
+  width:28px!important;
+  height:28px!important;
+  font-size:14px!important;
+  opacity:.58!important;
+}
+#page-lottery .v63-hero-draw>*:not(.v104-lottery-balls){
+  position:relative!important;
+  z-index:2!important;
+}
+
+/* Mobile tightening so the official result does not eat the screen. */
+@media(max-width:390px){
+  #page-lottery .v91-independent-result{padding:11px!important;margin:8px 0 15px!important;border-radius:22px!important;}
+  #page-lottery .v91-result-paper{padding:12px 8px 13px!important;gap:7px!important;}
+  #page-lottery .v91-result-head h3{font-size:16px!important;}
+  #page-lottery .v91-result-head span{font-size:11px!important;max-width:92px!important;padding:6px 10px!important;}
+  #page-lottery .v91-result-digits{gap:4px!important;}
+  #page-lottery .v91-result-digits span{flex-basis:31px!important;width:31px!important;height:36px!important;font-size:20px!important;}
+  #page-lottery .v91-result-prize{font-size:22px!important;min-height:44px!important;padding:9px 18px!important;}
+}
+</style>
+
+<script id="adnor-v120-result-placement-confirm">
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  function placeResult(){
+    var page=document.getElementById('page-lottery');
+    var tabs=page && page.querySelector('.tabs');
+    var card=document.getElementById('v91LatestResultCard');
+    if(!tabs || !card) return;
+    if(card.previousElementSibling!==tabs) tabs.insertAdjacentElement('afterend',card);
+  }
+  ready(function(){
+    placeResult();
+    setTimeout(placeResult,200);
+    setTimeout(placeResult,800);
+  });
+  window.ADNOR_V120_FIX_RESULT_LAYOUT=placeResult;
+})();
+</script>
+
 </head>
 <body>
   <div class="aurora"></div>

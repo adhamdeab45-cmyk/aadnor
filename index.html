@@ -615,6 +615,65 @@
   @media(max-width:820px){.settings-grid-v101{grid-template-columns:1fr}.settings-profile-v101{grid-template-columns:78px 1fr}.settings-avatar-v101{width:74px;height:74px;border-radius:26px}.settings-actions-v101{grid-template-columns:1fr}}
 </style>
 
+
+
+<!-- ADNOR V102 ROYAL LOTTERY EFFECTS + HIDDEN DAILY BOXES -->
+<style id="adnor-v102-royal-lottery-css">
+  /* V102: صندوق التسجيل اليومي = مفاجأة مخفية */
+  .v76-day-box span{display:none!important}
+  .v76-day-box{position:relative;isolation:isolate;min-height:86px!important}
+  .v76-day-box::after{content:"مفاجأة";font-size:9px;font-weight:1000;color:#9fb0c8;margin-top:2px;letter-spacing:.2px}
+  .v76-day-box.ready::after{content:"افتحه الآن";color:#130d04;text-shadow:0 1px 0 rgba(255,255,255,.25)}
+  .v76-day-box.done::after{content:"تم الفتح";color:#dfffee}
+  .v76-day-box.locked::after{content:"مخفي";color:#9fb0c8}
+  .v76-reward-current span{font-weight:950!important;color:#d7e2f4!important}
+
+  /* V102: زر التسجيل اليومي العائم والقابل للسحب */
+  .v76-daily-launcher.v102-floating-daily{position:fixed!important;right:16px;bottom:92px;left:auto;top:auto;z-index:79!important;width:auto!important;max-width:215px!important;margin:0!important;cursor:grab;touch-action:none;user-select:none;padding:9px 12px!important;backdrop-filter:blur(12px);animation:v102DailyFloat 2.3s ease-in-out infinite!important}
+  .v76-daily-launcher.v102-floating-daily:active{cursor:grabbing;animation:none!important;transform:scale(.98)}
+  .v76-daily-launcher.v102-floating-daily .orb{animation:v102GiftSpark 1.9s ease-in-out infinite}
+  @keyframes v102DailyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes v102GiftSpark{0%,100%{filter:drop-shadow(0 0 6px rgba(255,205,74,.36))}50%{filter:drop-shadow(0 0 16px rgba(255,238,140,.72))}}
+
+  /* V102: الشريط الملكي المتحرك للفائز */
+  .v61-top-ticker.site-alert{position:relative!important;display:block!important;overflow:hidden!important;min-height:58px!important;border-radius:24px!important;padding:0!important;margin:0 2px 14px!important;border:1px solid rgba(255,218,97,.86)!important;background:radial-gradient(circle at 12% 0%,rgba(255,230,129,.30),transparent 32%),radial-gradient(circle at 86% 100%,rgba(255,170,35,.22),transparent 34%),linear-gradient(90deg,#070707,#191205 32%,#04070f 66%,#120d04)!important;box-shadow:0 0 28px rgba(255,193,42,.24),0 0 70px rgba(255,186,35,.08),inset 0 0 18px rgba(255,239,154,.10)!important;color:#ffe184!important;isolation:isolate!important}
+  .v61-top-ticker.site-alert::before{content:""!important;position:absolute;inset:-2px;background:linear-gradient(105deg,transparent 0%,transparent 34%,rgba(255,255,255,.34) 47%,rgba(255,235,139,.42) 50%,transparent 63%,transparent 100%);transform:translateX(115%);animation:v102TickerShine 3.6s linear infinite;z-index:2;pointer-events:none}
+  .v61-top-ticker.site-alert::after{content:"";position:absolute;inset:1px;border-radius:23px;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 25px rgba(255,205,72,.08);pointer-events:none;z-index:3}
+  .v102-ticker-stage{height:58px;display:flex;align-items:center;white-space:nowrap;overflow:hidden;direction:rtl;position:relative;z-index:1}
+  .v102-ticker-track{display:inline-flex;align-items:center;gap:34px;min-width:max-content;padding-inline:28px;animation:v102TickerMove 18s linear infinite}
+  .v102-ticker-copy{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:1000;text-shadow:0 0 12px rgba(255,201,60,.18)}
+  .v102-ticker-copy .label{color:#ffe184;background:linear-gradient(180deg,#fff5ba,#d69b25);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-size:16px}
+  .v102-ticker-copy .winner{color:#66d9ff;text-shadow:0 0 13px rgba(102,217,255,.5)}
+  .v102-ticker-copy .ticket{color:#ffb33e;text-shadow:0 0 12px rgba(255,179,62,.5);border:1px solid rgba(255,178,62,.38);padding:3px 8px;border-radius:999px;background:rgba(255,178,62,.08);direction:ltr}
+  .v102-ticker-copy .prize{color:#48ffb2;font-size:18px;text-shadow:0 0 15px rgba(72,255,178,.56),0 0 28px rgba(72,255,178,.18)}
+  .v102-ticker-copy .draw{color:#fff3b4}
+  .v102-ticker-copy .sep{color:#866e32}
+  @keyframes v102TickerMove{0%{transform:translateX(0)}100%{transform:translateX(50%)}}
+  @keyframes v102TickerShine{0%{transform:translateX(120%)}55%,100%{transform:translateX(-120%)}}
+
+  /* V102: شاشة الجائزة اليومية والنتيجة الرسمية */
+  .v63-hero-draw,.v91-independent-result,.v66-last-result-inline{position:relative!important;overflow:hidden!important;isolation:isolate!important}
+  .v63-hero-draw::before,.v91-independent-result::before{content:"";position:absolute;inset:-45%;background:conic-gradient(from 0deg,transparent,rgba(255,215,88,.12),transparent,rgba(255,255,255,.06),transparent);animation:v102Aurora 9s linear infinite;z-index:0;pointer-events:none}
+  .v63-hero-draw::after,.v91-independent-result::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 8%,rgba(255,226,118,.22),transparent 28%),radial-gradient(circle at 10% 90%,rgba(81,208,255,.10),transparent 28%);z-index:0;pointer-events:none}
+  .v63-hero-draw>*:not(.v102-number-balls),.v91-independent-result>*:not(.v102-number-balls),.v66-last-result-inline>*:not(.v102-number-balls){position:relative;z-index:2}
+  .v63-prize-label{font-size:16px!important;color:#ffe89a!important;text-shadow:0 0 14px rgba(255,210,76,.30)!important;letter-spacing:.4px}
+  .v63-prize-amount{font-size:clamp(44px,12vw,86px)!important;line-height:1!important;background:linear-gradient(180deg,#fff8c6 0%,#ffd95d 34%,#ffad2e 58%,#fff1a8 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;text-shadow:0 0 24px rgba(255,190,35,.34),0 0 52px rgba(255,190,35,.14)!important;animation:v102PrizePulse 2.2s ease-in-out infinite!important}
+  .v91-result-paper{position:relative!important;overflow:hidden!important;background:radial-gradient(circle at 50% 0,rgba(255,217,91,.20),transparent 42%),linear-gradient(180deg,rgba(9,22,44,.90),rgba(2,8,18,.98))!important;border:1px solid rgba(255,218,97,.58)!important;box-shadow:0 0 26px rgba(255,194,45,.16),inset 0 0 22px rgba(255,255,255,.05)!important}
+  .v91-result-digits span,.v66-winner-digits span{box-shadow:0 0 18px rgba(255,203,62,.22),inset 0 0 12px rgba(255,255,255,.07)!important;animation:v102DigitGlow 1.7s ease-in-out infinite alternate!important}
+  .v91-result-winner{color:#66d9ff!important;text-shadow:0 0 14px rgba(102,217,255,.38)!important;font-weight:1000!important}
+  .v91-result-prize{color:#48ffb2!important;text-shadow:0 0 16px rgba(72,255,178,.45)!important;font-weight:1000!important}
+  .v102-number-balls{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+  .v102-number-ball{--x:50%;--d:0s;--dur:7s;position:absolute;left:var(--x);bottom:-56px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:1000;color:#170f04;background:radial-gradient(circle at 32% 22%,#fff8cf 0,#ffe37a 31%,#d99824 62%,#764406 100%);box-shadow:0 0 18px rgba(255,197,47,.28),inset -4px -5px 10px rgba(89,45,0,.35),inset 3px 3px 8px rgba(255,255,255,.56);animation:v102BallFloat var(--dur) linear infinite;animation-delay:var(--d);opacity:.82}
+  .v102-number-ball:nth-child(2n){width:30px;height:30px;opacity:.68;background:radial-gradient(circle at 32% 22%,#eaffff 0,#77dcff 32%,#1f83be 66%,#06355e 100%);color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.45)}
+  .v102-number-ball:nth-child(3n){width:32px;height:32px;background:radial-gradient(circle at 32% 22%,#e8fff5 0,#65ffc5 33%,#149d6e 68%,#063f30 100%);color:#062216}
+  @keyframes v102BallFloat{0%{transform:translateY(0) translateX(0) scale(.86);opacity:0}10%{opacity:.75}50%{transform:translateY(-52vh) translateX(calc((var(--wave, 1))*18px)) scale(1)}90%{opacity:.72}100%{transform:translateY(-105vh) translateX(calc((var(--wave, 1))*-22px)) scale(.72);opacity:0}}
+  @keyframes v102Aurora{to{transform:rotate(360deg)}}
+  @keyframes v102PrizePulse{0%,100%{filter:drop-shadow(0 0 10px rgba(255,196,43,.32));transform:scale(1)}50%{filter:drop-shadow(0 0 25px rgba(255,222,104,.56));transform:scale(1.025)}}
+  @keyframes v102DigitGlow{from{filter:brightness(1)}to{filter:brightness(1.28)}}
+  @media(max-width:520px){.v102-ticker-track{animation-duration:14s}.v102-ticker-copy{font-size:13px;gap:7px}.v102-ticker-copy .label{font-size:14px}.v102-ticker-copy .prize{font-size:15px}.v102-number-ball{width:30px;height:30px}.v76-daily-launcher.v102-floating-daily{max-width:174px!important}.v76-daily-launcher.v102-floating-daily span:not(.orb){font-size:12px}}
+  @media(prefers-reduced-motion:reduce){.v102-ticker-track,.v61-top-ticker.site-alert::before,.v102-number-ball,.v63-hero-draw::before,.v91-independent-result::before,.v63-prize-amount{animation:none!important}}
+</style>
+
 </head>
 <body>
   <div class="aurora"></div>
@@ -3203,8 +3262,9 @@ function setCurrentPrize(type){
     function renderDailyLoginModal(){
       const box=$('dailyLoginBoxes');if(!box)return;
       const idx=dlNextIndex(),done=dlClaimedToday(),lastIdx=Number(dlData().lastDayIndex??-1),days=dailyLoginSettings.days||defaultDailyLoginSettings.days;
-      box.innerHTML=days.map((d,i)=>{const state=done?(i===lastIdx?'done':'locked'):(i===idx?'ready':'locked');const icon=state==='done'?'✅':(state==='ready'?'🎁':'🔒');return '<div class="v76-day-box '+state+'"><div class="gift">'+icon+'</div><b>اليوم '+(i+1)+'</b><span>'+escapeHtml(dlRewardText(d))+'</span></div>'}).join('');
-      const day=days[idx]||days[0];setText('dailyLoginCurrentTitle',done?'تم فتح صندوق اليوم':(day.title||('اليوم '+(idx+1))));setText('dailyLoginCurrentReward',dailyLoginSettings.enabled?(done?'ارجع غدًا لفتح الصندوق التالي.':'مكافأة اليوم: '+dlRewardText(day)+' — '+(day.message||'')):'التسجيل اليومي متوقف مؤقتًا من الإدارة.');
+      box.innerHTML=days.map((d,i)=>{const state=done?(i===lastIdx?'done':'locked'):(i===idx?'ready':'locked');const icon=state==='done'?'✅':(state==='ready'?'🎁':'🔒');const title=(i===6?'الصندوق الملكي':'اليوم '+(i+1));return '<div class="v76-day-box '+state+'"><div class="gift">'+icon+'</div><b>'+title+'</b><span>مكافأة مخفية</span></div>'}).join('');
+      setText('dailyLoginCurrentTitle',done?'تم فتح صندوق اليوم':'صندوق اليوم');
+      setText('dailyLoginCurrentReward',dailyLoginSettings.enabled?(done?'تم فتح صندوق اليوم. ارجع غدًا لصندوق جديد ومكافأة مخفية.':'المكافأة مخفية داخل الصندوق. افتحه الآن لتعرف حظك اليوم.'):'التسجيل اليومي متوقف مؤقتًا من الإدارة.');
       const claim=$('dailyLoginClaimBtn');if(claim){claim.disabled=!dailyLoginSettings.enabled||done;claim.textContent=done?'تم فتح صندوق اليوم':'فتح صندوق اليوم'}
     }
     async function claimDailyLogin(){
@@ -3414,20 +3474,29 @@ function setCurrentPrize(type){
       const winner=String(r.winnerName||r.winnerEmail||'مستخدم ADNOR').trim();
       const ticket=String(r.ticketNumber||r.winningNumber||r.number||'').replace(/\D/g,'').padStart(7,'0').slice(-7);
       const prizeText=money(r.prize||0);
-      return 'مبروك للفائز '+winner+' في '+drawName+' — رقم التذكرة '+ticket+' — الجائزة '+prizeText+' 🎉';
+      return {winner,drawName,ticket,prizeText};
+    }
+    function v102RoyalTickerHtml(data){
+      const safe=x=>escapeHtml(String(x||''));
+      let item='';
+      if(data&&data.winner){
+        item='<span class="label">🏆 مبروك للفائز</span><span class="winner">'+safe(data.winner)+'</span><span class="sep">في</span><span class="draw">'+safe(data.drawName)+'</span><span class="sep">🎫 التذكرة</span><span class="ticket">#'+safe(data.ticket)+'</span><span class="sep">💰 الجائزة</span><span class="prize">'+safe(data.prizeText)+'</span>';
+      }else{
+        item='<span class="label">✨ السحب اليومي القادم عند الساعة 8:00 مساءً</span><span class="sep">—</span><span class="draw">تابعوا إعلان الفائز الرسمي داخل ADNOR</span><span class="sep">🎫</span><span class="prize">الجائزة اليومية '+safe(money(prizeFor('daily')||4500))+'</span>';
+      }
+      return '<div class="v102-ticker-stage"><div class="v102-ticker-track"><span class="v102-ticker-copy">'+item+'</span><span class="v102-ticker-copy" aria-hidden="true">'+item+'</span><span class="v102-ticker-copy" aria-hidden="true">'+item+'</span></div></div>';
     }
     function v93RenderTopWinnerTicker(){
       const alert=$('siteControlAlert'), sub=$('siteControlAlertSub');
       if(!alert)return;
-      let msg='';
       if(siteControl&&siteControl.maintenance){
-        msg='⚠️ '+(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');
+        const msg='⚠️ '+(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');
+        alert.innerHTML='<div class="v102-ticker-stage"><div class="v102-ticker-track"><span class="v102-ticker-copy"><span class="label">'+escapeHtml(msg)+'</span></span></div></div>';
       }else{
         const r=v93GetVisibleTickerResult();
-        msg=r?v93ResultTickerMessage(r):(siteControl?.announcement||'مبروك للفائزين بسحب أمس، ترقبوا السحب الكبير القادم.');
+        alert.innerHTML=v102RoyalTickerHtml(r?v93ResultTickerMessage(r):null);
       }
-      alert.classList.toggle('show',!!msg);
-      if(alert.firstChild) alert.firstChild.nodeValue=msg; else alert.textContent=msg;
+      alert.classList.add('show','v102-royal-winner-ticker');
       if(sub)sub.textContent='';
     }
     try{
@@ -3641,6 +3710,74 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   function init(){var b=q('adnorV98SoundBtn');if(b)b.onclick=function(e){e.preventDefault();unlock(true)};document.addEventListener('pointerdown',function(){if(!unlocked)unlock(false)},{capture:true,passive:true});document.addEventListener('click',handleClick,true);watchText('wheelResultText',analyzeWheel);watchText('v94GameResultText',analyzeGame);watchText('toast',analyzeToast);mini('اضغط 🔊 مرة واحدة لتفعيل الصوت')}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
   window.ADNOR_V98_SOUND={play:play,unlock:unlock,modal:modal,mini:mini,startSpin:startSpin,stopSpin:stopSpin};
+})();
+</script>
+
+
+<script id="adnor-v102-royal-lottery-script">
+(function(){
+  if(window.__ADNOR_V102_ROYAL_LOTTERY__)return;
+  window.__ADNOR_V102_ROYAL_LOTTERY__=true;
+  function q(id){return document.getElementById(id)}
+  function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+  function addBalls(target,cls,count){
+    if(!target||target.querySelector('.v102-number-balls.'+cls))return;
+    var wrap=document.createElement('div');wrap.className='v102-number-balls '+cls;
+    var nums=['1','2','3','4','5','6','7','8','9','0'];
+    for(var i=0;i<count;i++){
+      var b=document.createElement('i');b.className='v102-number-ball';b.textContent=nums[i%nums.length];
+      b.style.setProperty('--x', ((i*17+9)%96)+'%');
+      b.style.setProperty('--d', (-i*.47)+'s');
+      b.style.setProperty('--dur', (6.4+(i%7)*.55)+'s');
+      b.style.setProperty('--wave', (i%2?1:-1));
+      wrap.appendChild(b);
+    }
+    target.insertBefore(wrap,target.firstChild);
+  }
+  function initBalls(){
+    addBalls(document.querySelector('.v63-hero-draw'),'v102-prize-balls',22);
+    addBalls(q('v91LatestResultCard'),'v102-result-balls',18);
+    addBalls(document.querySelector('.v66-last-result-inline'),'v102-inline-result-balls',12);
+  }
+  function initDailyDrag(){
+    var btn=q('dailyLoginLauncher');if(!btn||btn.__v102Drag)return;btn.__v102Drag=true;btn.classList.add('v102-floating-daily');
+    try{var saved=JSON.parse(localStorage.getItem('adnor_daily_button_pos')||'null');if(saved){btn.style.left=saved.left+'px';btn.style.top=saved.top+'px';btn.style.right='auto';btn.style.bottom='auto'}}catch(e){}
+    var dragging=false,startX=0,startY=0,startLeft=0,startTop=0,moved=false;
+    btn.addEventListener('pointerdown',function(e){
+      if(e.button!=null&&e.button!==0)return;
+      dragging=true;moved=false;startX=e.clientX;startY=e.clientY;
+      var r=btn.getBoundingClientRect();startLeft=r.left;startTop=r.top;
+      try{btn.setPointerCapture(e.pointerId)}catch(_){}
+    },{passive:true});
+    btn.addEventListener('pointermove',function(e){
+      if(!dragging)return;
+      var dx=e.clientX-startX,dy=e.clientY-startY;if(Math.abs(dx)+Math.abs(dy)>5)moved=true;
+      var w=btn.offsetWidth,h=btn.offsetHeight;
+      var left=clamp(startLeft+dx,6,window.innerWidth-w-6),top=clamp(startTop+dy,70,window.innerHeight-h-12);
+      btn.style.left=left+'px';btn.style.top=top+'px';btn.style.right='auto';btn.style.bottom='auto';
+    },{passive:true});
+    function end(e){
+      if(!dragging)return;dragging=false;
+      var r=btn.getBoundingClientRect();try{localStorage.setItem('adnor_daily_button_pos',JSON.stringify({left:Math.round(r.left),top:Math.round(r.top)}))}catch(_){}
+      if(moved){btn.__v102SkipClick=true;setTimeout(function(){btn.__v102SkipClick=false},120)}
+    }
+    btn.addEventListener('pointerup',end,{passive:true});btn.addEventListener('pointercancel',end,{passive:true});
+    btn.addEventListener('click',function(e){if(btn.__v102SkipClick){e.preventDefault();e.stopImmediatePropagation()}},true);
+  }
+  function patchHiddenDailyText(){
+    var reward=q('dailyLoginCurrentReward');
+    if(reward && /مكافأة اليوم|بونص|رصيد حقيقي|نقطة VIP|لفة مجانية|قسيمة/.test(reward.textContent||'')){
+      reward.textContent='المكافأة مخفية داخل الصندوق. افتحه الآن لتعرف حظك اليوم.';
+    }
+    document.querySelectorAll('#dailyLoginBoxes .v76-day-box span').forEach(function(s){s.textContent='مكافأة مخفية'});
+  }
+  function decoratePrizeTitle(){
+    var amount=q('jackpotText');if(amount&&!amount.dataset.v102Title){amount.dataset.v102Title='1';amount.setAttribute('aria-label','الجائزة اليومية الملكية')}
+  }
+  function run(){initBalls();initDailyDrag();patchHiddenDailyText();decoratePrizeTitle()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+  setInterval(run,1200);
+  try{new MutationObserver(function(){patchHiddenDailyText();initBalls()}).observe(document.body,{subtree:true,childList:true,characterData:true})}catch(e){}
 })();
 </script>
 

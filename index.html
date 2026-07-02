@@ -1887,6 +1887,23 @@ function setCurrentPrize(type){
     renderMethods();
     listenWheelSettings();
 
+
+    /* V99 — No auto redirect on insufficient balance */
+    function adnorV99InsufficientBalance(message,details={}){
+      const msg=message||'الرصيد غير كافٍ لإكمال العملية.';
+      try{toast(msg)}catch(e){}
+      try{adnorV97Sound('lose')}catch(e){}
+      try{
+        const rows=[];
+        if(details.required!==undefined)rows.push({label:'المطلوب',value:money(Number(details.required||0))});
+        if(details.available!==undefined)rows.push({label:'المتاح الآن',value:money(Number(details.available||0))});
+        if(details.place)rows.push({label:'مكانك الحالي',value:details.place});
+        rows.push({label:'الإجراء',value:'بقيت بنفس الصفحة بدون تحويل للمحفظة'});
+        adnorV97ShowEventModal({icon:'💰',title:'الرصيد غير كافٍ',message:msg,confetti:false,rows,okText:'تمام'});
+      }catch(e){}
+      return false;
+    }
+
     document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentDraw=btn.dataset.draw;$('drawName').textContent=drawLabel(currentDraw);$('jackpotText').textContent=money(prizeFor(currentDraw));setText('jackpotLabelText',prizeNameFor(currentDraw));renderLatestDrawPublic()});
     function randomTicket(){return String(Math.floor(Math.random()*10000000)).padStart(7,'0')}$('randomBtn').onclick=()=>$('ticketNumber').value=randomTicket();$('clearBtn').onclick=()=>$('ticketNumber').value='';$('ticketNumber').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,7)});
     async function buyTicket(){
@@ -1898,7 +1915,7 @@ function setCurrentPrize(type){
       const num=$('ticketNumber').value.trim();
       if(!/^\d{7}$/.test(num)){toast('رقم التذكرة يجب أن يكون 7 خانات.');return}
       const pay=splitPlayablePayment(TICKET_PRICE);
-      if(pay.playable<TICKET_PRICE){toast('الرصيد غير كافٍ. الرصيد الحقيقي + البونص غير كافيين.');showPage('wallet');return}
+      if(pay.playable<TICKET_PRICE){adnorV99InsufficientBalance('الرصيد غير كافٍ لشراء البطاقة. الرصيد الحقيقي + البونص غير كافيين.',{required:TICKET_PRICE,available:pay.playable,place:'صفحة اليانصيب'});return}
       const ticketRef=push(ref(db,'tickets/'+currentDraw));
       const id=ticketRef.key;
       const now=Date.now();
@@ -1971,7 +1988,7 @@ function setCurrentPrize(type){
       if(bet<minBet)return toast('أقل رهان هو '+money(minBet));
       if(bet>maxBet)return toast('أعلى رهان هو '+money(maxBet));
       const real=Number(currentProfile.realBalance||0), bonus=Number(currentProfile.bonusBalance||0), playable=Number((real+bonus).toFixed(2));
-      if(!promoSpin&&bet>playable){toast('الرصيد غير كافٍ. تقدر تلعب من الرصيد الحقيقي + البونص.');showPage('wallet');return}
+      if(!promoSpin&&bet>playable){adnorV99InsufficientBalance('الرصيد غير كافٍ لتدوير العجلة. تقدر تلعب من الرصيد الحقيقي + البونص.',{required:bet,available:playable,place:'صفحة العجلة'});return}
       if(!promoSpin&&!(await checkSpendAllowed(bet)))return;
       const pay=promoSpin?{real,bonus,useReal:0,useBonus:0,newReal:real,newBonus:bonus,playable}:splitPlayablePayment(bet);
       isSpinning=true;
@@ -3378,7 +3395,7 @@ function setCurrentPrize(type){
       $('v94GameBet').value=bet;
       if(!(await checkSpendAllowed(bet)))return;
       const pay=v94SplitPayment(bet,g);
-      if(!pay){toast('الرصيد غير كافٍ لهذه اللعبة حسب إعداداتها');return}
+      if(!pay){const availableForGame=Number(((g.acceptReal?Number(currentProfile?.realBalance||0):0)+(g.acceptBonus?Number(currentProfile?.bonusBalance||0):0)).toFixed(2));adnorV99InsufficientBalance('الرصيد غير كافٍ لهذه اللعبة حسب إعداداتها.',{required:bet,available:availableForGame,place:'صفحة اللعبة'});return}
       adnorV97Sound('game');
       const chanceRoll=v96Random()*100;
       const forceLose=chanceRoll>=Number(g.winChance||0);
@@ -3534,5 +3551,6 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 })();
 </script>
 
+<!-- ADNOR V99 NO WALLET AUTO REDIRECT READY -->
 </body>
 </html>

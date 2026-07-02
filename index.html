@@ -4222,126 +4222,180 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 </script>
 
 
-
-<!-- ADNOR V110 Admin Organized Sections + Notifications -->
-<style id="adnor-v110-admin-organizer-css">
-  #page-admin .v110-admin-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;padding:12px 14px;border:1px solid rgba(255,204,77,.48);border-radius:22px;background:radial-gradient(circle at 100% 0,rgba(255,224,126,.16),transparent 35%),linear-gradient(180deg,rgba(8,25,49,.92),rgba(2,10,22,.96));box-shadow:0 0 20px rgba(255,188,39,.10);direction:rtl}
-  #page-admin .v110-admin-title{display:flex;align-items:center;gap:9px;color:#ffe184;font-weight:1000}.v110-admin-title small{display:block;color:#aeb8cd;font-size:11px;font-weight:800;margin-top:2px}.v110-admin-bell{position:relative;border:1px solid rgba(255,204,77,.48);border-radius:18px;background:rgba(2,10,22,.70);color:#ffe184;font:inherit;font-weight:1000;min-width:54px;height:48px;cursor:pointer;box-shadow:0 0 12px rgba(255,188,39,.10)}.v110-admin-bell b{position:absolute;top:-8px;left:-8px;min-width:22px;height:22px;border-radius:999px;background:#ff375f;color:#fff;font-size:11px;display:none;align-items:center;justify-content:center;border:2px solid #140b06}.v110-admin-bell.has b{display:flex}.v110-alert-menu{display:none;margin-bottom:12px;border:1px solid rgba(255,204,77,.40);border-radius:20px;background:rgba(2,10,22,.92);padding:10px;box-shadow:0 0 20px rgba(255,188,39,.10)}.v110-alert-menu.show{display:grid;gap:8px}.v110-alert-item{border:1px solid rgba(255,204,77,.26);border-radius:15px;background:rgba(255,255,255,.035);padding:10px;color:#eaf2ff;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}.v110-alert-item span{color:#ffe184}.v110-admin-groups{display:grid;gap:14px}.v110-group{border:1px solid rgba(255,204,77,.42);border-radius:24px;padding:14px;background:linear-gradient(180deg,rgba(8,24,48,.78),rgba(2,9,20,.90));box-shadow:0 0 18px rgba(255,188,39,.08)}.v110-group h4{margin:0 0 9px;color:#ffe184;font-size:17px;font-weight:1000;display:flex;align-items:center;gap:8px}.v110-group p{margin:0 0 11px;color:#aeb8cd;font-size:12px;font-weight:800;line-height:1.6}.v110-group-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v110-group-actions button,#page-admin .v110-open-btn{min-height:58px;border-radius:18px;border:1px solid rgba(255,204,77,.42);background:radial-gradient(circle at 100% 0,rgba(255,224,126,.12),transparent 38%),linear-gradient(180deg,rgba(9,30,58,.88),rgba(2,10,22,.96));color:#fff;font:inherit;font-weight:1000;cursor:pointer;text-align:right;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}.v110-group-actions button small{display:block;color:#aeb8cd;font-size:10px;margin-top:4px;font-weight:800}.v110-group-actions button i{font-style:normal;font-size:24px}.v110-admin-note{border:1px dashed rgba(255,204,77,.32);border-radius:16px;padding:10px;margin-top:10px;color:#cbd4e5;font-size:12px;font-weight:800;line-height:1.7;background:rgba(2,10,22,.40)}.v110-mini-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}.v110-mini-stat{border:1px solid rgba(255,204,77,.28);border-radius:17px;background:rgba(2,10,22,.54);padding:10px}.v110-mini-stat span{display:block;color:#aeb8cd;font-size:11px;font-weight:900}.v110-mini-stat b{display:block;color:#ffe184;font-size:20px;margin-top:5px;direction:ltr}.v110-referral-placeholder{border:1px dashed rgba(255,204,77,.35);border-radius:18px;padding:16px;background:rgba(2,10,22,.44);color:#cbd4e5;font-weight:900;text-align:center}.v110-old-ref-note{font-size:11px;color:#aeb8cd;margin-top:8px;font-weight:800}.admin-menu-btn[data-admin-section="finance"],.admin-menu-btn[data-admin-section="referrals"]{border-color:rgba(255,224,126,.50)!important}.admin-home-actions.v110-replaced{display:block!important}.admin-home-actions.v110-replaced>button{display:none!important}
-  @media(max-width:720px){#page-admin .v110-admin-topbar{padding:10px}.v110-group-actions{grid-template-columns:1fr}.v110-mini-stats{grid-template-columns:1fr}.v110-admin-title small{font-size:10px}}
+<!-- ADNOR V111 Admin Clean Layout - no duplicate panels -->
+<style id="adnor-v111-admin-clean-css">
+  #page-admin .v111-admin-quickbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 10px;padding:8px 10px;border:1px solid rgba(255,204,77,.30);border-radius:16px;background:rgba(2,10,22,.62);box-shadow:0 0 12px rgba(255,188,39,.06);direction:rtl}
+  #page-admin .v111-admin-quickbar .v111-title{display:flex;align-items:center;gap:7px;color:#ffe184;font-weight:900;font-size:13px;white-space:nowrap}
+  #page-admin .v111-admin-bell{position:relative;border:1px solid rgba(255,204,77,.38);border-radius:14px;background:rgba(2,10,22,.78);color:#ffe184;font:inherit;font-size:16px;font-weight:900;min-width:42px;height:36px;cursor:pointer;line-height:1}
+  #page-admin .v111-admin-bell b{position:absolute;top:-7px;left:-7px;min-width:19px;height:19px;border-radius:999px;background:#ff375f;color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;border:2px solid #140b06}
+  #page-admin .v111-admin-bell.has b{display:flex}
+  #page-admin .v111-alert-menu{display:none;margin:0 0 10px;border:1px solid rgba(255,204,77,.28);border-radius:16px;background:rgba(2,10,22,.94);padding:8px;box-shadow:0 0 14px rgba(255,188,39,.08);direction:rtl}
+  #page-admin .v111-alert-menu.show{display:grid;gap:7px}
+  #page-admin .v111-alert-item{border:1px solid rgba(255,204,77,.22);border-radius:12px;background:rgba(255,255,255,.035);padding:8px 10px;color:#eaf2ff;font-size:12px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  #page-admin .v111-alert-item span{color:#ffe184}
+  #page-admin .admin-side-menu{gap:7px!important}
+  #page-admin .admin-side-title{font-size:12px!important;padding:0 4px 4px!important;color:#ffe184!important}
+  #page-admin .admin-menu-btn{min-height:42px!important;padding:9px 10px!important;border-radius:14px!important;font-size:12px!important}
+  #page-admin .admin-menu-btn span:first-child{gap:7px!important}
+  #page-admin .admin-menu-btn i{font-size:15px!important}
+  #page-admin .admin-menu-btn.v111-submenu-hidden{display:none!important}
+  #page-admin .admin-home-actions.v111-source>button{display:none!important}
+  #page-admin .v111-dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:8px}
+  #page-admin .v111-tile,#page-admin .v111-mini-open{border:1px solid rgba(255,204,77,.30);border-radius:15px;background:linear-gradient(180deg,rgba(8,24,48,.72),rgba(2,9,20,.90));color:#fff;font:inherit;cursor:pointer;min-height:48px;padding:9px;text-align:center;font-weight:900;box-shadow:0 0 10px rgba(255,188,39,.05)}
+  #page-admin .v111-tile i,#page-admin .v111-mini-open i{display:block;font-style:normal;font-size:18px;margin-bottom:3px}
+  #page-admin .v111-tile span,#page-admin .v111-mini-open span{display:block;font-size:12px;line-height:1.25}
+  #page-admin .v111-tile small,#page-admin .v111-mini-open small{display:block;color:#aeb8cd;font-size:10px;margin-top:2px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #page-admin .v111-panel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:9px;margin-top:10px}
+  #page-admin .v111-compact-note{margin-top:9px;color:#aeb8cd;font-size:11px;font-weight:800;line-height:1.6;border:1px dashed rgba(255,204,77,.22);border-radius:12px;padding:8px;background:rgba(2,10,22,.38)}
+  #page-admin .v111-section-title{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  #page-admin .v111-section-title b{color:#ffe184;font-size:14px}
+  #page-admin .v111-section-title small{color:#aeb8cd;font-size:11px;font-weight:800}
+  #page-admin .v111-finance-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:9px 0}
+  #page-admin .v111-mini-stat{border:1px solid rgba(255,204,77,.22);border-radius:14px;background:rgba(2,10,22,.50);padding:8px;text-align:center}
+  #page-admin .v111-mini-stat span{display:block;color:#aeb8cd;font-size:10px;font-weight:900}
+  #page-admin .v111-mini-stat b{display:block;color:#ffe184;font-size:17px;margin-top:3px;direction:ltr}
+  #page-admin #v111ReferralMount>.admin-wide-card{margin-bottom:10px}
+  @media(max-width:720px){
+    #page-admin .admin-shell{gap:10px!important}
+    #page-admin .admin-side-menu{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+    #page-admin .admin-side-title{grid-column:1/-1}
+    #page-admin .admin-menu-btn{min-height:38px!important;font-size:11px!important;padding:8px!important}
+    #page-admin .v111-admin-quickbar{position:sticky;top:8px;z-index:20}
+    #page-admin .v111-finance-stats{grid-template-columns:1fr}
+  }
 </style>
-<script id="adnor-v110-admin-organizer-script">
+<script id="adnor-v111-admin-clean-script">
 (function(){
-  if(window.__ADNOR_V110_ADMIN_ORGANIZER__) return;
-  window.__ADNOR_V110_ADMIN_ORGANIZER__=true;
+  if(window.__ADNOR_V111_ADMIN_CLEAN__) return;
+  window.__ADNOR_V111_ADMIN_CLEAN__=true;
   function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
   function q(id){ return document.getElementById(id); }
-  function txt(id){ var el=q(id); return el ? (el.textContent||'0').trim() : '0'; }
-  function num(t){ var n=parseInt(String(t||'0').replace(/[^0-9]/g,''),10); return isNaN(n)?0:n; }
-  function esc(x){ return String(x==null?'':x).replace(/[&<>\"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]||m}); }
-  function openSec(sec){ if(typeof window.showAdminSection==='function') window.showAdminSection(sec); }
-  function btn(sec,icon,title,small){ return '<button type="button" data-v110-open="'+esc(sec)+'"><span><b>'+esc(title)+'</b><small>'+esc(small||'')+'</small></span><i>'+esc(icon)+'</i></button>'; }
-  function ensureTopBar(){
-    var page=q('page-admin'); if(!page || q('v110AdminTopbar')) return;
-    var top=document.createElement('div'); top.id='v110AdminTopbar'; top.className='v110-admin-topbar';
-    top.innerHTML='<div class="v110-admin-title"><span style="font-size:28px">🏛️</span><div>لوحة ADNOR المنظمة<small>كل قسم بمكانه: مالية، مستخدمين، يا نصيب، ألعاب، دعوات</small></div></div><button class="v110-admin-bell" id="v110AdminBell" type="button">🔔<b id="v110BellCount">0</b></button>';
-    var menu=document.createElement('div'); menu.id='v110AlertMenu'; menu.className='v110-alert-menu';
-    var first=page.querySelector('.jackpot');
-    if(first && first.parentNode){ first.parentNode.insertBefore(top, first.nextSibling); first.parentNode.insertBefore(menu, top.nextSibling); }
-    else page.insertBefore(top,page.firstChild);
-    var bell=q('v110AdminBell'); if(bell) bell.onclick=function(){ q('v110AlertMenu')?.classList.toggle('show'); };
-  }
-  function ensureSection(id,title,sub,body){
-    if(q('admin-section-'+id)) return;
-    var content=document.querySelector('#page-admin .admin-content'); if(!content) return;
-    var sec=document.createElement('section'); sec.className='admin-section'; sec.id='admin-section-'+id;
-    sec.innerHTML='<div class="admin-wide-card"><div class="admin-section-head"><div class="head-title"><h3>'+title+'</h3><span>'+sub+'</span></div><button class="admin-back-btn" type="button" data-v110-back>← رجوع للقائمة</button></div>'+body+'</div>';
-    content.insertBefore(sec, q('admin-section-settings') || null);
+  function esc(x){ return String(x==null?'':x).replace(/[&<>\"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]||m;}); }
+  function text(id){ var el=q(id); return el ? (el.textContent||'0').trim() : '0'; }
+  function numberFrom(id){ var n=parseInt(String(text(id)).replace(/[^0-9]/g,''),10); return isNaN(n)?0:n; }
+  function openSection(sec){ if(typeof window.showAdminSection==='function') window.showAdminSection(sec); }
+  function smallButton(sec,icon,title,sub){ return '<button class="v111-mini-open" type="button" data-v111-open="'+esc(sec)+'"><i>'+esc(icon)+'</i><span>'+esc(title)+'</span><small>'+esc(sub||'')+'</small></button>'; }
+  function ensureQuickBar(){
+    var page=q('page-admin'); if(!page || q('v111AdminQuickbar')) return;
+    var bar=document.createElement('div'); bar.id='v111AdminQuickbar'; bar.className='v111-admin-quickbar';
+    bar.innerHTML='<div class="v111-title"><span>🏛️</span><span>لوحة التحكم</span></div><button class="v111-admin-bell" id="v111AdminBell" type="button" title="التنبيهات">🔔<b id="v111BellCount">0</b></button>';
+    var menu=document.createElement('div'); menu.id='v111AlertMenu'; menu.className='v111-alert-menu';
+    var grid=page.querySelector('.admin-grid');
+    if(grid && grid.parentNode){ grid.parentNode.insertBefore(bar, grid.nextSibling); grid.parentNode.insertBefore(menu, bar.nextSibling); }
+    else page.insertBefore(bar,page.firstChild);
+    var bell=q('v111AdminBell'); if(bell) bell.onclick=function(){ var m=q('v111AlertMenu'); if(m) m.classList.toggle('show'); };
   }
   function ensureMenuButton(sec,icon,title,afterSec){
-    var side=document.querySelector('#page-admin .admin-side-menu'); if(!side || side.querySelector('[data-admin-section="'+sec+'"]')) return;
-    var b=document.createElement('button'); b.className='admin-menu-btn'; b.dataset.adminSection=sec; b.innerHTML='<span><i>'+icon+'</i> '+title+'</span><span>›</span>'; b.onclick=function(){openSec(sec)};
+    var side=document.querySelector('#page-admin .admin-side-menu'); if(!side) return null;
+    var old=side.querySelector('[data-admin-section="'+sec+'"]'); if(old) return old;
+    var b=document.createElement('button'); b.className='admin-menu-btn'; b.dataset.adminSection=sec; b.innerHTML='<span><i>'+icon+'</i> '+title+'</span><span>›</span>'; b.onclick=function(){openSection(sec);};
     var after=afterSec ? side.querySelector('[data-admin-section="'+afterSec+'"]') : null;
     if(after && after.nextSibling) side.insertBefore(b, after.nextSibling); else side.appendChild(b);
+    return b;
   }
-  function buildSections(){
-    ensureSection('finance','الإدارة المالية','الإيداع والسحب وطرق الدفع والسجل المالي',
-      '<div class="v110-mini-stats"><div class="v110-mini-stat"><span>إيداعات معلقة</span><b id="v110FinanceDep">0</b></div><div class="v110-mini-stat"><span>سحوبات معلقة</span><b id="v110FinanceWd">0</b></div><div class="v110-mini-stat"><span>إشعارات مالية</span><b id="v110FinanceNotes">0</b></div></div>'+ 
-      '<div class="v110-group-actions">'+btn('deposits','📥','طلبات الإيداع','قبول ورفض الإيصالات')+btn('withdrawals','📤','طلبات السحب','قبول السحب أو رفضه')+btn('payments','💳','طرق الدفع','USDT، شام كاش، بنك')+btn('logs','📜','سجل العمليات','تدقيق العمليات المالية')+'</div>'+ 
-      '<div class="v110-admin-note">هذا القسم يجمع كل ما يخص المال فقط. لم يتم حذف صفحات الإيداع والسحب وطرق الدفع؛ تم ترتيب الوصول إليها فقط.</div>');
-    ensureSection('referrals','الدعوات وكود الدعوة','تحكم كامل ببونص الدعوات وسجل المستخدمين المدعوين',
-      '<div id="v110ReferralMount"><div class="v110-referral-placeholder">يتم نقل إعدادات كود الدعوة وسجل الدعوات هنا تلقائيًا...</div></div>');
-    ensureMenuButton('finance','💰','الإدارة المالية','users');
+  function cleanSideMenu(){
+    var side=document.querySelector('#page-admin .admin-side-menu'); if(!side) return;
+    ensureMenuButton('finance','💰','المالية','users');
     ensureMenuButton('referrals','🤝','الدعوات','games');
+    var hide=['deposits','withdrawals','payments','vipadmin','dailylogin','campaigns','logs','backups'];
+    hide.forEach(function(sec){ var b=side.querySelector('[data-admin-section="'+sec+'"]'); if(b) b.classList.add('v111-submenu-hidden'); });
+    var keepTitles={overview:'الرئيسية',users:'المستخدمين',finance:'المالية',draws:'يا نصيب',games:'الألعاب',referrals:'الدعوات',support:'الدعم',aiadmin:'المساعد',notifications:'التنبيهات',settings:'الإعدادات'};
+    Object.keys(keepTitles).forEach(function(sec){ var b=side.querySelector('[data-admin-section="'+sec+'"]'); if(b){ var ico=(b.querySelector('i')||{}).textContent||''; b.innerHTML='<span><i>'+ico+'</i> '+keepTitles[sec]+'</span><span>›</span>'; b.onclick=function(){openSection(sec);}; }});
+  }
+  function ensureSection(id,inner){
+    if(q('admin-section-'+id)) return q('admin-section-'+id);
+    var content=document.querySelector('#page-admin .admin-content'); if(!content) return null;
+    var sec=document.createElement('section'); sec.className='admin-section'; sec.id='admin-section-'+id; sec.innerHTML=inner;
+    var before=q('admin-section-settings'); content.insertBefore(sec,before||null);
+    return sec;
+  }
+  function ensureFinance(){
+    var html='<div class="admin-wide-card"><div class="v111-section-title"><b>💰 الإدارة المالية</b><small>الإيداع والسحب وطرق الدفع</small></div>'+ 
+      '<div class="v111-finance-stats"><div class="v111-mini-stat"><span>إيداعات</span><b id="v111DepCount">0</b></div><div class="v111-mini-stat"><span>سحوبات</span><b id="v111WdCount">0</b></div><div class="v111-mini-stat"><span>تنبيهات</span><b id="v111NoteCount">0</b></div></div>'+ 
+      '<div class="v111-panel-grid">'+smallButton('deposits','📥','الإيداعات','قبول / رفض')+smallButton('withdrawals','📤','السحوبات','قبول / رفض')+smallButton('payments','💳','طرق الدفع','تعديل وتفعيل')+smallButton('logs','📜','السجل','تدقيق العمليات')+'</div>'+ 
+      '<div class="v111-compact-note">الأقسام الأصلية لم تُحذف، فقط تم جمع الوصول المالي في مكان مرتب.</div></div>';
+    ensureSection('finance',html);
   }
   function moveReferralCards(){
-    var mount=q('v110ReferralMount'); if(!mount) return;
+    var mount=q('v111ReferralMount'); if(!mount) return;
     var settings=q('admin-section-settings'); if(!settings) return;
     var cards=[].slice.call(settings.querySelectorAll('.admin-wide-card'));
-    var refCards=[];
-    cards.forEach(function(card){ var t=(card.textContent||''); if(t.indexOf('إعدادات كود الدعوة')>-1 || t.indexOf('آخر الدعوات')>-1){ refCards.push(card); } });
-    if(refCards.length){ mount.innerHTML=''; refCards.forEach(function(card){ mount.appendChild(card); }); }
+    var found=[];
+    cards.forEach(function(card){ var t=card.textContent||''; if(t.indexOf('إعدادات كود الدعوة')>-1 || t.indexOf('آخر الدعوات')>-1){ found.push(card); } });
+    if(found.length){
+      mount.innerHTML=''; found.forEach(function(card){ mount.appendChild(card); });
+    }else if(!mount.querySelector('.admin-wide-card') && !mount.dataset.waiting){
+      mount.dataset.waiting='1';
+      mount.innerHTML='<div class="v111-compact-note">كود الدعوة وسجل الدعوات محفوظين. إذا لم يظهروا، افتح الإعدادات مرة ثم ارجع إلى الدعوات.</div>';
+    }
   }
-  function buildOverview(){
-    var box=document.querySelector('#admin-section-overview .admin-home-actions'); if(!box || box.dataset.v110Done==='1') return;
-    box.dataset.v110Done='1'; box.classList.add('v110-replaced');
-    var html='<div class="v110-admin-groups">'+
-      '<div class="v110-group"><h4>👥 المستخدمين</h4><p>كل ما يخص حسابات المستخدمين والأرصدة والملفات.</p><div class="v110-group-actions">'+btn('users','👥','إدارة المستخدمين','بحث، فتح ملف، أرصدة، تجميد، VIP')+'</div></div>'+ 
-      '<div class="v110-group"><h4>💰 الإدارة المالية</h4><p>الإيداع والسحب وطرق الدفع والسجل المالي في مكان واحد.</p><div class="v110-group-actions">'+btn('finance','💰','فتح الإدارة المالية','كل المال بمكان واحد')+btn('deposits','📥','طلبات الإيداع','قبول/رفض')+btn('withdrawals','📤','طلبات السحب','قبول/رفض')+btn('payments','💳','طرق الدفع','تفعيل وتعديل')+'</div></div>'+ 
-      '<div class="v110-group"><h4>🎟️ يا نصيب</h4><p>التذاكر، السحوبات، النتائج الرسمية، وجدولة عرض النتيجة.</p><div class="v110-group-actions">'+btn('draws','🎟️','إدارة يا نصيب','اليومي، الأسبوعي، الشهري، السنوي')+'</div></div>'+ 
-      '<div class="v110-group"><h4>🎮 الألعاب والمكافآت</h4><p>العجلة، ألعاب الأدمن، صندوق الألعاب، VIP، والتسجيل اليومي.</p><div class="v110-group-actions">'+btn('games','🎡','الألعاب والعجلة','العجلة، المضاعفات، سجل الجولات')+btn('vipadmin','👑','VIP والمهام','مستويات ومهام')+btn('dailylogin','🎁','التسجيل اليومي','الصناديق اليومية')+'</div></div>'+ 
-      '<div class="v110-group"><h4>🤝 الدعوات والحملات</h4><p>كود الدعوة، بونص المستخدم الجديد، بونص صاحب الدعوة، وأكواد الحملات.</p><div class="v110-group-actions">'+btn('referrals','🤝','الدعوات','إعدادات كود الدعوة وسجلها')+btn('campaigns','📣','الحملات','أكواد دعائية ومؤثرين')+'</div></div>'+ 
-      '<div class="v110-group"><h4>💬 الدعم والمساعد</h4><p>الدعم الفني، المساعد الذكي، والتنبيهات.</p><div class="v110-group-actions">'+btn('support','💬','الدعم الفني','تذاكر المستخدمين')+btn('aiadmin','🤖','المساعد الذكي','أسئلة وأجوبة')+btn('notifications','🔔','الإشعارات','كل التنبيهات')+'</div></div>'+ 
-      '<div class="v110-group"><h4>⚙️ النظام</h4><p>الإعدادات العامة، السجلات، والنسخ الاحتياطي.</p><div class="v110-group-actions">'+btn('settings','⚙️','الإعدادات العامة','الصيانة، الأقسام، الدعم')+btn('logs','📜','سجل العمليات','تدقيق ومراجعة')+btn('backups','🗄️','النسخ الاحتياطي','تصدير وحفظ')+'</div></div>'+ 
-      '</div>';
-    box.insertAdjacentHTML('beforeend',html);
+  function ensureReferrals(){
+    var html='<div class="admin-wide-card"><div class="v111-section-title"><b>🤝 الدعوات</b><small>كود الدعوة والبونص والسجل</small></div><div id="v111ReferralMount"><div class="v111-compact-note">يتم تحميل إعدادات كود الدعوة هنا...</div></div></div>';
+    ensureSection('referrals',html);
+    moveReferralCards();
   }
-  function updateAlerts(){
-    ensureTopBar();
-    var dep=num(txt('adminDepositsPending')), wd=num(txt('adminWithdrawsPending')), sup=num(txt('adminSupportCount')), notes=num(txt('adminNotesCount'));
+  function addRelatedShortcuts(){
+    var games=q('admin-section-games');
+    if(games && !q('v111GameShortcuts')){
+      var card=document.createElement('div'); card.className='admin-wide-card'; card.id='v111GameShortcuts';
+      card.innerHTML='<div class="v111-section-title"><b>اختصارات الألعاب</b><small>بدون حذف أي قسم</small></div><div class="v111-panel-grid">'+smallButton('vipadmin','👑','VIP','المهام والمستويات')+smallButton('dailylogin','🎁','التسجيل اليومي','الصناديق')+'</div>';
+      games.insertBefore(card,games.firstChild);
+    }
+    var settings=q('admin-section-settings');
+    if(settings && !q('v111SystemShortcuts')){
+      var card2=document.createElement('div'); card2.className='admin-wide-card'; card2.id='v111SystemShortcuts';
+      card2.innerHTML='<div class="v111-section-title"><b>اختصارات النظام</b><small>أقسام محفوظة</small></div><div class="v111-panel-grid">'+smallButton('campaigns','📣','الحملات','أكواد دعائية')+smallButton('backups','🗄️','النسخ','نسخ احتياطي')+'</div>';
+      settings.insertBefore(card2,settings.firstChild);
+    }
+  }
+  function compactOverview(){
+    var box=document.querySelector('#admin-section-overview .admin-home-actions'); if(!box || q('v111DashboardGrid')) return;
+    box.classList.add('v111-source');
+    var grid=document.createElement('div'); grid.id='v111DashboardGrid'; grid.className='v111-dashboard-grid';
+    grid.innerHTML=smallButton('users','👥','المستخدمين','حسابات')+smallButton('finance','💰','المالية','إيداع / سحب')+smallButton('draws','🎟️','يا نصيب','نتائج')+smallButton('games','🎡','الألعاب','عجلة')+smallButton('referrals','🤝','الدعوات','كود')+smallButton('support','💬','الدعم','تذاكر')+smallButton('aiadmin','🤖','المساعد','أسئلة')+smallButton('settings','⚙️','الإعدادات','عام');
+    box.parentNode.insertBefore(grid,box.nextSibling);
+  }
+  function updateBell(){
+    var dep=numberFrom('adminDepositsPending'), wd=numberFrom('adminWithdrawsPending'), sup=numberFrom('adminSupportCount'), notes=numberFrom('adminNotesCount');
     var total=dep+wd+sup;
-    var bell=q('v110AdminBell'), count=q('v110BellCount'), menu=q('v110AlertMenu');
+    var count=q('v111BellCount'), bell=q('v111AdminBell'), menu=q('v111AlertMenu');
     if(count) count.textContent=String(total);
     if(bell) bell.classList.toggle('has',total>0);
-    if(q('v110FinanceDep')) q('v110FinanceDep').textContent=String(dep);
-    if(q('v110FinanceWd')) q('v110FinanceWd').textContent=String(wd);
-    if(q('v110FinanceNotes')) q('v110FinanceNotes').textContent=String(notes);
+    if(q('v111DepCount')) q('v111DepCount').textContent=String(dep);
+    if(q('v111WdCount')) q('v111WdCount').textContent=String(wd);
+    if(q('v111NoteCount')) q('v111NoteCount').textContent=String(notes);
     if(menu){
       var items=[];
-      if(dep>0) items.push('<div class="v110-alert-item" data-v110-open="deposits"><div>📥 طلبات إيداع جديدة</div><span>'+dep+'</span></div>');
-      if(wd>0) items.push('<div class="v110-alert-item" data-v110-open="withdrawals"><div>📤 طلبات سحب جديدة</div><span>'+wd+'</span></div>');
-      if(sup>0) items.push('<div class="v110-alert-item" data-v110-open="support"><div>💬 تذاكر دعم مفتوحة</div><span>'+sup+'</span></div>');
-      if(!items.length) items.push('<div class="v110-alert-item"><div>✅ لا يوجد طلبات جديدة حاليًا</div><span>0</span></div>');
+      if(dep>0) items.push('<div class="v111-alert-item" data-v111-open="deposits"><div>📥 طلب إيداع جديد</div><span>'+dep+'</span></div>');
+      if(wd>0) items.push('<div class="v111-alert-item" data-v111-open="withdrawals"><div>📤 طلب سحب جديد</div><span>'+wd+'</span></div>');
+      if(sup>0) items.push('<div class="v111-alert-item" data-v111-open="support"><div>💬 تذاكر دعم</div><span>'+sup+'</span></div>');
+      if(!items.length) items.push('<div class="v111-alert-item"><div>✅ لا يوجد طلبات جديدة</div><span>0</span></div>');
       menu.innerHTML=items.join('');
     }
   }
-  function wireClicks(){
-    document.addEventListener('click',function(e){
-      var open=e.target.closest && e.target.closest('[data-v110-open]');
-      if(open){ e.preventDefault(); openSec(open.getAttribute('data-v110-open')); return; }
-      var back=e.target.closest && e.target.closest('[data-v110-back]');
-      if(back){ e.preventDefault(); openSec('overview'); }
-    },true);
-  }
-  function patchShowAdminSection(){
+  function patchShow(){
     if(typeof window.showAdminSection!=='function') return false;
-    if(window.showAdminSection.__v110) return true;
+    if(window.showAdminSection.__v111) return true;
     var old=window.showAdminSection;
     window.showAdminSection=function(sec){
-      buildSections(); moveReferralCards();
+      setupPieces();
       old(sec);
-      setTimeout(function(){ moveReferralCards(); updateAlerts(); },60);
+      setTimeout(function(){ moveReferralCards(); updateBell(); },60);
     };
-    window.showAdminSection.__v110=true;
+    window.showAdminSection.__v111=true;
     return true;
   }
-  function init(){
-    ensureTopBar(); buildSections(); buildOverview(); moveReferralCards(); wireClicks(); patchShowAdminSection(); updateAlerts();
-    var acc=q('accountOpenAdminSettingsBtn'); if(acc) acc.onclick=function(){ if(typeof window.showPage==='function') window.showPage('admin'); setTimeout(function(){openSec('referrals')},80); };
-    var obsTargets=['adminDepositsPending','adminWithdrawsPending','adminSupportCount','adminNotesCount'].map(q).filter(Boolean);
-    obsTargets.forEach(function(el){ try{ new MutationObserver(updateAlerts).observe(el,{childList:true,subtree:true,characterData:true}); }catch(e){} });
-    setInterval(function(){ patchShowAdminSection(); buildSections(); buildOverview(); moveReferralCards(); updateAlerts(); },1800);
+  function wire(){
+    if(window.__ADNOR_V111_WIRED__) return; window.__ADNOR_V111_WIRED__=true;
+    document.addEventListener('click',function(e){
+      var open=e.target.closest && e.target.closest('[data-v111-open]');
+      if(open){ e.preventDefault(); openSection(open.getAttribute('data-v111-open')); }
+    },true);
   }
-  ready(function(){ setTimeout(init,500); });
+  function fixAccountShortcut(){ var a=q('accountOpenAdminSettingsBtn'); if(a) a.onclick=function(){ if(typeof window.showPage==='function') window.showPage('admin'); setTimeout(function(){openSection('referrals');},120); }; }
+  function setupPieces(){ ensureQuickBar(); cleanSideMenu(); ensureFinance(); ensureReferrals(); addRelatedShortcuts(); compactOverview(); updateBell(); }
+  function init(){ setupPieces(); wire(); patchShow(); fixAccountShortcut(); [ 'adminDepositsPending','adminWithdrawsPending','adminSupportCount','adminNotesCount' ].map(q).filter(Boolean).forEach(function(el){ try{ new MutationObserver(updateBell).observe(el,{childList:true,subtree:true,characterData:true}); }catch(e){} }); }
+  ready(function(){ setTimeout(init,500); setTimeout(init,1600); });
 })();
 </script>
 

@@ -681,9 +681,10 @@
   }
   .v61-top-ticker.site-alert:before{content:""!important;position:absolute;inset:-2px;background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.18) 45%,transparent 58%);transform:translateX(120%);animation:v104TickerShine 3.8s linear infinite;pointer-events:none;}
   .v61-top-ticker.site-alert:after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 24px rgba(255,213,83,.10);pointer-events:none;}
-  @keyframes v104TickerShine{0%{transform:translateX(120%)}100%{transform:translateX(-120%)}}
-  .v104-ticker-track{display:inline-flex;align-items:center;gap:14px;width:max-content;white-space:nowrap;padding:0 18px;animation:v104TickerMove 18s linear infinite;font-weight:1000;}
-  @keyframes v104TickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-110%)}}
+  @keyframes v104TickerShine{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+  .v104-ticker-track{display:inline-flex;align-items:center;gap:14px;width:max-content;white-space:nowrap;padding:0 18px;animation:v104TickerMove 20s linear infinite;font-weight:1000;direction:rtl;}
+  /* V115: official golden ticker moves from left to right */
+  @keyframes v104TickerMove{0%{transform:translateX(-115%)}100%{transform:translateX(105%)}}
   .v104-ticker-title{color:#ffe184;text-shadow:0 0 13px rgba(255,210,72,.42)}
   .v104-ticker-name{color:#8fe7ff;text-shadow:0 0 12px rgba(0,194,255,.34)}
   .v104-ticker-ticket{color:#ffb84d;border:1px solid rgba(255,184,77,.45);background:rgba(255,184,77,.08);border-radius:999px;padding:5px 10px;direction:ltr;}

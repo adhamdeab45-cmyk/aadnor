@@ -2313,6 +2313,50 @@ function setCurrentPrize(type){
     function renderGameStatus(){if(!$('dailyBoxText')||!currentProfile)return;updateWheelMoneyText();if(wheelSettings.luckyBox?.enabled===false){$('dailyBoxText').textContent='صندوق الحظ متوقف مؤقتًا من الإدارة.';$('dailyBoxBtn').disabled=true;$('dailyBoxBtn').style.opacity=.55;return}const last=Number(currentProfile.lastLuckyBoxAt||0),cool=Number(wheelSettings.luckyBox?.cooldownHours||24)*3600000,wait=Math.max(0,cool-(Date.now()-last));if(wait>0){const h=Math.floor(wait/3600000),m=Math.floor((wait%3600000)/60000);$('dailyBoxText').textContent='الصندوق التالي بعد '+h+' ساعة و '+m+' دقيقة.';$('dailyBoxBtn').disabled=true;$('dailyBoxBtn').style.opacity=.55}else{$('dailyBoxText').textContent='صندوق الحظ جاهز الآن. الجائزة تضاف إلى رصيد البونص.'+(Number(currentProfile.freeSpins||0)>0?' لديك '+Number(currentProfile.freeSpins||0)+' لفة مجانية دعائية للعجلة.':'');$('dailyBoxBtn').disabled=false;$('dailyBoxBtn').style.opacity=1}}
     function pickWheel(){const total=wheelSegments.reduce((a,s)=>a+s.w,0);let r=Math.random()*total;for(let i=0;i<wheelSegments.length;i++){r-=wheelSegments[i].w;if(r<=0)return {seg:wheelSegments[i],idx:i}}return {seg:wheelSegments[0],idx:0}}
     function setBet(delta){const el=$('betAmount');let v=Math.max(1,Number(el.value||1)+delta);el.value=v;updateWheelMoneyText()}
+
+    function adnorV113CreatePromoWheelRound(opts={}){
+      const bet=Number(opts.bet||1);
+      const segs=(opts.segments||wheelSegments||[]).map((s,i)=>({
+        segmentIndex:i,
+        label:String(s.label||((Number(s.m||0))+'x')),
+        multiplier:Number(s.m||0),
+        weight:Math.max(0,Number(s.w||0)),
+        payout:Number((bet*Number(s.m||0)).toFixed(2))
+      }));
+      // اللفة الدعائية المجانية آمنة: لا تدخل صندوق الألعاب ولا تسمح بالمضاعفات الضخمة بدون خزنة.
+      const maxPromoPayout=Number((bet*2).toFixed(2));
+      let allowed=segs.filter(x=>x.weight>0 && x.multiplier>=0 && x.payout<=maxPromoPayout);
+      if(!allowed.length){
+        allowed=segs.filter(x=>x.multiplier===0);
+      }
+      if(!allowed.length){
+        allowed=[{segmentIndex:0,label:'0x',multiplier:0,weight:1,payout:0}];
+      }
+      const total=allowed.reduce((a,x)=>a+x.weight,0)||1;
+      let r=Math.random()*total;
+      let pick=allowed[allowed.length-1];
+      for(const x of allowed){r-=x.weight;if(r<=0){pick=x;break}}
+      return {
+        id:'promo-local-'+Date.now(),
+        uid:opts.uid||'',
+        email:opts.email||'',
+        playerName:opts.playerName||'',
+        gameId:'wheel',
+        gameName:'عجلة الحظ',
+        bet,
+        paidFromReal:0,
+        paidFromBonus:0,
+        platformCut:0,
+        playerPoolAdd:0,
+        multiplier:pick.multiplier,
+        label:pick.label,
+        payout:pick.payout,
+        segmentIndex:pick.segmentIndex,
+        promoSpin:true,
+        localPromo:true,
+        createdAt:Date.now()
+      };
+    }
     document.querySelectorAll('[data-bet-change]').forEach(b=>b.onclick=()=>setBet(Number(b.dataset.betChange||0)));
     if($('betAmount'))$('betAmount').addEventListener('input',updateWheelMoneyText);
     function showWheelOnly(){if($('gamesHomePanel'))$('gamesHomePanel').classList.add('hidden');if($('wheelPlayCard')){$('wheelPlayCard').classList.remove('hidden');$('wheelPlayCard').scrollIntoView({behavior:'smooth',block:'start'});}updateWheelMoneyText()}
@@ -2342,9 +2386,14 @@ function setCurrentPrize(type){
       $('wheelResultText').textContent=promoSpin?'لفة مجانية دعائية قيد التشغيل...':'العجلة تدور... — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus);adnorV97StartSpinSound();
       let v96Round;
       try{
-        v96Round=await v96CreateGameRound({uid:currentUser.uid,email:currentUser.email||'',playerName:currentProfile.name||currentUser.displayName||currentUser.email||'مستخدم',gameId:'wheel',gameName:'عجلة الحظ',bet,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,promoSpin,segments:wheelSegments});
+        if(promoSpin){
+          // V113: اللفة المجانية الدعائية لا تلمس صندوق الألعاب حتى لا تتوقف بسبب صلاحيات Firebase.
+          v96Round=adnorV113CreatePromoWheelRound({uid:currentUser.uid,email:currentUser.email||'',playerName:currentProfile.name||currentUser.displayName||currentUser.email||'مستخدم',bet,segments:wheelSegments});
+        }else{
+          v96Round=await v96CreateGameRound({uid:currentUser.uid,email:currentUser.email||'',playerName:currentProfile.name||currentUser.displayName||currentUser.email||'مستخدم',gameId:'wheel',gameName:'عجلة الحظ',bet,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,promoSpin,segments:wheelSegments});
+        }
       }catch(e){
-        console.error(e);adnorV97StopSpinSound(false);toast('تعذر تجهيز نتيجة العجلة من صندوق الألعاب: '+(e.code||e.message));isSpinning=false;$('spinWheelBtn').disabled=false;return;
+        console.error(e);adnorV97StopSpinSound(false);toast('تعذر تجهيز نتيجة العجلة: '+(e.code||e.message));isSpinning=false;$('spinWheelBtn').disabled=false;return;
       }
       const pick={seg:{m:Number(v96Round.multiplier||0),label:v96Round.label||((Number(v96Round.multiplier||0))+'x')},idx:Number(v96Round.segmentIndex||0)};
       const angle=360/wheelSegments.length;

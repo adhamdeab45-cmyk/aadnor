@@ -878,7 +878,7 @@
 .v108-old-result-note{border:1px dashed rgba(255,205,74,.28);border-radius:18px;padding:10px;margin-top:12px;color:#cbd5e1;background:rgba(255,205,74,.04);font-size:12px;font-weight:900;line-height:1.7}
 </style>
 
-  <meta name="adnor-version" content="V120_LOTTERY_RESULT_LAYOUT_FIX">
+  <meta name="adnor-version" content="V121_LOTTERY_RESULT_BOARD_TRUE_FIX">
 
 
 <style id="adnor-v120-lottery-result-layout-fix">
@@ -1109,6 +1109,204 @@
   window.ADNOR_V120_FIX_RESULT_LAYOUT=placeResult;
 })();
 </script>
+
+
+<style id="adnor-v121-official-result-board">
+/* ADNOR V121 — TRUE official lottery result board fix.
+   Visual layout only: does not touch Firebase, deposits, withdraws, wheel, admin, or scheduled result logic. */
+#v91LatestResultCard.v121-result-board{
+  display:block!important;
+  position:relative!important;
+  z-index:20!important;
+  width:100%!important;
+  margin:10px 0 18px!important;
+  padding:12px!important;
+  border-radius:25px!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+  clear:both!important;
+  border:1px solid rgba(255,211,92,.72)!important;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(255,217,94,.18),transparent 36%),
+    radial-gradient(circle at 20% 15%,rgba(0,204,255,.10),transparent 28%),
+    linear-gradient(180deg,rgba(4,17,36,.98),rgba(0,6,16,.98))!important;
+  box-shadow:0 0 24px rgba(255,191,55,.16), inset 0 0 22px rgba(255,211,92,.04)!important;
+}
+#v91LatestResultCard.v121-result-board:before{
+  content:""!important;
+  position:absolute!important;
+  inset:-35%!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.11) 50%,transparent 64%)!important;
+  transform:translateX(-80%)!important;
+  animation:v121OfficialShine 5.8s linear infinite!important;
+}
+@keyframes v121OfficialShine{0%{transform:translateX(-80%) rotate(0deg)}100%{transform:translateX(80%) rotate(0deg)}}
+#v91LatestResultCard.v121-result-board *{box-sizing:border-box!important;}
+#v91LatestResultCard.v121-result-board .v91-result-head{display:none!important;}
+#v91LatestResultCard.v121-result-board .v91-result-paper{
+  position:relative!important;
+  z-index:2!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:9px!important;
+  width:100%!important;
+  min-height:0!important;
+  padding:13px 9px 14px!important;
+  border-radius:21px!important;
+  text-align:center!important;
+  overflow:visible!important;
+  background:linear-gradient(180deg,rgba(0,9,20,.92),rgba(0,12,28,.96))!important;
+  border:1px solid rgba(255,216,120,.28)!important;
+}
+#v91LatestResultCard.v121-result-board .v121-result-title{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  color:#ffe184!important;
+  font-size:clamp(16px,4.1vw,19px)!important;
+  line-height:1.3!important;
+  font-weight:1000!important;
+  white-space:normal!important;
+  text-shadow:0 0 14px rgba(255,204,74,.28)!important;
+  margin-bottom:2px!important;
+}
+#v91LatestResultCard.v121-result-board #v91ResultDrawLabel{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  max-width:none!important;
+  padding:4px 10px!important;
+  border-radius:999px!important;
+  color:#8fe7ff!important;
+  background:rgba(0,194,255,.09)!important;
+  border:1px solid rgba(143,231,255,.42)!important;
+  font-size:12px!important;
+  line-height:1.2!important;
+  font-weight:1000!important;
+}
+#v91LatestResultCard.v121-result-board .v91-result-label{
+  order:2!important;
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  color:#cbd7e8!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  font-weight:1000!important;
+}
+#v91LatestResultCard.v121-result-board .v91-result-digits{
+  order:3!important;
+  direction:ltr!important;
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:5px!important;
+  width:100%!important;
+  margin:1px 0 3px!important;
+  overflow:visible!important;
+}
+#v91LatestResultCard.v121-result-board .v91-result-digits span{
+  flex:0 0 clamp(32px,8.2vw,42px)!important;
+  width:clamp(32px,8.2vw,42px)!important;
+  height:clamp(38px,9vw,46px)!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  color:#ffffff!important;
+  font-family:'Cinzel',serif!important;
+  font-size:clamp(21px,5.2vw,29px)!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  background:radial-gradient(circle at 35% 25%,#2f5d8c 0%,#102b49 58%,#071320 100%)!important;
+  border:1px solid rgba(255,215,94,.88)!important;
+  box-shadow:0 0 13px rgba(255,203,75,.25), inset 0 1px 0 rgba(255,255,255,.26)!important;
+  animation:v121DigitPulse 2.4s ease-in-out infinite!important;
+}
+#v91LatestResultCard.v121-result-board .v91-result-digits span:nth-child(2n){animation-delay:.18s!important;}
+#v91LatestResultCard.v121-result-board .v91-result-digits span:nth-child(3n){animation-delay:.34s!important;}
+@keyframes v121DigitPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+#v91LatestResultCard.v121-result-board .v91-result-winner{
+  order:4!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:32px!important;
+  max-width:92%!important;
+  margin:0!important;
+  padding:7px 15px!important;
+  border-radius:999px!important;
+  color:#fff3b0!important;
+  background:rgba(255,205,74,.10)!important;
+  border:1px solid rgba(255,205,74,.42)!important;
+  box-shadow:0 0 13px rgba(255,205,74,.12)!important;
+  font-size:clamp(13px,3.6vw,15px)!important;
+  line-height:1.35!important;
+  font-weight:1000!important;
+  text-align:center!important;
+  overflow-wrap:anywhere!important;
+}
+#v91LatestResultCard.v121-result-board .v91-result-winner::before{content:"الفائز: "; color:#8fe7ff; margin-inline-end:4px;}
+html[lang="en"] #v91LatestResultCard.v121-result-board .v91-result-winner::before{content:"Winner: ";}
+html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::before{content:"Kazanan: ";}
+#v91LatestResultCard.v121-result-board .v91-result-prize{
+  order:5!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:min(230px,78%)!important;
+  min-height:48px!important;
+  margin:0!important;
+  padding:9px 20px!important;
+  border-radius:999px!important;
+  direction:ltr!important;
+  color:#35ffc4!important;
+  background:rgba(53,255,196,.08)!important;
+  border:1px solid rgba(53,255,196,.50)!important;
+  box-shadow:0 0 18px rgba(53,255,196,.14), inset 0 1px 0 rgba(255,255,255,.08)!important;
+  font-family:'Cinzel',serif!important;
+  font-size:clamp(22px,5.6vw,30px)!important;
+  line-height:1.1!important;
+  font-weight:1000!important;
+  text-shadow:0 0 14px rgba(53,255,196,.20)!important;
+}
+#v91LatestResultCard.v121-result-board .v91-result-wait{
+  order:6!important;
+  display:block!important;
+  width:100%!important;
+  margin:2px 0 0!important;
+  padding-top:4px!important;
+  color:rgba(205,216,232,.86)!important;
+  font-size:clamp(11px,3.05vw,13px)!important;
+  line-height:1.55!important;
+  font-weight:900!important;
+  text-align:center!important;
+  overflow-wrap:anywhere!important;
+}
+#page-lottery .v66-last-result-inline{display:none!important;}
+#page-lottery .v63-hero-draw{
+  position:relative!important;
+  z-index:1!important;
+  margin-top:0!important;
+  overflow:hidden!important;
+}
+#page-lottery .v104-lottery-balls{z-index:0!important; opacity:.42!important; pointer-events:none!important;}
+#page-lottery .v63-hero-draw>*:not(.v104-lottery-balls){position:relative!important; z-index:2!important;}
+@media(max-width:380px){
+  #v91LatestResultCard.v121-result-board{padding:10px!important;border-radius:22px!important;}
+  #v91LatestResultCard.v121-result-board .v91-result-paper{padding:11px 6px 12px!important;gap:7px!important;}
+  #v91LatestResultCard.v121-result-board .v121-result-title{font-size:15px!important;}
+  #v91LatestResultCard.v121-result-board .v91-result-digits{gap:3px!important;}
+  #v91LatestResultCard.v121-result-board .v91-result-digits span{flex-basis:30px!important;width:30px!important;height:35px!important;font-size:20px!important;}
+  #v91LatestResultCard.v121-result-board .v91-result-prize{min-width:205px!important;font-size:21px!important;min-height:44px!important;}
+}
+</style>
 
 </head>
 <body>
@@ -4973,6 +5171,81 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     window.ADNOR_V119_translateNow=function(){burst(true)};
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+})();
+</script>
+
+
+<script id="adnor-v121-official-result-board">
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function cleanWinnerText(txt){
+    txt = String(txt || '').trim();
+    var cleaned = txt.replace(/^\s*(اسم\s*الفائز|الفائز|Winner|Kazanan)\s*[:：-]?\s*/i,'').trim();
+    return cleaned || txt || 'بانتظار نشر نتيجة رسمية من الإدارة';
+  }
+  function digitValue(el){ return String(el && el.textContent || '0000000').replace(/\D/g,'').slice(-7).padStart(7,'0'); }
+  function setDigits(el, val){
+    if(!el) return;
+    var digits=String(val||'0000000').replace(/\D/g,'').slice(-7).padStart(7,'0');
+    el.innerHTML=digits.split('').map(function(d){return '<span>'+d+'</span>';}).join('');
+  }
+  function rebuildResultCard(){
+    var page=document.getElementById('page-lottery');
+    var card=document.getElementById('v91LatestResultCard');
+    if(!page || !card) return;
+    var tabs=page.querySelector('.tabs');
+    if(tabs && card.previousElementSibling!==tabs){ tabs.insertAdjacentElement('afterend',card); }
+
+    var oldLabel=document.getElementById('v91ResultDrawLabel');
+    var oldDigits=document.getElementById('v91ResultDigits');
+    var oldWinner=document.getElementById('v91ResultWinner');
+    var oldPrize=document.getElementById('v91ResultPrize');
+    var oldNote=document.getElementById('v91ResultNote');
+
+    var label=oldLabel ? oldLabel.textContent.trim() : 'اليومي';
+    var digits=digitValue(oldDigits);
+    var winner=oldWinner ? cleanWinnerText(oldWinner.textContent) : 'بانتظار نشر نتيجة رسمية من الإدارة';
+    var prize=oldPrize ? oldPrize.textContent.trim() : '$0.00';
+    var note=oldNote ? oldNote.textContent.trim() : 'بانتظار نشر النتيجة الرسمية.';
+
+    if(!card.classList.contains('v121-result-board')){
+      card.classList.add('v121-result-board');
+      card.innerHTML =
+        '<div class="v91-result-paper">'+
+          '<div class="v121-result-title">🏆 <span class="v121-title-text">النتيجة الرسمية الأخيرة</span> <span id="v91ResultDrawLabel"></span></div>'+
+          '<div class="v91-result-label">رقم التذكرة الرابحة</div>'+
+          '<div class="v91-result-digits" id="v91ResultDigits"></div>'+
+          '<div class="v91-result-winner" id="v91ResultWinner"></div>'+
+          '<div class="v91-result-prize" id="v91ResultPrize"></div>'+
+          '<div class="v91-result-wait" id="v91ResultNote"></div>'+
+        '</div>';
+    }
+
+    var labelEl=document.getElementById('v91ResultDrawLabel');
+    var digitsEl=document.getElementById('v91ResultDigits');
+    var winnerEl=document.getElementById('v91ResultWinner');
+    var prizeEl=document.getElementById('v91ResultPrize');
+    var noteEl=document.getElementById('v91ResultNote');
+    if(labelEl) labelEl.textContent=label;
+    setDigits(digitsEl,digits);
+    if(winnerEl) winnerEl.textContent=winner;
+    if(prizeEl) prizeEl.textContent=prize;
+    if(noteEl) noteEl.textContent=note;
+  }
+  ready(function(){
+    rebuildResultCard();
+    setTimeout(rebuildResultCard,250);
+    setTimeout(rebuildResultCard,900);
+    setTimeout(rebuildResultCard,1800);
+    var page=document.getElementById('page-lottery');
+    if(page && window.MutationObserver){
+      var timer=null;
+      var mo=new MutationObserver(function(){ clearTimeout(timer); timer=setTimeout(rebuildResultCard,120); });
+      mo.observe(page,{childList:true,subtree:true,characterData:true});
+    }
+  });
+  window.ADNOR_V121_REBUILD_RESULT_CARD=rebuildResultCard;
 })();
 </script>
 

@@ -1888,18 +1888,17 @@ function setCurrentPrize(type){
     listenWheelSettings();
 
 
-    /* V99 — No auto redirect on insufficient balance */
+    /* V100 — Friendly insufficient balance message */
     function adnorV99InsufficientBalance(message,details={}){
-      const msg=message||'الرصيد غير كافٍ لإكمال العملية.';
+      const msg=message||'رصيدك لا يكفي لإتمام هذه العملية.';
       try{toast(msg)}catch(e){}
       try{adnorV97Sound('lose')}catch(e){}
       try{
         const rows=[];
-        if(details.required!==undefined)rows.push({label:'المطلوب',value:money(Number(details.required||0))});
-        if(details.available!==undefined)rows.push({label:'المتاح الآن',value:money(Number(details.available||0))});
-        if(details.place)rows.push({label:'مكانك الحالي',value:details.place});
-        rows.push({label:'الإجراء',value:'بقيت بنفس الصفحة بدون تحويل للمحفظة'});
-        adnorV97ShowEventModal({icon:'💰',title:'الرصيد غير كافٍ',message:msg,confetti:false,rows,okText:'تمام'});
+        if(details.required!==undefined)rows.push({label:'المبلغ المطلوب',value:money(Number(details.required||0))});
+        if(details.available!==undefined)rows.push({label:'رصيدك المتاح',value:money(Number(details.available||0))});
+        rows.push({label:'الحل',value:'اشحن محفظتك أو جرّب بمبلغ أقل'});
+        adnorV97ShowEventModal({icon:'💰',title:'رصيدك لا يكفي',message:msg,confetti:false,rows,okText:'فهمت'});
       }catch(e){}
       return false;
     }
@@ -1915,7 +1914,7 @@ function setCurrentPrize(type){
       const num=$('ticketNumber').value.trim();
       if(!/^\d{7}$/.test(num)){toast('رقم التذكرة يجب أن يكون 7 خانات.');return}
       const pay=splitPlayablePayment(TICKET_PRICE);
-      if(pay.playable<TICKET_PRICE){adnorV99InsufficientBalance('الرصيد غير كافٍ لشراء البطاقة. الرصيد الحقيقي + البونص غير كافيين.',{required:TICKET_PRICE,available:pay.playable,place:'صفحة اليانصيب'});return}
+      if(pay.playable<TICKET_PRICE){adnorV99InsufficientBalance('رصيدك لا يكفي لشراء هذه البطاقة.',{required:TICKET_PRICE,available:pay.playable,place:'صفحة اليانصيب'});return}
       const ticketRef=push(ref(db,'tickets/'+currentDraw));
       const id=ticketRef.key;
       const now=Date.now();
@@ -1988,7 +1987,7 @@ function setCurrentPrize(type){
       if(bet<minBet)return toast('أقل رهان هو '+money(minBet));
       if(bet>maxBet)return toast('أعلى رهان هو '+money(maxBet));
       const real=Number(currentProfile.realBalance||0), bonus=Number(currentProfile.bonusBalance||0), playable=Number((real+bonus).toFixed(2));
-      if(!promoSpin&&bet>playable){adnorV99InsufficientBalance('الرصيد غير كافٍ لتدوير العجلة. تقدر تلعب من الرصيد الحقيقي + البونص.',{required:bet,available:playable,place:'صفحة العجلة'});return}
+      if(!promoSpin&&bet>playable){adnorV99InsufficientBalance('رصيدك لا يكفي لتدوير العجلة بهذا المبلغ.',{required:bet,available:playable,place:'صفحة العجلة'});return}
       if(!promoSpin&&!(await checkSpendAllowed(bet)))return;
       const pay=promoSpin?{real,bonus,useReal:0,useBonus:0,newReal:real,newBonus:bonus,playable}:splitPlayablePayment(bet);
       isSpinning=true;
@@ -3395,7 +3394,7 @@ function setCurrentPrize(type){
       $('v94GameBet').value=bet;
       if(!(await checkSpendAllowed(bet)))return;
       const pay=v94SplitPayment(bet,g);
-      if(!pay){const availableForGame=Number(((g.acceptReal?Number(currentProfile?.realBalance||0):0)+(g.acceptBonus?Number(currentProfile?.bonusBalance||0):0)).toFixed(2));adnorV99InsufficientBalance('الرصيد غير كافٍ لهذه اللعبة حسب إعداداتها.',{required:bet,available:availableForGame,place:'صفحة اللعبة'});return}
+      if(!pay){const availableForGame=Number(((g.acceptReal?Number(currentProfile?.realBalance||0):0)+(g.acceptBonus?Number(currentProfile?.bonusBalance||0):0)).toFixed(2));adnorV99InsufficientBalance('رصيدك لا يكفي لتشغيل هذه اللعبة.',{required:bet,available:availableForGame,place:'صفحة اللعبة'});return}
       adnorV97Sound('game');
       const chanceRoll=v96Random()*100;
       const forceLose=chanceRoll>=Number(g.winChance||0);

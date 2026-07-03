@@ -2164,7 +2164,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
                   <div class="field-wrap"><label>بونص المستخدم الجديد USD — بونص قابل للعب</label><div class="field"><span class="ico">🎁</span><input id="newUserBonusInput" type="number" step="0.01" min="0"></div></div>
                   <div class="field-wrap"><label>بونص صاحب الدعوة USD — بونص قابل للعب</label><div class="field"><span class="ico">🤝</span><input id="referrerBonusInput" type="number" step="0.01" min="0"></div></div>
                   <div class="field-wrap"><label>نسبة بونص الإيداع %</label><div class="field"><span class="ico">%</span><input id="depositBonusPercentInput" type="number" step="1" min="0" max="500"></div></div>
-                  <div class="field-wrap"><label>حد دعوات يومي لكل مستخدم</label><div class="field"><span class="ico">📈</span><input id="dailyReferralLimitInput" type="number" step="1" min="0"></div></div>
+                  <div class="field-wrap"><label>حد دعوات يومي لكل مستخدم</label><div class="field"><span class="ico">📈</span><input id="dailyReferralLimitInput" type="number" step="1" min="0"></div><small>0 يعني بدون حد. عند الوصول للحد لا يتم دفع بونص جديد لصاحب الدعوة بنفس اليوم.</small></div>
                   <div class="field-wrap"><label>ملاحظة تظهر في حسابي</label><div class="field"><span class="ico">📝</span><input id="referralNoteInput" placeholder="شارك رابطك واربح بونص"></div></div>
                 </div>
                 <div class="admin-form-actions"><button class="gold-btn" id="saveReferralSettingsBtn" type="button">حفظ إعدادات الدعوات والبونص</button><button class="admin-mini-btn" id="seedReferralSettingsBtn" type="button">استرجاع الافتراضي</button></div>
@@ -3264,6 +3264,38 @@ function setCurrentPrize(type){
       return Object.assign({enabled:true,adminCode:'ADNORVIP',newUserBonus:0.50,referrerBonus:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'},referralSettings||{});
     }
     function referralStatus(msg,opts={}){const status=$('refApplyStatus');if(status&&!opts.silent)status.textContent=msg;if(opts.toast)toast(msg)}
+    function referralDayKey(ts=Date.now()){
+      const d=new Date(ts);
+      const y=d.getFullYear();
+      const m=String(d.getMonth()+1).padStart(2,'0');
+      const day=String(d.getDate()).padStart(2,'0');
+      return y+'-'+m+'-'+day;
+    }
+    async function reserveReferralDailySlot(ownerUid,limit,referralId,code){
+      const cleanLimit=Math.max(0,parseInt(limit||0));
+      if(!cleanLimit)return {ok:true,skipped:true};
+      const now=Date.now();
+      const key=referralDayKey(now);
+      const path='referral_daily_counts/'+ownerUid+'/'+key;
+      try{
+        const result=await runTransaction(ref(db,path),cur=>{
+          const currentCount=Number((cur&&cur.count)||0);
+          if(currentCount>=cleanLimit)return;
+          return {count:currentCount+1,limit:cleanLimit,ownerUid,lastReferralId:referralId,lastReferredUid:currentUser.uid,lastCode:code,updatedAt:now};
+        });
+        if(!result.committed)return {ok:false,reason:'limit',count:Number((result.snapshot&&result.snapshot.val()&&result.snapshot.val().count)||cleanLimit),limit:cleanLimit,key,path};
+        return {ok:true,key,path};
+      }catch(e){console.error('referral daily limit transaction failed',e);return {ok:false,reason:'permission',error:e,key,path}}
+    }
+    async function releaseReferralDailySlot(reservation){
+      if(!reservation||!reservation.path)return;
+      try{
+        await runTransaction(ref(db,reservation.path),cur=>{
+          if(!cur||!Number(cur.count||0))return cur;
+          return Object.assign({},cur,{count:Math.max(0,Number(cur.count||0)-1),rolledBackAt:Date.now()});
+        });
+      }catch(e){console.warn('referral daily slot rollback failed',e)}
+    }
     async function applyReferralCode(codeOverride='',opts={}){
       if(!currentUser||!currentProfile){if(!opts.silent)toast('سجل الدخول أولًا');return false}
       const status=$('refApplyStatus');
@@ -3284,12 +3316,20 @@ function setCurrentPrize(type){
       const ownerSnap=await get(ref(db,'users/'+ownerUid));
       const owner=ownerSnap.val()||{};
       if(!owner.uid&&!owner.email&&c.type!=='admin_code'){referralStatus('صاحب كود الدعوة غير موجود.',opts);return false}
+      const existingByUser=await get(ref(db,'user_referrals_received/'+currentUser.uid));
+      if(existingByUser.exists()&&Object.keys(existingByUser.val()||{}).length){referralStatus('هذا الحساب استفاد من دعوة سابقًا.',opts);clearPendingReferralCode();return false}
       const now=Date.now();
-      const newBonus=Number(freshSettings.newUserBonus||0);
-      const refBonus=Number(freshSettings.referrerBonus||0);
+      const newBonus=Math.max(0,Number(freshSettings.newUserBonus||0));
+      const refBonus=Math.max(0,Number(freshSettings.referrerBonus||0));
       const myOld=Number(me.bonusBalance||0);
       const id=(push(ref(db,'referrals')).key)||('ref_'+now);
-      const data={id,code,referrerUid:ownerUid,referrerEmail:c.ownerEmail||owner.email||'',referrerName:c.ownerName||owner.name||'',referredUid:currentUser.uid,referredEmail:currentUser.email||'',referredName:me.name||currentUser.displayName||'',newUserBonus:newBonus,referrerBonus:refBonus,bonusType:'playable_bonus',status:'approved',referrerRewardStatus:refBonus>0?'pending_claim':'none',createdAt:now,source:'v109_referral_link'};
+      const reservation=await reserveReferralDailySlot(ownerUid,freshSettings.dailyReferralLimit,id,code);
+      if(!reservation.ok){
+        if(reservation.reason==='limit')referralStatus('صاحب الدعوة وصل إلى الحد اليومي للدعوات. جرّب لاحقًا.',opts);
+        else referralStatus('لم يتم فحص حد الدعوات اليومي بسبب صلاحيات قاعدة البيانات. حدّث قواعد Firebase من ملف V125.',{toast:!opts.silent});
+        return false;
+      }
+      const data={id,code,referrerUid:ownerUid,referrerEmail:c.ownerEmail||owner.email||'',referrerName:c.ownerName||owner.name||'',referredUid:currentUser.uid,referredEmail:currentUser.email||'',referredName:me.name||currentUser.displayName||'',newUserBonus:newBonus,referrerBonus:refBonus,bonusType:'playable_bonus',status:'approved',referrerRewardStatus:refBonus>0?'pending_claim':'none',dailyLimit:Number(freshSettings.dailyReferralLimit||0),dailyLimitKey:reservation.key||'',createdAt:now,source:opts.auto?'referral_link_auto':'referral_code_manual'};
       const updates={};
       updates['referrals/'+id]=data;
       updates['user_referrals_received/'+currentUser.uid+'/'+id]=data;
@@ -3300,19 +3340,16 @@ function setCurrentPrize(type){
       updates['transactions/'+currentUser.uid+'/'+now]={type:'referral_new_user_bonus',amount:newBonus,status:'bonus',note:'بونص استخدام كود دعوة '+code+' — بونص قابل للعب',balanceBefore:myOld,balanceAfter:Number((myOld+newBonus).toFixed(2)),createdAt:now};
       updates['user_notifications/'+currentUser.uid+'/'+now]=notifObj('referral_bonus','تم تفعيل كود الدعوة','تمت إضافة '+money(newBonus)+' إلى رصيد البونص القابل للعب وشراء التذاكر.',{amount:newBonus,referralId:id});
       updates['admin_notifications/'+now]={type:'referral',uid:currentUser.uid,email:currentUser.email||'',text:'تم تفعيل كود دعوة '+code+' — بونص مستخدم '+money(newBonus)+' / بونص صاحب الدعوة '+money(refBonus),createdAt:now,status:'new',referralId:id};
+      if(refBonus>0){
+        updates['pending_referral_rewards/'+ownerUid+'/'+id]={...data,status:'pending',amount:refBonus,createdAt:now};
+      }
       try{
         await update(ref(db),updates);
       }catch(e){
         console.error('referral main update failed',e);
-        referralStatus('لم يتم تفعيل كود الدعوة. إذا ظهر خطأ صلاحيات، حدّث قواعد قاعدة البيانات من ملف V109.',{toast:!opts.silent});
+        await releaseReferralDailySlot(reservation);
+        referralStatus('لم يتم تفعيل كود الدعوة. حدّث قواعد Firebase من ملف V125 ثم جرّب مرة ثانية.',{toast:!opts.silent});
         return false;
-      }
-      if(refBonus>0){
-        try{
-          await set(ref(db,'pending_referral_rewards/'+ownerUid+'/'+id),{...data,status:'pending',amount:refBonus,createdAt:now});
-        }catch(e){
-          console.warn('pending referrer reward failed',e);
-        }
       }
       currentProfile={...currentProfile,referredBy:code,referredByUid:ownerUid,bonusBalance:Number((myOld+newBonus).toFixed(2))};
       renderProfile();
@@ -3341,9 +3378,15 @@ function setCurrentPrize(type){
       updates['users/'+currentUser.uid+'/referralBonusEarned']=Number((Number(u.referralBonusEarned||0)+amount).toFixed(2));
       updates['users/'+currentUser.uid+'/updatedAt']=now;
       updates['transactions/'+currentUser.uid+'/'+now]={type:'referral_referrer_bonus',amount,status:'bonus',note:'بونص دعوة مستخدم جديد '+(reward.referredEmail||'')+' — بونص قابل للعب',balanceBefore:before,balanceAfter:after,createdAt:now};
-      updates['user_referrals/'+currentUser.uid+'/'+rewardId]={...reward,status:'claimed',claimedAt:now};
+      updates['user_referrals/'+currentUser.uid+'/'+rewardId]={...reward,status:'claimed',claimedAt:now,referrerRewardStatus:'claimed'};
       updates['pending_referral_rewards/'+currentUser.uid+'/'+rewardId+'/status']='claimed';
       updates['pending_referral_rewards/'+currentUser.uid+'/'+rewardId+'/claimedAt']=now;
+      updates['referrals/'+rewardId+'/referrerRewardStatus']='claimed';
+      updates['referrals/'+rewardId+'/claimedAt']=now;
+      if(reward.referredUid){
+        updates['user_referrals_received/'+reward.referredUid+'/'+rewardId+'/referrerRewardStatus']='claimed';
+        updates['user_referrals_received/'+reward.referredUid+'/'+rewardId+'/claimedAt']=now;
+      }
       updates['user_notifications/'+currentUser.uid+'/'+now]=notifObj('referral_bonus','وصلك بونص دعوة','تمت إضافة '+money(amount)+' إلى رصيد البونص لأن مستخدمًا سجل من رابطك.',{amount,referralId:rewardId});
       try{await update(ref(db),updates);return true}catch(e){console.error('claim referral reward failed',e);return false}
     }
@@ -3487,7 +3530,7 @@ function setCurrentPrize(type){
       const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');
       const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='adnor_campaigns_'+Date.now()+'.csv';a.click();URL.revokeObjectURL(a.href);
     }
-    function renderAdminReferrals(list){const box=$('adminReferralsList');if(!box)return;list=list.slice(0,30);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد دعوات بعد</div>';return}box.innerHTML=list.map(r=>'<div class="admin-row"><div><h4>كود الدعوة: '+escapeHtml(r.code||'')+' <span class="admin-badge approved">'+statusLabel(r.status||'approved')+'</span></h4><p>صاحب الدعوة: '+escapeHtml(r.referrerEmail||r.referrerUid||'')+'<br>المستخدم الجديد: '+escapeHtml(r.referredEmail||r.referredUid||'')+'<br>بونص المستخدم الجديد: '+money(r.newUserBonus)+' — بونص صاحب الدعوة: '+money(r.referrerBonus)+'<br>حالة بونص صاحب الدعوة: '+escapeHtml(r.referrerRewardStatus==='claimed'?'تمت الإضافة':(r.referrerRewardStatus==='pending_claim'?'بانتظار فتح حساب صاحب الدعوة':'لا يوجد'))+'</p></div><div class="admin-actions"><button class="warn" data-copy="'+escapeHtml(r.id||'')+'" onclick="copyText(this.dataset.copy)">نسخ ID</button></div></div>').join('')}
+    function renderAdminReferrals(list){const box=$('adminReferralsList');if(!box)return;list=list.slice(0,30);if(!list.length){box.innerHTML='<div class="admin-empty">لا توجد دعوات بعد</div>';return}box.innerHTML=list.map(r=>'<div class="admin-row"><div><h4>كود الدعوة: '+escapeHtml(r.code||'')+' <span class="admin-badge approved">'+statusLabel(r.status||'approved')+'</span></h4><p>صاحب الدعوة: '+escapeHtml(r.referrerEmail||r.referrerUid||'')+'<br>المستخدم الجديد: '+escapeHtml(r.referredEmail||r.referredUid||'')+'<br>بونص المستخدم الجديد: '+money(r.newUserBonus)+' — بونص صاحب الدعوة: '+money(r.referrerBonus)+'<br>حالة بونص صاحب الدعوة: '+escapeHtml(r.referrerRewardStatus==='claimed'?'تمت الإضافة':((r.referrerRewardStatus==='pending_claim'||r.referrerRewardStatus==='pending')?'بانتظار فتح حساب صاحب الدعوة':'لا يوجد'))+'</p></div><div class="admin-actions"><button class="warn" data-copy="'+escapeHtml(r.id||'')+'" onclick="copyText(this.dataset.copy)">نسخ ID</button></div></div>').join('')}
     if($('v101SaveSettingsBtn'))$('v101SaveSettingsBtn').onclick=v101SaveUserSettings;
     if($('v101OpenAccountBtn'))$('v101OpenAccountBtn').onclick=()=>showPage('account');
     if($('v101MuteInput'))$('v101MuteInput').onchange=()=>{localStorage.setItem('adnor_sound_muted',$('v101MuteInput').checked?'1':'0')};

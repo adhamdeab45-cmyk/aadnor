@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
+<!-- V126_MARKET_ACTIVITY_FIX: public market card uses real trading volume instead of investor count -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -1621,7 +1622,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
             <div class="adn-market-mini"><span>إجمالي العرض</span><b id="adnTotalSupply">5,000,000</b></div>
             <div class="adn-market-mini"><span>المتبقي للبيع</span><b id="adnRemainingSupply">5,000,000</b></div>
             <div class="adn-market-mini"><span>صندوق ADN</span><b id="adnFundUsd">$0.00</b></div>
-            <div class="adn-market-mini"><span>المستثمرين</span><b id="adnInvestorsCount">0</b></div>
+            <div class="adn-market-mini"><span>حجم التداول</span><b id="adnMarketActivity">$0.00</b></div>
           </div>
         </section>
         <section class="adn-chart-card">
@@ -2077,14 +2078,14 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
 
             <section class="admin-section" id="admin-section-token">
               <div class="admin-wide-card">
-                <div class="admin-section-head"><h3>صندوق ADN الداخلي</h3><span>إجمالي العرض، السيولة، المستثمرين، والشموع</span></div>
+                <div class="admin-section-head"><h3>صندوق ADN الداخلي</h3><span>إجمالي العرض، السيولة، الحاملون الحقيقيون، والشموع</span></div>
                 <div class="adn-admin-grid">
                   <div class="adn-admin-stat"><span>إجمالي العرض</span><b id="adminAdnTotalSupply">5,000,000</b></div>
                   <div class="adn-admin-stat"><span>المباع</span><b id="adminAdnSoldSupply">0</b></div>
                   <div class="adn-admin-stat"><span>المتبقي</span><b id="adminAdnRemainingSupply">5,000,000</b></div>
                   <div class="adn-admin-stat"><span>سعر ADN</span><b id="adminAdnPrice">$0.1000</b></div>
                   <div class="adn-admin-stat"><span>رصيد الصندوق</span><b id="adminAdnFundUsd">$0.00</b></div>
-                  <div class="adn-admin-stat"><span>عدد المستثمرين</span><b id="adminAdnInvestors">0</b></div>
+                  <div class="adn-admin-stat"><span>حاملو ADN الحقيقيون</span><b id="adminAdnInvestors">0</b></div>
                   <div class="adn-admin-stat"><span>حجم الشراء</span><b id="adminAdnBuyVol">$0.00</b></div>
                   <div class="adn-admin-stat"><span>حجم البيع</span><b id="adminAdnSellVol">$0.00</b></div>
                 </div>
@@ -4715,7 +4716,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     function adnInvestorsCount(){try{const adminCnt=Object.values(adminState?.users||{}).filter(u=>adnNum(u.adnBalance)>0).length;return adminCnt||adnNum(adnState.investorsCount)}catch(e){return adnNum(adnState.investorsCount)}}
     function adnMarketCap(){return adnCurrentPrice()*adnNum(adnState.totalSupply||adnSettings.totalSupply,5000000)}
     function renderAdnWalletCard(){const bal=adnNum(currentProfile?.adnBalance);const price=adnCurrentPrice();setText('adnWalletBalance',adnQty(bal)+' ADN');setText('adnWalletValue',money(bal*price));setText('adnWalletPrice',adnFmt(price,4));const t=adnTrendPct();const el=$('adnWalletTrend');if(el){el.textContent=(t>=0?'▲ ':'▼ ')+Math.abs(t).toFixed(2)+'%';el.style.color=t>=0?'#7dffd9':'#ff9ead';}}
-    function renderAdnMarket(){const price=adnCurrentPrice(),trend=adnTrendPct();setText('adnMarketPrice',adnFmt(price,4));const tr=$('adnMarketTrend');if(tr){tr.textContent=(trend>=0?'▲ ':'▼ ')+Math.abs(trend).toFixed(2)+'%';tr.classList.toggle('down',trend<0)}setText('adnTotalSupply',adnQty(adnState.totalSupply||adnSettings.totalSupply));setText('adnRemainingSupply',adnQty(adnState.remainingSupply));setText('adnFundUsd',money(adnState.fundUsd));setText('adnInvestorsCount',adnInvestorsCount());setText('adnUserRealBalance',money(currentProfile?.realBalance));setText('adnUserTokenBalance',adnQty(currentProfile?.adnBalance));renderAdnTradeCalc();renderAdnUserTrades();drawAdnCandles();}
+    function renderAdnMarket(){const price=adnCurrentPrice(),trend=adnTrendPct();setText('adnMarketPrice',adnFmt(price,4));const tr=$('adnMarketTrend');if(tr){tr.textContent=(trend>=0?'▲ ':'▼ ')+Math.abs(trend).toFixed(2)+'%';tr.classList.toggle('down',trend<0)}setText('adnTotalSupply',adnQty(adnState.totalSupply||adnSettings.totalSupply));setText('adnRemainingSupply',adnQty(adnState.remainingSupply));setText('adnFundUsd',money(adnState.fundUsd));setText('adnMarketActivity',money(adnNum(adnState.buyVolumeUsd)+adnNum(adnState.sellVolumeUsd)));setText('adnUserRealBalance',money(currentProfile?.realBalance));setText('adnUserTokenBalance',adnQty(currentProfile?.adnBalance));renderAdnTradeCalc();renderAdnUserTrades();drawAdnCandles();}
     function renderAdnTradeCalc(){const q=adnNum($('adnAmountInput')?.value);const price=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();const cost=q*price;setText('adnTradeCost',money(cost));if($('adnExecuteTradeBtn'))$('adnExecuteTradeBtn').textContent=adnTradeMode==='buy'?'تنفيذ الشراء':'تنفيذ البيع';}
     function candleRows(){let rows=Object.values(adnCandles||{}).filter(x=>x&&x.t).sort((a,b)=>a.t-b.t);if(!rows.length){const p=adnCurrentPrice();const now=Math.floor(Date.now()/60000)*60000;rows=[{t:now-240000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now-180000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now-120000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now-60000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0}]}return rows.slice(-48)}
     function drawAdnCandles(){const c=$('adnCandleCanvas');if(!c)return;const ctx=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();const w=Math.max(320,Math.floor(rect.width*dpr)),h=Math.max(220,Math.floor(rect.height*dpr));if(c.width!==w||c.height!==h){c.width=w;c.height=h}ctx.clearRect(0,0,w,h);ctx.fillStyle='#020812';ctx.fillRect(0,0,w,h);const padL=48*dpr,padR=14*dpr,padT=22*dpr,padB=42*dpr;const rows=candleRows();const maxP=Math.max(...rows.map(x=>adnNum(x.high,x.close)),adnCurrentPrice());const minP=Math.min(...rows.map(x=>adnNum(x.low,x.close)),adnCurrentPrice());const range=Math.max(0.0001,maxP-minP);function y(p){return padT+(maxP-p)/range*(h-padT-padB)}for(let i=0;i<5;i++){const yy=padT+i*(h-padT-padB)/4;ctx.strokeStyle='rgba(255,216,84,.10)';ctx.lineWidth=1*dpr;ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(w-padR,yy);ctx.stroke();ctx.fillStyle='rgba(210,224,245,.65)';ctx.font=(10*dpr)+'px Tahoma';const val=maxP-i*range/4;ctx.fillText('$'+val.toFixed(4),6*dpr,yy+4*dpr)}const areaW=w-padL-padR;const step=areaW/rows.length;rows.forEach((r,i)=>{const x=padL+i*step+step/2;const up=adnNum(r.close)>=adnNum(r.open);const col=up?'#24f0b9':'#ff5570';const yo=y(r.open),yc=y(r.close),yh=y(r.high),yl=y(r.low);ctx.strokeStyle=col;ctx.lineWidth=2*dpr;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();ctx.fillStyle=col;const bh=Math.max(3*dpr,Math.abs(yc-yo));ctx.fillRect(x-step*.28,Math.min(yo,yc),step*.56,bh)});if(rows.length>=2){ctx.strokeStyle='rgba(255,230,130,.86)';ctx.lineWidth=2*dpr;ctx.setLineDash([6*dpr,5*dpr]);ctx.beginPath();rows.forEach((r,i)=>{const x=padL+i*step+step/2, yy=y(r.close);if(i===0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy)});ctx.stroke();ctx.setLineDash([])}ctx.fillStyle='#ffe184';ctx.font='bold '+(12*dpr)+'px Tahoma';ctx.fillText('ADN / USD — شموع حسب عمليات الشراء والبيع',padL,16*dpr);setText('adnChartInfo','آخر سعر '+adnFmt(adnCurrentPrice(),4)+' — حجم التداول '+money(adnNum(adnState.buyVolumeUsd)+adnNum(adnState.sellVolumeUsd)));}

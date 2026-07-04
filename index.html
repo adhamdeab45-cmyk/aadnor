@@ -5398,7 +5398,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     ensureMenuButton('referrals','🤝','الدعوات','games');
     var hide=['deposits','withdrawals','payments','vipadmin','campaigns','logs','backups'];
     hide.forEach(function(sec){ var b=side.querySelector('[data-admin-section="'+sec+'"]'); if(b) b.classList.add('v111-submenu-hidden'); });
-    var keepTitles={overview:'الرئيسية',users:'المستخدمين',finance:'المالية',draws:'يا نصيب',games:'الألعاب',referrals:'الدعوات',support:'الدعم',aiadmin:'المساعد',notifications:'التنبيهات',settings:'الإعدادات',token:'صندوق ADN'};
+    var keepTitles={overview:'الرئيسية',users:'المستخدمين',finance:'المالية',draws:'يا نصيب',games:'الألعاب',referrals:'الدعوات والكود',support:'الدعم',aiadmin:'المساعد',notifications:'التنبيهات',settings:'الإعدادات',token:'صندوق ADN'};
     Object.keys(keepTitles).forEach(function(sec){ var b=side.querySelector('[data-admin-section="'+sec+'"]'); if(b){ var ico=(b.querySelector('i')||{}).textContent||''; b.innerHTML='<span><i>'+ico+'</i> '+keepTitles[sec]+'</span><span>›</span>'; b.onclick=function(){openSection(sec);}; }});
   }
   function ensureSection(id,inner){
@@ -5420,7 +5420,18 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     var settings=q('admin-section-settings'); if(!settings) return;
     var cards=[].slice.call(settings.querySelectorAll('.admin-wide-card'));
     var found=[];
-    cards.forEach(function(card){ var t=card.textContent||''; if(t.indexOf('إعدادات كود الدعوة')>-1 || t.indexOf('آخر الدعوات')>-1){ found.push(card); } });
+    cards.forEach(function(card){
+      var t=card.textContent||'';
+      if(
+        t.indexOf('إعدادات كود الدعوة')>-1 ||
+        t.indexOf('قوة الدعوة والبونص')>-1 ||
+        t.indexOf('كود الدعوة الرسمي الخاص بالرابط')>-1 ||
+        t.indexOf('آخر الدعوات')>-1 ||
+        card.querySelector('#adminReferralCodeInput,#saveReferralSettingsBtn,#adminReferralsList')
+      ){
+        found.push(card);
+      }
+    });
     if(found.length){
       mount.innerHTML=''; found.forEach(function(card){ mount.appendChild(card); });
     }else if(!mount.querySelector('.admin-wide-card') && !mount.dataset.waiting){
@@ -5429,7 +5440,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     }
   }
   function ensureReferrals(){
-    var html='<div class="admin-wide-card"><div class="v111-section-title"><b>🤝 الدعوات</b><small>كود الدعوة والبونص والسجل</small></div><div id="v111ReferralMount"><div class="v111-compact-note">يتم تحميل إعدادات كود الدعوة هنا...</div></div></div>';
+    var html='<div class="admin-wide-card"><div class="v111-section-title"><b>🤝 الدعوات والكود</b><small>تعديل كود الدعوة والبونص والسجل</small></div><div id="v111ReferralMount"><div class="v111-compact-note">يتم تحميل إعدادات كود الدعوة هنا...</div></div></div>';
     ensureSection('referrals',html);
     moveReferralCards();
   }
@@ -5451,7 +5462,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     var box=document.querySelector('#admin-section-overview .admin-home-actions'); if(!box || q('v111DashboardGrid')) return;
     box.classList.add('v111-source');
     var grid=document.createElement('div'); grid.id='v111DashboardGrid'; grid.className='v111-dashboard-grid';
-    grid.innerHTML=smallButton('users','👥','المستخدمين','حسابات')+smallButton('finance','💰','المالية','إيداع / سحب')+smallButton('draws','🎟️','يا نصيب','نتائج')+smallButton('games','🎡','الألعاب','عجلة')+smallButton('referrals','🤝','الدعوات','كود')+smallButton('support','💬','الدعم','تذاكر')+smallButton('aiadmin','🤖','المساعد','أسئلة')+smallButton('settings','⚙️','الإعدادات','عام')+smallButton('token','🪙','صندوق ADN','السوق');
+    grid.innerHTML=smallButton('users','👥','المستخدمين','حسابات')+smallButton('finance','💰','المالية','إيداع / سحب')+smallButton('draws','🎟️','يا نصيب','نتائج')+smallButton('games','🎡','الألعاب','عجلة')+smallButton('referrals','🤝','الدعوات','تعديل الكود')+smallButton('support','💬','الدعم','تذاكر')+smallButton('aiadmin','🤖','المساعد','أسئلة')+smallButton('settings','⚙️','الإعدادات','عام')+smallButton('token','🪙','صندوق ADN','السوق');
     box.parentNode.insertBefore(grid,box.nextSibling);
   }
   function updateBell(){

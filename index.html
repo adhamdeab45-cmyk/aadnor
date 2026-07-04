@@ -3312,7 +3312,7 @@ function setCurrentPrize(type){
         });
       }catch(e){console.warn('referral daily slot rollback failed',e)}
     }
-    async function applyReferralCode(codeOverride='',opts={}){
+    async function applyReferralCode(codeOverride='',opts={}){ // V131 owner-read permission fix
       if(!currentUser||!currentProfile){if(!opts.silent)toast('سجل الدخول أولًا');return false}
       const status=$('refApplyStatus');
       const code=cleanRefCode(codeOverride||$('applyRefCodeInput')?.value||getPendingReferralCode()||new URLSearchParams(location.search).get('ref')||'');
@@ -3329,9 +3329,9 @@ function setCurrentPrize(type){
       if(!c||c.active===false){referralStatus('كود الدعوة غير موجود أو متوقف.',opts);return false}
       const ownerUid=c.ownerUid;
       if(!ownerUid||ownerUid===currentUser.uid){referralStatus('لا يمكنك استخدام هذا الكود.',opts);clearPendingReferralCode();return false}
-      const ownerSnap=await get(ref(db,'users/'+ownerUid));
-      const owner=ownerSnap.val()||{};
-      if(!owner.uid&&!owner.email&&c.type!=='admin_code'){referralStatus('صاحب كود الدعوة غير موجود.',opts);return false}
+      // V131: لا نقرأ ملف صاحب الدعوة من users هنا لأن قواعد الأمان تمنع المستخدم الجديد من قراءة حساب شخص آخر.
+      // بيانات صاحب الدعوة المسموحة موجودة داخل referral_codes وهي كافية لتفعيل المكافأة.
+      const owner={uid:ownerUid,email:c.ownerEmail||'',name:c.ownerName||''};
       const existingByUser=await get(ref(db,'user_referrals_received/'+currentUser.uid));
       if(existingByUser.exists()&&Object.keys(existingByUser.val()||{}).length){referralStatus('هذا الحساب استفاد من دعوة سابقًا.',opts);clearPendingReferralCode();return false}
       const now=Date.now();
@@ -3346,7 +3346,7 @@ function setCurrentPrize(type){
         else referralStatus('تعذر تفعيل كود الدعوة الآن. جرّب لاحقًا.',{toast:!opts.silent});
         return false;
       }
-      const data={id,code,referrerUid:ownerUid,referrerEmail:c.ownerEmail||owner.email||'',referrerName:c.ownerName||owner.name||'',referredUid:currentUser.uid,referredEmail:currentUser.email||'',referredName:me.name||currentUser.displayName||'',newUserBonus:newBonus,referrerBonus:refBonus,bonusType:'playable_bonus',status:'approved',referrerRewardStatus:refBonus>0?'pending_claim':'none',dailyLimit:Number(freshSettings.dailyReferralLimit||0),dailyLimitKey:reservation.key||'',dailyLimitSkipped:!!reservation.skipped,createdAt:now,source:opts.auto?'referral_link_auto':'referral_code_manual'};
+      const data={id,code,referrerUid:ownerUid,referrerEmail:c.ownerEmail||'',referrerName:c.ownerName||'',referredUid:currentUser.uid,referredEmail:currentUser.email||'',referredName:me.name||currentUser.displayName||'',newUserBonus:newBonus,referrerBonus:refBonus,bonusType:'playable_bonus',status:'approved',referrerRewardStatus:refBonus>0?'pending_claim':'none',dailyLimit:Number(freshSettings.dailyReferralLimit||0),dailyLimitKey:reservation.key||'',dailyLimitSkipped:!!reservation.skipped,createdAt:now,source:opts.auto?'referral_link_auto':'referral_code_manual'};
       const updates={};
       updates['referrals/'+id]=data;
       updates['user_referrals_received/'+currentUser.uid+'/'+id]=data;

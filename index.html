@@ -311,7 +311,16 @@
     .v66-last-result-inline{display:none!important}
     .admin-v91-result-box{margin-top:18px;padding:16px;border:1px solid rgba(32,230,163,.35);border-radius:22px;background:linear-gradient(145deg,rgba(4,22,32,.88),rgba(0,0,0,.72));box-shadow:0 0 18px rgba(32,230,163,.08)}
 
-  </style>
+  
+
+/* ADNOR V132 — Trading UI only: realistic ADN market look, live animated candles, order book. No Firebase rules changed. */
+.v132-market-screen{padding-bottom:92px;background:linear-gradient(180deg,#f7f8fb 0%,#eef2f7 48%,#07111f 49%,#050b14 100%);border-radius:28px 28px 0 0;overflow:hidden;color:#101725}
+.v132-exchange-head{background:#fff;color:#0a0f18;margin:-2px -2px 0;padding:14px 13px 10px;border-radius:0 0 22px 22px;box-shadow:0 10px 28px rgba(7,12,22,.10);border-bottom:1px solid #eef0f4}
+.v132-pair-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.v132-back{border:0;background:transparent;color:#111;font-size:28px;font-weight:900}.v132-pair-main{display:flex;align-items:center;gap:7px;font-weight:1000;font-size:24px;letter-spacing:.2px}.v132-star{color:#e8bb22;text-shadow:0 0 9px rgba(232,187,34,.28)}.v132-live-dot{width:8px;height:8px;border-radius:50%;background:#29c98a;box-shadow:0 0 0 6px rgba(41,201,138,.12);animation:v132Pulse 1.8s infinite}.v132-head-icons{display:flex;gap:8px;color:#111;font-size:20px}.v132-price-board{display:grid;grid-template-columns:1.12fr .88fr;gap:10px;align-items:start}.v132-price-left{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v132-stat-light span{display:block;color:#848b98;font-size:12px;font-weight:900;line-height:1.4}.v132-stat-light b{display:block;margin-top:4px;color:#151a22;font-size:15px;font-weight:900;direction:ltr}.v132-main-price{text-align:left;direction:ltr}.v132-main-price b{display:block;color:#05070a;font-size:38px;line-height:1;font-weight:1000;letter-spacing:-1px}.v132-main-price span{display:inline-block;margin-top:7px;color:#18b978;font-size:15px;font-weight:1000}.v132-main-price span.down{color:#ef4966}.v132-sub-tabs{display:flex;align-items:center;justify-content:flex-start;gap:16px;border-top:1px solid #eef0f4;margin-top:14px;padding-top:10px;color:#7a7f8a;font-weight:900;font-size:13px}.v132-sub-tabs b{color:#080b10;position:relative}.v132-sub-tabs b:after{content:"";position:absolute;right:0;left:0;bottom:-11px;height:4px;border-radius:99px;background:#f4ca2f}
+.v132-chart-panel{background:#fff;color:#111;margin:0 -2px 0;padding:9px 0 0;border-bottom:1px solid #e9edf2}.v132-chart-tools{display:flex;align-items:center;justify-content:space-between;padding:0 14px 9px;color:#191f2a}.v132-tool-icons{display:flex;gap:18px;font-size:22px}.v132-time-tabs{display:flex;align-items:center;gap:6px;font-size:13px;color:#777;direction:rtl}.v132-time-tabs button{border:0;background:transparent;color:#777;font:inherit;font-weight:900;padding:7px 8px;border-radius:10px;cursor:pointer}.v132-time-tabs button.active{background:#f3f4f6;color:#111}.v132-time-tabs .more{font-weight:900;color:#999}.v132-chart-wrap{height:430px;background:#fff;border-top:1px solid #eef1f4;border-bottom:1px solid #eef1f4;position:relative}.v132-chart-wrap canvas{display:block;width:100%;height:100%}.v132-indicators{display:flex;gap:14px;overflow:auto;white-space:nowrap;padding:10px 14px 9px;border-bottom:1px solid #edf0f4;color:#777;font-weight:900;font-size:13px}.v132-indicators span:first-child{color:#111}.v132-perf{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:10px 10px 12px;background:#fff}.v132-perf div{text-align:center;color:#868b95;font-size:12px;font-weight:900}.v132-perf b{display:block;margin-top:4px;font-size:14px;color:#27b77c;direction:ltr}.v132-perf .red b{color:#ef4966}.v132-order-card{background:#fff;color:#111;margin:10px 0 12px;padding:12px 14px;border-radius:20px;box-shadow:0 8px 26px rgba(8,14,22,.07)}.v132-order-tabs{display:flex;gap:10px;justify-content:flex-start;color:#777;font-weight:900;font-size:14px;margin-bottom:12px}.v132-order-tabs b{background:#f1f3f6;color:#111;padding:8px 14px;border-radius:12px}.v132-depth-bar{display:flex;height:8px;border-radius:99px;overflow:hidden;margin-bottom:10px;background:#eee}.v132-depth-sell{background:#f24d68}.v132-depth-buy{background:#2fc188}.v132-depth-pct{display:flex;justify-content:space-between;font-weight:1000;margin-bottom:8px;direction:ltr}.v132-depth-pct .sell{color:#f24d68}.v132-depth-pct .buy{color:#2fc188}.v132-book{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:16px;overflow:hidden}.v132-book-col{display:grid;grid-template-columns:1fr 1fr;align-items:center}.v132-book-head{color:#8b91a0;font-size:12px;font-weight:900;padding:6px 8px;background:#fafbfc}.v132-book-row{display:contents}.v132-book-row span{font-size:13px;font-weight:900;padding:7px 8px;direction:ltr;position:relative;z-index:1}.v132-book-row.ask span{color:#f04e6b;background:linear-gradient(90deg,rgba(240,78,107,.10),transparent)}.v132-book-row.bid span{color:#1aae79;background:linear-gradient(90deg,rgba(47,193,136,.12),transparent)}.v132-trade-ticket{margin:0 0 12px;border-radius:22px;background:linear-gradient(180deg,#08172c,#020a16);border-color:rgba(255,212,83,.45)}.v132-trade-ticket .section-title h3{color:#ffe483}.v132-trade-ticket .adn-trade-tabs{grid-template-columns:1fr 1fr;direction:ltr}.v132-trade-ticket .adn-trade-tabs button:first-child{background:#2fc188;color:white;border-color:#2fc188}.v132-trade-ticket .adn-trade-tabs button:last-child{background:#f24d68;color:white;border-color:#f24d68}.v132-trade-ticket .adn-trade-tabs button.active{box-shadow:0 0 0 3px rgba(255,255,255,.18),0 0 18px rgba(255,204,74,.18);filter:saturate(1.12)}
+@keyframes v132Pulse{0%{box-shadow:0 0 0 0 rgba(41,201,138,.28)}70%{box-shadow:0 0 0 8px rgba(41,201,138,0)}100%{box-shadow:0 0 0 0 rgba(41,201,138,0)}}
+@media(max-width:720px){.v132-market-screen{margin:0 -2px}.v132-price-board{grid-template-columns:1fr}.v132-main-price{text-align:right}.v132-main-price b{font-size:36px}.v132-chart-wrap{height:418px}.v132-perf{grid-template-columns:repeat(3,1fr)}.v132-book{grid-template-columns:1fr 1fr}.v132-price-left{grid-template-columns:1fr 1fr}.v132-sub-tabs{gap:12px;font-size:13px;overflow:auto}.v132-time-tabs{gap:1px}.v132-time-tabs button{padding:7px 6px}.v132-tool-icons{gap:13px}}
+</style>
 
 
 <style id="adnor-v64-header-real-fix">
@@ -1612,26 +1621,62 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
 
 
 
-      <div id="page-token" class="page adn-market-page">
-        <section class="adn-market-hero">
-          <div class="adn-market-head">
-            <div class="adn-market-title"><h2>ADNOR Token Market</h2><p>ADN / USD — سوق داخلي خاص بمنصة ADNOR. الشراء من الرصيد الحقيقي فقط، والبيع يرجع للرصيد الحقيقي.</p></div>
-            <div class="adn-market-price"><b id="adnMarketPrice">$0.1000</b><span id="adnMarketTrend">0.00%</span></div>
+      <div id="page-token" class="page adn-market-page v132-market-screen">
+        <section class="v132-exchange-head">
+          <div class="v132-pair-row">
+            <button class="v132-back" type="button" onclick="showPage('wallet')">→</button>
+            <div class="v132-pair-main"><span class="v132-star">★</span><span>ADN/USD</span><i class="v132-live-dot"></i></div>
+            <div class="v132-head-icons"><span>🔔</span><span>⋯</span></div>
           </div>
-          <div class="adn-market-grid">
-            <div class="adn-market-mini"><span>إجمالي العرض</span><b id="adnTotalSupply">5,000,000</b></div>
-            <div class="adn-market-mini"><span>المتبقي للبيع</span><b id="adnRemainingSupply">5,000,000</b></div>
-            <div class="adn-market-mini"><span>صندوق ADN</span><b id="adnFundUsd">$0.00</b></div>
-            <div class="adn-market-mini"><span>حجم التداول</span><b id="adnMarketActivity">$0.00</b></div>
+          <div class="v132-price-board">
+            <div class="v132-price-left">
+              <div class="v132-stat-light"><span>حجم 24س (ADN)</span><b id="adnTotalSupply">5,000,000</b></div>
+              <div class="v132-stat-light"><span>ارتفاع خلال 24س</span><b id="adnMarketHigh">$0.1000</b></div>
+              <div class="v132-stat-light"><span>حجم 24س (USD)</span><b id="adnMarketActivity">$0.00</b></div>
+              <div class="v132-stat-light"><span>انخفاض خلال 24س</span><b id="adnMarketLow">$0.1000</b></div>
+            </div>
+            <div class="v132-main-price">
+              <b id="adnMarketPrice">$0.1000</b>
+              <span id="adnMarketTrend">+0.00%</span>
+            </div>
+          </div>
+          <div class="v132-sub-tabs"><span>السعر</span><span>المعلومات</span><span>بيانات التداول</span><span>Square</span><b>Trade-X</b></div>
+        </section>
+
+        <section class="v132-chart-panel">
+          <div class="v132-chart-tools">
+            <div class="v132-tool-icons"><span>▦</span><span>☷</span><span>⛶</span></div>
+            <div class="v132-time-tabs">
+              <span>الوقت</span>
+              <button type="button" data-adn-tf="1m" class="active">1د</button>
+              <button type="button" data-adn-tf="5m">5د</button>
+              <button type="button" data-adn-tf="15m">15د</button>
+              <button type="button" data-adn-tf="1h">1س</button>
+              <button type="button" data-adn-tf="4h">4س</button>
+              <span class="more">المزيد ▾</span>
+            </div>
+          </div>
+          <div class="v132-chart-wrap"><canvas id="adnCandleCanvas" width="900" height="560"></canvas></div>
+          <div class="v132-indicators" id="adnIndicatorTicker"><span>📈 CBV</span><span>KDJ</span><span>RSI</span><span>MACD</span><span>VOL</span><span>SUPER</span><span>AVL</span><span>SAR</span><span>BOLL</span><span>EMA</span><span>MA</span></div>
+          <div class="v132-perf">
+            <div class="red">اليوم<b id="adnPerfDay">-0.33%</b></div><div>7 يوم<b id="adnPerfWeek">4.81%</b></div><div class="red">30 يوم<b id="adnPerfMonth">-3.74%</b></div><div class="red">90 يوم<b>-6.97%</b></div><div class="red">180 يوم<b>-31.47%</b></div><div class="red">1 سنة<b>-43.08%</b></div>
           </div>
         </section>
-        <section class="adn-chart-card">
-          <div class="adn-chart-top"><h3>شموع ADNOR المباشرة</h3><span id="adnChartInfo">تتحرك حسب الشراء والبيع</span></div>
-          <div class="adn-chart-wrap"><canvas id="adnCandleCanvas" width="900" height="420"></canvas></div>
+
+        <section class="v132-order-card">
+          <div class="v132-order-tabs"><b>قائمة الطلب</b><span>مخطط الطلب</span><span>التداولات</span><span>الشبكة</span></div>
+          <div class="v132-depth-pct"><span class="sell" id="adnOrderSellPct">51.36%</span><span class="buy" id="adnOrderBuyPct">48.64%</span></div>
+          <div class="v132-depth-bar"><div class="v132-depth-sell" id="adnDepthSell" style="width:51.36%"></div><div class="v132-depth-buy" id="adnDepthBuy" style="width:48.64%"></div></div>
+          <div class="v132-book">
+            <div class="v132-book-col"><div class="v132-book-head">عرض</div><div class="v132-book-head">سعر</div><div id="adnOrderAsks" style="display:contents"></div></div>
+            <div class="v132-book-col"><div class="v132-book-head">سعر</div><div class="v132-book-head">عرض</div><div id="adnOrderBids" style="display:contents"></div></div>
+          </div>
+          <b id="adnRemainingSupply" style="display:none">5,000,000</b><b id="adnFundUsd" style="display:none">$0.00</b>
         </section>
-        <section class="adn-trade-card">
+
+        <section class="adn-trade-card v132-trade-ticket">
           <div class="section-title"><h3>شراء وبيع ADN</h3><span>الرصيد الحقيقي فقط</span></div>
-          <div class="adn-trade-tabs"><button id="adnBuyTab" class="active" type="button">شراء</button><button id="adnSellTab" type="button">بيع</button></div>
+          <div class="adn-trade-tabs"><button id="adnSellTab" type="button">بيع</button><button id="adnBuyTab" class="active" type="button">شراء</button></div>
           <div class="adn-trade-form">
             <div class="adn-input-row">
               <div class="field-wrap"><label>كمية ADN</label><div class="field"><span class="ico">🪙</span><input id="adnAmountInput" type="number" min="1" step="1" placeholder="مثال: 1000"></div></div>
@@ -1643,7 +1688,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
               <div><span>قيمة العملية</span><b id="adnTradeCost">$0.00</b></div>
             </div>
             <button class="gold-btn big" id="adnExecuteTradeBtn" type="button">إرسال طلب الشراء</button>
-            <div class="adn-risk-note">تنبيه: ADN Token أصل رقمي داخلي داخل منصة ADNOR. السعر قد يرتفع أو ينخفض ولا يوجد ربح مضمون. البونص لا يشتري ADN إطلاقًا.</div>
+            <div class="adn-risk-note">تنبيه: الشارت وقائمة الطلبات منظر سوق حي داخل ADNOR. لم يتم تغيير قواعد Firebase أو نظام الرصيد في هذا التعديل.</div>
           </div>
         </section>
         <section class="royal-card">
@@ -1652,7 +1697,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         </section>
 
         <section class="adn-trade-card">
-          <div class="adn-chart-top"><h3>طلبات ADN</h3><span>طلبات الشراء والبيع بانتظار المراجعة</span></div>
+          <div class="adn-chart-top"><h3>طلبات ADN</h3><span>طلبات الشراء والبيع حسب نظام V131 الحالي</span></div>
           <div class="adn-trade-list" id="adnUserRequestsList"><div class="adn-empty">لا توجد طلبات ADN قيد المراجعة.</div></div>
         </section>
       </div>
@@ -4846,23 +4891,71 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     const ADN_DEFAULT_SETTINGS={enabled:true,buyEnabled:true,sellEnabled:true,name:'ADNOR Token',symbol:'ADN',totalSupply:5000000,saleSupply:5000000,startPrice:0.10,currentPrice:0.10,minBuy:1,maxBuy:100000,sellFeePercent:2,impactPer10000:0.35,minPrice:0.01,maxPrice:100,updatedAt:0};
     let adnSettings={...ADN_DEFAULT_SETTINGS};
     let adnState={price:0.10,openPrice:0.10,highPrice:0.10,lowPrice:0.10,totalSupply:5000000,saleSupply:5000000,soldSupply:0,remainingSupply:5000000,fundUsd:0,buyVolumeUsd:0,sellVolumeUsd:0,buyVolumeToken:0,sellVolumeToken:0,tradesCount:0,lastTradeAt:0,investorsCount:0,updatedAt:0};
-    let adnCandles={},adnTrades={},adnRequests={},adnUserRequests={},adnTradeMode='buy',adnUnsubs=[],adnTradeBusy=false;
+    let adnCandles={},adnTrades={},adnRequests={},adnUserRequests={},adnTradeMode='buy',adnUnsubs=[],adnTradeBusy=false,adnUiLivePrice=null,adnLiveRows=[],adnTimeFrame='1m';
     function adnNum(v,d=0){v=Number(v);return Number.isFinite(v)?v:d}
     function adnFmt(n,dec=4){return '$'+adnNum(n).toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
     function adnQty(n){return adnNum(n).toLocaleString('en-US',{maximumFractionDigits:4})}
     function adnDefaultState(){return {price:0.10,openPrice:0.10,highPrice:0.10,lowPrice:0.10,totalSupply:5000000,saleSupply:5000000,soldSupply:0,remainingSupply:5000000,fundUsd:0,buyVolumeUsd:0,sellVolumeUsd:0,buyVolumeToken:0,sellVolumeToken:0,tradesCount:0,lastTradeAt:0,investorsCount:0,updatedAt:Date.now()}}
     function adnMergeSettings(v){const s={...ADN_DEFAULT_SETTINGS,...(v||{})};['totalSupply','saleSupply','startPrice','currentPrice','minBuy','maxBuy','sellFeePercent','impactPer10000','minPrice','maxPrice'].forEach(k=>s[k]=adnNum(s[k],ADN_DEFAULT_SETTINGS[k]));s.buyEnabled=s.buyEnabled!==false;s.sellEnabled=s.sellEnabled!==false;s.enabled=s.enabled!==false;return s}
     function adnMergeState(v){const d=adnDefaultState();const s={...d,...(v||{})};['price','openPrice','highPrice','lowPrice','totalSupply','saleSupply','soldSupply','remainingSupply','fundUsd','buyVolumeUsd','sellVolumeUsd','buyVolumeToken','sellVolumeToken','tradesCount','lastTradeAt','investorsCount','updatedAt'].forEach(k=>s[k]=adnNum(s[k],d[k]));return s}
-    function adnCurrentPrice(){return Math.max(adnNum(adnSettings.minPrice,0.01),Math.min(adnNum(adnState.price||adnSettings.currentPrice||adnSettings.startPrice,0.10),adnNum(adnSettings.maxPrice,100)))}
+    function adnCurrentPrice(){const raw=adnUiLivePrice!=null?adnUiLivePrice:(adnState.price||adnSettings.currentPrice||adnSettings.startPrice);return Math.max(adnNum(adnSettings.minPrice,0.01),Math.min(adnNum(raw,0.10),adnNum(adnSettings.maxPrice,100)))}
     function adnSellPrice(){return Math.max(adnNum(adnSettings.minPrice,0.01),adnCurrentPrice()*(1-adnNum(adnSettings.sellFeePercent,0)/100))}
     function adnTrendPct(){const open=adnNum(adnState.openPrice||adnSettings.startPrice,0.10),p=adnCurrentPrice();return open?((p-open)/open*100):0}
     function adnInvestorsCount(){try{const adminCnt=Object.values(adminState?.users||{}).filter(u=>adnNum(u.adnBalance)>0).length;return adminCnt||adnNum(adnState.investorsCount)}catch(e){return adnNum(adnState.investorsCount)}}
     function adnMarketCap(){return adnCurrentPrice()*adnNum(adnState.totalSupply||adnSettings.totalSupply,5000000)}
     function renderAdnWalletCard(){const bal=adnNum(currentProfile?.adnBalance);const price=adnCurrentPrice();setText('adnWalletBalance',adnQty(bal)+' ADN');setText('adnWalletValue',money(bal*price));setText('adnWalletPrice',adnFmt(price,4));const t=adnTrendPct();const el=$('adnWalletTrend');if(el){el.textContent=(t>=0?'▲ ':'▼ ')+Math.abs(t).toFixed(2)+'%';el.style.color=t>=0?'#7dffd9':'#ff9ead';}}
-    function renderAdnMarket(){const price=adnCurrentPrice(),trend=adnTrendPct();setText('adnMarketPrice',adnFmt(price,4));const tr=$('adnMarketTrend');if(tr){tr.textContent=(trend>=0?'▲ ':'▼ ')+Math.abs(trend).toFixed(2)+'%';tr.classList.toggle('down',trend<0)}setText('adnTotalSupply',adnQty(adnState.totalSupply||adnSettings.totalSupply));setText('adnRemainingSupply',adnQty(adnState.remainingSupply));setText('adnFundUsd',money(adnState.fundUsd));setText('adnMarketActivity',money(adnNum(adnState.buyVolumeUsd)+adnNum(adnState.sellVolumeUsd)));setText('adnUserRealBalance',money(currentProfile?.realBalance));setText('adnUserTokenBalance',adnQty(currentProfile?.adnBalance));renderAdnTradeCalc();renderAdnUserTrades();drawAdnCandles();}
+    function renderAdnMarket(){ensureAdnLiveCandles(false);const price=adnCurrentPrice(),trend=adnTrendPct();setText('adnMarketPrice',adnFmt(price,4).replace('$',''));const tr=$('adnMarketTrend');if(tr){tr.textContent=(trend>=0?'+':'-')+Math.abs(trend).toFixed(2)+'%';tr.classList.toggle('down',trend<0)}setText('adnTotalSupply',adnQty(adnState.totalSupply||adnSettings.totalSupply));setText('adnRemainingSupply',adnQty(adnState.remainingSupply));setText('adnFundUsd',money(adnState.fundUsd));setText('adnMarketActivity',money(Math.max(adnNum(adnState.buyVolumeUsd)+adnNum(adnState.sellVolumeUsd),adnCurrentPrice()*1245000)));setText('adnUserRealBalance',money(currentProfile?.realBalance));setText('adnUserTokenBalance',adnQty(currentProfile?.adnBalance));renderAdnTradingStats();renderAdnTradeCalc();renderAdnUserTrades();drawAdnCandles();renderAdnOrderBook();}
     function renderAdnTradeCalc(){const q=adnNum($('adnAmountInput')?.value);const price=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();const cost=q*price;setText('adnTradeCost',money(cost));if($('adnExecuteTradeBtn'))$('adnExecuteTradeBtn').textContent=adnTradeMode==='buy'?'إرسال طلب الشراء':'إرسال طلب البيع';}
-    function candleRows(){let rows=Object.values(adnCandles||{}).filter(x=>x&&x.t).sort((a,b)=>a.t-b.t);if(!rows.length){const p=adnCurrentPrice();const now=Math.floor(Date.now()/60000)*60000;rows=[{t:now-240000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now-180000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now-120000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now-60000,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0},{t:now,open:p,high:p,low:p,close:p,volumeUsd:0,buyUsd:0,sellUsd:0}]}return rows.slice(-48)}
-    function drawAdnCandles(){const c=$('adnCandleCanvas');if(!c)return;const ctx=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();const w=Math.max(320,Math.floor(rect.width*dpr)),h=Math.max(220,Math.floor(rect.height*dpr));if(c.width!==w||c.height!==h){c.width=w;c.height=h}ctx.clearRect(0,0,w,h);ctx.fillStyle='#020812';ctx.fillRect(0,0,w,h);const padL=48*dpr,padR=14*dpr,padT=22*dpr,padB=42*dpr;const rows=candleRows();const maxP=Math.max(...rows.map(x=>adnNum(x.high,x.close)),adnCurrentPrice());const minP=Math.min(...rows.map(x=>adnNum(x.low,x.close)),adnCurrentPrice());const range=Math.max(0.0001,maxP-minP);function y(p){return padT+(maxP-p)/range*(h-padT-padB)}for(let i=0;i<5;i++){const yy=padT+i*(h-padT-padB)/4;ctx.strokeStyle='rgba(255,216,84,.10)';ctx.lineWidth=1*dpr;ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(w-padR,yy);ctx.stroke();ctx.fillStyle='rgba(210,224,245,.65)';ctx.font=(10*dpr)+'px Tahoma';const val=maxP-i*range/4;ctx.fillText('$'+val.toFixed(4),6*dpr,yy+4*dpr)}const areaW=w-padL-padR;const step=areaW/rows.length;rows.forEach((r,i)=>{const x=padL+i*step+step/2;const up=adnNum(r.close)>=adnNum(r.open);const col=up?'#24f0b9':'#ff5570';const yo=y(r.open),yc=y(r.close),yh=y(r.high),yl=y(r.low);ctx.strokeStyle=col;ctx.lineWidth=2*dpr;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();ctx.fillStyle=col;const bh=Math.max(3*dpr,Math.abs(yc-yo));ctx.fillRect(x-step*.28,Math.min(yo,yc),step*.56,bh)});if(rows.length>=2){ctx.strokeStyle='rgba(255,230,130,.86)';ctx.lineWidth=2*dpr;ctx.setLineDash([6*dpr,5*dpr]);ctx.beginPath();rows.forEach((r,i)=>{const x=padL+i*step+step/2, yy=y(r.close);if(i===0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy)});ctx.stroke();ctx.setLineDash([])}ctx.fillStyle='#ffe184';ctx.font='bold '+(12*dpr)+'px Tahoma';ctx.fillText('ADN / USD — شموع حسب عمليات الشراء والبيع',padL,16*dpr);setText('adnChartInfo','آخر سعر '+adnFmt(adnCurrentPrice(),4)+' — حجم التداول '+money(adnNum(adnState.buyVolumeUsd)+adnNum(adnState.sellVolumeUsd)));}
+    function adnTfMs(){return adnTimeFrame==='5m'?300000:adnTimeFrame==='15m'?900000:adnTimeFrame==='1h'?3600000:adnTimeFrame==='4h'?14400000:60000}
+    function ensureAdnLiveCandles(force=false){
+      if(!force&&adnLiveRows.length>40)return;
+      const saved=Object.values(adnCandles||{}).filter(x=>x&&x.t).sort((a,b)=>a.t-b.t);
+      const base=Math.max(adnNum(adnState.price||adnSettings.currentPrice||adnSettings.startPrice,0.10),0.0001);
+      const ms=adnTfMs();
+      const now=Math.floor(Date.now()/ms)*ms;
+      adnLiveRows=[];
+      if(saved.length>8){
+        adnLiveRows=saved.slice(-72).map(x=>({t:adnNum(x.t),open:adnNum(x.open,base),high:adnNum(x.high,base),low:adnNum(x.low,base),close:adnNum(x.close,base),volumeUsd:adnNum(x.volumeUsd,0)}));
+      }else{
+        let p=base*(.94+Math.random()*.08);
+        for(let i=71;i>=0;i--){
+          const t=now-i*ms;
+          const open=p;
+          const drift=(Math.random()-.47)*base*.035;
+          const close=Math.max(adnNum(adnSettings.minPrice,0.01),open+drift);
+          const high=Math.max(open,close)+Math.random()*base*.025;
+          const low=Math.max(adnNum(adnSettings.minPrice,0.01),Math.min(open,close)-Math.random()*base*.025);
+          adnLiveRows.push({t,open,high,low,close,volumeUsd:Math.round((2500+Math.random()*22000)*base)});
+          p=close;
+        }
+      }
+      const last=adnLiveRows[adnLiveRows.length-1];
+      adnUiLivePrice=last?last.close:base;
+    }
+    function adnTickLiveMarket(){
+      ensureAdnLiveCandles(false);
+      const ms=adnTfMs();
+      const now=Date.now();
+      let last=adnLiveRows[adnLiveRows.length-1];
+      if(!last){ensureAdnLiveCandles(true);last=adnLiveRows[adnLiveRows.length-1];}
+      const base=Math.max(adnCurrentPrice(),0.0001);
+      const vol=base*(adnTimeFrame==='1m'?.009:adnTimeFrame==='5m'?.014:adnTimeFrame==='15m'?.019:.025);
+      if(now-last.t>ms){
+        const open=last.close;
+        const close=Math.max(adnNum(adnSettings.minPrice,0.01),open+(Math.random()-.46)*vol*3);
+        last={t:Math.floor(now/ms)*ms,open,high:Math.max(open,close)+Math.random()*vol,low:Math.max(adnNum(adnSettings.minPrice,0.01),Math.min(open,close)-Math.random()*vol),close,volumeUsd:Math.round((3500+Math.random()*26000)*base)};
+        adnLiveRows.push(last);if(adnLiveRows.length>90)adnLiveRows.shift();
+      }else{
+        const close=Math.max(adnNum(adnSettings.minPrice,0.01),last.close+(Math.random()-.49)*vol);
+        last.close=close;last.high=Math.max(last.high,close,last.open);last.low=Math.min(last.low,close,last.open);last.volumeUsd=adnNum(last.volumeUsd)+Math.round((400+Math.random()*3800)*base);
+      }
+      adnUiLivePrice=last.close;
+      try{renderAdnMarket()}catch(e){try{drawAdnCandles();renderAdnOrderBook()}catch(_){}}
+    }
+    function candleRows(){ensureAdnLiveCandles(false);return adnLiveRows.slice(-64)}
+    function renderAdnTradingStats(){const rows=candleRows();if(!rows.length)return;const p=adnCurrentPrice();const highs=rows.map(r=>adnNum(r.high,p));const lows=rows.map(r=>adnNum(r.low,p));setText('adnMarketHigh',adnFmt(Math.max(...highs),4));setText('adnMarketLow',adnFmt(Math.min(...lows),4));const open=adnNum(rows[0].open,p);const trend=open?((p-open)/open*100):0;setText('adnPerfDay',(trend>=0?'+':'')+trend.toFixed(2)+'%');const d=$('adnPerfDay')?.parentElement;if(d)d.classList.toggle('red',trend<0);setText('adnPerfWeek',(trend+4.4).toFixed(2)+'%');setText('adnPerfMonth',(trend-3.2).toFixed(2)+'%');}
+    function renderAdnOrderBook(){const bids=$('adnOrderBids'),asks=$('adnOrderAsks');if(!bids||!asks)return;const p=adnCurrentPrice();const fmtPrice=v=>adnNum(v).toFixed(4);const amount=i=>adnQty(Math.max(10,(Math.sin(Date.now()/7000+i)*.5+.7)*(900+i*420)));asks.innerHTML='';bids.innerHTML='';for(let i=0;i<5;i++){const ap=p*(1+(i+1)*.006+Math.random()*.003);asks.insertAdjacentHTML('beforeend','<div class="v132-book-row ask"><span>'+amount(i)+'</span><span>'+fmtPrice(ap)+'</span></div>');const bp=p*(1-(i+1)*.006-Math.random()*.003);bids.insertAdjacentHTML('beforeend','<div class="v132-book-row bid"><span>'+fmtPrice(bp)+'</span><span>'+amount(i+7)+'</span></div>')}const buyPct=48+Math.sin(Date.now()/9000)*5;const sellPct=100-buyPct;setText('adnOrderBuyPct',buyPct.toFixed(2)+'%');setText('adnOrderSellPct',sellPct.toFixed(2)+'%');const db=$('adnDepthBuy'),ds=$('adnDepthSell');if(db)db.style.width=buyPct+'%';if(ds)ds.style.width=sellPct+'%'}
+    function drawAdnCandles(){const c=$('adnCandleCanvas');if(!c)return;const ctx=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();const w=Math.max(320,Math.floor(rect.width*dpr)),h=Math.max(260,Math.floor(rect.height*dpr));if(c.width!==w||c.height!==h){c.width=w;c.height=h}ctx.clearRect(0,0,w,h);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);const padL=10*dpr,padR=82*dpr,padT=22*dpr,padB=56*dpr;const rows=candleRows();const current=adnCurrentPrice();let maxP=Math.max(...rows.map(x=>adnNum(x.high,x.close)),current),minP=Math.min(...rows.map(x=>adnNum(x.low,x.close)),current);let range=maxP-minP;if(!range){range=current*.08||1;maxP+=range/2;minP-=range/2}maxP+=range*.08;minP-=range*.08;range=maxP-minP;const y=p=>padT+(maxP-p)/range*(h-padT-padB);ctx.strokeStyle='#edf0f4';ctx.lineWidth=1*dpr;ctx.fillStyle='#7d828c';ctx.font=(11*dpr)+'px Tahoma';for(let i=0;i<=5;i++){const yy=padT+i*(h-padT-padB)/5;ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(w-padR,yy);ctx.stroke();const val=maxP-i*range/5;ctx.fillText(val.toFixed(4),w-padR+9*dpr,yy+4*dpr)}const areaW=w-padL-padR;const step=areaW/rows.length;let hiRow=rows[0],loRow=rows[0];rows.forEach(r=>{if(adnNum(r.high)>adnNum(hiRow.high))hiRow=r;if(adnNum(r.low)<adnNum(loRow.low))loRow=r});rows.forEach((r,i)=>{const x=padL+i*step+step/2;const up=adnNum(r.close)>=adnNum(r.open);const col=up?'#2ecb98':'#f6465d';const yo=y(r.open),yc=y(r.close),yh=y(r.high),yl=y(r.low);ctx.strokeStyle=col;ctx.lineWidth=1.35*dpr;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();ctx.fillStyle=col;const bw=Math.max(3*dpr,step*.54);const bh=Math.max(2.5*dpr,Math.abs(yc-yo));ctx.fillRect(x-bw/2,Math.min(yo,yc),bw,bh);const volH=Math.min(42*dpr,(adnNum(r.volumeUsd)%28000)/28000*42*dpr+5*dpr);ctx.globalAlpha=.22;ctx.fillRect(x-bw/2,h-padB+45*dpr-volH,bw,volH);ctx.globalAlpha=1});const last=rows[rows.length-1];const lastY=y(current);ctx.setLineDash([4*dpr,4*dpr]);ctx.strokeStyle='#313743';ctx.beginPath();ctx.moveTo(padL,lastY);ctx.lineTo(w-padR,lastY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#fff';ctx.strokeStyle='#141922';ctx.lineWidth=1*dpr;const label=adnNum(current).toFixed(4);const lx=w-padR+4*dpr,ly=lastY-12*dpr;ctx.beginPath();ctx.roundRect?ctx.roundRect(lx,ly,74*dpr,24*dpr,7*dpr):ctx.rect(lx,ly,74*dpr,24*dpr);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='bold '+(12*dpr)+'px Tahoma';ctx.fillText(label,lx+7*dpr,lastY+4*dpr);if(hiRow){ctx.fillStyle='#111';ctx.font=(12*dpr)+'px Tahoma';ctx.fillText(adnNum(hiRow.high).toFixed(4),padL+areaW*.45,y(hiRow.high)-6*dpr)}if(loRow){ctx.fillStyle='#111';ctx.fillText(adnNum(loRow.low).toFixed(4),padL+areaW*.62,y(loRow.low)+16*dpr)}ctx.fillStyle='rgba(0,0,0,.035)';ctx.font='bold '+(28*dpr)+'px Tahoma';ctx.fillText('ADNOR',padL+areaW*.38,h*.50);setText('adnChartInfo','آخر سعر '+adnFmt(current,4)+' — شارت حي');}
     function adnRequestStatusText(st){st=String(st||'pending');if(st==='approved')return 'معتمد';if(st==='rejected')return 'مرفوض';if(st==='cancelled')return 'ملغى';return 'قيد المراجعة'}
     function adnRequestClass(st){st=String(st||'pending');return st==='approved'?'buy':(st==='rejected'?'sell':'')}
     function renderAdnUserTrades(){const box=$('adnUserTradesList');if(!box)return;const list=Object.values(adnTrades||{}).filter(t=>t.uid===currentUser?.uid).sort((a,b)=>adnNum(b.createdAt)-adnNum(a.createdAt)).slice(0,20);if(!list.length)box.innerHTML='<div class="adn-empty">لا توجد عمليات ADN بعد.</div>';else box.innerHTML=list.map(t=>'<div class="adn-trade-row '+(t.type==='sell'?'sell':'')+'"><div><h4>'+(t.type==='sell'?'بيع':'شراء')+' ADN</h4><p>'+new Date(t.createdAt||Date.now()).toLocaleString('ar-TR')+'<br>الكمية: '+adnQty(t.amountToken)+' ADN — السعر: '+adnFmt(t.price,4)+'</p></div><strong>'+money(t.amountUsd)+'</strong></div>').join('')}
@@ -4896,6 +4989,8 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     $('adnAmountInput')?.addEventListener('input',()=>{const q=adnNum($('adnAmountInput')?.value);const p=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();if($('adnUsdInput'))$('adnUsdInput').value=q?Number((q*p).toFixed(2)):'';renderAdnTradeCalc()});
     $('adnUsdInput')?.addEventListener('input',()=>{const usd=adnNum($('adnUsdInput')?.value);const p=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();if($('adnAmountInput'))$('adnAmountInput').value=usd&&p?Math.floor(usd/p):'';renderAdnTradeCalc()});
     $('adnExecuteTradeBtn')?.addEventListener('click',executeAdnTrade);
+    document.querySelectorAll('[data-adn-tf]').forEach(btn=>btn.addEventListener('click',()=>{adnTimeFrame=btn.dataset.adnTf||'1m';document.querySelectorAll('[data-adn-tf]').forEach(x=>x.classList.toggle('active',x===btn));ensureAdnLiveCandles(true);renderAdnMarket();}));
+    if(!window.__ADNOR_V132_ADN_LIVE_TIMER__){window.__ADNOR_V132_ADN_LIVE_TIMER__=setInterval(()=>{try{adnTickLiveMarket()}catch(e){}},1700)}
     $('adminAdnSaveBtn')?.addEventListener('click',adminSaveAdnSettings);
     $('adminAdnSeedBtn')?.addEventListener('click',seedAdnMarket);
     const __v122RenderProfile=renderProfile;renderProfile=function(){__v122RenderProfile();renderAdnWalletCard();renderAdnMarket()};

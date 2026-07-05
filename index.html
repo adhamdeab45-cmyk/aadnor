@@ -6791,17 +6791,52 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     finally{const btn=$('buyTicketBtn'); if(btn)btn.disabled=false;}
   }
 
+  function adnorV151ParseAmount(v, def=1){
+    let txt=String(v ?? def).trim();
+    const map={'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};
+    txt=txt.replace(/[٠-٩۰-۹]/g,ch=>map[ch]||ch).replace(/[^0-9.\-]/g,'');
+    const n=Number(txt || def);
+    return Number.isFinite(n) ? Math.round(n*100)/100 : def;
+  }
+
   async function secureSpinWheel(){
+    const btn=$('spinWheelBtn');
     try{
       if(!auth.currentUser)return toast('سجل الدخول أولًا');
-      const bet=Number($('betAmount')?.value||1);
-      const btn=$('spinWheelBtn'); if(btn)btn.disabled=true;
-      if($('wheelResultText'))$('wheelResultText').textContent='جاري تنفيذ العجلة من السيرفر...';
+      const bet=adnorV151ParseAmount($('betAmount')?.value,1);
+      if(!Number.isFinite(bet) || bet<=0)return toast('قيمة الرهان غير صحيحة');
+      if(btn)btn.disabled=true;
+      if($('wheelResultText')){
+        $('wheelResultText').className='wheel-result';
+        $('wheelResultText').textContent='العجلة تدور... جاري تنفيذ النتيجة من السيرفر';
+      }
+      try{ if(typeof adnorV97StartSpinSound==='function')adnorV97StartSpinSound(); }catch(_e){}
       const res=await call('spinWheelServer',{bet});
-      if($('wheelResultText'))$('wheelResultText').textContent='النتيجة '+res.label+' — الربح '+money(res.win)+' — تم الحفظ من السيرفر';
-      toast('تم تنفيذ العجلة بأمان من السيرفر');
-    }catch(e){console.error(e);toast('فشل تنفيذ العجلة الآمنة: '+(e.message||e.code||e));}
-    finally{const btn=$('spinWheelBtn'); if(btn)btn.disabled=false;}
+      const idx=Number(res.segmentIndex||0);
+      const segCount=(Array.isArray(window.wheelSegments)&&window.wheelSegments.length) ? window.wheelSegments.length : (Array.isArray(wheelSegments)?wheelSegments.length:10);
+      const angle=360/Math.max(1,segCount);
+      const segmentCenter=idx*angle+angle/2;
+      const targetMod=(360-segmentCenter)%360;
+      const currentMod=((wheelRotation%360)+360)%360;
+      const delta=((targetMod-currentMod+360)%360);
+      wheelRotation+=1440+delta;
+      if($('wheelDisc'))$('wheelDisc').style.transform='rotate('+wheelRotation+'deg)';
+      setTimeout(()=>{
+        try{ if(typeof adnorV97StopSpinSound==='function')adnorV97StopSpinSound(true,Number(res.win||0)>0); }catch(_e){}
+        if($('wheelResultText')){
+          $('wheelResultText').className='wheel-result '+(Number(res.win||0)>Number(res.bet||bet)?'win':'lose');
+          $('wheelResultText').textContent='النتيجة '+(res.label||'')+' — الربح '+money(Number(res.win||0))+' — الرصيد الجديد '+money(Number(res.playableAfter || (Number(res.realAfter||0)+Number(res.bonusAfter||0))));
+        }
+        toast('تم تنفيذ العجلة بأمان من السيرفر');
+      },4300);
+    }catch(e){
+      console.error(e);
+      try{ if(typeof adnorV97StopSpinSound==='function')adnorV97StopSpinSound(false); }catch(_e){}
+      const msg=(e && (e.message || e.code)) ? (e.message || e.code) : String(e);
+      toast('فشل تنفيذ العجلة الآمنة: '+msg);
+      if($('wheelResultText'))$('wheelResultText').textContent='فشل تنفيذ العجلة الآمنة: '+msg;
+    }
+    finally{setTimeout(()=>{if(btn)btn.disabled=false;},4500);}
   }
 
   async function adminCall(name,data,ok){

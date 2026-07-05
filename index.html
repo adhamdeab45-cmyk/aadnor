@@ -2765,9 +2765,19 @@ function setCurrentPrize(type){
     function drawTicketStatusClass(t){const label=drawTicketStatusLabel(t);if(label==='فائزة')return 'win';if(label==='بانتظار النشر')return 'wait';if(label==='منتهية')return 'bad';return ''}
     function renderUserTicketHistory(val){currentUserTickets=val||currentUserTickets||{};const all=Object.values(currentUserTickets||{}).sort((a,b)=>(b.createdAt||b.movedAt||0)-(a.createdAt||a.movedAt||0));const activeList=all.filter(t=>t.status==='active');const active=activeList.length;const won=all.filter(t=>t.status==='winner').length;setText('myTicketsTotalText',all.length);setText('myTicketsActiveText',active);setText('myTicketsWonText',won);setText('ticketsCountText',active?('لديك '+active+' تذكرة نشطة'):(all.length?'لا توجد تذاكر نشطة':'لا توجد تذاكر بعد'));setText('activeTicketsText',active);setText('homeTicketsText',all.length);const lbox=$('lotteryActiveTicketsList');if(lbox){if(!activeList.length){lbox.innerHTML='<div class="v61-mini-empty">لا توجد تذاكر نشطة بعد</div>'}else{lbox.innerHTML=activeList.slice(0,8).map(t=>'<div class="v61-mini-ticket"><i>🎟️</i><b>'+escapeHtml(t.number||'')+'</b><span>'+escapeHtml(t.drawLabel||drawLabel(t.drawType))+'</span></div>').join('')}}const box=$('myTicketsList');if(!box)return;let list=all;if(currentTicketFilter!=='all')list=all.filter(t=>t.status===currentTicketFilter);if(!list.length){box.innerHTML='<div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر في هذا القسم</h4><p>استخدم الفلتر الآخر أو اشترِ تذكرة جديدة.</p></div><strong>0</strong></div>';return}box.innerHTML=list.slice(0,80).map(t=>{const cls=drawTicketStatusClass(t);const status=drawTicketStatusLabel(t);const detail=(t.status==='moved'&&t.movedTo)?('انتقلت إلى '+drawLabel(t.movedTo)):(t.status==='winner'?'ربحت '+drawLabel(t.drawType):'محفوظة في '+(t.drawLabel||drawLabel(t.drawType)));return '<div class="draw-item"><div class="medal">🎟️</div><div><h4>رقم '+escapeHtml(t.number||'')+' <span class="ticket-mini '+cls+'">'+status+'</span></h4><p>'+escapeHtml(detail)+'<br>النوع: '+escapeHtml(t.drawLabel||drawLabel(t.drawType))+' — السعر: '+money(t.price||0)+'<br>الوقت: '+new Date(t.createdAt||t.movedAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+escapeHtml(t.number||'')+'</strong></div>'}).join('')}
 
-    const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app,'us-central1');provider.setCustomParameters({prompt:'select_account'});
+    const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app);provider.setCustomParameters({prompt:'select_account'});
     const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',depositCategory='',withdrawCategory='',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{},promoCodes:{},promoRedemptions:{},backups:{},aiKnowledge:{},aiUnanswered:{},gameCenter:{},customGameLogs:{}};let currentUserTickets={};let currentTicketFilter='all';let lotteryTicketsHidden=false;let currentAuditFilter="all";let currentUserFilter="all";let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:0.50,referrerBonus:0.25,newUserRewardType:'bonus',newUserRewardAmount:0.50,referrerRewardType:'bonus',referrerRewardAmount:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'}; let promoCodesCache={};let referralUnsub=null,referralsUnsub=null,pendingReferralUnsub=null,userNotifUnsub=null,currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+    // V155: تحويل كل الأرقام العربية/الفارسية إلى أرقام إنجليزية قبل أي حساب أو حفظ.
+    function adnorDigitsEN(v){
+      const map={'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};
+      return String(v==null?'':v).replace(/[٠-٩۰-۹]/g,ch=>map[ch]||ch);
+    }
+    function adnorNumberEN(v,def=0){
+      const cleaned=adnorDigitsEN(v).replace(/,/g,'.').replace(/[^0-9.\-]/g,'');
+      const n=Number(cleaned);
+      return Number.isFinite(n)?n:def;
+    }
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){await uiPrompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
     async function callServer(name,data){
@@ -2987,7 +2997,7 @@ function setCurrentPrize(type){
       }
       box.innerHTML='<div class="v69-address-card"><div class="v69-address-title"><b>'+escapeHtml(m.name)+'</b><span>'+paymentTypeLabel(m.type)+'</span></div><p>'+escapeHtml(m.details||m.hint||'')+'</p><div class="finance-mini-grid"><div class="finance-pill"><b>الحالة</b>'+(m.active!==false?'مفعلة':'متوقفة')+'</div><div class="finance-pill"><b>الحد الأدنى</b>'+money(min)+'</div><div class="finance-pill"><b>الطريقة</b>'+escapeHtml(catInfo(methodCategory(m)).title)+'</div></div>'+(m.address?'<div class="copy-line"><code>'+escapeHtml(m.address)+'</code><button class="copy-btn" data-copy="'+escapeHtml(m.address)+'" onclick="copyText(this.dataset.copy)">نسخ</button></div>':'<div class="v69-no-address">لا يوجد عنوان مضاف من الأدمن لهذه الطريقة.</div>')+(m.qrUrl?'<img class="qr-preview" src="'+escapeHtml(m.qrUrl)+'" alt="QR">':'')+'</div>';
     }
-    function renderSpecificMethods(mode,list){const grid=$(mode==='deposit'?'depositMethods':'withdrawMethods');const step=$(mode==='deposit'?'depositMethodStep':'withdrawMethodStep');const details=$(mode==='deposit'?'depositMethodDetails':'withdrawMethodDetails');const form=$(mode==='deposit'?'depositFormBlock':'withdrawFormBlock');if(!grid)return;const cat=mode==='deposit'?depositCategory:withdrawCategory;const selected=mode==='deposit'?depositMethod:withdrawMethod;grid.innerHTML='';if(!cat){grid.classList.add('hidden');if(step)step.classList.add('hidden');if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}const list2=list.filter(m=>methodCategory(m)===cat);if(step)step.classList.remove('hidden');grid.classList.remove('hidden');if(!list2.length){grid.innerHTML='<div class="admin-empty">لا توجد طريقة مفعّلة ضمن هذا الخيار.</div>';if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}list2.forEach(m=>{const b=document.createElement('button');b.className='method v69-method '+(selected===m.id?'active':'');b.dataset.method=m.id;if(mode==='deposit'&&selected===m.id)window.depositMethod=m.id;if(mode==='withdraw'&&selected===m.id)window.withdrawMethod=m.id;b.innerHTML='<strong>'+escapeHtml(m.name)+'</strong><span>'+escapeHtml(methodHint(m,mode))+'</span>';b.onclick=()=>{if(mode==='deposit'){depositMethod=m.id;window.depositMethod=m.id}else{withdrawMethod=m.id;window.withdrawMethod=m.id}renderMethods()};grid.appendChild(b)});renderMethodDetails(mode)}
+    function renderSpecificMethods(mode,list){const grid=$(mode==='deposit'?'depositMethods':'withdrawMethods');const step=$(mode==='deposit'?'depositMethodStep':'withdrawMethodStep');const details=$(mode==='deposit'?'depositMethodDetails':'withdrawMethodDetails');const form=$(mode==='deposit'?'depositFormBlock':'withdrawFormBlock');if(!grid)return;const cat=mode==='deposit'?depositCategory:withdrawCategory;const selected=mode==='deposit'?depositMethod:withdrawMethod;grid.innerHTML='';if(!cat){grid.classList.add('hidden');if(step)step.classList.add('hidden');if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}const list2=list.filter(m=>methodCategory(m)===cat);if(step)step.classList.remove('hidden');grid.classList.remove('hidden');if(!list2.length){grid.innerHTML='<div class="admin-empty">لا توجد طريقة مفعّلة ضمن هذا الخيار.</div>';if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}list2.forEach(m=>{const b=document.createElement('button');b.className='method v69-method '+(selected===m.id?'active':'');b.innerHTML='<strong>'+escapeHtml(m.name)+'</strong><span>'+escapeHtml(methodHint(m,mode))+'</span>';b.onclick=()=>{if(mode==='deposit')depositMethod=m.id;else withdrawMethod=m.id;renderMethods()};grid.appendChild(b)});renderMethodDetails(mode)}
     function renderMethods(){const d=$('depositMethods'),w=$('withdrawMethods');if(!d||!w)return;const deps=methods.filter(m=>methodAllowed(m,'deposit'));const withs=methods.filter(m=>methodAllowed(m,'withdraw'));if(depositCategory&&!deps.some(m=>methodCategory(m)===depositCategory))depositCategory='';if(withdrawCategory&&!withs.some(m=>methodCategory(m)===withdrawCategory))withdrawCategory='';if(depositMethod&&!deps.some(m=>m.id===depositMethod))depositMethod='';if(withdrawMethod&&!withs.some(m=>m.id===withdrawMethod))withdrawMethod='';renderCategoryGrid('deposit',deps);renderCategoryGrid('withdraw',withs);renderSpecificMethods('deposit',deps);renderSpecificMethods('withdraw',withs);renderAgentSupportContacts()}
     function getAgentContact(kind){
       const arr=(typeof getSupportContactArray==='function'?getSupportContactArray():Object.values(supportContacts||{}).filter(c=>c&&c.active!==false)).sort((a,b)=>(a.order||99)-(b.order||99));
@@ -3046,14 +3056,14 @@ function setCurrentPrize(type){
     }
 
     document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentDraw=btn.dataset.draw;$('drawName').textContent=drawLabel(currentDraw);$('jackpotText').textContent=money(prizeFor(currentDraw));setText('jackpotLabelText',prizeNameFor(currentDraw));renderLatestDrawPublic()});
-    function randomTicket(){return String(Math.floor(Math.random()*10000000)).padStart(7,'0')}$('randomBtn').onclick=()=>$('ticketNumber').value=randomTicket();$('clearBtn').onclick=()=>$('ticketNumber').value='';$('ticketNumber').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,7)});
+    function randomTicket(){return String(Math.floor(Math.random()*10000000)).padStart(7,'0')}$('randomBtn').onclick=()=>$('ticketNumber').value=randomTicket();$('clearBtn').onclick=()=>$('ticketNumber').value='';$('ticketNumber').addEventListener('input',e=>{e.target.value=adnorDigitsEN(e.target.value).replace(/\D/g,'').slice(0,7)});
     async function buyTicket(){
       if(!currentUser||!currentProfile){toast('سجل الدخول أولًا');return}
       if(!drawEnabled(currentDraw)){toast('هذا السحب متوقف مؤقتًا من الإدارة.');return}
       if(isSelfExcluded()){toast('حسابك موقوف ذاتيًا حتى '+new Date(currentProfile.selfExcludedUntil).toLocaleString('ar-TR'));return}
       TICKET_PRICE=Number(lotterySettings.ticketPrice||TICKET_PRICE||1);
       if(!(await checkSpendAllowed(TICKET_PRICE)))return;
-      const num=$('ticketNumber').value.trim();
+      const num=adnorDigitsEN($('ticketNumber').value).replace(/\D/g,'').slice(0,7);
       if(!/^\d{7}$/.test(num)){toast('رقم التذكرة يجب أن يكون 7 خانات.');return}
       const pay=splitPlayablePayment(TICKET_PRICE);
       if(pay.playable<TICKET_PRICE){adnorV99InsufficientBalance('رصيدك لا يكفي لشراء هذه البطاقة.',{required:TICKET_PRICE,available:pay.playable,place:'صفحة اليانصيب'});return}
@@ -3105,10 +3115,10 @@ function setCurrentPrize(type){
     function calcGameProfit(uid){const logs=collectGameLogs(uid);const totalBet=logs.reduce((a,l)=>a+Number(l.bet||0),0);const totalWin=logs.reduce((a,l)=>a+Number(l.win||0),0);const net=totalBet-totalWin;const wins=logs.filter(l=>Number(l.win)>Number(l.bet)).length;const losses=logs.length-wins;return{logs,totalBet,totalWin,net,wins,losses,count:logs.length}}
     function renderAdminGameProfitSummary(){const box=$('adminGamesProfitCards');if(!box)return;const st=calcGameProfit();box.innerHTML='<div class="admin-profit-card"><span>إجمالي الرهانات</span><b>'+money(st.totalBet)+'</b></div><div class="admin-profit-card"><span>إجمالي أرباح اللاعبين</span><b>'+money(st.totalWin)+'</b></div><div class="admin-profit-card '+(st.net>=0?'good':'bad')+'"><span>صافي الموقع</span><b>'+money(st.net)+'</b></div><div class="admin-profit-card"><span>عدد الجولات</span><b>'+st.count+'</b></div>'}
     async function openUserGameProfit(uid){const u=adminState.users?.[uid]||{};const st=calcGameProfit(uid);const last=st.logs.slice(0,8).map(l=>'• '+new Date(l.createdAt||Date.now()).toLocaleString('ar-TR')+' | '+(l.label||'')+' | رهان '+money(l.bet)+' | ربح '+money(l.win)).join('\n')||'لا يوجد لعب مسجل لهذا المستخدم.';await uiAlert('ربح/خسارة الألعاب للمستخدم\n\n'+(u.name||'مستخدم')+'\n'+(u.email||'')+'\nUID: '+uid+'\n\nإجمالي الرهانات: '+money(st.totalBet)+'\nإجمالي أرباح اللاعب: '+money(st.totalWin)+'\nصافي الموقع من هذا المستخدم: '+money(st.net)+'\nعدد الجولات: '+st.count+'\nمرات ربح اللاعب: '+st.wins+'\nمرات خسارة اللاعب: '+st.losses+'\n\nآخر الجولات:\n'+last)}
-    function updateWheelMoneyText(){const real=Number(currentProfile?.realBalance||0),bonus=Number(currentProfile?.bonusBalance||0),bal=real+bonus;setText('wheelBalanceText','الرصيد القابل للعب: '+money(bal)+' (حقيقي '+money(real)+' + بونص '+money(bonus)+')');const bet=Number($('betAmount')?.value||wheelSettings.minBet||1);setText('wheelBetPriceText','ثمن اللفة الحالية: '+money(Math.max(1,bet)))}
+    function updateWheelMoneyText(){const real=Number(currentProfile?.realBalance||0),bonus=Number(currentProfile?.bonusBalance||0),bal=real+bonus;setText('wheelBalanceText','الرصيد القابل للعب: '+money(bal)+' (حقيقي '+money(real)+' + بونص '+money(bonus)+')');const bet=adnorNumberEN($('betAmount')?.value,wheelSettings.minBet||1);setText('wheelBetPriceText','ثمن اللفة الحالية: '+money(Math.max(1,bet)))}
     function renderGameStatus(){if(!$('dailyBoxText')||!currentProfile)return;updateWheelMoneyText();if(wheelSettings.luckyBox?.enabled===false){$('dailyBoxText').textContent='صندوق الحظ متوقف مؤقتًا من الإدارة.';$('dailyBoxBtn').disabled=true;$('dailyBoxBtn').style.opacity=.55;return}const last=Number(currentProfile.lastLuckyBoxAt||0),cool=Number(wheelSettings.luckyBox?.cooldownHours||24)*3600000,wait=Math.max(0,cool-(Date.now()-last));if(wait>0){const h=Math.floor(wait/3600000),m=Math.floor((wait%3600000)/60000);$('dailyBoxText').textContent='الصندوق التالي بعد '+h+' ساعة و '+m+' دقيقة.';$('dailyBoxBtn').disabled=true;$('dailyBoxBtn').style.opacity=.55}else{$('dailyBoxText').textContent='صندوق الحظ جاهز الآن. الجائزة تضاف إلى رصيد البونص.'+(Number(currentProfile.freeSpins||0)>0?' لديك '+Number(currentProfile.freeSpins||0)+' لفة مجانية دعائية للعجلة.':'');$('dailyBoxBtn').disabled=false;$('dailyBoxBtn').style.opacity=1}}
     function pickWheel(){const total=wheelSegments.reduce((a,s)=>a+s.w,0);let r=Math.random()*total;for(let i=0;i<wheelSegments.length;i++){r-=wheelSegments[i].w;if(r<=0)return {seg:wheelSegments[i],idx:i}}return {seg:wheelSegments[0],idx:0}}
-    function setBet(delta){const el=$('betAmount');let v=Math.max(1,Number(el.value||1)+delta);el.value=v;updateWheelMoneyText()}
+    function setBet(delta){const el=$('betAmount');let v=Math.max(1,adnorNumberEN(el.value,1)+delta);el.value=v;updateWheelMoneyText()}
 
     function adnorV113CreatePromoWheelRound(opts={}){
       const bet=Number(opts.bet||1);
@@ -3154,7 +3164,7 @@ function setCurrentPrize(type){
       };
     }
     document.querySelectorAll('[data-bet-change]').forEach(b=>b.onclick=()=>setBet(Number(b.dataset.betChange||0)));
-    if($('betAmount'))$('betAmount').addEventListener('input',updateWheelMoneyText);
+    if($('betAmount'))$('betAmount').addEventListener('input',e=>{e.target.value=adnorDigitsEN(e.target.value);updateWheelMoneyText();});
     function showWheelOnly(){if($('gamesHomePanel'))$('gamesHomePanel').classList.add('hidden');if($('wheelPlayCard')){$('wheelPlayCard').classList.remove('hidden');$('wheelPlayCard').scrollIntoView({behavior:'smooth',block:'start'});}updateWheelMoneyText()}
     function showGamesHome(){if($('wheelPlayCard'))$('wheelPlayCard').classList.add('hidden');if($('gamesHomePanel'))$('gamesHomePanel').classList.remove('hidden')}
     $('openWheelBtn').onclick=showWheelOnly;
@@ -3168,7 +3178,7 @@ function setCurrentPrize(type){
       const minBet=Number(wheelSettings.minBet||1),maxBet=Number(wheelSettings.maxBet||500);
       const freeSpins=Number(currentProfile.freeSpins||0);
       const promoSpin=freeSpins>0;
-      let bet=Math.max(minBet,Number($('betAmount').value||minBet));
+      let bet=Math.max(minBet,adnorNumberEN($('betAmount').value,minBet));
       if(promoSpin){bet=minBet;$('betAmount').value=bet}else{$('betAmount').value=bet}
       if(bet<minBet)return toast('أقل رهان هو '+money(minBet));
       if(bet>maxBet)return toast('أعلى رهان هو '+money(maxBet));
@@ -6703,184 +6713,9 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 </script>
 
 
-
-<!-- ADNOR V150 FIREBASE FULL LOCK: server-only actions + soft DevTools deterrent -->
-<script id="adnor-v150-soft-client-lock">
-(function(){
-  window.ADNOR_SECURITY_LOCK_VERSION='V153_HARD_SERVER_FIX';
-  function blocked(e){
-    try{
-      var k=(e.key||'').toLowerCase();
-      var bad=e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k))||(e.ctrlKey&&['u','s'].includes(k));
-      if(bad){e.preventDefault();e.stopPropagation();return false;}
-    }catch(_){ }
-  }
-  document.addEventListener('keydown',blocked,true);
-  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;},true);
-})();
+<!-- ADNOR V155 WORKING MODE: NO SERVER LOCK -->
+<script id="adnor-v155-working-mode-marker">
+  window.ADNOR_WORKING_MODE='V155_NO_SERVER_LOCK_CLIENT_DIRECT';
 </script>
-<script type="module" id="adnor-v150-server-only-overrides">
-  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-  import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-  import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
-
-  const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
-  const app=getApps().length?getApp():initializeApp(firebaseConfig);
-  const auth=getAuth(app);
-  const fns=getFunctions(app,'us-central1');
-  const $=(id)=>document.getElementById(id);
-  const money=(v)=>'$'+Number(v||0).toFixed(2);
-  function toast(msg){const t=$('toast');if(t){t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3800)}else alert(msg)}
-  function activeDraw(){return document.querySelector('.tab.active')?.dataset?.draw || 'daily'}
-  async function call(name,data){
-    try{
-      const result=await httpsCallable(fns,name)(data);
-      return result.data;
-    }catch(e){
-      const code=String(e && (e.code||'') || '');
-      const msg=String(e && (e.message||'') || '');
-      if(code.includes('not-found') || msg.includes('not-found')){
-        throw new Error('دوال السيرفر V153 غير منشورة. لازم تنشر functions من Firebase، وليس رفع index.html فقط.');
-      }
-      if(code.includes('internal') && !msg){
-        throw new Error('خطأ من السيرفر. افتح Firebase Functions Logs أو انشر functions/index.js الجديد.');
-      }
-      throw e;
-    }
-  }
-  function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||''));r.onerror=()=>reject(r.error||new Error('file_read_failed'));r.readAsDataURL(file);});}
-
-  async function secureSendDeposit(){
-    try{
-      if(!auth.currentUser)return toast('سجل الدخول أولًا');
-      const amount=Number($('depositAmount')?.value||0);
-      const method=window.depositMethod || document.querySelector('.method-card.active')?.dataset?.method || 'usdt';
-      const reference=String($('depositRef')?.value||'').trim();
-      const file=$('depositReceipt')?.files?.[0]||null;
-      if(amount<=0)return toast('اكتب مبلغ الإيداع');
-      let receiptDataUrl='',receiptFileName='';
-      if(file){
-        if(!file.type.startsWith('image/'))return toast('الإيصال لازم يكون صورة');
-        if(file.size>8*1024*1024)return toast('حجم صورة الإيصال كبير');
-        receiptDataUrl=await fileToDataUrl(file);
-        receiptFileName=file.name||'';
-      }
-      const btn=$('sendDepositBtn'); if(btn)btn.disabled=true;
-      const res=await call('requestDeposit',{amount,method,reference,note:'طلب إيداع من الواجهة المقفولة V150',receiptDataUrl,receiptFileName,receiptStorageError:receiptDataUrl?'inline_v150':'no_receipt'});
-      if($('depositAmount'))$('depositAmount').value='';
-      if($('depositRef'))$('depositRef').value='';
-      if($('depositReceipt'))$('depositReceipt').value='';
-      toast('تم إرسال طلب الإيداع للأدمن بأمان — رقم الطلب: '+(res.id||''));
-    }catch(e){console.error(e);toast('فشل طلب الإيداع الآمن: '+(e.message||e.code||e));}
-    finally{const btn=$('sendDepositBtn'); if(btn)btn.disabled=false;}
-  }
-
-  async function secureSendWithdraw(){
-    try{
-      if(!auth.currentUser)return toast('سجل الدخول أولًا');
-      const amount=Number($('withdrawAmount')?.value||0);
-      const method=window.withdrawMethod || document.querySelector('.method-card.active')?.dataset?.method || 'usdt';
-      const destination=String($('withdrawDetails')?.value||'').trim();
-      if(amount<=0)return toast('اكتب مبلغ السحب');
-      if(destination.length<8)return toast('اكتب بيانات الاستلام كاملة');
-      if(!confirm('سيتم إرسال طلب السحب وحجز المبلغ من السيرفر. متابعة؟'))return;
-      const btn=$('sendWithdrawBtn'); if(btn)btn.disabled=true;
-      const res=await call('requestWithdraw',{amount,method,destination});
-      if($('withdrawAmount'))$('withdrawAmount').value='';
-      if($('withdrawDetails'))$('withdrawDetails').value='';
-      toast('تم إرسال طلب السحب بأمان — رقم الطلب: '+(res.id||''));
-    }catch(e){console.error(e);toast('فشل طلب السحب الآمن: '+(e.message||e.code||e));}
-    finally{const btn=$('sendWithdrawBtn'); if(btn)btn.disabled=false;}
-  }
-
-  async function secureBuyTicket(){
-    try{
-      if(!auth.currentUser)return toast('سجل الدخول أولًا');
-      const ticketNumber=String($('ticketNumber')?.value||'').trim();
-      if(!/^\d{7}$/.test(ticketNumber))return toast('رقم التذكرة يجب أن يكون 7 خانات');
-      const btn=$('buyTicketBtn'); if(btn)btn.disabled=true;
-      const res=await call('buyTicketServerV153',{drawType:activeDraw(),ticketNumber});
-      if($('ticketNumber'))$('ticketNumber').value=String(Math.floor(Math.random()*10000000)).padStart(7,'0');
-      toast('تم شراء التذكرة من السيرفر بأمان: '+res.ticketNumber);
-    }catch(e){console.error(e);toast('فشل شراء التذكرة الآمن: '+(e.message||e.code||e));}
-    finally{const btn=$('buyTicketBtn'); if(btn)btn.disabled=false;}
-  }
-
-  function adnorV151ParseAmount(v, def=1){
-    let txt=String(v ?? def).trim();
-    const map={'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};
-    txt=txt.replace(/[٠-٩۰-۹]/g,ch=>map[ch]||ch).replace(/[^0-9.\-]/g,'');
-    const n=Number(txt || def);
-    return Number.isFinite(n) ? Math.round(n*100)/100 : def;
-  }
-
-  async function secureSpinWheel(){
-    const btn=$('spinWheelBtn');
-    try{
-      if(!auth.currentUser)return toast('سجل الدخول أولًا');
-      const bet=adnorV151ParseAmount($('betAmount')?.value,1);
-      if(!Number.isFinite(bet) || bet<=0)return toast('قيمة الرهان غير صحيحة');
-      if(btn)btn.disabled=true;
-      if($('wheelResultText')){
-        $('wheelResultText').className='wheel-result';
-        $('wheelResultText').textContent='العجلة تدور... جاري تنفيذ النتيجة من السيرفر';
-      }
-      try{ if(typeof adnorV97StartSpinSound==='function')adnorV97StartSpinSound(); }catch(_e){}
-      const res=await call('spinWheelServerV153',{bet});
-      if(!res || res.ok===false){
-        const err=(res && (res.error || res.message || res.code)) || 'تعذر تنفيذ العجلة من السيرفر';
-        throw new Error(err);
-      }
-      const idx=Number(res.segmentIndex||0);
-      const segCount=Math.max(1, Number(res.segmentCount||12));
-      const angle=360/segCount;
-      const segmentCenter=idx*angle+angle/2;
-      const targetMod=(360-segmentCenter)%360;
-      if(typeof wheelRotation!=='number') window.wheelRotation=0;
-      const currentRotation=(typeof wheelRotation==='number')?wheelRotation:(window.wheelRotation||0);
-      const currentMod=((currentRotation%360)+360)%360;
-      const delta=((targetMod-currentMod+360)%360);
-      const nextRotation=currentRotation+1440+delta;
-      try{ wheelRotation=nextRotation; }catch(_e){ window.wheelRotation=nextRotation; }
-      if($('wheelDisc'))$('wheelDisc').style.transform='rotate('+nextRotation+'deg)';
-      setTimeout(()=>{
-        try{ if(typeof adnorV97StopSpinSound==='function')adnorV97StopSpinSound(true,Number(res.win||0)>0); }catch(_e){}
-        const playableAfter=Number(res.playableAfter || (Number(res.realAfter||0)+Number(res.bonusAfter||0)) || 0);
-        if($('wheelResultText')){
-          $('wheelResultText').className='wheel-result '+(Number(res.win||0)>Number(res.bet||bet)?'win':'lose');
-          $('wheelResultText').textContent='النتيجة '+(res.label||'')+' — الربح '+money(Number(res.win||0))+' — الرصيد الجديد '+money(playableAfter);
-        }
-        toast('تم تنفيذ العجلة بأمان من السيرفر');
-      },4300);
-    }catch(e){
-      console.error('secureSpinWheel error',e);
-      try{ if(typeof adnorV97StopSpinSound==='function')adnorV97StopSpinSound(false); }catch(_e){}
-      let msg=(e && (e.message || e.code)) ? (e.message || e.code) : String(e);
-      msg=String(msg||'خطأ غير معروف').replace(/^FirebaseError:\s*/i,'').replace(/^FunctionsError:\s*/i,'');
-      toast('فشل تنفيذ العجلة الآمنة: '+msg);
-      if($('wheelResultText'))$('wheelResultText').textContent='فشل تنفيذ العجلة الآمنة: '+msg;
-    }
-    finally{setTimeout(()=>{if(btn)btn.disabled=false;},4500);}
-  }
-
-  async function adminCall(name,data,ok){
-    try{const res=await call(name,data);toast(ok||'تم تنفيذ العملية من السيرفر');return res}
-    catch(e){console.error(e);toast('فشل أمر الأدمن الآمن: '+(e.message||e.code||e));}
-  }
-  window.adminApproveDeposit=(id)=>adminCall('adminApproveDeposit',{id},'تم قبول الإيداع من السيرفر');
-  window.adminRejectDeposit=async(id)=>{const reason=prompt('سبب رفض الإيداع','الإيصال غير واضح')||'مرفوض من الإدارة';return adminCall('adminRejectDeposit',{id,reason},'تم رفض الإيداع من السيرفر')};
-  window.adminApproveWithdraw=(id)=>adminCall('adminApproveWithdraw',{id},'تم قبول السحب من السيرفر');
-  window.adminRejectWithdraw=async(id)=>{const reason=prompt('سبب رفض السحب','بيانات التحويل غير صحيحة')||'مرفوض من الإدارة';return adminCall('adminRejectWithdraw',{id,reason},'تم رفض السحب وإرجاعه من السيرفر')};
-
-  function install(){
-    const dep=$('sendDepositBtn'); if(dep)dep.onclick=secureSendDeposit;
-    const wd=$('sendWithdrawBtn'); if(wd)wd.onclick=secureSendWithdraw;
-    const bt=$('buyTicketBtn'); if(bt)bt.onclick=secureBuyTicket;
-    const wh=$('spinWheelBtn'); if(wh)wh.onclick=secureSpinWheel;
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-  [600,1400,2600].forEach(t=>setTimeout(install,t));
-</script>
-
 </body>
 </html>

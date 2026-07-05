@@ -2765,7 +2765,7 @@ function setCurrentPrize(type){
     function drawTicketStatusClass(t){const label=drawTicketStatusLabel(t);if(label==='فائزة')return 'win';if(label==='بانتظار النشر')return 'wait';if(label==='منتهية')return 'bad';return ''}
     function renderUserTicketHistory(val){currentUserTickets=val||currentUserTickets||{};const all=Object.values(currentUserTickets||{}).sort((a,b)=>(b.createdAt||b.movedAt||0)-(a.createdAt||a.movedAt||0));const activeList=all.filter(t=>t.status==='active');const active=activeList.length;const won=all.filter(t=>t.status==='winner').length;setText('myTicketsTotalText',all.length);setText('myTicketsActiveText',active);setText('myTicketsWonText',won);setText('ticketsCountText',active?('لديك '+active+' تذكرة نشطة'):(all.length?'لا توجد تذاكر نشطة':'لا توجد تذاكر بعد'));setText('activeTicketsText',active);setText('homeTicketsText',all.length);const lbox=$('lotteryActiveTicketsList');if(lbox){if(!activeList.length){lbox.innerHTML='<div class="v61-mini-empty">لا توجد تذاكر نشطة بعد</div>'}else{lbox.innerHTML=activeList.slice(0,8).map(t=>'<div class="v61-mini-ticket"><i>🎟️</i><b>'+escapeHtml(t.number||'')+'</b><span>'+escapeHtml(t.drawLabel||drawLabel(t.drawType))+'</span></div>').join('')}}const box=$('myTicketsList');if(!box)return;let list=all;if(currentTicketFilter!=='all')list=all.filter(t=>t.status===currentTicketFilter);if(!list.length){box.innerHTML='<div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر في هذا القسم</h4><p>استخدم الفلتر الآخر أو اشترِ تذكرة جديدة.</p></div><strong>0</strong></div>';return}box.innerHTML=list.slice(0,80).map(t=>{const cls=drawTicketStatusClass(t);const status=drawTicketStatusLabel(t);const detail=(t.status==='moved'&&t.movedTo)?('انتقلت إلى '+drawLabel(t.movedTo)):(t.status==='winner'?'ربحت '+drawLabel(t.drawType):'محفوظة في '+(t.drawLabel||drawLabel(t.drawType)));return '<div class="draw-item"><div class="medal">🎟️</div><div><h4>رقم '+escapeHtml(t.number||'')+' <span class="ticket-mini '+cls+'">'+status+'</span></h4><p>'+escapeHtml(detail)+'<br>النوع: '+escapeHtml(t.drawLabel||drawLabel(t.drawType))+' — السعر: '+money(t.price||0)+'<br>الوقت: '+new Date(t.createdAt||t.movedAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+escapeHtml(t.number||'')+'</strong></div>'}).join('')}
 
-    const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app);provider.setCustomParameters({prompt:'select_account'});
+    const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app,'us-central1');provider.setCustomParameters({prompt:'select_account'});
     const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',depositCategory='',withdrawCategory='',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{},promoCodes:{},promoRedemptions:{},backups:{},aiKnowledge:{},aiUnanswered:{},gameCenter:{},customGameLogs:{}};let currentUserTickets={};let currentTicketFilter='all';let lotteryTicketsHidden=false;let currentAuditFilter="all";let currentUserFilter="all";let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:0.50,referrerBonus:0.25,newUserRewardType:'bonus',newUserRewardAmount:0.50,referrerRewardType:'bonus',referrerRewardAmount:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'}; let promoCodesCache={};let referralUnsub=null,referralsUnsub=null,pendingReferralUnsub=null,userNotifUnsub=null,currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){await uiPrompt('انسخ النص يدويًا',String(t||''))}}
@@ -6707,7 +6707,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 <!-- ADNOR V150 FIREBASE FULL LOCK: server-only actions + soft DevTools deterrent -->
 <script id="adnor-v150-soft-client-lock">
 (function(){
-  window.ADNOR_SECURITY_LOCK_VERSION='V150_FIREBASE_FULL_LOCK';
+  window.ADNOR_SECURITY_LOCK_VERSION='V153_HARD_SERVER_FIX';
   function blocked(e){
     try{
       var k=(e.key||'').toLowerCase();
@@ -6727,12 +6727,27 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
   const app=getApps().length?getApp():initializeApp(firebaseConfig);
   const auth=getAuth(app);
-  const fns=getFunctions(app);
+  const fns=getFunctions(app,'us-central1');
   const $=(id)=>document.getElementById(id);
   const money=(v)=>'$'+Number(v||0).toFixed(2);
   function toast(msg){const t=$('toast');if(t){t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3800)}else alert(msg)}
   function activeDraw(){return document.querySelector('.tab.active')?.dataset?.draw || 'daily'}
-  function call(name,data){return httpsCallable(fns,name)(data).then(r=>r.data)}
+  async function call(name,data){
+    try{
+      const result=await httpsCallable(fns,name)(data);
+      return result.data;
+    }catch(e){
+      const code=String(e && (e.code||'') || '');
+      const msg=String(e && (e.message||'') || '');
+      if(code.includes('not-found') || msg.includes('not-found')){
+        throw new Error('دوال السيرفر V153 غير منشورة. لازم تنشر functions من Firebase، وليس رفع index.html فقط.');
+      }
+      if(code.includes('internal') && !msg){
+        throw new Error('خطأ من السيرفر. افتح Firebase Functions Logs أو انشر functions/index.js الجديد.');
+      }
+      throw e;
+    }
+  }
   function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||''));r.onerror=()=>reject(r.error||new Error('file_read_failed'));r.readAsDataURL(file);});}
 
   async function secureSendDeposit(){
@@ -6784,7 +6799,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       const ticketNumber=String($('ticketNumber')?.value||'').trim();
       if(!/^\d{7}$/.test(ticketNumber))return toast('رقم التذكرة يجب أن يكون 7 خانات');
       const btn=$('buyTicketBtn'); if(btn)btn.disabled=true;
-      const res=await call('buyTicketServer',{drawType:activeDraw(),ticketNumber});
+      const res=await call('buyTicketServerV153',{drawType:activeDraw(),ticketNumber});
       if($('ticketNumber'))$('ticketNumber').value=String(Math.floor(Math.random()*10000000)).padStart(7,'0');
       toast('تم شراء التذكرة من السيرفر بأمان: '+res.ticketNumber);
     }catch(e){console.error(e);toast('فشل شراء التذكرة الآمن: '+(e.message||e.code||e));}
@@ -6811,7 +6826,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         $('wheelResultText').textContent='العجلة تدور... جاري تنفيذ النتيجة من السيرفر';
       }
       try{ if(typeof adnorV97StartSpinSound==='function')adnorV97StartSpinSound(); }catch(_e){}
-      const res=await call('spinWheelServer',{bet});
+      const res=await call('spinWheelServerV153',{bet});
       if(!res || res.ok===false){
         const err=(res && (res.error || res.message || res.code)) || 'تعذر تنفيذ العجلة من السيرفر';
         throw new Error(err);

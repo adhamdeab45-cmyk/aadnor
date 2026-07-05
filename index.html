@@ -892,7 +892,7 @@
 .v144-safe-note{display:inline-block;margin-top:5px;color:#8fe7ff;font-weight:1000}.v144-gold-track{gap:16px}.v144-sep{color:#ffd45d;opacity:.7}.v108-status b{color:#ffe184}.v108-status{min-height:82px}.v104-ticker-track.v144-gold-track{animation-duration:38s!important}
 </style>
 
-  <meta name="adnor-version" content="V144_DRAW_SCHEDULER_GOLD_TICKER_PRO">
+  <meta name="adnor-version" content="V158_STABLE_UI_SETTINGS_TICKER_FIX">
 
 
 <style id="adnor-v120-lottery-result-layout-fix">
@@ -1508,6 +1508,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
             <div class="settings-actions-v101">
               <button class="gold" id="v101SaveSettingsBtn" type="button">حفظ الإعدادات</button>
               <button class="dark" id="v101OpenAccountBtn" type="button">فتح حسابي</button>
+              <button class="danger" id="v158SettingsLogoutBtn" type="button">تسجيل الخروج</button>
             </div>
             <p class="hint" id="v101SettingsHint" style="margin-top:10px">الإعدادات محفوظة على جهازك وداخل حسابك عندما تكون مسجّل الدخول.</p>
           </section>
@@ -6701,6 +6702,118 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   function install(){installBottom();installDrawer();keepReferralsInsideAccount();forceStart();bindInvestmentButtons();sync()}
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
   [300,900,1300,2200].forEach(t=>setTimeout(install,t));
+</script>
+
+
+<style id="adnor-v158-stable-ui-fix-css">
+  /* V158 — إبطاء الشريط الذهبي الرسمي بدون لمس نظام النتائج */
+  #appWrap:not(.admin-layout) .v104-ticker-track,
+  #appWrap:not(.admin-layout) .v104-ticker-track.v144-gold-track,
+  .v104-ticker-track.v144-gold-track{
+    animation-duration:90s!important;
+  }
+  #appWrap:not(.admin-layout) .v61-top-ticker.site-alert{
+    min-height:54px!important;
+  }
+  /* زر خروج واضح داخل الإعدادات */
+  .settings-actions-v101 .danger,
+  #v158SettingsLogoutBtn{
+    border:1px solid rgba(255,92,105,.45)!important;
+    background:linear-gradient(180deg,rgba(255,92,105,.22),rgba(79,12,22,.76))!important;
+    color:#ffe5e8!important;
+    border-radius:16px!important;
+    min-height:48px!important;
+    font:inherit!important;
+    font-weight:1000!important;
+    cursor:pointer!important;
+    box-shadow:0 0 14px rgba(255,92,105,.12)!important;
+  }
+  #page-settings .settings-card-v101{scroll-margin-top:16px}
+</style>
+<script id="adnor-v158-stable-ui-fix-js">
+(function(){
+  function q(s,r){return (r||document).querySelector(s)}
+  function qa(s,r){return Array.from((r||document).querySelectorAll(s))}
+  function closeDrawer(){q('#sideDrawer')?.classList.remove('open');q('#drawerOverlay')?.classList.remove('open')}
+  function hardShowPage(page){
+    const target=q('#page-'+page);
+    if(!target) return false;
+    closeDrawer();
+    qa('.page').forEach(x=>x.classList.remove('active'));
+    target.classList.add('active');
+    qa('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+    const wrap=q('#appWrap');
+    if(wrap){
+      wrap.setAttribute('data-active-page',page);
+      wrap.classList.toggle('admin-layout',page==='admin');
+    }
+    if(page==='games' && typeof window.showGamesHome==='function'){
+      try{window.showGamesHome()}catch(e){}
+    }
+    try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}
+    return true;
+  }
+  function bindDrawerHard(){
+    const map={
+      settings:'settings',
+      support:'support',
+      notifications:'notifications',
+      account:'account',
+      wallet:'wallet',
+      lottery:'lottery',
+      games:'games',
+      investment:'investment'
+    };
+    qa('#sideDrawer [data-v139-page],#sideDrawer [data-drawer-page]').forEach(btn=>{
+      const page=btn.getAttribute('data-v139-page')||btn.getAttribute('data-drawer-page');
+      if(!map[page]) return;
+      btn.onclick=function(ev){
+        if(ev){ev.preventDefault();ev.stopPropagation();}
+        hardShowPage(map[page]);
+        return false;
+      };
+    });
+    const settingsBtn=qa('#sideDrawer button').find(b=>(b.textContent||'').includes('الإعدادات'));
+    if(settingsBtn){
+      settingsBtn.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation();}hardShowPage('settings');return false;};
+    }
+    const supportBtn=qa('#sideDrawer button').find(b=>(b.textContent||'').includes('الدعم الفني'));
+    if(supportBtn){
+      supportBtn.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation();}hardShowPage('support');return false;};
+    }
+  }
+  function ensureSettingsLogout(){
+    const actions=q('#page-settings .settings-actions-v101');
+    if(actions && !q('#v158SettingsLogoutBtn')){
+      const b=document.createElement('button');
+      b.className='danger';
+      b.id='v158SettingsLogoutBtn';
+      b.type='button';
+      b.textContent='تسجيل الخروج';
+      actions.appendChild(b);
+    }
+    const b=q('#v158SettingsLogoutBtn');
+    if(b && b.dataset.v158Bound!=='1'){
+      b.dataset.v158Bound='1';
+      b.addEventListener('click',function(){
+        const drawerLogout=q('#drawerLogoutBtn');
+        if(drawerLogout) drawerLogout.click();
+        else location.reload();
+      });
+    }
+  }
+  function fixSettingsButton(){
+    const openAcc=q('#v101OpenAccountBtn');
+    if(openAcc && openAcc.dataset.v158Bound!=='1'){
+      openAcc.dataset.v158Bound='1';
+      openAcc.addEventListener('click',function(ev){ev.preventDefault();hardShowPage('account')});
+    }
+  }
+  function install(){bindDrawerHard();ensureSettingsLogout();fixSettingsButton();}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+  [300,900,1600,2800,4500].forEach(t=>setTimeout(install,t));
+  window.ADNOR_V158_SHOW_PAGE=hardShowPage;
+})();
 </script>
 
 </body>

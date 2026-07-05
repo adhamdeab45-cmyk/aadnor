@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
-<!-- V138_CLEAN_STRUCTURE: professional navigation, separated referrals/support/admin layout over V137 secure wallet -->
+<!-- V145_REFERRAL_PRIVACY_MASK: hides invited user email from referrer, admin keeps full audit. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -2645,6 +2645,34 @@ function setCurrentPrize(type){
       });
     }
     function maskEmail(v){v=String(v||'مستخدم ADNOR');if(!v.includes('@'))return v;const [a,b]=v.split('@');return (a.slice(0,2)+'***'+a.slice(-1))+'@'+(b||'');}
+    // V145_PRIVACY: لا نعرض البريد الكامل للمستخدم الذي أرسل الدعوة. الأدمن فقط يرى السجل الكامل من referrals.
+    function maskReferralEmail(v){return maskEmail(v||'');}
+    function referralPublicIdentity(r){return r?.referredEmailMasked||r?.referredDisplay||maskReferralEmail(r?.referredEmail||'')||'مستخدم جديد';}
+    function safeReferralRecordForReferrer(r){
+      const masked=maskReferralEmail(r?.referredEmail||r?.email||'');
+      const safe={...(r||{})};
+      if(masked){safe.referredEmailMasked=masked;safe.referredDisplay=masked;}
+      else {safe.referredDisplay='مستخدم جديد';}
+      safe.referredEmail=masked||'مستخدم جديد';
+      safe.referredName='مستخدم جديد';
+      safe.privacyMode='masked_for_referrer';
+      safe.privacyUpdatedAt=Date.now();
+      return safe;
+    }
+    async function sanitizeVisibleReferralPath(uid,id,r){
+      try{
+        if(!uid||!id||!r||!String(r.referredEmail||'').includes('@'))return;
+        const safe=safeReferralRecordForReferrer(r);
+        await update(ref(db,'user_referrals/'+uid+'/'+id),{referredEmail:safe.referredEmail,referredEmailMasked:safe.referredEmailMasked||'',referredDisplay:safe.referredDisplay||'مستخدم جديد',referredName:'مستخدم جديد',privacyMode:'masked_for_referrer',privacyUpdatedAt:Date.now()});
+      }catch(e){console.warn('referral privacy cleanup skipped',e)}
+    }
+    async function sanitizePendingReferralRewardPath(uid,id,r){
+      try{
+        if(!uid||!id||!r||!String(r.referredEmail||'').includes('@'))return;
+        const safe=safeReferralRecordForReferrer(r);
+        await update(ref(db,'pending_referral_rewards/'+uid+'/'+id),{referredEmail:safe.referredEmail,referredEmailMasked:safe.referredEmailMasked||'',referredDisplay:safe.referredDisplay||'مستخدم جديد',referredName:'مستخدم جديد',privacyMode:'masked_for_referrer',privacyUpdatedAt:Date.now()});
+      }catch(e){console.warn('pending referral privacy cleanup skipped',e)}
+    }
     function drawPublishMillis(d){let v=Number(d?.publishAt||d?.publishedAt||d?.createdAt||0); if(v && v<100000000000) v*=1000; return v||0}
     function publicDrawsList(type='all'){
       const now=Date.now();
@@ -3467,7 +3495,8 @@ function setCurrentPrize(type){
         if($('refBonusText'))$('refBonusText').textContent=money(bonus);
         if($('userReferralsList')){
           const recent=claimedOrPending.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,6);
-          $('userReferralsList').innerHTML=recent.length?recent.map(r=>'<div class="ref-mini"><b>'+escapeHtml(r.referredEmail||r.referredName||'مستخدم جديد')+'</b>مكافأتك: '+escapeHtml(r.referrerRewardText||referralRewardText(referralRewardFromRecord(r,'referrer')))+' — الحالة: '+escapeHtml(r.referrerRewardStatus==='claimed'?'تمت الإضافة':'بانتظار الاستلام')+'<br><small>'+new Date(r.createdAt||Date.now()).toLocaleString('ar-TR')+'</small></div>').join(''):'<div class="ref-mini"><b>آخر الدعوات</b>لا توجد دعوات بعد.</div>';
+          recent.forEach(r=>sanitizeVisibleReferralPath(uid,r.id,r));
+          $('userReferralsList').innerHTML=recent.length?recent.map(r=>'<div class="ref-mini"><b>'+escapeHtml(referralPublicIdentity(r))+'</b>مكافأتك: '+escapeHtml(r.referrerRewardText||referralRewardText(referralRewardFromRecord(r,'referrer')))+' — الحالة: '+escapeHtml(r.referrerRewardStatus==='claimed'?'تمت الإضافة':'بانتظار الاستلام')+'<br><small>'+new Date(r.createdAt||Date.now()).toLocaleString('ar-TR')+'</small></div>').join(''):'<div class="ref-mini"><b>آخر الدعوات</b>لا توجد دعوات بعد.</div>';
         }
       });
     }
@@ -3590,11 +3619,12 @@ function setCurrentPrize(type){
         return false;
       }
       const data={id,code,referrerUid:ownerUid,referrerEmail:c.ownerEmail||'',referrerName:c.ownerName||'',referredUid:currentUser.uid,referredEmail:currentUser.email||'',referredName:me.name||currentUser.displayName||'',newUserBonus:newBonus,referrerBonus:refBonus,newUserRewardType:newReward.type,newUserRewardAmount:newReward.amount,newUserRewardText:referralRewardText(newReward),referrerRewardType:refReward.type,referrerRewardAmount:refReward.amount,referrerRewardText:referralRewardText(refReward),bonusType:newReward.type==='bonus'?'playable_bonus':newReward.type,status:'approved',referrerRewardStatus:refReward.amount>0?'pending_claim':'none',dailyLimit:Number(freshSettings.dailyReferralLimit||0),dailyLimitKey:reservation.key||'',dailyLimitSkipped:!!reservation.skipped,createdAt:now,source:opts.auto?'referral_link_auto':'referral_code_manual'};
+      const dataForReferrer=safeReferralRecordForReferrer(data);
       const updates={};
       const newApplied=applyReferralRewardUpdates(updates,currentUser.uid,me,newReward,now,{code,source:'referral_new_user'});
-      updates['referrals/'+id]=data;
-      updates['user_referrals_received/'+currentUser.uid+'/'+id]=data;
-      updates['user_referrals/'+ownerUid+'/'+id]=data; // queue visible to referrer; also fallback for claiming reward
+      updates['referrals/'+id]=data; // سجل كامل للأدمن فقط
+      updates['user_referrals_received/'+currentUser.uid+'/'+id]=data; // المستخدم الجديد يرى سجله الخاص
+      updates['user_referrals/'+ownerUid+'/'+id]=dataForReferrer; // سجل مخفي الخصوصية لصاحب الرابط
       updates['users/'+currentUser.uid+'/referredBy']=code;
       updates['users/'+currentUser.uid+'/referredByUid']=ownerUid;
       updates['users/'+currentUser.uid+'/updatedAt']=now;
@@ -3612,7 +3642,7 @@ function setCurrentPrize(type){
       // Non-critical mirror. If rules are older and this path is blocked, the referral still works through user_referrals fallback.
       if(refReward.amount>0){
         try{
-          await set(ref(db,'pending_referral_rewards/'+ownerUid+'/'+id),{...data,status:'pending',amount:refReward.amount,createdAt:now});
+          await set(ref(db,'pending_referral_rewards/'+ownerUid+'/'+id),{...dataForReferrer,status:'pending',amount:refReward.amount,createdAt:now});
         }catch(mirrorErr){console.warn('pending referral mirror skipped',mirrorErr)}
       }
       currentProfile={...currentProfile,referredBy:code,referredByUid:ownerUid};
@@ -3666,7 +3696,7 @@ function setCurrentPrize(type){
         const applied=applyReferralRewardUpdates(updates,currentUser.uid,u,refReward,now,{code:reward.code||'',source:'referral_referrer'});
         if(applied.moneyAmount>0)updates['users/'+currentUser.uid+'/referralBonusEarned']=Number((Number(u.referralBonusEarned||0)+applied.moneyAmount).toFixed(2));
         updates['users/'+currentUser.uid+'/updatedAt']=now;
-        updates['transactions/'+currentUser.uid+'/'+txId]={type:'referral_referrer_reward',amount:applied.moneyAmount,status:refReward.type,note:'مكافأة دعوة مستخدم جديد '+(reward.referredEmail||'')+' — '+applied.text,balanceBefore:applied.balanceBefore,balanceAfter:applied.balanceAfter,createdAt:now,referralId:rewardId,rewardType:refReward.type,rewardAmount:refReward.amount};
+        updates['transactions/'+currentUser.uid+'/'+txId]={type:'referral_referrer_reward',amount:applied.moneyAmount,status:refReward.type,note:'مكافأة دعوة مستخدم جديد — '+applied.text,balanceBefore:applied.balanceBefore,balanceAfter:applied.balanceAfter,createdAt:now,referralId:rewardId,rewardType:refReward.type,rewardAmount:refReward.amount};
         updates['user_referrals/'+currentUser.uid+'/'+rewardId]=claimedReward;
         updates['user_notifications/'+currentUser.uid+'/'+txId]=notifObj('referral_bonus','وصلتك مكافأة دعوة','تمت إضافة '+applied.text+' لأن مستخدمًا سجل من رابطك.',{amount:refReward.amount,rewardType:refReward.type,referralId:rewardId});
         await update(ref(db),updates);
@@ -3702,7 +3732,8 @@ function setCurrentPrize(type){
       if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null}
       pendingReferralUnsub=onValue(ref(db,'pending_referral_rewards/'+uid),snap=>{
         const pending=Object.entries(snap.val()||{}).filter(([id,r])=>r&&r.status!=='claimed');
-        pending.forEach(([id,r])=>claimPendingReferralReward(id,r));
+        pending.forEach(([id,r])=>{sanitizeVisibleReferralPath(uid,id,r);sanitizePendingReferralRewardPath(uid,id,r)});
+        pending.forEach(([id,r])=>claimPendingReferralReward(id,safeReferralRecordForReferrer(r)));
         const claimed=Object.values(snap.val()||{}).filter(r=>r&&r.status==='claimed');
         if($('refCountText'))$('refCountText').textContent=String(Math.max(Number($('refCountText').textContent||0),pending.length+claimed.length));
       });
@@ -3867,8 +3898,8 @@ function setCurrentPrize(type){
       if(applied.moneyAmount>0)updates['users/'+uid+'/referralBonusEarned']=Number((Number(u.referralBonusEarned||0)+applied.moneyAmount).toFixed(2));
       updates['users/'+uid+'/updatedAt']=now;
       updates['transactions/'+uid+'/admin_ref_claim_'+now]={type:'referral_referrer_reward',amount:applied.moneyAmount,status:refReward.type,note:'دفع مكافأة دعوة من الأدمن — '+applied.text,balanceBefore:applied.balanceBefore,balanceAfter:applied.balanceAfter,createdAt:now,referralId,rewardType:refReward.type,rewardAmount:refReward.amount};
-      updates['user_referrals/'+uid+'/'+referralId]=claimed;
-      updates['pending_referral_rewards/'+uid+'/'+referralId]=claimed;
+      updates['user_referrals/'+uid+'/'+referralId]=safeReferralRecordForReferrer(claimed);
+      updates['pending_referral_rewards/'+uid+'/'+referralId]=safeReferralRecordForReferrer(claimed);
       updates['referrals/'+referralId+'/referrerRewardStatus']='claimed';
       updates['referrals/'+referralId+'/claimedAt']=now;
       updates['referrals/'+referralId+'/referrerRewardText']=applied.text;

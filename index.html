@@ -1367,7 +1367,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
   </main>
 
   <main class="screen" id="appScreen">
-    <div class="app-wrap" id="appWrap" data-active-page="home">
+    <div class="app-wrap" id="appWrap" data-active-page="lottery">
       <div class="v61-top-ticker site-alert" id="siteControlAlert">مبروك للفائزين بسحب أمس، ترقبوا السحب الكبير القادم.<span class="sub" id="siteControlAlertSub"></span></div>
       <section class="v62-royal-head" aria-label="رأس صفحة ADNOR">
         <div class="v62-balance-card">
@@ -1391,13 +1391,12 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
       <aside class="side-drawer" id="sideDrawer" aria-label="قائمة ADNOR">
         <div class="drawer-head"><div class="drawer-title">ADNOR</div><button class="drawer-close" id="drawerCloseBtn">×</button></div>
         <div class="drawer-user v71-drawer-user"><b id="drawerUserName">مستخدم ADNOR</b><span id="drawerUserEmail">نظام آمن</span></div>
-        <div class="drawer-menu v71-drawer-menu">
-          <button class="drawer-link v52-primary" data-drawer-page="settings"><span>⚙️ الضبط والإعدادات</span><span>›</span></button>
-          <button class="drawer-link v52-secondary" data-drawer-page="results"><span>🏆 النتائج وتذاكري</span><span>›</span></button>
-          <button class="drawer-link v52-secondary" data-drawer-page="vip"><span>👑 VIP الملكي</span><span>›</span></button>
-          <button class="drawer-link v52-secondary" data-drawer-page="support"><span>💬 الدعم الفني</span><span>›</span></button>
-          <button class="drawer-link v52-secondary" data-drawer-page="ai"><span>🤖 مساعد ADNOR الذكي</span><span>›</span></button>
-          <button class="drawer-link" id="drawerLogoutBtn"><span>🚪 تسجيل الخروج</span><span>›</span></button>
+        <div class="drawer-menu v71-drawer-menu v139-drawer-menu">
+          <button class="drawer-link v52-primary" data-drawer-page="support" type="button"><span>💬 الدعم الفني</span><span>›</span></button>
+          <button class="drawer-link v52-secondary" data-drawer-page="notifications" type="button"><span>🔔 الإشعارات</span><span>›</span></button>
+          <button class="drawer-link v52-secondary" data-drawer-page="settings" type="button"><span>⚙️ الإعدادات</span><span>›</span></button>
+          <button class="drawer-link v52-secondary hidden" id="drawerAdminBtn" data-drawer-page="admin" type="button"><span>🛡️ لوحة الأدمن</span><span>›</span></button>
+          <button class="drawer-link" id="drawerLogoutBtn" type="button"><span>🚪 تسجيل الخروج</span><span>›</span></button>
         </div>
       </aside>
 
@@ -1459,7 +1458,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         </div>
       </div>
 
-      <div id="page-home" class="page active">
+      <div id="page-home" class="page">
         <section class="home-hero">
           <div class="home-hero-inner">
             <div class="home-hello"><div><h2>أهلاً بك في ADNOR</h2><p id="homeWelcomeText">بوابتك المختصرة لكل شيء: رصيدك، تذاكرك، ألعابك، ودعمك.</p></div><div class="home-badge">ROYAL</div></div>
@@ -1482,7 +1481,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         <section class="royal-card home-section-clean"><div class="section-title"><h3>اختصارات منظمة</h3><span>كل شيء صار في مكانه الصحيح</span></div><div class="feature-grid"><button class="feature vip-home-highlight" data-home-go="vip"><div>👑</div><b>VIP الملكي</b><span>مستويات، مهام يومية، وصندوق جوائز</span></button><button class="feature" data-home-go="results"><div>🏆</div><b>النتائج وتذاكري</b><span>سجل التذاكر والنتائج</span></button><button class="feature" data-home-go="support"><div>💬</div><b>الدعم الفني</b><span>واتساب، تليجرام، وتذاكر الدعم</span></button></div></section>
       </div>
 
-      <div id="page-lottery" class="page v63-lottery-page">
+      <div id="page-lottery" class="page active v63-lottery-page">
         <nav class="tabs v63-tabs" aria-label="أنواع السحب">
           <button class="tab active" data-draw="daily">اليومي 💎</button>
           <button class="tab" data-draw="weekly">الأسبوعي 💎</button>
@@ -1793,6 +1792,33 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         <section class="royal-card"><div class="section-title"><h3>تذاكري السابقة</h3><span id="supportCountText">0</span></div><div class="support-ticket-list" id="supportTicketsList"><div class="ticket-card"><div class="ticket-top"><h4>لا توجد تذاكر بعد</h4><span class="badge">فارغ</span></div><p>أي طلب دعم ترسله سيظهر هنا مع حالته.</p></div></div></section>
         <section class="royal-card"><div class="section-title"><h3>أسئلة مهمة</h3><span>اللعب المسؤول</span></div><div class="faq-list"><div class="faq-item"><b>هل يمكن تعديل الرصيد من F12؟</b><p>لا. الرصيد الحقيقي محفوظ داخل نظام ADNOR وليس داخل المتصفح فقط، وكل عملية يتم تسجيلها في سجل العمليات.</p></div><div class="faq-item"><b>هل المنصة مناسبة لمن هم دون 18؟</b><p>لا. ADNOR مخصص لمن هم 18 عامًا أو أكثر فقط، مع قواعد لعب مسؤول وحدود استخدام.</p></div><div class="faq-item"><b>هل البونص قابل للسحب؟</b><p>البونص مخصص للعب فقط. الأرباح الناتجة عنه تتبع قواعد الإدارة قبل التحويل إلى رصيد حقيقي.</p></div><div class="faq-item"><b>متى تتم مراجعة الإيداع والسحب؟</b><p>كل طلب يظهر للأدمن داخل لوحة الإدارة، ويتم قبوله أو رفضه مع سبب واضح.</p></div></div></section>
       </div>
+
+      <div id="page-investment" class="page">
+        <section class="jackpot v139-invest-hero">
+          <div class="label">قسم الاستثمار</div>
+          <div class="amount">INVEST</div>
+          <div class="drawname">قسم مستقل ومنظم، ولا يتم تفعيل أي خطة إلا من الإدارة وبشكل نظامي.</div>
+        </section>
+        <section class="royal-card v139-invest-card">
+          <div class="section-title"><h3>📈 مركز الاستثمار</h3><span>قيد التجهيز</span></div>
+          <div class="hint">هذا القسم صار مستقل حتى ما يختلط مع المحفظة أو الألعاب. الاستثمار الحقيقي يحتاج إعدادات واضحة من الأدمن، سجل عمليات، وموافقة نظامية قبل تفعيله.</div>
+          <div class="v139-invest-grid">
+            <div class="v139-invest-box"><b>رصيدي الاستثماري</b><strong id="investmentBalanceText">$0.00</strong><span>يعرض لاحقًا المبلغ المستثمر فقط.</span></div>
+            <div class="v139-invest-box"><b>الأرباح/الخسائر</b><strong id="investmentProfitText">$0.00</strong><span>لا تظهر أرقام وهمية.</span></div>
+            <div class="v139-invest-box"><b>الحالة</b><strong>غير مفعّل</strong><span>ينتظر إعدادات الأدمن.</span></div>
+          </div>
+        </section>
+        <section class="royal-card v139-invest-card">
+          <div class="section-title"><h3>🪙 سوق ADN</h3><span>اختياري</span></div>
+          <div class="hint">إذا بدك تخلي ADN Token جزء من الاستثمار، نخليه مربوط من هون بشكل واضح بدل ما يكون مخفي داخل صفحات ثانية.</div>
+          <button class="gold-btn" type="button" data-v139-go="token">فتح سوق ADN</button>
+        </section>
+        <section class="royal-card v139-invest-card">
+          <div class="section-title"><h3>سجل الاستثمار</h3><span>فارغ الآن</span></div>
+          <div class="admin-empty">أي عملية استثمار مستقبلية ستظهر هنا فقط، وليس داخل المحفظة أو الألعاب.</div>
+        </section>
+      </div>
+
       <div id="page-account" class="page">
         <section class="jackpot"><div class="label">حسابي</div><div class="amount">MY ADNOR</div><div class="drawname" id="accountInfo">ملفك الملكي، الدعوات، والحماية.</div></section>
         <div class="account-final-grid">
@@ -2435,11 +2461,12 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
       </div>
 
 
-      <nav class="bottom-nav">
-        <button class="nav-btn" data-page="lottery"><i>💎</i><span>اليانصيب</span></button>
-        <button class="nav-btn" data-page="games"><i>🎮</i><span>الألعاب</span></button>
-        <button class="nav-btn" data-page="wallet"><i>💳</i><span>المحفظة</span></button>
-        <button class="nav-btn" data-page="account"><i>👤</i><span>حسابي</span></button>
+      <nav class="bottom-nav v139-bottom-nav">
+        <button class="nav-btn active" data-page="lottery" type="button"><i>🎟️</i><span>اليانصيب</span></button>
+        <button class="nav-btn" data-page="games" type="button"><i>🎮</i><span>الألعاب</span></button>
+        <button class="nav-btn" data-page="investment" type="button"><i>📈</i><span>استثمار</span></button>
+        <button class="nav-btn" data-page="wallet" type="button"><i>💳</i><span>المحفظة</span></button>
+        <button class="nav-btn" data-page="account" type="button"><i>👤</i><span>حسابي</span></button>
       </nav>
     </div>
   </main>
@@ -6022,131 +6049,91 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 </script>
 
 
-<style id="adnor-v138-clean-structure-css">
-  /* ADNOR V138 — Clean Structure + Professional Navigation. UI organization only. */
-  #appWrap:not(.admin-layout){padding-bottom:106px!important}
-  .v138-map{position:relative;z-index:2;margin:14px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .v138-map-card{position:relative;overflow:hidden;min-height:106px;border:1px solid rgba(255,204,77,.38);border-radius:24px;background:radial-gradient(circle at 100% 0,rgba(255,220,95,.16),transparent 35%),linear-gradient(180deg,rgba(8,25,49,.86),rgba(2,10,22,.96));box-shadow:0 0 18px rgba(255,188,39,.08),inset 0 0 18px rgba(255,205,76,.035);padding:13px;color:#fff;text-align:right;cursor:pointer;font:inherit;font-weight:900;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px}
-  .v138-map-card:before{content:"";position:absolute;inset:-40px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(120%);transition:.5s;pointer-events:none}.v138-map-card:active:before{transform:translateX(-120%)}
-  .v138-map-card i{font-style:normal;font-size:28px;filter:drop-shadow(0 0 10px rgba(255,204,77,.32))}.v138-map-card b{display:block;color:#ffe184;font-size:15px}.v138-map-card span{display:block;color:#aebbd1;font-size:11px;line-height:1.55;font-weight:800}
-  .v138-map-card.primary{grid-column:1/-1;min-height:122px;background:radial-gradient(circle at 18% 0,rgba(54,240,188,.14),transparent 34%),radial-gradient(circle at 100% 0,rgba(255,220,95,.20),transparent 36%),linear-gradient(135deg,rgba(12,34,65,.94),rgba(2,10,22,.98))}
-  .v138-section-label{margin:13px 2px 7px;color:#ffe184;font-size:12px;font-weight:1000;letter-spacing:.2px;display:flex;align-items:center;gap:7px}.v138-section-label:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,rgba(255,204,77,.34),transparent)}
-  .v138-drawer-menu{gap:8px!important}.v138-drawer-menu .drawer-link{min-height:52px!important;height:auto!important}.v138-drawer-menu .drawer-link small{display:block;color:#93a4bd;font-size:10px;margin-top:3px;font-weight:800}.v138-drawer-menu .drawer-link span:first-child{align-items:flex-start!important}.v138-drawer-menu .drawer-link.v138-main{border-color:rgba(255,224,126,.62)!important;background:radial-gradient(circle at 100% 0,rgba(255,224,126,.14),transparent 35%),linear-gradient(180deg,rgba(10,31,60,.92),rgba(2,10,22,.98))!important;color:#fff4b7!important}.v138-drawer-menu .drawer-link.v138-admin{border-color:rgba(72,214,255,.62)!important;background:radial-gradient(circle at 100% 0,rgba(72,214,255,.14),transparent 35%),linear-gradient(180deg,rgba(8,28,55,.92),rgba(2,10,22,.98))!important;color:#bdf4ff!important}
-  .v138-bottom.bottom-nav{grid-template-columns:repeat(4,1fr)!important;padding:7px!important;border-radius:24px!important}.v138-bottom .nav-btn span{font-size:10px!important}.v138-bottom .nav-btn i{font-size:22px!important}.v138-bottom .nav-btn[data-page="home"] i{font-size:23px!important}
-  #page-referrals .referrals-hero{position:relative;overflow:hidden;border:1px solid rgba(255,204,77,.58);border-radius:30px;padding:18px 15px;margin-bottom:14px;background:radial-gradient(circle at 20% 0,rgba(255,220,95,.22),transparent 36%),radial-gradient(circle at 85% 20%,rgba(51,239,189,.12),transparent 34%),linear-gradient(150deg,rgba(10,28,56,.96),rgba(1,7,18,.98));box-shadow:0 0 30px rgba(255,188,39,.12);text-align:center}
-  #page-referrals .referrals-hero .big{font-size:44px;filter:drop-shadow(0 0 16px rgba(255,204,77,.42))}#page-referrals .referrals-hero h2{margin:6px 0;color:#ffe184;font-size:27px}#page-referrals .referrals-hero p{margin:0;color:#c5d0e2;font-size:13px;font-weight:800;line-height:1.8}
-  .v138-admin-hint{border:1px dashed rgba(143,231,255,.34);border-radius:18px;padding:11px;margin:0 0 12px;color:#cfeeff;background:rgba(0,160,255,.06);font-size:12px;font-weight:900;line-height:1.7}.v138-admin-hint b{color:#ffe184}
-  #page-admin.admin-overview .admin-home-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}.v138-admin-group-title{grid-column:1/-1;margin:4px 0 -2px;color:#ffe184;font-weight:1000;font-size:13px;display:flex;align-items:center;gap:8px}.v138-admin-group-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,rgba(255,204,77,.32),transparent)}
-  @media(max-width:720px){.v138-map{grid-template-columns:1fr 1fr}.v138-map-card{min-height:104px;padding:12px}.v138-map-card.primary{min-height:112px}#page-admin.admin-overview .admin-home-actions{grid-template-columns:1fr 1fr!important}}
-  @media(max-width:390px){.v138-map{gap:8px}.v138-map-card{border-radius:20px;min-height:98px}.v138-map-card b{font-size:14px}.v138-map-card span{font-size:10px}.v138-bottom .nav-btn{height:56px!important}}
-</style>
 
-<script id="adnor-v138-clean-structure-js">
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
-  function q(sel,root){ return (root||document).querySelector(sel); }
-  function qa(sel,root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
-  function closeDrawer(){ q('#sideDrawer')?.classList.remove('open'); q('#drawerOverlay')?.classList.remove('open'); }
+
+<style id="adnor-v139-five-tabs-clean-css">
+  /* ADNOR V139 — five clean user tabs, no homepage clutter */
+  .app-wrap{padding-bottom:102px!important}
+  .bottom-nav.v139-bottom-nav,
+  .bottom-nav{grid-template-columns:repeat(5,1fr)!important;gap:4px!important;width:min(96%,430px)!important;padding:6px!important;border-radius:22px!important}
+  .bottom-nav .nav-btn{height:57px!important;border-radius:16px!important;font-size:10px!important;line-height:1!important}
+  .bottom-nav .nav-btn i{font-size:20px!important}
+  .bottom-nav .nav-btn span{font-size:9.5px!important;white-space:nowrap!important}
+  .bottom-nav .nav-btn.active{background:linear-gradient(180deg,#fff2cc,#d4af37 46%,#aa7c11 82%)!important;color:#100c05!important}
+  .v139-drawer-menu .drawer-link{min-height:54px!important;border-radius:17px!important;margin-bottom:8px!important}
+  #page-home{display:none!important}
+  .v139-invest-hero .amount{font-size:44px!important}
+  .v139-invest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .v139-invest-box{border:1px solid rgba(255,204,77,.32);border-radius:18px;background:rgba(2,10,22,.58);padding:12px;text-align:center}
+  .v139-invest-box b{display:block;color:#ffe184;font-size:12px;margin-bottom:6px}.v139-invest-box strong{display:block;color:#fff4b3;direction:ltr;font-size:16px}.v139-invest-box span{display:block;color:#aeb8cd;font-size:10.5px;line-height:1.6;margin-top:5px;font-weight:800}
+  @media(max-width:390px){.bottom-nav .nav-btn{height:54px!important}.bottom-nav .nav-btn i{font-size:18px!important}.bottom-nav .nav-btn span{font-size:9px!important}.v139-invest-grid{grid-template-columns:1fr}}
+</style>
+<script type="module" id="adnor-v139-five-tabs-clean-js">
+  import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+  function q(s,r=document){return r.querySelector(s)}
+  function qa(s,r=document){return Array.from(r.querySelectorAll(s))}
+  function closeDrawer(){q('#sideDrawer')?.classList.remove('open');q('#drawerOverlay')?.classList.remove('open')}
+  function fallbackShow(page){
+    const el=q('#page-'+page); if(!el) return;
+    qa('.page').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    qa('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+    const wrap=q('#appWrap'); if(wrap){wrap.dataset.activePage=page;wrap.classList.toggle('admin-layout',page==='admin')}
+  }
   function go(page){
     closeDrawer();
-    if(typeof window.showPage==='function') window.showPage(page);
-    else { var el=q('#page-'+page); if(el){ qa('.page').forEach(x=>x.classList.remove('active')); el.classList.add('active'); } }
-    setTimeout(syncActiveNav,60);
+    if(window.showPage) window.showPage(page); else fallbackShow(page);
+    setTimeout(()=>sync(page),60);
   }
-  function syncActiveNav(){
-    var active=q('.page.active'); var name=active&&active.id?active.id.replace('page-',''):'';
-    qa('.v138-bottom .nav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.page===name); });
+  function sync(page){
+    const active=page || (q('.page.active')?.id||'page-lottery').replace('page-','');
+    qa('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===active));
+    const wrap=q('#appWrap'); if(wrap) wrap.dataset.activePage=active;
   }
-  function installBottomNav(){
-    var nav=q('.bottom-nav'); if(!nav || nav.dataset.v138==='1') return;
-    nav.dataset.v138='1'; nav.classList.add('v138-bottom');
-    nav.innerHTML =
-      '<button class="nav-btn active" data-page="home" type="button"><i>🏠</i><span>الرئيسية</span></button>'+ 
-      '<button class="nav-btn" data-page="wallet" type="button"><i>💳</i><span>المحفظة</span></button>'+ 
-      '<button class="nav-btn" data-page="lottery" type="button"><i>🎟️</i><span>النصيب</span></button>'+ 
-      '<button class="nav-btn" data-page="games" type="button"><i>🎮</i><span>الألعاب</span></button>';
-    qa('.nav-btn',nav).forEach(function(btn){ btn.onclick=function(){ go(btn.dataset.page); }; });
+  function installBottom(){
+    const nav=q('.bottom-nav'); if(!nav) return;
+    nav.className='bottom-nav v139-bottom-nav';
+    nav.innerHTML=`
+      <button class="nav-btn" data-page="lottery" type="button"><i>🎟️</i><span>اليانصيب</span></button>
+      <button class="nav-btn" data-page="games" type="button"><i>🎮</i><span>الألعاب</span></button>
+      <button class="nav-btn" data-page="investment" type="button"><i>📈</i><span>استثمار</span></button>
+      <button class="nav-btn" data-page="wallet" type="button"><i>💳</i><span>المحفظة</span></button>
+      <button class="nav-btn" data-page="account" type="button"><i>👤</i><span>حسابي</span></button>`;
+    qa('.nav-btn',nav).forEach(btn=>btn.onclick=()=>go(btn.dataset.page));
+    sync();
   }
   function installDrawer(){
-    var menu=q('#sideDrawer .drawer-menu'); if(!menu || menu.dataset.v138==='1') return;
-    menu.dataset.v138='1'; menu.classList.add('v138-drawer-menu');
-    menu.innerHTML =
-      '<div class="v138-section-label">🏛️ الأقسام الرئيسية</div>'+ 
-      drawerBtn('home','🏠','الرئيسية','نظرة عامة واختصارات', 'v138-main')+
-      drawerBtn('wallet','💳','المحفظة','إيداع، سحب، وسجل العمليات', 'v138-main')+
-      drawerBtn('lottery','🎟️','النصيب','شراء البطاقات والنتائج', 'v138-main')+
-      drawerBtn('games','🎮','الألعاب','العجلة والألعاب اليومية', 'v138-main')+
-      '<div class="v138-section-label">👤 حسابي وخدماتي</div>'+ 
-      drawerBtn('referrals','🎁','الدعوات','الكود، الرابط، وأرباح الدعوات', '')+
-      drawerBtn('results','🏆','النتائج وتذاكري','أرشيف السحوبات وبطاقاتك', '')+
-      drawerBtn('vip','👑','VIP الملكي','المستويات والمهام والصندوق', '')+
-      drawerBtn('support','💬','الدعم الفني','تذاكر الدعم والتواصل مع الإدارة', '')+
-      drawerBtn('notifications','🔔','الإشعارات','كل تحديث مهم لحسابك', '')+
-      drawerBtn('account','👤','حسابي','بياناتك والحماية والملف الشخصي', '')+
-      drawerBtn('settings','⚙️','الإعدادات','الصوت، اللغة، والمظهر', '')+
-      '<div class="v138-section-label">🤖 أدوات إضافية</div>'+ 
-      drawerBtn('ai','🤖','مساعد ADNOR','أجوبة سريعة وأسئلة جاهزة', '')+
-      drawerBtn('token','🪙','سوق ADN','شراء وبيع ADN من المحفظة', '')+
-      '<button class="drawer-link" id="drawerLogoutBtnV138" type="button"><span>🚪 تسجيل الخروج<small>الخروج من الحساب الحالي</small></span><span>›</span></button>';
-    qa('[data-v138-page]',menu).forEach(function(btn){ btn.onclick=function(){ go(btn.dataset.v138Page); }; });
-    var logout=q('#drawerLogoutBtnV138'); if(logout) logout.onclick=function(){ closeDrawer(); var old=q('#drawerLogoutBtn'); if(old && old.onclick) old.onclick(); else try{ localStorage.clear(); location.reload(); }catch(e){} };
+    const menu=q('#sideDrawer .drawer-menu'); if(!menu) return;
+    menu.className='drawer-menu v71-drawer-menu v139-drawer-menu';
+    menu.innerHTML=`
+      <button class="drawer-link v52-primary" data-v139-page="support" type="button"><span>💬 الدعم الفني</span><span>›</span></button>
+      <button class="drawer-link v52-secondary" data-v139-page="notifications" type="button"><span>🔔 الإشعارات</span><span>›</span></button>
+      <button class="drawer-link v52-secondary" data-v139-page="settings" type="button"><span>⚙️ الإعدادات</span><span>›</span></button>
+      <button class="drawer-link v52-secondary hidden" id="drawerAdminBtn" data-v139-page="admin" type="button"><span>🛡️ لوحة الأدمن</span><span>›</span></button>
+      <button class="drawer-link" id="drawerLogoutBtn" type="button"><span>🚪 تسجيل الخروج</span><span>›</span></button>`;
+    qa('[data-v139-page]',menu).forEach(btn=>btn.onclick=()=>go(btn.dataset.v139Page));
+    q('#drawerLogoutBtn')?.addEventListener('click',async()=>{closeDrawer();try{await signOut(getAuth())}catch(e){location.reload()}});
   }
-  function drawerBtn(page,icon,title,sub,cls){
-    return '<button class="drawer-link '+(cls||'')+'" data-v138-page="'+page+'" type="button"><span>'+icon+' '+title+'<small>'+sub+'</small></span><span>›</span></button>';
-  }
-  function installHomeMap(){
-    var home=q('#page-home'); if(!home || q('#v138HomeMap')) return;
-    var hero=q('#page-home .home-hero');
-    var map=document.createElement('section'); map.id='v138HomeMap'; map.className='v138-map';
-    map.innerHTML =
-      card('wallet','💳','المحفظة','رصيدك، الإيداع، السحب، وسجل العمليات','primary')+
-      card('lottery','🎟️','النصيب','شراء البطاقات ومتابعة السحوبات','')+
-      card('games','🎮','الألعاب','العجلة والصناديق والألعاب اليومية','')+
-      card('referrals','🎁','الدعوات','كودك، رابطك، وأرباحك','')+
-      card('support','💬','الدعم','تواصل مباشر وتذاكر محفوظة','')+
-      card('results','🏆','النتائج','أرشيف السحوبات وتذاكرك','')+
-      card('vip','👑','VIP','مستويات ومهام وصندوق يومي','');
-    if(hero && hero.parentNode) hero.insertAdjacentElement('afterend',map); else home.prepend(map);
-    qa('[data-v138-go]',map).forEach(function(b){ b.onclick=function(){ go(b.dataset.v138Go); }; });
-  }
-  function card(page,icon,title,sub,cls){ return '<button class="v138-map-card '+(cls||'')+'" data-v138-go="'+page+'" type="button"><i>'+icon+'</i><b>'+title+'</b><span>'+sub+'</span></button>'; }
-  function moveReferralsToPage(){
-    if(q('#page-referrals')) return;
-    var account=q('#page-account'); if(!account) return;
-    var refSection=qa('#page-account > section.royal-card').find(function(sec){ return (sec.textContent||'').indexOf('نظام الدعوات')>-1; });
-    var page=document.createElement('div'); page.id='page-referrals'; page.className='page';
-    page.innerHTML='<section class="referrals-hero"><div class="big">🎁</div><h2>مركز الدعوات</h2><p>قسم مستقل للكود، الرابط، المكافآت، والأشخاص الذين سجلوا عن طريقك.</p></section>';
-    if(refSection) page.appendChild(refSection); else page.innerHTML += '<section class="royal-card"><div class="section-title"><h3>نظام الدعوات</h3><span>قريبًا</span></div><div class="hint">سيظهر هنا كود الدعوة والرابط وسجل أرباح الدعوات.</div></section>';
-    var nav=q('.bottom-nav'); if(nav && nav.parentNode) nav.parentNode.insertBefore(page,nav); else q('#appWrap')?.appendChild(page);
-  }
-  function installAdminOverviewHint(){
-    var overview=q('#admin-section-overview'); if(!overview || q('#v138AdminHint')) return;
-    var hint=document.createElement('div'); hint.id='v138AdminHint'; hint.className='v138-admin-hint';
-    hint.innerHTML='<b>V138 ترتيب احترافي:</b> لوحة الأدمن صارت مركز قيادة. ابدأ من المستخدمين، المالية، الدعم، السجل، ثم الإعدادات. كل قسم مستقل حتى ما تختلط الأشياء ببعض.';
-    overview.prepend(hint);
-    var actions=q('#page-admin .admin-home-actions');
-    if(actions && !q('#v138AdminGroupMain')){
-      var g1=document.createElement('div'); g1.id='v138AdminGroupMain'; g1.className='v138-admin-group-title'; g1.textContent='🏛️ أقسام الإدارة الأساسية';
-      actions.prepend(g1);
+  function keepReferralsInsideAccount(){
+    const account=q('#page-account'); if(!account) return;
+    const external=q('#page-referrals');
+    if(external){
+      const sec=qa('section.royal-card',external).find(x=>(x.textContent||'').includes('نظام الدعوات'));
+      const responsible=qa('section.royal-card',account).find(x=>(x.textContent||'').includes('الحماية واللعب المسؤول'));
+      if(sec && !qa('section.royal-card',account).some(x=>(x.textContent||'').includes('نظام الدعوات'))){
+        account.insertBefore(sec,responsible||account.children[2]||null);
+      }
+      external.remove();
     }
   }
-  function relinkHomeButtons(){
-    qa('[data-home-go]').forEach(function(b){ if(b.dataset.v138Bound==='1') return; b.dataset.v138Bound='1'; b.addEventListener('click',function(ev){ var goTo=b.dataset.homeGo||'home'; var page=goTo.split(':')[0]; if(page==='referral') page='referrals'; }, true); });
+  function forceStart(){
+    const active=q('.page.active');
+    if(!active || active.id==='page-home') fallbackShow('lottery');
   }
-  function install(){
-    moveReferralsToPage();
-    installBottomNav();
-    installDrawer();
-    installHomeMap();
-    installAdminOverviewHint();
-    relinkHomeButtons();
-    syncActiveNav();
-    document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('.nav-btn,.drawer-link,.v138-map-card')) setTimeout(syncActiveNav,80); },true);
-    setTimeout(function(){ installBottomNav(); installDrawer(); installHomeMap(); installAdminOverviewHint(); syncActiveNav(); },900);
-  }
-  ready(install);
-  window.ADNOR_V138_INSTALL_CLEAN_STRUCTURE=install;
-})();
+  function bindInvestmentButtons(){qa('[data-v139-go]').forEach(b=>{if(b.dataset.bound==='1')return;b.dataset.bound='1';b.onclick=()=>go(b.dataset.v139Go)})}
+  function install(){installBottom();installDrawer();keepReferralsInsideAccount();forceStart();bindInvestmentButtons();sync()}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+  [300,900,1300,2200].forEach(t=>setTimeout(install,t));
 </script>
 
 </body>

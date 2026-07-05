@@ -1325,6 +1325,34 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
 
 </style>
 
+<style id="v140-investment-clean-css">
+  /* V140: ADN moved from wallet/account confusion into the Investment tab only */
+  #page-wallet #adnWalletCard{display:none!important}
+  #page-investment.v140-investment-market{padding-bottom:18px}
+  #page-investment .v132-exchange-head{margin-top:0!important}
+  #page-investment .v132-pair-main span:nth-child(2)::after{content:' · استثمار'; color:#8df8d8; font-size:12px; margin-inline-start:7px}
+  #page-investment .v132-back{display:none!important}
+  #page-investment.v140-investment-market{background:linear-gradient(180deg,#071425 0%,#020711 100%)!important;border-radius:26px!important;overflow:hidden!important;color:#dbe7f7!important}
+  #page-investment .v132-exchange-head{background:radial-gradient(circle at 10% 0,rgba(255,214,84,.14),transparent 36%),linear-gradient(180deg,#0b1d38,#06101f)!important;color:#eaf3ff!important;border-bottom:1px solid rgba(255,204,77,.22)!important;box-shadow:0 14px 32px rgba(0,0,0,.22)!important}
+  #page-investment .v132-stat-light span,#page-investment .v132-sub-tabs{color:#98a9c2!important}
+  #page-investment .v132-stat-light b,#page-investment .v132-main-price b,#page-investment .v132-sub-tabs b,#page-investment .v132-head-icons,#page-investment .v132-tool-icons{color:#fff2b0!important}
+  #page-investment .v132-sub-tabs{border-top-color:rgba(255,204,77,.16)!important}
+  #page-investment .v132-chart-panel{background:linear-gradient(180deg,#061426,#020711)!important;color:#dbe7f7!important;border-bottom:1px solid rgba(255,204,77,.18)!important}
+  #page-investment .v132-chart-tools{color:#dbe7f7!important}
+  #page-investment .v132-time-tabs{color:#9fb0c8!important}
+  #page-investment .v132-time-tabs button{color:#aab9cf!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.06)!important}
+  #page-investment .v132-time-tabs button.active{background:linear-gradient(180deg,#ffe99b,#c98921)!important;color:#161007!important;border-color:#ffe99b!important}
+  #page-investment .v132-chart-wrap{background:radial-gradient(circle at 50% 0,rgba(255,221,99,.07),transparent 36%),linear-gradient(180deg,#071426,#020711)!important;border-color:rgba(255,204,77,.26)!important}
+  #page-investment .v132-indicators,#page-investment .v132-perf{background:#030a14!important;border-bottom-color:rgba(255,204,77,.14)!important;color:#9fb0c8!important}
+  #page-investment .v132-indicators span:first-child{color:#ffe184!important}
+  #page-investment .v132-order-card{background:linear-gradient(180deg,#07172d,#030a14)!important;color:#dbe7f7!important;border:1px solid rgba(255,204,77,.24)!important;box-shadow:0 12px 30px rgba(0,0,0,.28)!important}
+  #page-investment .v132-order-tabs{color:#9fb0c8!important}
+  #page-investment .v132-order-tabs b,#page-investment .v132-book-head{background:rgba(255,255,255,.06)!important;color:#fff2b0!important}
+  #page-investment .v132-time-tabs button{min-width:42px}
+  #page-investment .v132-time-tabs button.active{box-shadow:0 0 14px rgba(255,205,74,.22)}
+  #page-investment .adn-trade-card.v132-trade-ticket{margin-top:12px}
+</style>
+
 
 <style id="v136-user-control-center-css">
   .hidden{display:none!important}
@@ -1635,10 +1663,10 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
 
 
 
-      <div id="page-token" class="page adn-market-page v132-market-screen">
+      <div id="page-investment" class="page adn-market-page v132-market-screen v140-investment-market">
         <section class="v132-exchange-head">
           <div class="v132-pair-row">
-            <button class="v132-back" type="button" onclick="showPage('wallet')">→</button>
+            <button class="v132-back v140-market-back" type="button" onclick="showPage('account')">→</button>
             <div class="v132-pair-main"><span class="v132-star">★</span><span>ADN/USD</span><i class="v132-live-dot"></i></div>
             <div class="v132-head-icons"><span>🔔</span><span>⋯</span></div>
           </div>
@@ -1664,6 +1692,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
               <span>الوقت</span>
               <button type="button" data-adn-tf="1m" class="active">1د</button>
               <button type="button" data-adn-tf="5m">5د</button>
+              <button type="button" data-adn-tf="10m">10د</button>
               <button type="button" data-adn-tf="15m">15د</button>
               <button type="button" data-adn-tf="1h">1س</button>
               <button type="button" data-adn-tf="4h">4س</button>
@@ -1793,31 +1822,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         <section class="royal-card"><div class="section-title"><h3>أسئلة مهمة</h3><span>اللعب المسؤول</span></div><div class="faq-list"><div class="faq-item"><b>هل يمكن تعديل الرصيد من F12؟</b><p>لا. الرصيد الحقيقي محفوظ داخل نظام ADNOR وليس داخل المتصفح فقط، وكل عملية يتم تسجيلها في سجل العمليات.</p></div><div class="faq-item"><b>هل المنصة مناسبة لمن هم دون 18؟</b><p>لا. ADNOR مخصص لمن هم 18 عامًا أو أكثر فقط، مع قواعد لعب مسؤول وحدود استخدام.</p></div><div class="faq-item"><b>هل البونص قابل للسحب؟</b><p>البونص مخصص للعب فقط. الأرباح الناتجة عنه تتبع قواعد الإدارة قبل التحويل إلى رصيد حقيقي.</p></div><div class="faq-item"><b>متى تتم مراجعة الإيداع والسحب؟</b><p>كل طلب يظهر للأدمن داخل لوحة الإدارة، ويتم قبوله أو رفضه مع سبب واضح.</p></div></div></section>
       </div>
 
-      <div id="page-investment" class="page">
-        <section class="jackpot v139-invest-hero">
-          <div class="label">قسم الاستثمار</div>
-          <div class="amount">INVEST</div>
-          <div class="drawname">قسم مستقل ومنظم، ولا يتم تفعيل أي خطة إلا من الإدارة وبشكل نظامي.</div>
-        </section>
-        <section class="royal-card v139-invest-card">
-          <div class="section-title"><h3>📈 مركز الاستثمار</h3><span>قيد التجهيز</span></div>
-          <div class="hint">هذا القسم صار مستقل حتى ما يختلط مع المحفظة أو الألعاب. الاستثمار الحقيقي يحتاج إعدادات واضحة من الأدمن، سجل عمليات، وموافقة نظامية قبل تفعيله.</div>
-          <div class="v139-invest-grid">
-            <div class="v139-invest-box"><b>رصيدي الاستثماري</b><strong id="investmentBalanceText">$0.00</strong><span>يعرض لاحقًا المبلغ المستثمر فقط.</span></div>
-            <div class="v139-invest-box"><b>الأرباح/الخسائر</b><strong id="investmentProfitText">$0.00</strong><span>لا تظهر أرقام وهمية.</span></div>
-            <div class="v139-invest-box"><b>الحالة</b><strong>غير مفعّل</strong><span>ينتظر إعدادات الأدمن.</span></div>
-          </div>
-        </section>
-        <section class="royal-card v139-invest-card">
-          <div class="section-title"><h3>🪙 سوق ADN</h3><span>اختياري</span></div>
-          <div class="hint">إذا بدك تخلي ADN Token جزء من الاستثمار، نخليه مربوط من هون بشكل واضح بدل ما يكون مخفي داخل صفحات ثانية.</div>
-          <button class="gold-btn" type="button" data-v139-go="token">فتح سوق ADN</button>
-        </section>
-        <section class="royal-card v139-invest-card">
-          <div class="section-title"><h3>سجل الاستثمار</h3><span>فارغ الآن</span></div>
-          <div class="admin-empty">أي عملية استثمار مستقبلية ستظهر هنا فقط، وليس داخل المحفظة أو الألعاب.</div>
-        </section>
-      </div>
+      <!-- ADNOR V140: investment placeholder removed; investment now opens the full ADN market page. -->
 
       <div id="page-account" class="page">
         <section class="jackpot"><div class="label">حسابي</div><div class="amount">MY ADNOR</div><div class="drawname" id="accountInfo">ملفك الملكي، الدعوات، والحماية.</div></section>
@@ -5172,7 +5177,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     function renderAdnWalletCard(){const bal=adnNum(currentProfile?.adnBalance);const price=adnCurrentPrice();setText('adnWalletBalance',adnQty(bal)+' ADN');setText('adnWalletValue',money(bal*price));setText('adnWalletPrice',adnFmt(price,4));const t=adnTrendPct();const el=$('adnWalletTrend');if(el){el.textContent=(t>=0?'▲ ':'▼ ')+Math.abs(t).toFixed(2)+'%';el.style.color=t>=0?'#7dffd9':'#ff9ead';}}
     function renderAdnMarket(){ensureAdnLiveCandles(false);const price=adnCurrentPrice(),trend=adnTrendPct();setText('adnMarketPrice',adnFmt(price,4).replace('$',''));const tr=$('adnMarketTrend');if(tr){tr.textContent=(trend>=0?'+':'-')+Math.abs(trend).toFixed(2)+'%';tr.classList.toggle('down',trend<0)}setText('adnTotalSupply',adnQty(adnState.totalSupply||adnSettings.totalSupply));setText('adnRemainingSupply',adnQty(adnState.remainingSupply));setText('adnFundUsd',money(adnState.fundUsd));setText('adnMarketActivity',money(Math.max(adnNum(adnState.buyVolumeUsd)+adnNum(adnState.sellVolumeUsd),adnCurrentPrice()*1245000)));setText('adnUserRealBalance',money(currentProfile?.realBalance));setText('adnUserTokenBalance',adnQty(currentProfile?.adnBalance));renderAdnTradingStats();renderAdnTradeCalc();renderAdnUserTrades();drawAdnCandles();renderAdnOrderBook();}
     function renderAdnTradeCalc(){const q=adnNum($('adnAmountInput')?.value);const price=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();const cost=q*price;setText('adnTradeCost',money(cost));if($('adnExecuteTradeBtn'))$('adnExecuteTradeBtn').textContent=adnTradeMode==='buy'?'شراء الآن':'إرسال طلب البيع';}
-    function adnTfMs(){return adnTimeFrame==='5m'?300000:adnTimeFrame==='15m'?900000:adnTimeFrame==='1h'?3600000:adnTimeFrame==='4h'?14400000:60000}
+    function adnTfMs(){return adnTimeFrame==='5m'?300000:adnTimeFrame==='10m'?600000:adnTimeFrame==='15m'?900000:adnTimeFrame==='1h'?3600000:adnTimeFrame==='4h'?14400000:60000}
     function ensureAdnLiveCandles(force=false){
       if(!force&&adnLiveRows.length>40)return;
       const saved=Object.values(adnCandles||{}).filter(x=>x&&x.t).sort((a,b)=>a.t-b.t);
@@ -5221,7 +5226,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     function candleRows(){ensureAdnLiveCandles(false);return adnLiveRows.slice(-64)}
     function renderAdnTradingStats(){const rows=candleRows();if(!rows.length)return;const p=adnCurrentPrice();const highs=rows.map(r=>adnNum(r.high,p));const lows=rows.map(r=>adnNum(r.low,p));setText('adnMarketHigh',adnFmt(Math.max(...highs),4));setText('adnMarketLow',adnFmt(Math.min(...lows),4));const open=adnNum(rows[0].open,p);const trend=open?((p-open)/open*100):0;setText('adnPerfDay',(trend>=0?'+':'')+trend.toFixed(2)+'%');const d=$('adnPerfDay')?.parentElement;if(d)d.classList.toggle('red',trend<0);setText('adnPerfWeek',(trend+4.4).toFixed(2)+'%');setText('adnPerfMonth',(trend-3.2).toFixed(2)+'%');}
     function renderAdnOrderBook(){const bids=$('adnOrderBids'),asks=$('adnOrderAsks');if(!bids||!asks)return;const p=adnCurrentPrice();const fmtPrice=v=>adnNum(v).toFixed(4);const amount=i=>adnQty(Math.max(10,(Math.sin(Date.now()/7000+i)*.5+.7)*(900+i*420)));asks.innerHTML='';bids.innerHTML='';for(let i=0;i<5;i++){const ap=p*(1+(i+1)*.006+Math.random()*.003);asks.insertAdjacentHTML('beforeend','<div class="v132-book-row ask"><span>'+amount(i)+'</span><span>'+fmtPrice(ap)+'</span></div>');const bp=p*(1-(i+1)*.006-Math.random()*.003);bids.insertAdjacentHTML('beforeend','<div class="v132-book-row bid"><span>'+fmtPrice(bp)+'</span><span>'+amount(i+7)+'</span></div>')}const buyPct=48+Math.sin(Date.now()/9000)*5;const sellPct=100-buyPct;setText('adnOrderBuyPct',buyPct.toFixed(2)+'%');setText('adnOrderSellPct',sellPct.toFixed(2)+'%');const db=$('adnDepthBuy'),ds=$('adnDepthSell');if(db)db.style.width=buyPct+'%';if(ds)ds.style.width=sellPct+'%'}
-    function drawAdnCandles(){const c=$('adnCandleCanvas');if(!c)return;const ctx=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();const w=Math.max(320,Math.floor(rect.width*dpr)),h=Math.max(260,Math.floor(rect.height*dpr));if(c.width!==w||c.height!==h){c.width=w;c.height=h}ctx.clearRect(0,0,w,h);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);const padL=10*dpr,padR=82*dpr,padT=22*dpr,padB=56*dpr;const rows=candleRows();const current=adnCurrentPrice();let maxP=Math.max(...rows.map(x=>adnNum(x.high,x.close)),current),minP=Math.min(...rows.map(x=>adnNum(x.low,x.close)),current);let range=maxP-minP;if(!range){range=current*.08||1;maxP+=range/2;minP-=range/2}maxP+=range*.08;minP-=range*.08;range=maxP-minP;const y=p=>padT+(maxP-p)/range*(h-padT-padB);ctx.strokeStyle='#edf0f4';ctx.lineWidth=1*dpr;ctx.fillStyle='#7d828c';ctx.font=(11*dpr)+'px Tahoma';for(let i=0;i<=5;i++){const yy=padT+i*(h-padT-padB)/5;ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(w-padR,yy);ctx.stroke();const val=maxP-i*range/5;ctx.fillText(val.toFixed(4),w-padR+9*dpr,yy+4*dpr)}const areaW=w-padL-padR;const step=areaW/rows.length;let hiRow=rows[0],loRow=rows[0];rows.forEach(r=>{if(adnNum(r.high)>adnNum(hiRow.high))hiRow=r;if(adnNum(r.low)<adnNum(loRow.low))loRow=r});rows.forEach((r,i)=>{const x=padL+i*step+step/2;const up=adnNum(r.close)>=adnNum(r.open);const col=up?'#2ecb98':'#f6465d';const yo=y(r.open),yc=y(r.close),yh=y(r.high),yl=y(r.low);ctx.strokeStyle=col;ctx.lineWidth=1.35*dpr;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();ctx.fillStyle=col;const bw=Math.max(3*dpr,step*.54);const bh=Math.max(2.5*dpr,Math.abs(yc-yo));ctx.fillRect(x-bw/2,Math.min(yo,yc),bw,bh);const volH=Math.min(42*dpr,(adnNum(r.volumeUsd)%28000)/28000*42*dpr+5*dpr);ctx.globalAlpha=.22;ctx.fillRect(x-bw/2,h-padB+45*dpr-volH,bw,volH);ctx.globalAlpha=1});const last=rows[rows.length-1];const lastY=y(current);ctx.setLineDash([4*dpr,4*dpr]);ctx.strokeStyle='#313743';ctx.beginPath();ctx.moveTo(padL,lastY);ctx.lineTo(w-padR,lastY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#fff';ctx.strokeStyle='#141922';ctx.lineWidth=1*dpr;const label=adnNum(current).toFixed(4);const lx=w-padR+4*dpr,ly=lastY-12*dpr;ctx.beginPath();ctx.roundRect?ctx.roundRect(lx,ly,74*dpr,24*dpr,7*dpr):ctx.rect(lx,ly,74*dpr,24*dpr);ctx.fill();ctx.stroke();ctx.fillStyle='#111';ctx.font='bold '+(12*dpr)+'px Tahoma';ctx.fillText(label,lx+7*dpr,lastY+4*dpr);if(hiRow){ctx.fillStyle='#111';ctx.font=(12*dpr)+'px Tahoma';ctx.fillText(adnNum(hiRow.high).toFixed(4),padL+areaW*.45,y(hiRow.high)-6*dpr)}if(loRow){ctx.fillStyle='#111';ctx.fillText(adnNum(loRow.low).toFixed(4),padL+areaW*.62,y(loRow.low)+16*dpr)}ctx.fillStyle='rgba(0,0,0,.035)';ctx.font='bold '+(28*dpr)+'px Tahoma';ctx.fillText('ADNOR',padL+areaW*.38,h*.50);setText('adnChartInfo','آخر سعر '+adnFmt(current,4)+' — شارت حي');}
+    function drawAdnCandles(){const c=$('adnCandleCanvas');if(!c)return;const ctx=c.getContext('2d');const dpr=window.devicePixelRatio||1;const rect=c.getBoundingClientRect();const w=Math.max(320,Math.floor(rect.width*dpr)),h=Math.max(260,Math.floor(rect.height*dpr));if(c.width!==w||c.height!==h){c.width=w;c.height=h}ctx.clearRect(0,0,w,h);ctx.fillStyle='#06101f';ctx.fillRect(0,0,w,h);const padL=10*dpr,padR=82*dpr,padT=22*dpr,padB=56*dpr;const rows=candleRows();const current=adnCurrentPrice();let maxP=Math.max(...rows.map(x=>adnNum(x.high,x.close)),current),minP=Math.min(...rows.map(x=>adnNum(x.low,x.close)),current);let range=maxP-minP;if(!range){range=current*.08||1;maxP+=range/2;minP-=range/2}maxP+=range*.08;minP-=range*.08;range=maxP-minP;const y=p=>padT+(maxP-p)/range*(h-padT-padB);ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1*dpr;ctx.fillStyle='rgba(210,223,244,.72)';ctx.font=(11*dpr)+'px Tahoma';for(let i=0;i<=5;i++){const yy=padT+i*(h-padT-padB)/5;ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(w-padR,yy);ctx.stroke();const val=maxP-i*range/5;ctx.fillText(val.toFixed(4),w-padR+9*dpr,yy+4*dpr)}const areaW=w-padL-padR;const step=areaW/rows.length;let hiRow=rows[0],loRow=rows[0];rows.forEach(r=>{if(adnNum(r.high)>adnNum(hiRow.high))hiRow=r;if(adnNum(r.low)<adnNum(loRow.low))loRow=r});rows.forEach((r,i)=>{const x=padL+i*step+step/2;const up=adnNum(r.close)>=adnNum(r.open);const col=up?'#2ecb98':'#f6465d';const yo=y(r.open),yc=y(r.close),yh=y(r.high),yl=y(r.low);ctx.strokeStyle=col;ctx.lineWidth=1.35*dpr;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();ctx.fillStyle=col;const bw=Math.max(3*dpr,step*.54);const bh=Math.max(2.5*dpr,Math.abs(yc-yo));ctx.fillRect(x-bw/2,Math.min(yo,yc),bw,bh);const volH=Math.min(42*dpr,(adnNum(r.volumeUsd)%28000)/28000*42*dpr+5*dpr);ctx.globalAlpha=.22;ctx.fillRect(x-bw/2,h-padB+45*dpr-volH,bw,volH);ctx.globalAlpha=1});const last=rows[rows.length-1];const lastY=y(current);ctx.setLineDash([4*dpr,4*dpr]);ctx.strokeStyle='#313743';ctx.beginPath();ctx.moveTo(padL,lastY);ctx.lineTo(w-padR,lastY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(2,8,18,.96)';ctx.strokeStyle='rgba(255,204,77,.36)';ctx.lineWidth=1*dpr;const label=adnNum(current).toFixed(4);const lx=w-padR+4*dpr,ly=lastY-12*dpr;ctx.beginPath();ctx.roundRect?ctx.roundRect(lx,ly,74*dpr,24*dpr,7*dpr):ctx.rect(lx,ly,74*dpr,24*dpr);ctx.fill();ctx.stroke();ctx.fillStyle='#ffe184';ctx.font='bold '+(12*dpr)+'px Tahoma';ctx.fillText(label,lx+7*dpr,lastY+4*dpr);if(hiRow){ctx.fillStyle='#d7e2f4';ctx.font=(12*dpr)+'px Tahoma';ctx.fillText(adnNum(hiRow.high).toFixed(4),padL+areaW*.45,y(hiRow.high)-6*dpr)}if(loRow){ctx.fillStyle='#d7e2f4';ctx.fillText(adnNum(loRow.low).toFixed(4),padL+areaW*.62,y(loRow.low)+16*dpr)}ctx.fillStyle='rgba(255,225,132,.055)';ctx.font='bold '+(28*dpr)+'px Tahoma';ctx.fillText('ADNOR',padL+areaW*.38,h*.50);setText('adnChartInfo','آخر سعر '+adnFmt(current,4)+' — شارت حي');}
     function adnRequestStatusText(st){st=String(st||'pending');if(st==='approved')return 'معتمد';if(st==='rejected')return 'مرفوض';if(st==='cancelled')return 'ملغى';return 'قيد المراجعة'}
     function adnRequestClass(st){st=String(st||'pending');return st==='approved'?'buy':(st==='rejected'?'sell':'')}
     function renderAdnUserTrades(){const box=$('adnUserTradesList');if(!box)return;const list=Object.values(adnTrades||{}).filter(t=>t.uid===currentUser?.uid).sort((a,b)=>adnNum(b.createdAt)-adnNum(a.createdAt)).slice(0,20);if(!list.length)box.innerHTML='<div class="adn-empty">لا توجد عمليات ADN بعد.</div>';else box.innerHTML=list.map(t=>'<div class="adn-trade-row '+(t.type==='sell'?'sell':'')+'"><div><h4>'+(t.type==='sell'?'بيع':'شراء')+' ADN</h4><p>'+new Date(t.createdAt||Date.now()).toLocaleString('ar-TR')+'<br>الكمية: '+adnQty(t.amountToken)+' ADN — السعر: '+adnFmt(t.price,4)+'</p></div><strong>'+money(t.amountUsd)+'</strong></div>').join('')}
@@ -5318,7 +5323,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     catch(e){console.error(e);toast('تعذر اعتماد الطلب: '+(e?.message||e));}}
     async function rejectAdnRequest(id){if(!isAdminUser())return toast('للأدمن فقط');if(!id)return;try{const snap=await get(ref(db,'adn_trade_requests/'+id));const req=snap.val();if(!req)return toast('الطلب غير موجود');if(String(req.status||'pending')!=='pending')return toast('تمت معالجة هذا الطلب سابقًا');const reason=await uiPrompt('سبب الرفض','تم رفض الطلب من الإدارة')||'تم رفض الطلب من الإدارة';const now=Date.now();const done={...req,status:'rejected',adminNote:reason,rejectedAt:now,rejectedBy:currentUser.email||'',updatedAt:now};const updates={};updates['adn_trade_requests/'+id]=done;updates['user_adn_requests/'+req.uid+'/'+id]=done;updates['finance_audit/'+now]={action:'adn_request_rejected',uid:req.uid||'',email:req.email||'',type:req.type||'',qty:req.amountToken||0,requestId:id,reason,adminEmail:currentUser.email||'',createdAt:now};updates['user_notifications/'+req.uid+'/adn_rej_'+now]=notifObj('adn','تم رفض طلب ADN',reason);await update(ref(db),updates);toast('تم رفض الطلب');}catch(e){console.error(e);toast('تعذر رفض الطلب: '+(e?.message||e));}}
     function setAdnMode(mode){adnTradeMode=mode==='sell'?'sell':'buy';$('adnBuyTab')?.classList.toggle('active',adnTradeMode==='buy');$('adnSellTab')?.classList.toggle('active',adnTradeMode==='sell');renderAdnTradeCalc()}
-    $('openAdnMarketBtn')?.addEventListener('click',()=>showPage('token'));
+    $('openAdnMarketBtn')?.addEventListener('click',()=>showPage('investment'));
     $('adnBuyTab')?.addEventListener('click',()=>setAdnMode('buy'));
     $('adnSellTab')?.addEventListener('click',()=>setAdnMode('sell'));
     $('adnAmountInput')?.addEventListener('input',()=>{const q=adnNum($('adnAmountInput')?.value);const p=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();if($('adnUsdInput'))$('adnUsdInput').value=q?Number((q*p).toFixed(2)):'';renderAdnTradeCalc()});
@@ -5329,7 +5334,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     $('adminAdnSaveBtn')?.addEventListener('click',adminSaveAdnSettings);
     $('adminAdnSeedBtn')?.addEventListener('click',seedAdnMarket);
     const __v122RenderProfile=renderProfile;renderProfile=function(){__v122RenderProfile();renderAdnWalletCard();renderAdnMarket()};
-    const __v122ShowPage=showPage;showPage=function(p){__v122ShowPage(p);if(p==='wallet'||p==='token')setTimeout(renderAdnAll,50);if(p==='admin')setTimeout(renderAdminAdn,90)};
+    const __v122ShowPage=showPage;showPage=function(p){__v122ShowPage(p);if(p==='wallet'||p==='token'||p==='investment')setTimeout(renderAdnAll,50);if(p==='admin')setTimeout(renderAdminAdn,90)};
     const __v122RenderAdmin=renderAdmin;renderAdmin=function(){__v122RenderAdmin();renderAdminAdn()};
     const __v122ListenProfile=listenProfile;listenProfile=function(uid){__v122ListenProfile(uid);listenAdnMarket()};
     Object.assign(window,{seedAdnMarket,adminSaveAdnSettings,executeAdnTrade,approveAdnRequest,rejectAdnRequest,renderAdnAll,showPage});

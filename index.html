@@ -6812,27 +6812,36 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       }
       try{ if(typeof adnorV97StartSpinSound==='function')adnorV97StartSpinSound(); }catch(_e){}
       const res=await call('spinWheelServer',{bet});
+      if(!res || res.ok===false){
+        const err=(res && (res.error || res.message || res.code)) || 'تعذر تنفيذ العجلة من السيرفر';
+        throw new Error(err);
+      }
       const idx=Number(res.segmentIndex||0);
-      const segCount=(Array.isArray(window.wheelSegments)&&window.wheelSegments.length) ? window.wheelSegments.length : (Array.isArray(wheelSegments)?wheelSegments.length:10);
-      const angle=360/Math.max(1,segCount);
+      const segCount=Math.max(1, Number(res.segmentCount||12));
+      const angle=360/segCount;
       const segmentCenter=idx*angle+angle/2;
       const targetMod=(360-segmentCenter)%360;
-      const currentMod=((wheelRotation%360)+360)%360;
+      if(typeof wheelRotation!=='number') window.wheelRotation=0;
+      const currentRotation=(typeof wheelRotation==='number')?wheelRotation:(window.wheelRotation||0);
+      const currentMod=((currentRotation%360)+360)%360;
       const delta=((targetMod-currentMod+360)%360);
-      wheelRotation+=1440+delta;
-      if($('wheelDisc'))$('wheelDisc').style.transform='rotate('+wheelRotation+'deg)';
+      const nextRotation=currentRotation+1440+delta;
+      try{ wheelRotation=nextRotation; }catch(_e){ window.wheelRotation=nextRotation; }
+      if($('wheelDisc'))$('wheelDisc').style.transform='rotate('+nextRotation+'deg)';
       setTimeout(()=>{
         try{ if(typeof adnorV97StopSpinSound==='function')adnorV97StopSpinSound(true,Number(res.win||0)>0); }catch(_e){}
+        const playableAfter=Number(res.playableAfter || (Number(res.realAfter||0)+Number(res.bonusAfter||0)) || 0);
         if($('wheelResultText')){
           $('wheelResultText').className='wheel-result '+(Number(res.win||0)>Number(res.bet||bet)?'win':'lose');
-          $('wheelResultText').textContent='النتيجة '+(res.label||'')+' — الربح '+money(Number(res.win||0))+' — الرصيد الجديد '+money(Number(res.playableAfter || (Number(res.realAfter||0)+Number(res.bonusAfter||0))));
+          $('wheelResultText').textContent='النتيجة '+(res.label||'')+' — الربح '+money(Number(res.win||0))+' — الرصيد الجديد '+money(playableAfter);
         }
         toast('تم تنفيذ العجلة بأمان من السيرفر');
       },4300);
     }catch(e){
-      console.error(e);
+      console.error('secureSpinWheel error',e);
       try{ if(typeof adnorV97StopSpinSound==='function')adnorV97StopSpinSound(false); }catch(_e){}
-      const msg=(e && (e.message || e.code)) ? (e.message || e.code) : String(e);
+      let msg=(e && (e.message || e.code)) ? (e.message || e.code) : String(e);
+      msg=String(msg||'خطأ غير معروف').replace(/^FirebaseError:\s*/i,'').replace(/^FunctionsError:\s*/i,'');
       toast('فشل تنفيذ العجلة الآمنة: '+msg);
       if($('wheelResultText'))$('wheelResultText').textContent='فشل تنفيذ العجلة الآمنة: '+msg;
     }

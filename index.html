@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
-<!-- V137_SECURE_WALLET: admin balance/messages/freeze now call Firebase Cloud Functions first -->
+<!-- V138_CLEAN_STRUCTURE: professional navigation, separated referrals/support/admin layout over V137 secure wallet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -888,7 +888,7 @@
 .v108-old-result-note{border:1px dashed rgba(255,205,74,.28);border-radius:18px;padding:10px;margin-top:12px;color:#cbd5e1;background:rgba(255,205,74,.04);font-size:12px;font-weight:900;line-height:1.7}
 </style>
 
-  <meta name="adnor-version" content="V128_SECURITY_LOCK_READY">
+  <meta name="adnor-version" content="V138_CLEAN_STRUCTURE_READY">
 
 
 <style id="adnor-v120-lottery-result-layout-fix">
@@ -6018,6 +6018,134 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     }
   });
   window.ADNOR_V121_REBUILD_RESULT_CARD=rebuildResultCard;
+})();
+</script>
+
+
+<style id="adnor-v138-clean-structure-css">
+  /* ADNOR V138 — Clean Structure + Professional Navigation. UI organization only. */
+  #appWrap:not(.admin-layout){padding-bottom:106px!important}
+  .v138-map{position:relative;z-index:2;margin:14px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .v138-map-card{position:relative;overflow:hidden;min-height:106px;border:1px solid rgba(255,204,77,.38);border-radius:24px;background:radial-gradient(circle at 100% 0,rgba(255,220,95,.16),transparent 35%),linear-gradient(180deg,rgba(8,25,49,.86),rgba(2,10,22,.96));box-shadow:0 0 18px rgba(255,188,39,.08),inset 0 0 18px rgba(255,205,76,.035);padding:13px;color:#fff;text-align:right;cursor:pointer;font:inherit;font-weight:900;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px}
+  .v138-map-card:before{content:"";position:absolute;inset:-40px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(120%);transition:.5s;pointer-events:none}.v138-map-card:active:before{transform:translateX(-120%)}
+  .v138-map-card i{font-style:normal;font-size:28px;filter:drop-shadow(0 0 10px rgba(255,204,77,.32))}.v138-map-card b{display:block;color:#ffe184;font-size:15px}.v138-map-card span{display:block;color:#aebbd1;font-size:11px;line-height:1.55;font-weight:800}
+  .v138-map-card.primary{grid-column:1/-1;min-height:122px;background:radial-gradient(circle at 18% 0,rgba(54,240,188,.14),transparent 34%),radial-gradient(circle at 100% 0,rgba(255,220,95,.20),transparent 36%),linear-gradient(135deg,rgba(12,34,65,.94),rgba(2,10,22,.98))}
+  .v138-section-label{margin:13px 2px 7px;color:#ffe184;font-size:12px;font-weight:1000;letter-spacing:.2px;display:flex;align-items:center;gap:7px}.v138-section-label:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,rgba(255,204,77,.34),transparent)}
+  .v138-drawer-menu{gap:8px!important}.v138-drawer-menu .drawer-link{min-height:52px!important;height:auto!important}.v138-drawer-menu .drawer-link small{display:block;color:#93a4bd;font-size:10px;margin-top:3px;font-weight:800}.v138-drawer-menu .drawer-link span:first-child{align-items:flex-start!important}.v138-drawer-menu .drawer-link.v138-main{border-color:rgba(255,224,126,.62)!important;background:radial-gradient(circle at 100% 0,rgba(255,224,126,.14),transparent 35%),linear-gradient(180deg,rgba(10,31,60,.92),rgba(2,10,22,.98))!important;color:#fff4b7!important}.v138-drawer-menu .drawer-link.v138-admin{border-color:rgba(72,214,255,.62)!important;background:radial-gradient(circle at 100% 0,rgba(72,214,255,.14),transparent 35%),linear-gradient(180deg,rgba(8,28,55,.92),rgba(2,10,22,.98))!important;color:#bdf4ff!important}
+  .v138-bottom.bottom-nav{grid-template-columns:repeat(4,1fr)!important;padding:7px!important;border-radius:24px!important}.v138-bottom .nav-btn span{font-size:10px!important}.v138-bottom .nav-btn i{font-size:22px!important}.v138-bottom .nav-btn[data-page="home"] i{font-size:23px!important}
+  #page-referrals .referrals-hero{position:relative;overflow:hidden;border:1px solid rgba(255,204,77,.58);border-radius:30px;padding:18px 15px;margin-bottom:14px;background:radial-gradient(circle at 20% 0,rgba(255,220,95,.22),transparent 36%),radial-gradient(circle at 85% 20%,rgba(51,239,189,.12),transparent 34%),linear-gradient(150deg,rgba(10,28,56,.96),rgba(1,7,18,.98));box-shadow:0 0 30px rgba(255,188,39,.12);text-align:center}
+  #page-referrals .referrals-hero .big{font-size:44px;filter:drop-shadow(0 0 16px rgba(255,204,77,.42))}#page-referrals .referrals-hero h2{margin:6px 0;color:#ffe184;font-size:27px}#page-referrals .referrals-hero p{margin:0;color:#c5d0e2;font-size:13px;font-weight:800;line-height:1.8}
+  .v138-admin-hint{border:1px dashed rgba(143,231,255,.34);border-radius:18px;padding:11px;margin:0 0 12px;color:#cfeeff;background:rgba(0,160,255,.06);font-size:12px;font-weight:900;line-height:1.7}.v138-admin-hint b{color:#ffe184}
+  #page-admin.admin-overview .admin-home-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}.v138-admin-group-title{grid-column:1/-1;margin:4px 0 -2px;color:#ffe184;font-weight:1000;font-size:13px;display:flex;align-items:center;gap:8px}.v138-admin-group-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,rgba(255,204,77,.32),transparent)}
+  @media(max-width:720px){.v138-map{grid-template-columns:1fr 1fr}.v138-map-card{min-height:104px;padding:12px}.v138-map-card.primary{min-height:112px}#page-admin.admin-overview .admin-home-actions{grid-template-columns:1fr 1fr!important}}
+  @media(max-width:390px){.v138-map{gap:8px}.v138-map-card{border-radius:20px;min-height:98px}.v138-map-card b{font-size:14px}.v138-map-card span{font-size:10px}.v138-bottom .nav-btn{height:56px!important}}
+</style>
+
+<script id="adnor-v138-clean-structure-js">
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  function q(sel,root){ return (root||document).querySelector(sel); }
+  function qa(sel,root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+  function closeDrawer(){ q('#sideDrawer')?.classList.remove('open'); q('#drawerOverlay')?.classList.remove('open'); }
+  function go(page){
+    closeDrawer();
+    if(typeof window.showPage==='function') window.showPage(page);
+    else { var el=q('#page-'+page); if(el){ qa('.page').forEach(x=>x.classList.remove('active')); el.classList.add('active'); } }
+    setTimeout(syncActiveNav,60);
+  }
+  function syncActiveNav(){
+    var active=q('.page.active'); var name=active&&active.id?active.id.replace('page-',''):'';
+    qa('.v138-bottom .nav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.page===name); });
+  }
+  function installBottomNav(){
+    var nav=q('.bottom-nav'); if(!nav || nav.dataset.v138==='1') return;
+    nav.dataset.v138='1'; nav.classList.add('v138-bottom');
+    nav.innerHTML =
+      '<button class="nav-btn active" data-page="home" type="button"><i>🏠</i><span>الرئيسية</span></button>'+ 
+      '<button class="nav-btn" data-page="wallet" type="button"><i>💳</i><span>المحفظة</span></button>'+ 
+      '<button class="nav-btn" data-page="lottery" type="button"><i>🎟️</i><span>النصيب</span></button>'+ 
+      '<button class="nav-btn" data-page="games" type="button"><i>🎮</i><span>الألعاب</span></button>';
+    qa('.nav-btn',nav).forEach(function(btn){ btn.onclick=function(){ go(btn.dataset.page); }; });
+  }
+  function installDrawer(){
+    var menu=q('#sideDrawer .drawer-menu'); if(!menu || menu.dataset.v138==='1') return;
+    menu.dataset.v138='1'; menu.classList.add('v138-drawer-menu');
+    menu.innerHTML =
+      '<div class="v138-section-label">🏛️ الأقسام الرئيسية</div>'+ 
+      drawerBtn('home','🏠','الرئيسية','نظرة عامة واختصارات', 'v138-main')+
+      drawerBtn('wallet','💳','المحفظة','إيداع، سحب، وسجل العمليات', 'v138-main')+
+      drawerBtn('lottery','🎟️','النصيب','شراء البطاقات والنتائج', 'v138-main')+
+      drawerBtn('games','🎮','الألعاب','العجلة والألعاب اليومية', 'v138-main')+
+      '<div class="v138-section-label">👤 حسابي وخدماتي</div>'+ 
+      drawerBtn('referrals','🎁','الدعوات','الكود، الرابط، وأرباح الدعوات', '')+
+      drawerBtn('results','🏆','النتائج وتذاكري','أرشيف السحوبات وبطاقاتك', '')+
+      drawerBtn('vip','👑','VIP الملكي','المستويات والمهام والصندوق', '')+
+      drawerBtn('support','💬','الدعم الفني','تذاكر الدعم والتواصل مع الإدارة', '')+
+      drawerBtn('notifications','🔔','الإشعارات','كل تحديث مهم لحسابك', '')+
+      drawerBtn('account','👤','حسابي','بياناتك والحماية والملف الشخصي', '')+
+      drawerBtn('settings','⚙️','الإعدادات','الصوت، اللغة، والمظهر', '')+
+      '<div class="v138-section-label">🤖 أدوات إضافية</div>'+ 
+      drawerBtn('ai','🤖','مساعد ADNOR','أجوبة سريعة وأسئلة جاهزة', '')+
+      drawerBtn('token','🪙','سوق ADN','شراء وبيع ADN من المحفظة', '')+
+      '<button class="drawer-link" id="drawerLogoutBtnV138" type="button"><span>🚪 تسجيل الخروج<small>الخروج من الحساب الحالي</small></span><span>›</span></button>';
+    qa('[data-v138-page]',menu).forEach(function(btn){ btn.onclick=function(){ go(btn.dataset.v138Page); }; });
+    var logout=q('#drawerLogoutBtnV138'); if(logout) logout.onclick=function(){ closeDrawer(); var old=q('#drawerLogoutBtn'); if(old && old.onclick) old.onclick(); else try{ localStorage.clear(); location.reload(); }catch(e){} };
+  }
+  function drawerBtn(page,icon,title,sub,cls){
+    return '<button class="drawer-link '+(cls||'')+'" data-v138-page="'+page+'" type="button"><span>'+icon+' '+title+'<small>'+sub+'</small></span><span>›</span></button>';
+  }
+  function installHomeMap(){
+    var home=q('#page-home'); if(!home || q('#v138HomeMap')) return;
+    var hero=q('#page-home .home-hero');
+    var map=document.createElement('section'); map.id='v138HomeMap'; map.className='v138-map';
+    map.innerHTML =
+      card('wallet','💳','المحفظة','رصيدك، الإيداع، السحب، وسجل العمليات','primary')+
+      card('lottery','🎟️','النصيب','شراء البطاقات ومتابعة السحوبات','')+
+      card('games','🎮','الألعاب','العجلة والصناديق والألعاب اليومية','')+
+      card('referrals','🎁','الدعوات','كودك، رابطك، وأرباحك','')+
+      card('support','💬','الدعم','تواصل مباشر وتذاكر محفوظة','')+
+      card('results','🏆','النتائج','أرشيف السحوبات وتذاكرك','')+
+      card('vip','👑','VIP','مستويات ومهام وصندوق يومي','');
+    if(hero && hero.parentNode) hero.insertAdjacentElement('afterend',map); else home.prepend(map);
+    qa('[data-v138-go]',map).forEach(function(b){ b.onclick=function(){ go(b.dataset.v138Go); }; });
+  }
+  function card(page,icon,title,sub,cls){ return '<button class="v138-map-card '+(cls||'')+'" data-v138-go="'+page+'" type="button"><i>'+icon+'</i><b>'+title+'</b><span>'+sub+'</span></button>'; }
+  function moveReferralsToPage(){
+    if(q('#page-referrals')) return;
+    var account=q('#page-account'); if(!account) return;
+    var refSection=qa('#page-account > section.royal-card').find(function(sec){ return (sec.textContent||'').indexOf('نظام الدعوات')>-1; });
+    var page=document.createElement('div'); page.id='page-referrals'; page.className='page';
+    page.innerHTML='<section class="referrals-hero"><div class="big">🎁</div><h2>مركز الدعوات</h2><p>قسم مستقل للكود، الرابط، المكافآت، والأشخاص الذين سجلوا عن طريقك.</p></section>';
+    if(refSection) page.appendChild(refSection); else page.innerHTML += '<section class="royal-card"><div class="section-title"><h3>نظام الدعوات</h3><span>قريبًا</span></div><div class="hint">سيظهر هنا كود الدعوة والرابط وسجل أرباح الدعوات.</div></section>';
+    var nav=q('.bottom-nav'); if(nav && nav.parentNode) nav.parentNode.insertBefore(page,nav); else q('#appWrap')?.appendChild(page);
+  }
+  function installAdminOverviewHint(){
+    var overview=q('#admin-section-overview'); if(!overview || q('#v138AdminHint')) return;
+    var hint=document.createElement('div'); hint.id='v138AdminHint'; hint.className='v138-admin-hint';
+    hint.innerHTML='<b>V138 ترتيب احترافي:</b> لوحة الأدمن صارت مركز قيادة. ابدأ من المستخدمين، المالية، الدعم، السجل، ثم الإعدادات. كل قسم مستقل حتى ما تختلط الأشياء ببعض.';
+    overview.prepend(hint);
+    var actions=q('#page-admin .admin-home-actions');
+    if(actions && !q('#v138AdminGroupMain')){
+      var g1=document.createElement('div'); g1.id='v138AdminGroupMain'; g1.className='v138-admin-group-title'; g1.textContent='🏛️ أقسام الإدارة الأساسية';
+      actions.prepend(g1);
+    }
+  }
+  function relinkHomeButtons(){
+    qa('[data-home-go]').forEach(function(b){ if(b.dataset.v138Bound==='1') return; b.dataset.v138Bound='1'; b.addEventListener('click',function(ev){ var goTo=b.dataset.homeGo||'home'; var page=goTo.split(':')[0]; if(page==='referral') page='referrals'; }, true); });
+  }
+  function install(){
+    moveReferralsToPage();
+    installBottomNav();
+    installDrawer();
+    installHomeMap();
+    installAdminOverviewHint();
+    relinkHomeButtons();
+    syncActiveNav();
+    document.addEventListener('click',function(e){ if(e.target.closest && e.target.closest('.nav-btn,.drawer-link,.v138-map-card')) setTimeout(syncActiveNav,80); },true);
+    setTimeout(function(){ installBottomNav(); installDrawer(); installHomeMap(); installAdminOverviewHint(); syncActiveNav(); },900);
+  }
+  ready(install);
+  window.ADNOR_V138_INSTALL_CLEAN_STRUCTURE=install;
 })();
 </script>
 

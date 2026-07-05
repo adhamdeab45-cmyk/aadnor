@@ -1666,10 +1666,10 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
             <div class="v69-step-head"><b>1</b><div><h4>اختر نوع الإيداع</h4><p>اختار USD أو ShamCash أو حساب بنكي. بعد الاختيار تظهر لك الطريقة والعنوان.</p></div></div>
             <div class="v69-category-grid" id="depositCategoryGrid"></div>
             <div class="v147-deposit-support-card" id="depositSupportCard">
-              <div class="v147-deposit-support-head"><i>💬</i><div><b>ما لقيت طريقة الإيداع المناسبة؟</b><span>تواصل مع الدعم، واكتب لهم الطريقة والمبلغ. الأدمن يراجع طلبك ويخبرك كيف تحول بأمان.</span></div></div>
+              <div class="v147-deposit-support-head"><i>💬</i><div><b>تواصل مع وكيل الشحن الحصري</b><span>إذا لم تجد طريقة الإيداع المناسبة، تواصل مع وكيل الشحن الحصري وحدد المبلغ والطريقة، وسيتم إرشادك للتحويل بأمان.</span></div></div>
               <div class="v147-deposit-support-actions">
-                <button type="button" id="openDepositSupportBtn">فتح تذكرة شحن</button>
-                <a id="depositQuickContactLink" href="#" target="_blank" rel="noopener">تواصل مباشر</a>
+                <button type="button" id="openDepositSupportBtn">طلب شحن عبر الوكيل</button>
+                <a id="depositQuickContactLink" href="#" target="_blank" rel="noopener">تواصل مع الوكيل</a>
               </div>
               <div class="v147-deposit-contact-links" id="depositSupportContactLinks"></div>
             </div>
@@ -2988,10 +2988,10 @@ function setCurrentPrize(type){
       showPage('support');
       setTimeout(()=>{
         if($('supportCategory'))$('supportCategory').value='wallet';
-        if($('supportTitle'))$('supportTitle').value='طلب شحن بطريقة غير موجودة';
+        if($('supportTitle'))$('supportTitle').value='طلب شحن عبر وكيل الشحن الحصري';
         if($('supportMessage')){
           const old=$('supportMessage').value.trim();
-          if(!old){$('supportMessage').value='مرحبًا، أريد شحن حسابي لكن لم أجد طريقة الإيداع المناسبة.\nطريقة التحويل التي أريد استخدامها: اكتب هنا مثل ShamCash / حوالة / طريقة أخرى.\nالمبلغ التقريبي: اكتب المبلغ هنا.\nيرجى إرسال طريقة التحويل المناسبة لي.'}
+          if(!old){$('supportMessage').value='مرحبًا، أريد شحن حسابي عبر وكيل الشحن الحصري.\nطريقة التحويل التي أريد استخدامها: اكتب هنا مثل ShamCash / حوالة / طريقة أخرى.\nالمبلغ المطلوب شحنه: اكتب المبلغ هنا.\nيرجى إرسال بيانات التحويل وطريقة المتابعة.'}
           $('supportMessage').focus();
         }
       },80);
@@ -3003,11 +3003,11 @@ function setCurrentPrize(type){
       const arr=(typeof getSupportContactArray==='function'?getSupportContactArray():Object.values(supportContacts||{}).filter(c=>c&&c.active!==false)).sort((a,b)=>(a.order||99)-(b.order||99));
       const first=arr.find(c=>normalizeContactUrl(c.id,c.url,c.subtitle)&&normalizeContactUrl(c.id,c.url,c.subtitle)!=='#');
       if(main){
-        if(first){main.href=normalizeContactUrl(first.id,first.url,first.subtitle);main.textContent='تواصل مباشر: '+(first.name||first.id||'الدعم');main.classList.remove('disabled');main.onclick=null}
+        if(first){main.href=normalizeContactUrl(first.id,first.url,first.subtitle);main.textContent='تواصل مع الوكيل: '+(first.name||first.id||'الدعم');main.classList.remove('disabled');main.onclick=null}
         else{main.href='#';main.textContent='لا توجد قناة مباشرة الآن';main.onclick=(e)=>{e.preventDefault();openDepositSupportTicket()}}
       }
       if(box){
-        box.innerHTML=arr.length?arr.slice(0,4).map(c=>{const url=normalizeContactUrl(c.id,c.url,c.subtitle)||'#';return '<a href="'+escapeHtml(url)+'" target="_blank" rel="noopener">'+escapeHtml(c.icon||'💬')+' '+escapeHtml(c.name||c.id||'تواصل')+'</a>'}).join(''):'<a href="#" onclick="openDepositSupportTicket();return false;">💬 افتح تذكرة دعم</a>';
+        box.innerHTML=arr.length?arr.slice(0,4).map(c=>{const url=normalizeContactUrl(c.id,c.url,c.subtitle)||'#';return '<a href="'+escapeHtml(url)+'" target="_blank" rel="noopener">'+escapeHtml(c.icon||'💬')+' '+escapeHtml(c.name||c.id||'تواصل')+'</a>'}).join(''):'<a href="#" onclick="openDepositSupportTicket();return false;">💬 طلب شحن عبر الوكيل</a>';
       }
     }
     function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val);methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)})}

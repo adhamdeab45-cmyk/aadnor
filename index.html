@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
-<!-- V128_SECURITY_LOCK: ADN token market uses pending requests and admin approval for balance-changing operations -->
+<!-- V137_SECURE_WALLET: admin balance/messages/freeze now call Firebase Cloud Functions first -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -2487,6 +2487,7 @@ function setCurrentPrize(type){
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
     import { getDatabase, ref, set, update, get, onValue, push, increment, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js';
+    import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
 
     const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
     const ADMIN_EMAILS=['adhamdeab2@gmail.com','adhamdeab45@gmail.com'];
@@ -2636,11 +2637,20 @@ function setCurrentPrize(type){
     function drawTicketStatusClass(t){const label=drawTicketStatusLabel(t);if(label==='فائزة')return 'win';if(label==='بانتظار النشر')return 'wait';if(label==='منتهية')return 'bad';return ''}
     function renderUserTicketHistory(val){currentUserTickets=val||currentUserTickets||{};const all=Object.values(currentUserTickets||{}).sort((a,b)=>(b.createdAt||b.movedAt||0)-(a.createdAt||a.movedAt||0));const activeList=all.filter(t=>t.status==='active');const active=activeList.length;const won=all.filter(t=>t.status==='winner').length;setText('myTicketsTotalText',all.length);setText('myTicketsActiveText',active);setText('myTicketsWonText',won);setText('ticketsCountText',active?('لديك '+active+' تذكرة نشطة'):(all.length?'لا توجد تذاكر نشطة':'لا توجد تذاكر بعد'));setText('activeTicketsText',active);setText('homeTicketsText',all.length);const lbox=$('lotteryActiveTicketsList');if(lbox){if(!activeList.length){lbox.innerHTML='<div class="v61-mini-empty">لا توجد تذاكر نشطة بعد</div>'}else{lbox.innerHTML=activeList.slice(0,8).map(t=>'<div class="v61-mini-ticket"><i>🎟️</i><b>'+escapeHtml(t.number||'')+'</b><span>'+escapeHtml(t.drawLabel||drawLabel(t.drawType))+'</span></div>').join('')}}const box=$('myTicketsList');if(!box)return;let list=all;if(currentTicketFilter!=='all')list=all.filter(t=>t.status===currentTicketFilter);if(!list.length){box.innerHTML='<div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر في هذا القسم</h4><p>استخدم الفلتر الآخر أو اشترِ تذكرة جديدة.</p></div><strong>0</strong></div>';return}box.innerHTML=list.slice(0,80).map(t=>{const cls=drawTicketStatusClass(t);const status=drawTicketStatusLabel(t);const detail=(t.status==='moved'&&t.movedTo)?('انتقلت إلى '+drawLabel(t.movedTo)):(t.status==='winner'?'ربحت '+drawLabel(t.drawType):'محفوظة في '+(t.drawLabel||drawLabel(t.drawType)));return '<div class="draw-item"><div class="medal">🎟️</div><div><h4>رقم '+escapeHtml(t.number||'')+' <span class="ticket-mini '+cls+'">'+status+'</span></h4><p>'+escapeHtml(detail)+'<br>النوع: '+escapeHtml(t.drawLabel||drawLabel(t.drawType))+' — السعر: '+money(t.price||0)+'<br>الوقت: '+new Date(t.createdAt||t.movedAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+escapeHtml(t.number||'')+'</strong></div>'}).join('')}
 
-    const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
+    const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app);provider.setCustomParameters({prompt:'select_account'});
     const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',depositCategory='',withdrawCategory='',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{},promoCodes:{},promoRedemptions:{},backups:{},aiKnowledge:{},aiUnanswered:{},gameCenter:{},customGameLogs:{}};let currentUserTickets={};let currentTicketFilter='all';let lotteryTicketsHidden=false;let currentAuditFilter="all";let currentUserFilter="all";let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:0.50,referrerBonus:0.25,newUserRewardType:'bonus',newUserRewardAmount:0.50,referrerRewardType:'bonus',referrerRewardAmount:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'}; let promoCodesCache={};let referralUnsub=null,referralsUnsub=null,pendingReferralUnsub=null,userNotifUnsub=null,currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){await uiPrompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
+    async function callServer(name,data){
+      const fn=httpsCallable(cloudFns,name);
+      const res=await fn(data||{});
+      return res.data||{};
+    }
+    function serverErr(e){
+      return (e&&e.message)||String(e||'خطأ غير معروف');
+    }
+
 
     /* ADNOR V97 - Sounds + Royal Result Popups */
     let adnorV97AudioCtx=null;
@@ -4065,51 +4075,47 @@ function renderAdminUsers(users){
       if(!['realBalance','bonusBalance','reservedWithdrawalBalance','freeSpins','freeTickets'].includes(field))return toast('نوع التعديل غير معروف');
       const amount=Number(await uiPrompt('اكتب قيمة التعديل على '+v136AdminLabel(field)+': موجب للإضافة، سالب للخصم','10')||0);
       if(!amount)return toast('لم يتم إدخال مبلغ');
-      const note=String(await uiPrompt('سبب التعديل — إلزامي للتدقيق','تعديل يدوي من لوحة الأدمن')||'').trim();
+      const note=String(await uiPrompt('سبب التعديل — إلزامي للتدقيق','تعديل رصيد من لوحة الأدمن')||'').trim();
       if(note.length<3)return toast('لازم تكتب سبب واضح للتعديل');
-      const snap=await get(ref(db,'users/'+uid));
-      const u=snap.val();if(!u)return toast('المستخدم غير موجود');
-      const before=Number(u[field]||0),after=Number((before+amount).toFixed(2));
-      if(after<0 && !(await uiConfirm('القيمة الجديدة ستصبح سالبة. هل أنت متأكد؟')))return;
-      const now=Date.now();
-      const auditId='adj_'+now;
-      const updates={};
-      updates['users/'+uid+'/'+field]=after;
-      updates['users/'+uid+'/updatedAt']=now;
-      updates['transactions/'+uid+'/'+now]={type:'admin_'+field+'_adjust',walletField:field,walletLabel:v136AdminLabel(field),amount,balanceBefore:before,balanceAfter:after,note,adminEmail:currentUser.email,createdAt:now};
-      updates['finance_audit/'+auditId]={id:auditId,action:'admin_balance_adjust',walletField:field,walletLabel:v136AdminLabel(field),uid,email:u.email||'',amount,before,after,note,adminEmail:currentUser.email,createdAt:now,source:'admin_user_control_center'};
-      updates['admin_user_notes/'+uid+'/'+now]={type:'balance_adjust',walletField:field,amount,before,after,note,adminEmail:currentUser.email,createdAt:now};
-      updates['user_notifications/'+uid+'/'+now]=notifObj('admin_balance_adjust','تعديل '+v136AdminLabel(field),'تم تعديل '+v136AdminLabel(field)+' بمقدار '+(field.includes('Balance')||field.includes('reserved')?money(amount):amount)+' — '+note,{amount,walletField:field});
-      await update(ref(db),updates);
-      toast('تم تعديل '+v136AdminLabel(field)+' وحفظ السبب بالسجل');
-      openAdminUserCard(uid);
+      try{
+        toast('جاري إرسال أمر التعديل للسيرفر...');
+        const res=await callServer('adminAdjustBalance',{uid,field,amount,note});
+        toast('تم من السيرفر: '+v136AdminLabel(field)+' من '+money(res.before||0)+' إلى '+money(res.after||0));
+        openAdminUserCard(uid);
+      }catch(e){
+        console.error(e);
+        toast('فشل تعديل الرصيد من السيرفر: '+serverErr(e));
+      }
     }
     async function adminToggleFreeze(uid){
       if(!isAdminUser())return toast('للأدمن فقط');
       const snap=await get(ref(db,'users/'+uid));const u=snap.val();if(!u)return;
-      const now=Date.now();const frozen=!u.isFrozen;
+      const frozen=!u.isFrozen;
       const reason=String(await uiPrompt(frozen?'سبب تجميد الحساب':'سبب فك التجميد',frozen?'نشاط يحتاج مراجعة':'تمت المراجعة')||'').trim()||'قرار إداري';
-      const updates={};
-      updates['users/'+uid+'/isFrozen']=frozen;updates['users/'+uid+'/freezeReason']=frozen?reason:'';updates['users/'+uid+'/updatedAt']=now;
-      updates['finance_audit/account_'+now]={action:frozen?'account_freeze':'account_unfreeze',uid,email:u.email||'',reason,adminEmail:currentUser.email,createdAt:now,source:'admin_user_control_center'};
-      updates['admin_user_notes/'+uid+'/'+now]={type:frozen?'account_freeze':'account_unfreeze',reason,adminEmail:currentUser.email,createdAt:now};
-      updates['user_notifications/'+uid+'/'+now]=notifObj(frozen?'account_freeze':'account_unfreeze',frozen?'تم تجميد الحساب':'تم فك تجميد الحساب',(frozen?'تم إيقاف بعض العمليات مؤقتًا من الإدارة. السبب: ':'تمت إعادة تفعيل حسابك. السبب: ')+reason);
-      await update(ref(db),updates);toast(frozen?'تم تجميد الحساب':'تم فك التجميد');openAdminUserCard(uid)
+      try{
+        toast('جاري تنفيذ قرار الحساب من السيرفر...');
+        await callServer('adminToggleFreeze',{uid,frozen,reason});
+        toast(frozen?'تم تجميد الحساب من السيرفر':'تم فك التجميد من السيرفر');
+        openAdminUserCard(uid);
+      }catch(e){
+        console.error(e);
+        toast('فشل تنفيذ القرار من السيرفر: '+serverErr(e));
+      }
     }
     
     async function adminSendUserMessage(uid){
       if(!isAdminUser())return toast('للأدمن فقط');
-      const snap=await get(ref(db,'users/'+uid));const u=snap.val();if(!u)return toast('المستخدم غير موجود');
       const title=String(await uiPrompt('عنوان الرسالة للمستخدم','رسالة من إدارة ADNOR')||'').trim();if(title.length<2)return toast('اكتب عنوان الرسالة');
       const message=String(await uiPrompt('نص الرسالة', '')||'').trim();if(message.length<3)return toast('اكتب نص الرسالة');
-      const now=Date.now(), id='msg_'+now;
-      const data={id,uid,email:u.email||'',title,message,status:'sent',read:false,adminEmail:currentUser.email||'',createdAt:now};
-      const updates={};
-      updates['user_direct_messages/'+uid+'/'+id]=data;
-      updates['admin_user_messages/'+id]=data;
-      updates['user_notifications/'+uid+'/'+now]=notifObj('admin_direct_message',title,message,{messageId:id});
-      updates['finance_audit/'+id]={id,action:'admin_direct_message',uid,email:u.email||'',note:title+' — '+message,adminEmail:currentUser.email||'',createdAt:now,source:'admin_user_control_center'};
-      await update(ref(db),updates);toast('تم إرسال الرسالة للمستخدم');openAdminUserCard(uid)
+      try{
+        toast('جاري إرسال الرسالة من السيرفر...');
+        await callServer('adminSendUserMessage',{uid,title,message});
+        toast('تم إرسال الرسالة للمستخدم من السيرفر');
+        openAdminUserCard(uid);
+      }catch(e){
+        console.error(e);
+        toast('فشل إرسال الرسالة من السيرفر: '+serverErr(e));
+      }
     }
     async function adminSaveUserNote(uid){
       if(!isAdminUser())return toast('للأدمن فقط');

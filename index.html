@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
-<!-- V145_REFERRAL_PRIVACY_MASK: hides invited user email from referrer, admin keeps full audit. -->
+<!-- V146_REFERRAL_PRIVACY_NO_FREEZE: masks referral emails for referrer without database cleanup loops. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Cinzel:wght@700;800;900&display=swap" rel="stylesheet">
@@ -2659,20 +2659,11 @@ function setCurrentPrize(type){
       safe.privacyUpdatedAt=Date.now();
       return safe;
     }
-    async function sanitizeVisibleReferralPath(uid,id,r){
-      try{
-        if(!uid||!id||!r||!String(r.referredEmail||'').includes('@'))return;
-        const safe=safeReferralRecordForReferrer(r);
-        await update(ref(db,'user_referrals/'+uid+'/'+id),{referredEmail:safe.referredEmail,referredEmailMasked:safe.referredEmailMasked||'',referredDisplay:safe.referredDisplay||'مستخدم جديد',referredName:'مستخدم جديد',privacyMode:'masked_for_referrer',privacyUpdatedAt:Date.now()});
-      }catch(e){console.warn('referral privacy cleanup skipped',e)}
-    }
-    async function sanitizePendingReferralRewardPath(uid,id,r){
-      try{
-        if(!uid||!id||!r||!String(r.referredEmail||'').includes('@'))return;
-        const safe=safeReferralRecordForReferrer(r);
-        await update(ref(db,'pending_referral_rewards/'+uid+'/'+id),{referredEmail:safe.referredEmail,referredEmailMasked:safe.referredEmailMasked||'',referredDisplay:safe.referredDisplay||'مستخدم جديد',referredName:'مستخدم جديد',privacyMode:'masked_for_referrer',privacyUpdatedAt:Date.now()});
-      }catch(e){console.warn('pending referral privacy cleanup skipped',e)}
-    }
+    // V146_FIX: ممنوع تنظيف الدعوات القديمة بكتابات متكررة داخل onValue.
+    // السبب: أي update داخل listener كان يعيد تشغيل نفس listener ويعمل تعليق بالموقع.
+    // الخصوصية الآن تُطبّق في العرض فقط، والدعوات الجديدة تُحفظ مخفية من الأساس.
+    async function sanitizeVisibleReferralPath(uid,id,r){return false}
+    async function sanitizePendingReferralRewardPath(uid,id,r){return false}
     function drawPublishMillis(d){let v=Number(d?.publishAt||d?.publishedAt||d?.createdAt||0); if(v && v<100000000000) v*=1000; return v||0}
     function publicDrawsList(type='all'){
       const now=Date.now();
@@ -3488,14 +3479,14 @@ function setCurrentPrize(type){
       referralsUnsub=onValue(ref(db,'user_referrals/'+uid),snap=>{
         const entries=Object.entries(snap.val()||{});
         const arr=entries.map(([id,r])=>({...r,id:r.id||id}));
-        arr.filter(r=>r&&r.referrerUid===uid&&r.referrerRewardStatus!=='claimed'&&Number(r.referrerBonus||r.amount||0)>0).forEach(r=>claimPendingReferralReward(r.id,r));
+        arr.filter(r=>r&&r.referrerUid===uid&&r.referrerRewardStatus!=='claimed'&&Number(r.referrerBonus||r.amount||0)>0).forEach(r=>claimPendingReferralReward(r.id,safeReferralRecordForReferrer(r))); // V146: claim with masked referrer copy
         const claimedOrPending=arr.filter(x=>x&&x.referrerUid===uid);
         const bonus=claimedOrPending.reduce((a,x)=>{const rw=referralRewardFromRecord(x,'referrer');return a+Number((x.referrerRewardStatus==='claimed'||x.status==='claimed')?referralRewardMoneyAmount(rw):0)},0);
         if($('refCountText'))$('refCountText').textContent=String(claimedOrPending.length);
         if($('refBonusText'))$('refBonusText').textContent=money(bonus);
         if($('userReferralsList')){
           const recent=claimedOrPending.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,6);
-          recent.forEach(r=>sanitizeVisibleReferralPath(uid,r.id,r));
+          // V146: لا نكتب على قاعدة البيانات أثناء عرض القائمة؛ نعرض البريد مخفيًا فقط.
           $('userReferralsList').innerHTML=recent.length?recent.map(r=>'<div class="ref-mini"><b>'+escapeHtml(referralPublicIdentity(r))+'</b>مكافأتك: '+escapeHtml(r.referrerRewardText||referralRewardText(referralRewardFromRecord(r,'referrer')))+' — الحالة: '+escapeHtml(r.referrerRewardStatus==='claimed'?'تمت الإضافة':'بانتظار الاستلام')+'<br><small>'+new Date(r.createdAt||Date.now()).toLocaleString('ar-TR')+'</small></div>').join(''):'<div class="ref-mini"><b>آخر الدعوات</b>لا توجد دعوات بعد.</div>';
         }
       });
@@ -3732,7 +3723,7 @@ function setCurrentPrize(type){
       if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null}
       pendingReferralUnsub=onValue(ref(db,'pending_referral_rewards/'+uid),snap=>{
         const pending=Object.entries(snap.val()||{}).filter(([id,r])=>r&&r.status!=='claimed');
-        pending.forEach(([id,r])=>{sanitizeVisibleReferralPath(uid,id,r);sanitizePendingReferralRewardPath(uid,id,r)});
+        // V146: لا يوجد تنظيف مباشر داخل listener حتى لا يصير loop أو تعليق.
         pending.forEach(([id,r])=>claimPendingReferralReward(id,safeReferralRecordForReferrer(r)));
         const claimed=Object.values(snap.val()||{}).filter(r=>r&&r.status==='claimed');
         if($('refCountText'))$('refCountText').textContent=String(Math.max(Number($('refCountText').textContent||0),pending.length+claimed.length));
@@ -5451,7 +5442,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       try{renderLatestDrawPublic=v144RenderPublic;renderAllDrawResultsPublic=v144RenderAllResults;renderV91LastResult=v144RenderPublic;}catch(e){}
       try{v93GetVisibleTickerResult=function(){return {v144Ticker:true}};v93ResultTickerMessage=function(){return v144TickerHtml()};v93RenderTopWinnerTicker=v144RenderTicker;}catch(e){}
       const __v144ShowPage=showPage;showPage=function(p){__v144ShowPage(p);if(p==='lottery'||p==='results')setTimeout(v144RenderPublic,50);if(p==='admin')setTimeout(()=>{v144Attach();v144RenderAdmin();},90)};
-      v144Attach();setTimeout(()=>{v144RenderAdmin();v144RenderPublic();v144RenderTicker()},900);setInterval(()=>{try{v144RenderAdmin();v144RenderPublic();v144RenderTicker()}catch(e){}},5000);
+      v144Attach();setTimeout(()=>{v144RenderAdmin();v144RenderPublic();v144RenderTicker()},900);setInterval(()=>{try{v144RenderPublic();v144RenderTicker();if(document.querySelector('#adminPage.active,.admin-page.active,[data-page=admin].active'))v144RenderAdmin()}catch(e){}},7000);
       Object.assign(window,{v144SaveScheduled,v144Hide,v144SetDefault,v144RenderPublic,v144RenderAdmin,v144Visible,v144Upcoming,v144TickerHtml});
     })();
 

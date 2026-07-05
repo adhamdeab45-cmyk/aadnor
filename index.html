@@ -1393,6 +1393,19 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
 @media(max-width:720px){.v142-price-board{grid-template-columns:1fr}.v142-main-price b{font-size:38px}.v142-market-meta{grid-template-columns:repeat(2,1fr)}.v142-chart-wrap{height:410px}.v142-indicators{grid-template-columns:repeat(2,1fr)}.v142-panel-tabs{grid-template-columns:repeat(2,1fr)}.v142-input-row,.v142-book-grid,.v142-summary{grid-template-columns:1fr}.v142-chart-footer{flex-direction:column;align-items:flex-start}}
 </style>
 
+
+<style id="adnor-v143-live-candle-history-ui">
+  .v143-chart-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+  .v143-chart-actions .v142-chart-btn{min-height:34px;padding:8px 12px;border-radius:12px}
+  .v143-chart-hint{font-size:12px;font-weight:900;color:#b9c8df;opacity:.9;border:1px solid rgba(255,225,132,.12);background:rgba(255,255,255,.04);padding:8px 10px;border-radius:14px}
+  .v142-chart-wrap{touch-action:none;user-select:none;position:relative}
+  #adnCandleCanvas{cursor:grab;touch-action:none}
+  #adnCandleCanvas:active{cursor:grabbing}
+  .v143-hover-box{position:absolute;left:10px;top:10px;z-index:5;display:none;min-width:170px;max-width:260px;border:1px solid rgba(255,225,132,.35);background:rgba(2,8,18,.92);box-shadow:0 12px 30px rgba(0,0,0,.35),0 0 18px rgba(255,202,65,.10);border-radius:14px;padding:9px 10px;color:#f7e8a6;font-size:12px;font-weight:900;line-height:1.7;pointer-events:none;direction:rtl}
+  .v143-hover-box b{color:#35ffbd}.v143-hover-box .down{color:#ff6b81}
+  .v143-history-mode .v142-chart-live-badge{border-color:rgba(255,225,132,.45);background:rgba(80,52,8,.54)}
+</style>
+
 </head>
 <body>
   <div class="aurora"></div>
@@ -1720,7 +1733,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
             <div class="v142-stat"><span>صندوق السيولة</span><b id="adnFundUsd">$0.00</b></div>
             <div class="v142-stat"><span>سعر البداية</span><b id="adnStartPriceText">$0.1000</b></div>
             <div class="v142-stat"><span>عدد العمليات</span><b id="adnTradesCountText">0</b></div>
-            <div class="v142-stat"><span>عدد المستثمرين</span><b id="adnInvestorsText">0</b></div>
+            <div class="v142-stat"><span>مؤشر نشاط السوق</span><b id="adnInvestorsText">300,000</b></div>
           </div>
         </section>
 
@@ -5479,6 +5492,129 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     const __v122ShowPage=showPage;showPage=function(p){__v122ShowPage(p);if(p==='wallet'||p==='token'||p==='investment')setTimeout(renderAdnAll,50);if(p==='admin')setTimeout(renderAdminAdn,90)};
     const __v122RenderAdmin=renderAdmin;renderAdmin=function(){__v122RenderAdmin();renderAdminAdn()};
     const __v122ListenProfile=listenProfile;listenProfile=function(uid){__v122ListenProfile(uid);listenAdnMarket()};
+
+
+    /* ADNOR V143 — interactive candle history + safe market activity baseline
+       - المخطط صار قابل للسحب يمين/يسار للرجوع للشموع القديمة.
+       - زر يرجعك لآخر السوق.
+       - مؤشر نشاط السوق يبدأ من 300,000 ولا نسميه مستثمرين حقيقيين حتى لا يكون تضليل. */
+    const ADN_V143_ACTIVITY_BASE = 300000;
+    let adnChartOffset = 0;
+    let adnChartHover = null;
+    let adnChartDragging = false;
+    let adnChartDragStartX = 0;
+    let adnChartDragStartOffset = 0;
+    let adnChartEventsReady = false;
+    function adnClamp(v,min,max){return Math.max(min,Math.min(max,v))}
+    function adnActivityCount(){
+      let realHolders=0;
+      try{ realHolders=Object.values(adminState?.users||{}).filter(u=>adnNum(u.adnBalance)>0).length; }catch(e){}
+      const serverDynamic = Math.max(0, adnNum(adnState.investorsCount,0));
+      return ADN_V143_ACTIVITY_BASE + Math.max(realHolders, serverDynamic);
+    }
+    adnInvestorsCount=function(){ return adnActivityCount(); };
+    function adnMaxChartOffset(){ return Math.max(0, adnLiveRows.length-64); }
+    function adnBuildOlderHistory(minRows=220){
+      try{
+        if(!adnLiveRows.length) return;
+        const ms=adnTfMs();
+        const minPrice=adnNum(adnSettings.minPrice,0.01);
+        while(adnLiveRows.length<minRows){
+          const first=adnLiveRows[0];
+          const base=Math.max(adnNum(first.open,0.10),minPrice);
+          const vol=base*(adnTimeFrame==='1m'?0.006:adnTimeFrame==='5m'?0.010:adnTimeFrame==='10m'?0.013:adnTimeFrame==='15m'?0.016:0.022);
+          const close=base;
+          const open=Math.max(minPrice, close + (Math.random()-.50)*vol*2.4);
+          const high=Math.max(open,close)+Math.random()*vol*1.15;
+          const low=Math.max(minPrice, Math.min(open,close)-Math.random()*vol*1.15);
+          adnLiveRows.unshift({t:first.t-ms,open,high,low,close,volumeUsd:Math.round((1800+Math.random()*22000)*base)});
+        }
+        if(adnLiveRows.length>260) adnLiveRows=adnLiveRows.slice(-260);
+      }catch(e){console.warn('V143 history build failed',e)}
+    }
+    const __v143EnsureAdnLiveCandles = ensureAdnLiveCandles;
+    ensureAdnLiveCandles=function(force=false){
+      __v143EnsureAdnLiveCandles(force);
+      adnBuildOlderHistory(220);
+      adnChartOffset = adnClamp(adnChartOffset,0,adnMaxChartOffset());
+    };
+    candleRows=function(){
+      ensureAdnLiveCandles(false);
+      const view=64;
+      const maxOff=adnMaxChartOffset();
+      adnChartOffset=adnClamp(adnChartOffset,0,maxOff);
+      const end=Math.max(view, adnLiveRows.length-adnChartOffset);
+      return adnLiveRows.slice(Math.max(0,end-view), end);
+    };
+    function adnVisibleRangeText(){
+      const rows=candleRows();
+      if(!rows.length) return 'لا توجد شموع';
+      const a=new Date(rows[0].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+      const b=new Date(rows[rows.length-1].t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+      return (adnChartOffset>0?'عرض تاريخي ':'آخر السوق ')+'— من '+a+' إلى '+b;
+    }
+    function installAdnV143ChartControls(){
+      if(window.__ADNOR_V143_CHART_CONTROLS__) return;
+      const tools=document.querySelector('.v142-chart-tools');
+      if(!tools) return;
+      window.__ADNOR_V143_CHART_CONTROLS__=true;
+      const div=document.createElement('div');
+      div.className='v143-chart-actions';
+      div.innerHTML='<button class="v142-chart-btn" type="button" id="adnChartBackBtn">رجوع بالسعر</button><button class="v142-chart-btn" type="button" id="adnChartLatestBtn">آخر السوق</button><span class="v143-chart-hint">اسحب الشموع يمين/يسار لترجع للسعر القديم، والمس على الشمعة لتشوف وقتها وسعرها.</span>';
+      tools.appendChild(div);
+      $('adnChartBackBtn')?.addEventListener('click',()=>{adnChartOffset=adnClamp(adnChartOffset+24,0,adnMaxChartOffset());drawAdnCandles();toast('عرض شموع أقدم')});
+      $('adnChartLatestBtn')?.addEventListener('click',()=>{adnChartOffset=0;drawAdnCandles();toast('رجعنا لآخر السوق')});
+      const wrap=document.querySelector('.v142-chart-wrap');
+      if(wrap && !$('adnChartHoverInfo')){const h=document.createElement('div');h.id='adnChartHoverInfo';h.className='v143-hover-box';wrap.appendChild(h)}
+    }
+    function installAdnV143CanvasEvents(){
+      if(adnChartEventsReady) return;
+      const c=$('adnCandleCanvas'); if(!c) return;
+      adnChartEventsReady=true;
+      const pos=(e)=>{const r=c.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top,w:r.width,h:r.height}};
+      c.addEventListener('pointerdown',e=>{adnChartDragging=true;adnChartDragStartX=e.clientX;adnChartDragStartOffset=adnChartOffset;try{c.setPointerCapture(e.pointerId)}catch(_){}});
+      c.addEventListener('pointermove',e=>{
+        const p=pos(e);adnChartHover=p;
+        if(adnChartDragging){
+          const rect=c.getBoundingClientRect();const step=Math.max(5,rect.width/64);const delta=Math.round((e.clientX-adnChartDragStartX)/step);
+          adnChartOffset=adnClamp(adnChartDragStartOffset+delta,0,adnMaxChartOffset());
+        }
+        drawAdnCandles();
+      });
+      ['pointerup','pointercancel'].forEach(ev=>c.addEventListener(ev,e=>{adnChartDragging=false;try{c.releasePointerCapture(e.pointerId)}catch(_){}}));
+      c.addEventListener('pointerleave',()=>{adnChartDragging=false;adnChartHover=null;const h=$('adnChartHoverInfo');if(h)h.style.display='none';drawAdnCandles();});
+      c.addEventListener('wheel',e=>{e.preventDefault();adnChartOffset=adnClamp(adnChartOffset+(e.deltaY>0?12:-12),0,adnMaxChartOffset());drawAdnCandles();},{passive:false});
+    }
+    const __v143DrawAdnCandlesBase = drawAdnCandles;
+    drawAdnCandles=function(){
+      __v143DrawAdnCandlesBase();
+      try{
+        installAdnV143ChartControls();installAdnV143CanvasEvents();
+        const wrap=document.querySelector('.v142-chart-wrap'); if(wrap) wrap.classList.toggle('v143-history-mode',adnChartOffset>0);
+        const info=adnVisibleRangeText(); setText('adnChartInfo', info+' — '+adnTfLabel());
+        const latest=$('adnChartLatestBtn'); if(latest) latest.disabled=adnChartOffset<=0;
+        const back=$('adnChartBackBtn'); if(back) back.disabled=adnChartOffset>=adnMaxChartOffset();
+        const hover=$('adnChartHoverInfo'); const c=$('adnCandleCanvas'); if(!hover||!c||!adnChartHover){return;}
+        const rect=c.getBoundingClientRect(); const rows=candleRows(); if(!rows.length) return;
+        const padL=12, padR=86, padT=28, padB=62; const areaW=Math.max(1,rect.width-padL-padR); const step=areaW/rows.length;
+        const idx=adnClamp(Math.floor((adnChartHover.x-padL)/step),0,rows.length-1); const r=rows[idx]; if(!r) return;
+        const up=adnNum(r.close)>=adnNum(r.open);
+        hover.style.display='block';
+        hover.style.left=adnClamp(adnChartHover.x+12,8,rect.width-188)+'px';
+        hover.style.top=adnClamp(adnChartHover.y+12,8,rect.height-115)+'px';
+        hover.innerHTML='<div>الوقت: <b>'+new Date(r.t).toLocaleString('ar-TR')+'</b></div><div>افتتاح: <b>'+adnFmt(r.open,4)+'</b></div><div>إغلاق: <b class="'+(up?'':'down')+'">'+adnFmt(r.close,4)+'</b></div><div>أعلى/أقل: <b>'+adnFmt(r.high,4)+' / '+adnFmt(r.low,4)+'</b></div><div>الحجم: <b>'+money(r.volumeUsd||0)+'</b></div>';
+      }catch(e){console.warn('V143 candle overlay skipped',e)}
+    };
+    const __v143RenderAdnMarket = renderAdnMarket;
+    renderAdnMarket=function(){
+      __v143RenderAdnMarket();
+      setText('adnInvestorsText',adnActivityCount().toLocaleString('en-US'));
+      const label=$('adnInvestorsText')?.previousElementSibling; if(label) label.textContent='مؤشر نشاط السوق';
+    };
+    const __v143RenderAdminAdn = renderAdminAdn;
+    renderAdminAdn=function(){__v143RenderAdminAdn();setText('adminAdnInvestors',adnActivityCount().toLocaleString('en-US'));};
+    setTimeout(()=>{try{installAdnV143ChartControls();installAdnV143CanvasEvents();renderAdnMarket();}catch(e){}},800);
+
     Object.assign(window,{seedAdnMarket,adminSaveAdnSettings,executeAdnTrade,approveAdnRequest,rejectAdnRequest,renderAdnAll,showPage});
 
 

@@ -32,7 +32,11 @@
   const app=initializeApp(firebaseConfig), auth=getAuth(app), fns=getFunctions(app), db=getDatabase(app);
   const creatorApp=initializeApp(firebaseConfig,'adnor-agent-creator'), creatorAuth=getAuth(creatorApp);
   const ADMIN_EMAILS=['adhamdeab2@gmail.com','adhamdeab45@gmail.com'];
-  const $=id=>document.getElementById(id); const money=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const $=id=>document.getElementById(id);
+  function toEnglishDigits(v){return String(v??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));}
+  function cleanNum(v){if(typeof v==='number')return Number.isFinite(v)?Math.round(v*100)/100:0;if(v==null)return 0;let s=toEnglishDigits(v).trim().replace(/\s/g,'').replace(/,/g,'.').replace(/[^0-9.\-]/g,'');const parts=s.split('.');if(parts.length>2)s=parts.shift()+'.'+parts.join('');const n=Number(s);return Number.isFinite(n)?Math.round(n*100)/100:0}
+  function agentBalanceFrom(a){if(!a)return 0;const arr=[a.agentBalance,a.balance,a.walletBalance,a.credit,a.amount,a.wallet&&a.wallet.balance,a.wallet&&a.wallet.agentBalance];for(const v of arr){const n=cleanNum(v);if(n>0)return n;if(v===0||v==='0')return 0}return 0}
+  const money=n=>'$'+cleanNum(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
   function msg(id,t,cls=''){const el=$(id); if(el){el.textContent=t;el.className='status '+cls}}
   function err(e){
@@ -56,7 +60,8 @@
       console.warn('Functions list failed, using direct database fallback', e);
       if(!adminOk()) throw e;
       const snap=await get(ref(db,'agents'));
-      agents=Object.entries(snap.val()||{}).map(([uid,a])=>({uid,...(a||{}),agentBalance:Number((a&&a.agentBalance)||0),totalCharged:Number((a&&a.totalCharged)||0),totalOperations:Number((a&&a.totalOperations)||0),active:(a&&a.active)!==false})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      agents=Object.entries(snap.val()||{}).map(([uid,a])=>({uid,...(a||{}),agentBalance:agentBalanceFrom(a),totalCharged:cleanNum(a&&a.totalCharged),totalOperations:Number((a&&a.totalOperations)||0),active:(a&&a.active)!==false,_rawAgentBalance:a&&a.agentBalance})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      const fixes={}; agents.forEach(a=>{if(a._rawAgentBalance!==a.agentBalance){fixes['agents/'+a.uid+'/agentBalance']=a.agentBalance;fixes['agents/'+a.uid+'/updatedAt']=Date.now();fixes['agents/'+a.uid+'/balanceFixedBy']='admin_agents_v165'}}); if(Object.keys(fixes).length) update(ref(db),fixes).catch(()=>null);
       const rs=await get(ref(db,'agent_recharges'));
       const recharges=Object.values(rs.val()||{}).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,100);
       renderAgents(agents);renderRecharges(recharges);
@@ -67,7 +72,7 @@
   async function adjustAgent(uid,sign){const amount=Number(prompt(sign>0?'كم تريد إضافة رصيد للوكيل؟':'كم تريد خصم من الوكيل؟')||0); if(!amount)return; const note=prompt('ملاحظة التعديل','تعديل رصيد وكيل')||'تعديل رصيد وكيل'; try{await call('adminAdjustAgentBalance',{agentUid:uid,amount:sign*Math.abs(amount),note});await loadAll()}catch(e){
     if(!adminOk()) return alert(err(e));
     const delta=sign*Math.abs(amount); const balRef=ref(db,'agents/'+uid+'/agentBalance'); let before=0, after=0;
-    const res=await runTransaction(balRef,(cur)=>{before=Number(cur||0); after=Math.round((before+delta)*100)/100; if(after<0)return; return after;});
+    const res=await runTransaction(balRef,(cur)=>{before=cleanNum(cur); after=Math.round((before+delta)*100)/100; if(after<0)return; return after;});
     if(!res.committed) return alert('رصيد الوكيل لا يكفي.');
     const id=nowId('agent_wallet'); const now=Date.now();
     await update(ref(db),{['agents/'+uid+'/updatedAt']:now,['agent_wallet_logs/'+uid+'/'+id]:{id,agentUid:uid,type:delta>0?'admin_add':'admin_deduct',amount:delta,before,after,note,adminEmail:auth.currentUser.email,createdAt:now},['finance_audit/'+id]:{id,action:delta>0?'client_agent_balance_add':'client_agent_balance_deduct',agentUid:uid,amount:delta,before,after,note,adminEmail:auth.currentUser.email,createdAt:now,source:'client_fallback'}});

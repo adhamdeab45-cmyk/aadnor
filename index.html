@@ -3083,8 +3083,21 @@ function setCurrentPrize(type){
       updates['users/'+currentUser.uid+'/bonusBalance']=pay.newBonus;
       updates['users/'+currentUser.uid+'/updatedAt']=now;
       updates['transactions/'+currentUser.uid+'/'+now]={type:'ticket_purchase',amount:-TICKET_PRICE,balanceBefore:pay.playable,balanceAfter:Number((pay.newReal+pay.newBonus).toFixed(2)),realBefore:pay.real,realAfter:pay.newReal,bonusBefore:pay.bonus,bonusAfter:pay.newBonus,paidFromReal:pay.useReal,paidFromBonus:pay.useBonus,note:'شراء تذكرة '+num+' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus),createdAt:now};
-      updates['admin_notifications/'+now]={type:'ticket_purchase',uid:currentUser.uid,email:currentUser.email||'',text:'شراء تذكرة جديدة رقم '+num+' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus),createdAt:now,status:'new'};
-      try{await update(ref(db),updates);adnorV97Sound('ticket');toast('تم شراء البطاقة بنجاح — تم استخدام '+paymentSourceText(pay.useReal,pay.useBonus)+' 👑');adnorV97ShowEventModal({icon:'🎟️',title:'تم شراء البطاقة',message:'بطاقتك دخلت السحب الرسمي بنجاح.',confetti:true,rows:[{label:'رقم البطاقة',value:num},{label:'نوع السحب',value:drawLabel(currentDraw)},{label:'قيمة البطاقة',value:money(TICKET_PRICE)},{label:'الدفع من',value:paymentSourceText(pay.useReal,pay.useBonus)},{label:'الحالة',value:'نشطة ومحفوظة'}],okText:'تمام'});$('ticketNumber').value=randomTicket()}catch(e){console.error(e);toast('تعذر حفظ التذكرة: '+(e.code||e.message))}
+      // V167: لا نضع إشعار الأدمن داخل عملية شراء التذكرة الأساسية.
+      // بعض قواعد Firebase تمنع المستخدم العادي من الكتابة داخل admin_notifications،
+      // وإذا وضعناها داخل update واحد تفشل عملية شراء التذكرة كلها بـ PERMISSION_DENIED.
+      try{
+        await update(ref(db),updates);
+        try{
+          await set(ref(db,'admin_notifications/'+now),{type:'ticket_purchase',uid:currentUser.uid,email:currentUser.email||'',text:'شراء تذكرة جديدة رقم '+num+' — الدفع من '+paymentSourceText(pay.useReal,pay.useBonus),createdAt:now,status:'new'});
+        }catch(notifyErr){console.warn('V167: تم شراء التذكرة، لكن لم يتم حفظ إشعار الأدمن بسبب الصلاحيات',notifyErr)}
+        adnorV97Sound('ticket');toast('تم شراء البطاقة بنجاح — تم استخدام '+paymentSourceText(pay.useReal,pay.useBonus)+' 👑');adnorV97ShowEventModal({icon:'🎟️',title:'تم شراء البطاقة',message:'بطاقتك دخلت السحب الرسمي بنجاح.',confetti:true,rows:[{label:'رقم البطاقة',value:num},{label:'نوع السحب',value:drawLabel(currentDraw)},{label:'قيمة البطاقة',value:money(TICKET_PRICE)},{label:'الدفع من',value:paymentSourceText(pay.useReal,pay.useBonus)},{label:'الحالة',value:'نشطة ومحفوظة'}],okText:'تمام'});$('ticketNumber').value=randomTicket()
+      }catch(e){
+        console.error(e);
+        const code=(e&&e.code)?String(e.code):String(e&&e.message||e);
+        if(code.includes('PERMISSION_DENIED')) toast('تعذر حفظ التذكرة: صلاحيات قاعدة البيانات تحتاج تحديث V167');
+        else toast('تعذر حفظ التذكرة: '+code);
+      }
     }
     $('buyTicketBtn').onclick=buyTicket;
     

@@ -1967,7 +1967,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
 
       <div id="page-admin" class="page admin-overview">
         <section class="jackpot"><div class="label">بوابة الإدارة الملكية</div><div class="amount">ADNOR CONTROL</div><div class="drawname">كل قسم داخل صفحة مستقلة — بدون ازدحام</div>
-          <button type="button" onclick="location.href='admin-agents.html'" style="margin-top:14px;width:100%;border:0;border-radius:18px;padding:14px 16px;background:linear-gradient(135deg,#ffd56b,#b8860b);color:#120b02;font-weight:900;font-size:16px;box-shadow:0 12px 30px rgba(212,175,55,.28);cursor:pointer">🧾 فتح إدارة وكلاء الشحن</button>
+          <button type="button" onclick="showAdminSection('agents')" style="margin-top:14px;width:100%;border:0;border-radius:18px;padding:14px 16px;background:linear-gradient(135deg,#ffd56b,#b8860b);color:#120b02;font-weight:900;font-size:16px;box-shadow:0 12px 30px rgba(212,175,55,.28);cursor:pointer">🧾 فتح وكلاء الشحن داخل الأدمن</button>
         </section>
         <div class="admin-grid">
           <div class="admin-stat"><span>المستخدمين</span><b id="adminUsersCount">0</b></div>
@@ -1990,7 +1990,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
             <button class="admin-menu-btn" data-admin-section="vipadmin"><span><i>👑</i> VIP والمهام</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="dailylogin"><span><i>🎁</i> الصندوق اليومي</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="payments"><span><i>💳</i> طرق الدفع</span><span>›</span></button>
-            <button class="admin-menu-btn" type="button" onclick="location.href='admin-agents.html'"><span><i>🧾</i> وكلاء الشحن</span><span>↗</span></button>
+            <button class="admin-menu-btn" data-admin-section="agents"><span><i>🧾</i> وكلاء الشحن</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="token"><span><i>🪙</i> صندوق ADN</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="notifications"><span><i>🔔</i> الإشعارات</span><span>›</span></button>
             <button class="admin-menu-btn" data-admin-section="aiadmin"><span><i>🤖</i> المساعد الذكي</span><span>›</span></button>
@@ -2011,7 +2011,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
                   <button onclick="showAdminSection('vipadmin')"><span><b>VIP والمهام</b><small>المستويات، نقاط VIP، الصندوق الملكي والمهام اليومية</small></span><i>👑</i></button>
                   <button onclick="showAdminSection('dailylogin')"><span><b>التسجيل اليومي</b><small>7 صناديق، بونص، رصيد، VIP، قسائم ولفات مجانية</small></span><i>🎁</i></button>
                   <button onclick="showAdminSection('payments')"><span><b>طرق الدفع</b><small>USDT، شام كاش، بنك، واتساب، تيليجرام</small></span><i>💳</i></button>
-                  <button onclick="location.href='admin-agents.html'"><span><b>وكلاء الشحن</b><small>إنشاء وكيل، محفظة وكيل، إضافة رصيد، إيقاف وتفعيل</small></span><i>🧾</i></button>
+                  <button onclick="showAdminSection('agents')"><span><b>وكلاء الشحن</b><small>إنشاء وكيل، محفظة وكيل، إضافة رصيد، إيقاف وتفعيل — داخل نفس لوحة الأدمن</small></span><i>🧾</i></button>
                   <button onclick="showAdminSection('notifications')"><span><b>الإشعارات</b><small>آخر الأحداث والتنبيهات المهمة</small></span><i>🔔</i></button>
                   <button onclick="showAdminSection('aiadmin')"><span><b>المساعد الذكي</b><small>أسئلة جديدة، أجوبة محفوظة، وتعليم المساعد</small></span><i>🤖</i></button>
                   <button onclick="showAdminSection('settings')"><span><b>الإعدادات</b><small>البونص، الإحالات، السياسة، شاشة البداية</small></span><i>⚙️</i></button>
@@ -2019,6 +2019,15 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
                   <button onclick="showAdminSection('logs')"><span><b>سجل العمليات</b><small>التدقيق ومراجعة التغييرات المالية</small></span><i>📜</i></button>
                   <button onclick="showAdminSection('backups')"><span><b>النسخ الاحتياطي</b><small>حفظ نسخة، تنزيل JSON، واستيراد نسخة للمراجعة</small></span><i>🗄️</i></button>
                 </div></div>
+            </section>
+            <section class="admin-section" id="admin-section-agents">
+              <div class="admin-wide-card">
+                <div class="admin-section-head"><h3>وكلاء الشحن</h3><span>إدارة الوكلاء داخل لوحة الأدمن مباشرة</span></div>
+                <div class="hint">هذا القسم مدموج داخل صفحة الأدمن. من هنا تضيف وكيل، تعطيه رصيد 100 أو 200 أو 1000، توقفه أو تفعّله، وتراجع شحناته. صفحة الوكيل للمندوبين تبقى: <b>agent.html</b></div>
+                <div style="margin-top:12px;border:1px solid rgba(212,175,55,.32);border-radius:24px;overflow:hidden;background:#020a16;min-height:760px">
+                  <iframe id="adminAgentsFrame" src="admin-agents.html" title="إدارة وكلاء الشحن" style="width:100%;height:900px;border:0;background:#020a16"></iframe>
+                </div>
+              </div>
             </section>
             <section class="admin-section" id="admin-section-users">
               <div class="admin-wide-card">
@@ -4006,7 +4015,7 @@ function setCurrentPrize(type){
     if($('campaignSearchInput'))$('campaignSearchInput').oninput=renderAdminCampaigns;
     if($('exportCampaignsCsvBtn'))$('exportCampaignsCsvBtn').onclick=exportCampaignsCsv;
 
-    function showAdminSection(sec){if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');const adminPage=$('page-admin');adminPage?.classList.toggle('admin-overview',sec==='overview');adminPage?.classList.toggle('admin-section-mode',sec!=='overview');document.querySelectorAll('.admin-section').forEach(x=>x.classList.toggle('active',x.id==='admin-section-'+sec));document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===sec));if(sec==='users'&&$('adminUserSearch'))setTimeout(()=>$('adminUserSearch').focus(),120);if(sec==='vipadmin'&&typeof renderVipAdmin==='function')setTimeout(renderVipAdmin,80);if(sec!=='overview')window.scrollTo({top:0,behavior:'smooth'})}
+    function showAdminSection(sec){if(!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');const adminPage=$('page-admin');adminPage?.classList.toggle('admin-overview',sec==='overview');adminPage?.classList.toggle('admin-section-mode',sec!=='overview');document.querySelectorAll('.admin-section').forEach(x=>x.classList.toggle('active',x.id==='admin-section-'+sec));document.querySelectorAll('.admin-menu-btn').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===sec));if(sec==='users'&&$('adminUserSearch'))setTimeout(()=>$('adminUserSearch').focus(),120);if(sec==='vipadmin'&&typeof renderVipAdmin==='function')setTimeout(renderVipAdmin,80);if(sec==='agents'){setTimeout(()=>{const fr=$('adminAgentsFrame');if(fr&&!fr.dataset.ready){fr.dataset.ready='1';}},80)}if(sec!=='overview')window.scrollTo({top:0,behavior:'smooth'})}
     document.querySelectorAll('.admin-menu-btn').forEach(b=>b.onclick=()=>showAdminSection(b.dataset.adminSection));if($('accountOpenAdminBtn'))$('accountOpenAdminBtn').onclick=()=>showPage('admin');
     document.querySelectorAll('#page-admin .admin-section:not(#admin-section-overview) .admin-section-head').forEach(head=>{if(!head.querySelector('.admin-back-btn')){const title=document.createElement('div');title.className='head-title';const children=[...head.childNodes];children.forEach(n=>title.appendChild(n));const btn=document.createElement('button');btn.className='admin-back-btn';btn.type='button';btn.textContent='← رجوع للقائمة';btn.onclick=()=>showAdminSection('overview');head.appendChild(title);head.appendChild(btn);}});
 

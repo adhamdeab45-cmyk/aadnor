@@ -17,7 +17,7 @@
     <section class="card hero"><div class="icon">💳</div><h1>وكيل شحن ADNOR</h1><p>ادخل بحساب الوكيل، ثم اشحن المستخدم عبر UID أو كود الدعوة أو البريد. الرصيد ينخصم من محفظتك فقط.</p></section>
     <section class="card" id="loginCard">
       <h2 style="color:#ffe184;font-size:21px">تسجيل دخول الوكيل</h2>
-      <div class="field"><label>إيميل الوكيل</label><div class="input"><span>📧</span><input id="loginEmail" type="email" autocomplete="username" placeholder="agent@email.com"></div></div>
+      <div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="loginEmail" type="text" autocomplete="username" placeholder="adhamagent أو agent@gmail.com"></div></div>
       <div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div></div>
       <button class="btn" id="loginBtn">دخول الوكيل</button>
       <div class="status" id="loginStatus">استخدم البيانات التي أعطاها لك أدمن ADNOR.</div>
@@ -48,15 +48,15 @@
   const $=id=>document.getElementById(id); const money=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   function msg(id,t,cls=''){const el=$(id);el.textContent=t;el.className='status '+cls}
   function err(e){return (e&&e.message?e.message:String(e||'خطأ')).replace('Firebase:','').replace(/\(functions\/.+?\)\.?/g,'').trim()}
-  async function call(name,data){return (await httpsCallable(fns,name)(data||{})).data||{}}
+  async function call(name,data){return (await httpsCallable(fns,name)(data||{})).data||{}} function normalizeAgentLogin(v){const raw=String(v||'').trim().toLowerCase(); if(!raw) throw new Error('اكتب اسم الدخول أو الإيميل.'); if(raw.includes('@')) return raw; const id=raw.replace(/\s+/g,''); if(!/^[a-z0-9._-]{3,60}$/.test(id)) throw new Error('اسم الدخول غير صحيح. اكتب الاسم الإنكليزي الذي أعطاك إياه الأدمن.'); return id+'@adnor-agent.com'}
   async function loadDash(){
     const res=await call('getAgentDashboard'); const a=res.agent||{};
-    $('agentName').textContent=a.name||'وكيل شحن'; $('agentEmail').textContent=a.email||''; $('agentState').textContent=a.active?'مفعّل':'موقوف'; $('agentBalance').textContent=money(a.agentBalance); $('agentTotal').textContent=money(a.totalCharged);
+    $('agentName').textContent=a.name||'وكيل شحن'; $('agentEmail').textContent=a.loginId||a.email||''; $('agentState').textContent=a.active?'مفعّل':'موقوف'; $('agentBalance').textContent=money(a.agentBalance); $('agentTotal').textContent=money(a.totalCharged);
     const logs=res.logs||[]; $('logsList').innerHTML=logs.length?logs.map(x=>`<div class="log"><b>${money(x.amount)} إلى ${escapeHtml(x.targetName||x.targetUserId||'مستخدم')}</b><p>ID: ${escapeHtml(x.targetUserId||x.targetUid||'')}<br>${new Date(x.createdAt||Date.now()).toLocaleString('ar-TR')}<br>${escapeHtml(x.note||'')}</p></div>`).join(''):'<div class="status">لا توجد عمليات بعد.</div>';
   }
   function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
   function showAuthed(ok){['dashboardCard','rechargeCard','logsCard','logoutBtn'].forEach(id=>$(id).classList.toggle('hidden',!ok)); $('loginCard').classList.toggle('hidden',ok)}
-  $('loginBtn').onclick=async()=>{try{$('loginBtn').disabled=true;msg('loginStatus','جارٍ الدخول...');await signInWithEmailAndPassword(auth,$('loginEmail').value.trim(),$('loginPass').value);msg('loginStatus','تم الدخول','ok')}catch(e){msg('loginStatus',err(e),'bad')}finally{$('loginBtn').disabled=false}};
+  $('loginBtn').onclick=async()=>{try{$('loginBtn').disabled=true;msg('loginStatus','جارٍ الدخول...');await signInWithEmailAndPassword(auth,normalizeAgentLogin($('loginEmail').value),$('loginPass').value);msg('loginStatus','تم الدخول','ok')}catch(e){msg('loginStatus',err(e),'bad')}finally{$('loginBtn').disabled=false}};
   $('logoutBtn').onclick=()=>signOut(auth);
   $('refreshBtn').onclick=()=>loadDash().catch(e=>msg('rechargeStatus',err(e),'bad'));
   $('findUserBtn').onclick=async()=>{try{msg('rechargeStatus','جارٍ فحص المستخدم...');const r=await call('agentFindUser',{targetId:$('targetId').value.trim()});const u=r.user||{};$('targetUserBox').classList.add('show');$('targetUserName').textContent=u.name||'مستخدم';$('targetUserInfo').textContent=`UID: ${u.uid}\nEmail: ${u.email||'—'}\nReal: ${money(u.realBalance)} | Bonus: ${money(u.bonusBalance)}\nRef: ${u.refCode||'—'}`;msg('rechargeStatus','تم العثور على المستخدم. تأكد من الاسم قبل الشحن.','ok')}catch(e){$('targetUserBox').classList.remove('show');msg('rechargeStatus',err(e),'bad')}};

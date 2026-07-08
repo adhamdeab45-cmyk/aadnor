@@ -5206,7 +5206,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
        ADNOR V96 — Game Treasury + Multiplier Control
        ========================================================= */
     const V96_MULTIPLIER_KEYS=['1','2','5','10','100','10000'];
-    const v96DefaultSettings={platformCutPercent:20,reportHour:20,carryOverPlayerPool:true,multipliers:{'1':{enabled:true,weight:520},'2':{enabled:true,weight:280},'5':{enabled:true,weight:120},'10':{enabled:true,weight:55},'100':{enabled:false,weight:20},'10000':{enabled:false,weight:1}},updatedAt:0};
+    const v96DefaultSettings={platformCutPercent:50,reportHour:20,carryOverPlayerPool:true,multipliers:{'1':{enabled:true,weight:520},'2':{enabled:true,weight:280},'5':{enabled:true,weight:120},'10':{enabled:true,weight:55},'100':{enabled:false,weight:20},'10000':{enabled:false,weight:1}},updatedAt:0};
     const v96DefaultTreasury={totalBetsReal:0,totalBetsBonus:0,platformProfit:0,playerPool:0,paidOut:0,roundsCount:0,lastReportDate:'',updatedAt:0};
     let v96Settings=JSON.parse(JSON.stringify(v96DefaultSettings)),v96Treasury=JSON.parse(JSON.stringify(v96DefaultTreasury)),v96Rounds={},v96Reports={},v96Unsubs=[],v96AdminAttached=false;
     function v96Money(n){return Math.round((Number(n||0)+Number.EPSILON)*100)/100}
@@ -5229,65 +5229,50 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       const paidFromReal=v96Money(opts.paidFromReal||0),paidFromBonus=v96Money(opts.paidFromBonus||0);
       const settings=v96MergeSettings(v96Settings);
       let finalRound=null;
-      let platformCut=v96Money(paidFromReal*Number(settings.platformCutPercent||0)/100);
-      let playerPoolAdd=v96Money(paidFromReal-platformCut);
+      let platformCut=0,playerPoolAdd=0;
       const now=Date.now();
-      async function makeLocalRound(reason){
-        const poolBefore=v96Money(v96Treasury.playerPool||0);
+      /* V180 FIX — إرجاع نظام صندوق الألعاب الحقيقي:
+         - لا يوجد fallback محلي يوزّع أرباح وهمية إذا فشل Firebase.
+         - نصف رهان الرصيد الحقيقي يذهب للمنصة ونصفه لصندوق أرباح اللاعبين افتراضياً.
+         - الربح لا يمكن أن يتجاوز صندوق اللاعبين بعد دخول الرهان.
+         - إذا كان الصندوق لا يغطي الربح، النتيجة تكون 0x أو مضاعف مسموح داخل الصندوق فقط. */
+      const poolTx=await runTransaction(ref(db,'game_treasury/current/playerPool'),cur=>{
+        const poolBefore=v96Money(cur||0);
+        platformCut=v96Money(paidFromReal*Number(settings.platformCutPercent||50)/100);
+        playerPoolAdd=v96Money(paidFromReal-platformCut);
         const poolAfterIncome=v96Money(poolBefore+playerPoolAdd);
         let pick;
         if(opts.forceLose){
           pick={multiplier:0,label:'0x',payout:0,weight:1,segmentIndex:0};
         }else if(Array.isArray(opts.segments)){
-          pick=v96PickWeighted(v96AllowedBySegments(bet,Math.max(poolAfterIncome,bet*10000),opts.segments));
+          pick=v96PickWeighted(v96AllowedBySegments(bet,poolAfterIncome,opts.segments));
         }else{
-          pick=v96PickWeighted(v96AllowedByMultipliers(bet,Math.max(poolAfterIncome,bet*10000),Number(opts.maxMultiplier||0)));
+          pick=v96PickWeighted(v96AllowedByMultipliers(bet,poolAfterIncome,Number(opts.maxMultiplier||0)));
         }
         const payout=v96Money(pick.payout||0);
-        return {id:'local_'+now+'_'+Math.random().toString(36).slice(2,7),uid,email:opts.email||'',playerName:opts.playerName||'',gameId:opts.gameId||'game',gameName:opts.gameName||'لعبة',bet,paidFromReal,paidFromBonus,platformCut,playerPoolAdd,poolBefore,poolAfterIncome,multiplier:Number(pick.multiplier||0),label:pick.label||((Number(pick.multiplier||0))+'x'),payout,playerPoolAfter:v96Money(Math.max(0,poolAfterIncome-payout)),segmentIndex:Number(pick.segmentIndex||0),promoSpin:!!opts.promoSpin,forcedLoss:!!opts.forceLose,createdAt:now,createdAtText:v96NowText(),source:'v169_local_fallback',fallbackReason:reason||''};
-      }
-      try{
-        const poolTx=await runTransaction(ref(db,'game_treasury/current/playerPool'),cur=>{
-          const poolBefore=v96Money(cur||0);
-          platformCut=v96Money(paidFromReal*Number(settings.platformCutPercent||0)/100);
-          playerPoolAdd=v96Money(paidFromReal-platformCut);
-          const poolAfterIncome=v96Money(poolBefore+playerPoolAdd);
-          let pick;
-          if(opts.forceLose){
-            pick={multiplier:0,label:'0x',payout:0,weight:1,segmentIndex:0};
-          }else if(Array.isArray(opts.segments)){
-            pick=v96PickWeighted(v96AllowedBySegments(bet,poolAfterIncome,opts.segments));
-          }else{
-            pick=v96PickWeighted(v96AllowedByMultipliers(bet,poolAfterIncome,Number(opts.maxMultiplier||0)));
-          }
-          const payout=v96Money(pick.payout||0);
-          finalRound={id:'',uid,email:opts.email||'',playerName:opts.playerName||'',gameId:opts.gameId||'game',gameName:opts.gameName||'لعبة',bet,paidFromReal,paidFromBonus,platformCut,playerPoolAdd,poolBefore,poolAfterIncome,multiplier:Number(pick.multiplier||0),label:pick.label||((Number(pick.multiplier||0))+'x'),payout,playerPoolAfter:v96Money(Math.max(0,poolAfterIncome-payout)),segmentIndex:Number(pick.segmentIndex||0),promoSpin:!!opts.promoSpin,forcedLoss:!!opts.forceLose,createdAt:now,createdAtText:v96NowText(),source:'v169_child_pool_transaction'};
-          return finalRound.playerPoolAfter;
-        });
-        if(!poolTx.committed || !finalRound)throw new Error('تعذر تجهيز صندوق اللعبة');
-        await Promise.allSettled([
-          runTransaction(ref(db,'game_treasury/current/totalBetsReal'),cur=>v96Money(Number(cur||0)+paidFromReal)),
-          runTransaction(ref(db,'game_treasury/current/totalBetsBonus'),cur=>v96Money(Number(cur||0)+paidFromBonus)),
-          runTransaction(ref(db,'game_treasury/current/platformProfit'),cur=>v96Money(Number(cur||0)+platformCut)),
-          runTransaction(ref(db,'game_treasury/current/paidOut'),cur=>v96Money(Number(cur||0)+Number(finalRound.payout||0))),
-          runTransaction(ref(db,'game_treasury/current/roundsCount'),cur=>Number(cur||0)+1),
-          set(ref(db,'game_treasury/current/updatedAt'),Date.now())
-        ]);
-        const roundRef=push(ref(db,'game_treasury/rounds'));
-        finalRound.id=roundRef.key;
-        await Promise.allSettled([
-          set(ref(db,'game_treasury/rounds/'+finalRound.id),finalRound),
-          set(ref(db,'game_treasury/user_rounds/'+uid+'/'+finalRound.id),finalRound)
-        ]);
-        return finalRound;
-      }catch(e){
-        console.warn('V169 treasury unavailable, using local round fallback',e);
-        return await makeLocalRound(adnorErrCode(e));
-      }
+        finalRound={id:'',uid,email:opts.email||'',playerName:opts.playerName||'',gameId:opts.gameId||'game',gameName:opts.gameName||'لعبة',bet,paidFromReal,paidFromBonus,platformCut,playerPoolAdd,poolBefore,poolAfterIncome,multiplier:Number(pick.multiplier||0),label:pick.label||((Number(pick.multiplier||0))+'x'),payout,playerPoolAfter:v96Money(Math.max(0,poolAfterIncome-payout)),segmentIndex:Number(pick.segmentIndex||0),promoSpin:!!opts.promoSpin,forcedLoss:!!opts.forceLose,createdAt:now,createdAtText:v96NowText(),source:'v180_strict_treasury_pool'};
+        return finalRound.playerPoolAfter;
+      });
+      if(!poolTx.committed || !finalRound)throw new Error('تعذر تجهيز صندوق اللعبة');
+      await Promise.allSettled([
+        runTransaction(ref(db,'game_treasury/current/totalBetsReal'),cur=>v96Money(Number(cur||0)+paidFromReal)),
+        runTransaction(ref(db,'game_treasury/current/totalBetsBonus'),cur=>v96Money(Number(cur||0)+paidFromBonus)),
+        runTransaction(ref(db,'game_treasury/current/platformProfit'),cur=>v96Money(Number(cur||0)+platformCut)),
+        runTransaction(ref(db,'game_treasury/current/paidOut'),cur=>v96Money(Number(cur||0)+Number(finalRound.payout||0))),
+        runTransaction(ref(db,'game_treasury/current/roundsCount'),cur=>Number(cur||0)+1),
+        set(ref(db,'game_treasury/current/updatedAt'),Date.now())
+      ]);
+      const roundRef=push(ref(db,'game_treasury/rounds'));
+      finalRound.id=roundRef.key;
+      await Promise.allSettled([
+        set(ref(db,'game_treasury/rounds/'+finalRound.id),finalRound),
+        set(ref(db,'game_treasury/user_rounds/'+uid+'/'+finalRound.id),finalRound)
+      ]);
+      return finalRound;
     }
     function v96RenderMultiplierControls(){const box=$('v96MultipliersBox');if(!box)return;box.innerHTML=V96_MULTIPLIER_KEYS.map(k=>{const d=v96Settings.multipliers[k]||{};return '<label class="v96-mult-card"><input class="v96MultEnabled" data-m="'+k+'" type="checkbox" '+(d.enabled?'checked':'')+'><div><b>X'+k+'</b><small>تفعيل ووزن ظهور المضاعف</small></div><input class="v96MultWeight" data-m="'+k+'" type="number" min="0" step="1" value="'+Number(d.weight||0)+'"></label>'}).join('')}
-    function v96RenderAdminTreasury(){if(!$('v96TreasuryAdminCard'))return;if($('v96TotalRealBets'))$('v96TotalRealBets').textContent=money(v96Treasury.totalBetsReal||0);if($('v96TotalBonusBets'))$('v96TotalBonusBets').textContent=money(v96Treasury.totalBetsBonus||0);if($('v96PlatformProfit'))$('v96PlatformProfit').textContent=money(v96Treasury.platformProfit||0);if($('v96PlayerPool'))$('v96PlayerPool').textContent=money(v96Treasury.playerPool||0);if($('v96PaidOut'))$('v96PaidOut').textContent=money(v96Treasury.paidOut||0);if($('v96RoundsCount'))$('v96RoundsCount').textContent=String(Number(v96Treasury.roundsCount||0));if($('v96CutPercent')&&document.activeElement!==$('v96CutPercent'))$('v96CutPercent').value=Number(v96Settings.platformCutPercent||20);if($('v96ReportHour')&&document.activeElement!==$('v96ReportHour'))$('v96ReportHour').value=Number(v96Settings.reportHour||20);if($('v96CarryOver'))$('v96CarryOver').value=String(v96Settings.carryOverPlayerPool!==false);v96RenderMultiplierControls();const logBox=$('v96RoundsLog');if(logBox){const rows=Object.values(v96Rounds||{}).sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0)).slice(0,45);if(!rows.length){logBox.innerHTML='<div class="admin-empty">لا يوجد سجل V96 بعد.</div>'}else{logBox.innerHTML=rows.map(r=>'<div class="admin-row v96-round-row"><div><h4>'+escapeHtml(r.gameName||'لعبة')+' <span class="admin-badge '+(Number(r.payout||0)>0?'approved':'rejected')+'">'+escapeHtml(r.label||'0x')+'</span></h4><p>'+escapeHtml(r.email||r.playerName||r.uid||'مستخدم')+'<br><span class="v96-muted-line">الرهان: '+money(r.bet)+' — حقيقي: <span class="v96-source-real">'+money(r.paidFromReal)+'</span> — بونص: <span class="v96-source-bonus">'+money(r.paidFromBonus)+'</span> — ربح المنصة: '+money(r.platformCut)+'<br>الربح المدفوع: '+money(r.payout)+' — الصندوق بعد الجولة: '+money(r.playerPoolAfter)+' — '+escapeHtml(r.createdAtText||new Date(r.createdAt||Date.now()).toLocaleString('ar-TR'))+'</span></p></div><strong>'+money(Number(r.payout||0)-Number(r.bet||0))+'</strong></div>').join('')}}}
-    async function v96SaveSettings(){if(!isAdminUser())return toast('للأدمن فقط');const multipliers={};V96_MULTIPLIER_KEYS.forEach(k=>{multipliers[k]={enabled:!!document.querySelector('.v96MultEnabled[data-m="'+k+'"]')?.checked,weight:Math.max(0,Number(document.querySelector('.v96MultWeight[data-m="'+k+'"]')?.value||0))}});const cfg={platformCutPercent:Math.min(90,Math.max(0,Number($('v96CutPercent')?.value||20))),reportHour:Math.min(23,Math.max(0,Number($('v96ReportHour')?.value||20))),carryOverPlayerPool:$('v96CarryOver')?.value!=='false',multipliers,updatedAt:Date.now(),updatedBy:currentUser?.email||''};await set(ref(db,'game_treasury/settings'),cfg);toast('تم حفظ إعدادات صندوق الألعاب V96')}
+    function v96RenderAdminTreasury(){if(!$('v96TreasuryAdminCard'))return;if($('v96TotalRealBets'))$('v96TotalRealBets').textContent=money(v96Treasury.totalBetsReal||0);if($('v96TotalBonusBets'))$('v96TotalBonusBets').textContent=money(v96Treasury.totalBetsBonus||0);if($('v96PlatformProfit'))$('v96PlatformProfit').textContent=money(v96Treasury.platformProfit||0);if($('v96PlayerPool'))$('v96PlayerPool').textContent=money(v96Treasury.playerPool||0);if($('v96PaidOut'))$('v96PaidOut').textContent=money(v96Treasury.paidOut||0);if($('v96RoundsCount'))$('v96RoundsCount').textContent=String(Number(v96Treasury.roundsCount||0));if($('v96CutPercent')&&document.activeElement!==$('v96CutPercent'))$('v96CutPercent').value=Number(v96Settings.platformCutPercent||50);if($('v96ReportHour')&&document.activeElement!==$('v96ReportHour'))$('v96ReportHour').value=Number(v96Settings.reportHour||20);if($('v96CarryOver'))$('v96CarryOver').value=String(v96Settings.carryOverPlayerPool!==false);v96RenderMultiplierControls();const logBox=$('v96RoundsLog');if(logBox){const rows=Object.values(v96Rounds||{}).sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0)).slice(0,45);if(!rows.length){logBox.innerHTML='<div class="admin-empty">لا يوجد سجل V96 بعد.</div>'}else{logBox.innerHTML=rows.map(r=>'<div class="admin-row v96-round-row"><div><h4>'+escapeHtml(r.gameName||'لعبة')+' <span class="admin-badge '+(Number(r.payout||0)>0?'approved':'rejected')+'">'+escapeHtml(r.label||'0x')+'</span></h4><p>'+escapeHtml(r.email||r.playerName||r.uid||'مستخدم')+'<br><span class="v96-muted-line">الرهان: '+money(r.bet)+' — حقيقي: <span class="v96-source-real">'+money(r.paidFromReal)+'</span> — بونص: <span class="v96-source-bonus">'+money(r.paidFromBonus)+'</span> — ربح المنصة: '+money(r.platformCut)+'<br>الربح المدفوع: '+money(r.payout)+' — الصندوق بعد الجولة: '+money(r.playerPoolAfter)+' — '+escapeHtml(r.createdAtText||new Date(r.createdAt||Date.now()).toLocaleString('ar-TR'))+'</span></p></div><strong>'+money(Number(r.payout||0)-Number(r.bet||0))+'</strong></div>').join('')}}}
+    async function v96SaveSettings(){if(!isAdminUser())return toast('للأدمن فقط');const multipliers={};V96_MULTIPLIER_KEYS.forEach(k=>{multipliers[k]={enabled:!!document.querySelector('.v96MultEnabled[data-m="'+k+'"]')?.checked,weight:Math.max(0,Number(document.querySelector('.v96MultWeight[data-m="'+k+'"]')?.value||0))}});const cfg={platformCutPercent:Math.min(90,Math.max(0,Number($('v96CutPercent')?.value||50))),reportHour:Math.min(23,Math.max(0,Number($('v96ReportHour')?.value||20))),carryOverPlayerPool:$('v96CarryOver')?.value!=='false',multipliers,updatedAt:Date.now(),updatedBy:currentUser?.email||''};await set(ref(db,'game_treasury/settings'),cfg);toast('تم حفظ إعدادات صندوق الألعاب V96')}
     async function v96SeedTreasury(){
       if(!isAdminUser())return toast('للأدمن فقط');
       const now=Date.now();

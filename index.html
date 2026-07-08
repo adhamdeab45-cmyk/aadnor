@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
+  <!-- ADNOR_V181_FINAL_REVIEWED_FULL_READY -->
 <!-- V146_REFERRAL_PRIVACY_NO_FREEZE: masks referral emails for referrer without database cleanup loops. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2112,7 +2113,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
                     <div class="v108-draw-head"><h4>🌙 السحب الشهري</h4><span>افتراضي 8 مساءً</span></div>
                     <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v108Winner_monthly" placeholder="مثال: ADNOR Winner"></div></div>
                     <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v108Ticket_monthly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
-                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_monthly" type="number" min="0" step="0.01" placeholder="50000"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_monthly" type="number" min="0" step="0.01" placeholder="45000"></div></div>
                     <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v108Publish_monthly" type="datetime-local"></div></div>
                     <div class="v108-actions"><button class="dark" type="button" data-v108-set8="monthly">موعد تلقائي</button><button class="ok" type="button" data-v108-save="monthly">حفظ وجدولة</button><button class="blue" type="button" data-v108-now="monthly">عرض الآن</button><button class="bad" type="button" data-v108-hide="monthly">إخفاء النتيجة</button></div>
                     <div class="v108-status" id="v108Status_monthly">لم يتم تحميل الحالة بعد.</div>
@@ -2121,7 +2122,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
                     <div class="v108-draw-head"><h4>👑 السحب السنوي</h4><span>افتراضي 8 مساءً</span></div>
                     <div class="field-wrap"><label>اسم الفائز</label><div class="field"><span class="ico">👤</span><input id="v108Winner_yearly" placeholder="مثال: الفائز الملكي"></div></div>
                     <div class="field-wrap"><label>رقم التذكرة الرابحة</label><div class="field"><span class="ico">🎟️</span><input id="v108Ticket_yearly" inputmode="numeric" maxlength="7" placeholder="0000000"></div></div>
-                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_yearly" type="number" min="0" step="0.01" placeholder="250000"></div></div>
+                    <div class="field-wrap"><label>قيمة الجائزة</label><div class="field"><span class="ico">💰</span><input id="v108Prize_yearly" type="number" min="0" step="0.01" placeholder="750000"></div></div>
                     <div class="field-wrap"><label>وقت عرض النتيجة</label><div class="field"><span class="ico">⏰</span><input id="v108Publish_yearly" type="datetime-local"></div></div>
                     <div class="v108-actions"><button class="dark" type="button" data-v108-set8="yearly">موعد تلقائي</button><button class="ok" type="button" data-v108-save="yearly">حفظ وجدولة</button><button class="blue" type="button" data-v108-now="yearly">عرض الآن</button><button class="bad" type="button" data-v108-hide="yearly">إخفاء النتيجة</button></div>
                     <div class="v108-status" id="v108Status_yearly">لم يتم تحميل الحالة بعد.</div>
@@ -2601,7 +2602,7 @@ function setCurrentPrize(type){
     var el=document.getElementById('resultBoxPrize');
     var typed=Number((el&&el.value)||0);
     if(typed>0) return Number(typed.toFixed(2));
-    var map={daily:4500,weekly:15000,monthly:50000,yearly:250000};
+    var map={daily:4500,weekly:15000,monthly:45000,yearly:750000};
     var v=Number(map[type||'daily']||0);
     if(el&&!Number(el.value||0)) el.value=v;
     return v;
@@ -2620,9 +2621,9 @@ function setCurrentPrize(type){
     // ADNOR V157 ADMIN EMAIL LOCK: لا نعتمد على isAdmin من قاعدة البيانات؛ الأدمن فقط بالإيميلات الرسمية.
     const ADMIN_EMAIL=ADMIN_EMAILS[0];
     let TICKET_PRICE=1;
-    const defaultLotterySettings={ticketPrice:1,moveLosers:true,daily:{enabled:true,label:'السحب اليومي',prize:4500},weekly:{enabled:true,label:'السحب الأسبوعي',prize:15000},monthly:{enabled:true,label:'السحب الشهري',prize:50000},yearly:{enabled:true,label:'السحب السنوي',prize:250000}};
+    const defaultLotterySettings={ticketPrice:1,moveLosers:true,daily:{enabled:true,label:'السحب اليومي',prize:4500},weekly:{enabled:true,label:'السحب الأسبوعي',prize:15000},monthly:{enabled:true,label:'السحب الشهري',prize:45000},yearly:{enabled:true,label:'السحب السنوي',prize:750000}};
     let lotterySettings=JSON.parse(JSON.stringify(defaultLotterySettings));
-    const drawMeta={daily:{label:'السحب اليومي',jackpot:4500},weekly:{label:'السحب الأسبوعي',jackpot:15000},monthly:{label:'السحب الشهري',jackpot:50000},yearly:{label:'السحب السنوي',jackpot:250000}};
+    const drawMeta={daily:{label:'السحب اليومي',jackpot:4500},weekly:{label:'السحب الأسبوعي',jackpot:15000},monthly:{label:'السحب الشهري',jackpot:45000},yearly:{label:'السحب السنوي',jackpot:750000}};
     const defaultMethods=[{id:'usdt',name:'USDT TRC20',type:'both',active:true,minDeposit:5,minWithdraw:5,address:'TQ8F...ADNOR...X72',qrUrl:'',details:'حوّل عبر شبكة TRC20 فقط، ثم اكتب رقم العملية وارفع الإيصال.',hint:'أقل إيداع 5 USD'},{id:'sham',name:'Sham Cash',type:'both',active:true,minDeposit:100,minWithdraw:100,address:'يُرسل الرقم من الدعم بعد إنشاء الطلب',qrUrl:'',details:'اختر Sham Cash ثم اكتب رقم العملية أو رقم المرسل.',hint:'أقل إيداع 100 ليرة'},{id:'bank',name:'Bank / IBAN',type:'both',active:true,minDeposit:10,minWithdraw:10,address:'IBAN يضاف من لوحة الأدمن',qrUrl:'',details:'اكتب اسم صاحب التحويل ورقم المرجع البنكي.',hint:'تحويل بنكي'},{id:'whatsapp',name:'WhatsApp',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'ضع رابط واتساب من لوحة الأدمن',qrUrl:'',details:'تواصل مع الدعم عبر واتساب ثم أرسل رقم المرجع هنا.',hint:'تنسيق عبر الدعم'},{id:'telegram',name:'Telegram',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'ضع رابط تيليجرام من لوحة الأدمن',qrUrl:'',details:'تواصل مع الدعم عبر تيليجرام ثم أرسل رقم المرجع هنا.',hint:'تنسيق عبر الدعم'}];let methods=[...defaultMethods];let editingPaymentId='usdt';
     const defaultSupportContacts={whatsapp:{id:'whatsapp',name:'WhatsApp',icon:'🟢',active:true,url:'https://wa.me/905359334785',subtitle:'0535 933 47 85',order:1},telegram:{id:'telegram',name:'Telegram',icon:'🔵',active:true,url:'https://t.me/ADNOR1',subtitle:'@ADNOR1',order:2}};let supportContacts={...defaultSupportContacts};let supportContactsUnsub=null;
     const defaultSiteControl={maintenance:false,maintenanceMessage:'النظام قيد الصيانة مؤقتًا. يرجى العودة لاحقًا.',announcement:'',modules:{lottery:true,results:true,games:true,wallet:true,support:true}};let siteControl=JSON.parse(JSON.stringify(defaultSiteControl));let siteControlUnsub=null;
@@ -5300,7 +5301,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     let v108Results={current:{},history:{},latest:null};
     let v108ResultsUnsub=null;
     function v108Label(type){return {daily:'السحب اليومي',weekly:'السحب الأسبوعي',monthly:'السحب الشهري',yearly:'السحب السنوي'}[type]||'السحب'}
-    function v108Prize(type){return {daily:4500,weekly:15000,monthly:50000,yearly:250000}[type]||4500}
+    function v108Prize(type){return {daily:4500,weekly:15000,monthly:45000,yearly:750000}[type]||4500}
     function v108CleanTicket(v){return String(v||'').replace(/\D/g,'').slice(0,7).padStart(7,'0')}
     function v108IstanbulParts(date=new Date()){
       const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(date).reduce((a,p)=>(a[p.type]=p.value,a),{});

@@ -1,0 +1,15 @@
+ADNOR V8.4 — إصلاح تسجيل الدخول Google/Gmail
+
+ما تم تعديله:
+1) إزالة تضارب طبقات V8.2 و V8.3 القديمة التي كانت تجبر Redirect فقط.
+2) إضافة دخول Google ثابت: Popup أولاً، وإذا المتصفح منعه يتحول تلقائياً إلى Redirect.
+3) إبقاء دخول رقم الهاتف كما هو.
+4) إخفاء تسجيل الإيميل/كلمة السر لأن النسخة مخصصة Google/Phone.
+5) عرض سبب الخطأ بالعربي بوضوح إذا كان Google غير مفعّل أو الدومين غير مضاف في Firebase.
+6) فتح التطبيق بعد نجاح Google حتى لو تأخر onAuthStateChanged.
+
+مهم جداً قبل التجربة:
+Firebase Console > Authentication > Sign-in method > فعّل Google.
+Firebase Console > Authentication > Settings > Authorized domains > أضف دومين موقعك الحالي.
+إذا تستخدم Replit Preview انسخ الدومين الظاهر داخل واجهة الدخول وأضفه.
+إذا تستخدم Netlify أضف دومين netlify الخاص بموقعك.

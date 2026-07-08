@@ -71,7 +71,7 @@ Health Check Path:
 /api/health
 
 Environment Variables:
-FIREBASE_DATABASE_URL=https://adhamnnn-8a4d2-default-rtdb.firebaseio.com
+FIREBASE_DATABASE_URL=https://adnor-vp-default-rtdb.firebaseio.com
 DRAW_TIMEZONE=Europe/Istanbul
 ADMIN_TOKEN=ADNOR_ADMIN_2026_987654
 SESSION_SECRET=adnor_secret_2026

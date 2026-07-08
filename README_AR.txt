@@ -12,7 +12,7 @@ ADNOR REPLIT NO ADMIN JSON
 - التنفيذ الحقيقي للسحب يكون من زر الأدمن: تنفيذ / نشر السحب.
 
 Secrets المطلوبة فقط:
-1) FIREBASE_DATABASE_URL=https://adhamnnn-8a4d2-default-rtdb.firebaseio.com
+1) FIREBASE_DATABASE_URL=https://adnor-vp-default-rtdb.firebaseio.com
 2) DRAW_TIMEZONE=Europe/Istanbul
 3) ADMIN_TOKEN=ADNOR_ADMIN_2026_987654
 

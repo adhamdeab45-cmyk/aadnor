@@ -8,5 +8,5 @@ ADNOR V8.3 LASER AUTH FIX
 - Google يستخدم redirect آمن فقط عبر signInWithRedirect.
 - رقم الهاتف يبقى عبر OTP و reCAPTCHA.
 - بدون إيميل + كلمة سر، وبدون نسيت كلمة السر.
-- Firebase الرسمي: adhamnnn-8a4d2.
+- Firebase الرسمي: adnor-vp.
 - الدومين المطلوب إضافته في Firebase: adnor1.onrender.com أو دومين Render الذي تستخدمه.

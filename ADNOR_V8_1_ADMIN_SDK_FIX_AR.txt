@@ -14,7 +14,7 @@ ADNOR V8.1 ADMIN SDK FIX
 مطلوب في Render للإنتاج:
 أضف Environment Variable جديد:
 FIREBASE_SERVICE_ACCOUNT_JSON
-وقيمته JSON مفتاح Firebase Admin Service Account من مشروع adhamnnn-8a4d2.
+وقيمته JSON مفتاح Firebase Admin Service Account من مشروع adnor-vp.
 
 أبقِ FIREBASE_DATABASE_URL:
-https://adhamnnn-8a4d2-default-rtdb.firebaseio.com
+https://adnor-vp-default-rtdb.firebaseio.com

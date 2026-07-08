@@ -1,7 +1,7 @@
 {
-  "name": "adnor-github-firebase-new",
-  "version": "9.0.0",
-  "description": "ADNOR GitHub ready with new Firebase config, Google and Apple login only, admin email configured",
+  "name": "adnor-complete-v8-4-google-login-fixed",
+  "version": "8.4.0",
+  "description": "ADNOR V8.4 - fixed Google/Gmail login with popup plus redirect fallback, clear Arabic Firebase domain/provider errors, phone login preserved",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

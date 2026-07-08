@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADNOR Admin | منظمة</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/base.css" />
+</head>
+<body>
+  <header class="topbar"><div class="wrap"><div class="brand"><div class="logo">AD</div><div><b>لوحة أدمن ADNOR</b><div class="muted">V200 — الأدمن منفصل بالكامل</div></div></div><div id="adminAuthBox"></div></div></header>
+  <main class="wrap">
+    <section id="adminLogin" class="panel">
+      <h1>دخول الأدمن</h1>
+      <div class="grid"><div class="col-6"><label>الإيميل</label><input id="adminEmail" class="input"></div><div class="col-6"><label>كلمة السر</label><input id="adminPass" class="input" type="password"></div></div>
+      <button id="btnAdminLogin" class="btn" style="margin-top:12px">دخول</button>
+      <div id="adminLoginStatus" class="status info"></div>
+    </section>
+    <section id="adminApp" class="hide">
+      <div class="tabs" style="position:static;border:1px solid var(--line);border-radius:20px;margin-bottom:14px">
+        <button data-admin-tab="agents" class="active">وكلاء الشحن</button>
+        <button data-admin-tab="finance">الإيداع والسحب</button>
+        <button data-admin-tab="users">المستخدمون</button>
+        <button data-admin-tab="adn">ADN</button>
+      </div>
+
+      <section data-admin-page="agents" class="panel">
+        <h2>وكلاء الشحن</h2>
+        <div class="grid">
+          <div class="col-5 card">
+            <h3>إضافة وكيل</h3>
+            <label>اسم الوكيل</label><input id="agentName" class="input" placeholder="وكيل إسطنبول">
+            <label>اسم الدخول أو الإيميل</label><input id="agentLogin" class="input" placeholder="agent1 أو agent@gmail.com">
+            <label>كلمة السر</label><input id="agentPass" class="input" type="password">
+            <label>رصيد البداية</label><input id="agentBalance" class="input" type="number" step="0.01" value="0">
+            <button id="btnCreateAgent" class="btn" style="margin-top:12px">حفظ الوكيل</button>
+            <div id="agentCreateStatus" class="status info"></div>
+          </div>
+          <div class="col-7 card"><h3>قائمة الوكلاء</h3><div id="agentsList" class="muted">جارٍ التحميل...</div></div>
+        </div>
+      </section>
+
+      <section data-admin-page="finance" class="panel" hidden>
+        <h2>طلبات الإيداع والسحب</h2>
+        <div id="financeRequests" class="muted">جارٍ التحميل...</div>
+      </section>
+      <section data-admin-page="users" class="panel" hidden>
+        <h2>المستخدمون</h2>
+        <div id="usersList" class="muted">جارٍ التحميل...</div>
+      </section>
+      <section data-admin-page="adn" class="panel" hidden>
+        <h2>عمليات ADN</h2>
+        <div id="adnTrades" class="muted">جارٍ التحميل...</div>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="./assets/js/admin/admin-main.js"></script>
+</body>
+</html>

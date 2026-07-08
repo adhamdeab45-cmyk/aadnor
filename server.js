@@ -20,7 +20,7 @@ const cron = require('node-cron');
 const PORT = Number(process.env.PORT || 3000);
 const TIMEZONE = process.env.DRAW_TIMEZONE || 'Europe/Istanbul';
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'CHANGE_ME_ADMIN_TOKEN';
-const FIREBASE_DATABASE_URL = (process.env.FIREBASE_DATABASE_URL || 'https://adhamnnn-8a4d2-default-rtdb.firebaseio.com').replace(/\/$/, '');
+const FIREBASE_DATABASE_URL = (process.env.FIREBASE_DATABASE_URL || 'https://adnor-vp-default-rtdb.firebaseio.com').replace(/\/$/, '');
 
 const LEVELS = ['daily', 'weekly', 'monthly', 'yearly'];
 const LABEL = { daily: 'اليومي', weekly: 'الأسبوعي', monthly: 'الشهري', yearly: 'السنوي' };
@@ -526,7 +526,7 @@ app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 // This makes Google signInWithRedirect work more reliably on mobile browsers.
 app.all('/__/auth/*', async (req, res) => {
   try {
-    const target = 'https://adhamnnn-8a4d2.firebaseapp.com' + req.originalUrl;
+    const target = 'https://adnor-vp.firebaseapp.com' + req.originalUrl;
     const headers = { ...req.headers };
     delete headers.host;
     delete headers['content-length'];

@@ -2,8 +2,8 @@ ADNOR V8.2 — إصلاح دخول Google
 
 - تم تحويل تسجيل Google من popup إلى redirect فقط.
 - السبب: المتصفح كان يغلق نافذة Google ويعطي auth/popup-closed-by-user.
-- لا يغيّر Firebase project: adhamnnn-8a4d2.
+- لا يغيّر Firebase project: adnor-vp.
 - تسجيل الدخول المتاح: Google وPhone فقط.
 - يجب إضافة دومين Render الحالي في Firebase Authorized Domains: adnor1.onrender.com
 - وفي Google Cloud Authorized JavaScript origins: https://adnor1.onrender.com
-- وفي Redirect URIs: https://adhamnnn-8a4d2.firebaseapp.com/__/auth/handler و https://adhamnnn-8a4d2.web.app/__/auth/handler
+- وفي Redirect URIs: https://adnor-vp.firebaseapp.com/__/auth/handler و https://adnor-vp.web.app/__/auth/handler

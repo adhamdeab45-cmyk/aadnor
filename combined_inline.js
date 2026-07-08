@@ -1,10 +1,10 @@
 
-const firebaseConfig = {apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
+const firebaseConfig = {apiKey:"AIzaSyBpklFtIKgxmnLCpk7Zi00p5lxny966mpM",authDomain:"adnor-vp.firebaseapp.com",databaseURL:"https://adnor-vp-default-rtdb.firebaseio.com",projectId:"adnor-vp",storageBucket:"adnor-vp.firebasestorage.app",messagingSenderId:"808457533052",appId:"1:808457533052:web:d7d2bcef237c2214be3bf9",measurementId:"G-Q8SV80V1TN"};
 if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth();const db=firebase.database();
 window.__ADNOR_AUTH_READY__=auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e=>{console.warn('Auth persistence warning',e)});
-const ADMIN_EMAIL='adhamdeab2@gmail.com';
-const ADMIN_PHONE='+000000000000000';
+const ADMIN_EMAIL='adhamdeab45@gmail.com';
+const ADMIN_PHONE='+905445034910';
 const LEVELS=['daily','weekly','monthly','yearly'];
 const LABEL={daily:'اليومي',weekly:'الأسبوعي',monthly:'الشهري',yearly:'السنوي'};
 const NEXT={daily:'weekly',weekly:'monthly',monthly:'yearly',yearly:null};

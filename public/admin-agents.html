@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADNOR | إدارة وكلاء الشحن</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#020a16;--card:#081a34;--gold:#ffd866;--gold2:#d89524;--line:rgba(255,216,102,.42);--txt:#ecf4ff;--muted:#aebbd0;--green:#4dffc6;--red:#ff6f7d;--blue:#91eaff}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -5%,rgba(255,216,102,.18),transparent 32%),radial-gradient(circle at 0 100%,rgba(0,201,255,.12),transparent 30%),linear-gradient(180deg,#061225,#020a16 72%);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--txt)}.wrap{width:min(100%,1180px);margin:auto;padding:18px 13px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.brand{font-family:Cinzel,serif;font-size:34px;font-weight:900;background:linear-gradient(180deg,#fff3b4,#d89524,#ffe184);-webkit-background-clip:text;color:transparent}.mini{font-size:12px;color:var(--muted);font-weight:900}.card{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(8,26,52,.92),rgba(2,10,22,.96));box-shadow:0 0 28px rgba(255,188,39,.12),inset 0 0 28px rgba(255,216,102,.04);padding:16px;margin-bottom:13px;position:relative;overflow:hidden}.hero{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.hero h1{margin:0;color:#ffe184;font-size:28px}.hero p{margin:6px 0 0;color:var(--muted);font-size:13px;font-weight:800;line-height:1.7}.grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:13px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:#ffe184;font-size:13px;font-weight:900;margin-bottom:6px}.input{height:50px;border:1px solid rgba(255,216,102,.38);border-radius:16px;background:rgba(2,10,22,.72);display:flex;align-items:center;gap:8px;padding:0 12px}.input span{font-size:20px}.input input{width:100%;height:100%;border:0;outline:0;background:transparent;color:#fff;font:inherit;font-weight:800}.btn{min-height:48px;border:0;border-radius:16px;background:linear-gradient(180deg,#fff1a5,#d89524 62%,#8d510d);color:#151007;font:inherit;font-weight:1000;cursor:pointer;box-shadow:0 0 18px rgba(255,188,39,.18);padding:0 14px}.btn.dark{background:rgba(2,10,22,.72);color:#ffe184;border:1px solid rgba(255,216,102,.38);box-shadow:none}.btn.red{background:rgba(255,111,125,.12);color:#ffb7bf;border:1px solid rgba(255,111,125,.45);box-shadow:none}.btn.blue{background:rgba(0,201,255,.12);color:#bdf3ff;border:1px solid rgba(0,201,255,.45);box-shadow:none}.btn.green{background:rgba(77,255,198,.12);color:#b9ffe8;border:1px solid rgba(77,255,198,.45);box-shadow:none}.btn:disabled{opacity:.55;cursor:not-allowed}.status{margin-top:10px;border-radius:16px;padding:11px;background:rgba(2,10,22,.58);border:1px dashed rgba(255,216,102,.28);color:var(--muted);font-weight:800;line-height:1.7;font-size:13px}.status.ok{border-color:rgba(77,255,198,.45);color:#b9ffe8}.status.bad{border-color:rgba(255,111,125,.45);color:#ffd1d6}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{border:1px solid rgba(255,216,102,.32);background:rgba(2,10,22,.55);border-radius:20px;padding:13px;text-align:center}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:900}.stat b{display:block;color:#ffe184;font-size:20px;margin-top:4px;direction:ltr}.table{display:grid;gap:9px}.row{border:1px solid rgba(255,216,102,.28);border-radius:20px;background:rgba(2,10,22,.52);padding:13px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.row h3{margin:0;color:#fff;font-size:15px}.row p{margin:5px 0 0;color:#aebbd0;font-size:12px;font-weight:800;line-height:1.7;direction:ltr;text-align:right}.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.badge{display:inline-flex;border:1px solid rgba(255,216,102,.35);border-radius:999px;padding:5px 9px;color:#ffe184;font-size:11px;font-weight:900}.badge.ok{color:#82ffd5;border-color:rgba(77,255,198,.45);background:rgba(77,255,198,.08)}.badge.bad{color:#ffb7bf;border-color:rgba(255,111,125,.45);background:rgba(255,111,125,.08)}.hidden{display:none!important}a{color:#ffe184;text-decoration:none}.login{width:min(100%,450px);margin:20px auto}@media(max-width:850px){.grid,.formgrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.actions{justify-content:flex-start}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top"><div><div class="brand">ADNOR</div><div class="mini">إدارة وكلاء الشحن</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn dark" style="display:grid;place-items:center" href="index.html">الرئيسية</a><a class="btn blue" style="display:grid;place-items:center" href="agent.html" target="_blank">رابط الوكيل</a><button id="logoutBtn" class="btn red hidden">خروج</button></div></div>
+    <section class="card hero"><div><h1>إدارة وكلاء الشحن</h1><p>أنشئ وكيل، أعطه كلمة سر، عبّي محفظته 100 أو 200 أو 1000 دولار، والوكيل يشحن المستخدمين من رصيده فقط.</p></div><button class="btn" id="refreshBtn">تحديث البيانات</button></section>
+    <section class="card login" id="loginCard"><h2 style="color:#ffe184;margin:0 0 10px">دخول الأدمن</h2><div class="field"><label>إيميل الأدمن</label><div class="input"><span>📧</span><input id="adminEmail" type="email" placeholder="admin@email.com"></div></div><div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="adminPass" type="password" placeholder="••••••••"></div></div><button class="btn" id="loginBtn" style="width:100%;margin-top:10px">دخول</button><div class="status" id="loginStatus">ادخل بحساب الأدمن الرسمي.</div></section>
+    <section id="adminArea" class="hidden">
+      <div class="stats card"><div class="stat"><span>عدد الوكلاء</span><b id="agentsCount">0</b></div><div class="stat"><span>رصيد الوكلاء</span><b id="agentsBalance">$0.00</b></div><div class="stat"><span>إجمالي الشحن</span><b id="agentsCharged">$0.00</b></div><div class="stat"><span>العمليات</span><b id="agentsOps">0</b></div></div>
+      <div class="grid">
+        <section class="card"><h2 style="color:#ffe184;margin:0 0 12px">إضافة / تعديل وكيل</h2><div class="formgrid"><div class="field"><label>اسم الوكيل</label><div class="input"><span>👤</span><input id="agentName" placeholder="وكيل إسطنبول"></div></div><div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="agentEmail" type="text" placeholder="adhamagent أو agent@gmail.com"></div></div><div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="agentPass" type="text" placeholder="اكتبها عند الإنشاء أو للتغيير"></div></div><div class="field"><label>رصيد بداية</label><div class="input"><span>💵</span><input id="agentInitial" type="number" min="0" step="0.01" placeholder="100"></div></div><div class="field"><label>حد يومي اختياري</label><div class="input"><span>📆</span><input id="agentDaily" type="number" min="0" step="0.01" placeholder="0 = بدون حد"></div></div><div class="field"><label>حد شهري اختياري</label><div class="input"><span>🗓️</span><input id="agentMonthly" type="number" min="0" step="0.01" placeholder="0 = بدون حد"></div></div></div><button class="btn" id="saveAgentBtn" style="width:100%;margin-top:10px">حفظ الوكيل</button><div class="status" id="saveStatus">بعد الحفظ أعطِ الوكيل رابط agent.html واسم الدخول وكلمة السر.</div></section>
+        <section class="card"><h2 style="color:#ffe184;margin:0 0 12px">الوكلاء</h2><div class="table" id="agentsList"><div class="status">لا توجد بيانات بعد.</div></div></section>
+      </div>
+      <section class="card"><h2 style="color:#ffe184;margin:0 0 12px">آخر شحنات الوكلاء</h2><div class="table" id="rechargesList"><div class="status">لا توجد عمليات بعد.</div></div></section>
+    </section>
+  </main>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+  import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
+  import { getDatabase, ref, get, update, push, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
+  const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
+  const app=initializeApp(firebaseConfig), auth=getAuth(app), fns=getFunctions(app), db=getDatabase(app);
+  const creatorApp=initializeApp(firebaseConfig,'adnor-agent-creator'), creatorAuth=getAuth(creatorApp);
+  const ADMIN_EMAILS=['adhamdeab2@gmail.com','adhamdeab45@gmail.com'];
+  const $=id=>document.getElementById(id);
+  function toEnglishDigits(v){return String(v??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));}
+  function cleanNum(v){if(typeof v==='number')return Number.isFinite(v)?Math.round(v*100)/100:0;if(v==null)return 0;let s=toEnglishDigits(v).trim().replace(/\s/g,'').replace(/,/g,'.').replace(/[^0-9.\-]/g,'');const parts=s.split('.');if(parts.length>2)s=parts.shift()+'.'+parts.join('');const n=Number(s);return Number.isFinite(n)?Math.round(n*100)/100:0}
+  function agentBalanceFrom(a){if(!a)return 0;const arr=[a.agentBalance,a.balance,a.walletBalance,a.credit,a.amount,a.agentWalletBalance,a.walletAmount,a.wallet&&a.wallet.balance,a.wallet&&a.wallet.agentBalance];let sawZero=false;for(const v of arr){const n=cleanNum(v);if(n>0)return n;if(v===0||v==='0')sawZero=true}return sawZero?0:0}
+  const money=n=>'$'+cleanNum(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+  function msg(id,t,cls=''){const el=$(id); if(el){el.textContent=t;el.className='status '+cls}}
+  function err(e){
+    const code=e&&e.code?String(e.code):'';
+    let m=(e&&e.message?e.message:String(e||'خطأ'));
+    m=m.replace('Firebase:','').replace(/\(functions\/.+?\)\.?/g,'').trim();
+    if(m==='internal'||code==='functions/internal') return 'تعذر تنفيذ دالة السيرفر، تم تشغيل وضع بديل داخل الصفحة. إذا تكرر الخطأ ارفع Firebase Functions أو استخدم النسخة V163.';
+    return m;
+  }
+  async function call(name,data){return (await httpsCallable(fns,name)(data||{})).data||{}}
+  function normalizeAgentLogin(v){const raw=String(v||'').trim().toLowerCase(); if(!raw) throw new Error('اكتب اسم دخول الوكيل أو إيميله.'); if(raw.includes('@')) return raw; const id=raw.replace(/\s+/g,''); if(!/^[a-z0-9._-]{3,60}$/.test(id)) throw new Error('اسم الدخول لازم يكون إنكليزي فقط مثل: adhamagent أو agent1'); return id+'@adnor-agent.com'}
+  function loginIdFromEmail(email){return String(email||'').toLowerCase().endsWith('@adnor-agent.com')?String(email).split('@')[0]:String(email||'').split('@')[0]}
+  function adminOk(){const u=auth.currentUser; return !!(u&&ADMIN_EMAILS.includes(String(u.email||'').toLowerCase()))}
+  function nowId(prefix){return prefix+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
+  let agents=[];
+  function showAdmin(ok){$('loginCard').classList.toggle('hidden',ok);$('adminArea').classList.toggle('hidden',!ok);$('logoutBtn').classList.toggle('hidden',!ok)}
+  async function loadAll(){
+    try{
+      const a=await call('adminListAgents');agents=a.agents||[];const r=await call('adminListAgentRecharges',{limit:100});renderAgents(agents);renderRecharges(r.recharges||[]);return;
+    }catch(e){
+      console.warn('Functions list failed, using direct database fallback', e);
+      if(!adminOk()) throw e;
+      const snap=await get(ref(db,'agents'));
+      agents=Object.entries(snap.val()||{}).map(([uid,a])=>({uid,...(a||{}),agentBalance:agentBalanceFrom(a),totalCharged:cleanNum(a&&a.totalCharged),totalOperations:Number((a&&a.totalOperations)||0),active:(a&&a.active)!==false,_rawAgentBalance:a&&a.agentBalance})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      const fixes={}; agents.forEach(a=>{if(a._rawAgentBalance!==a.agentBalance){fixes['agents/'+a.uid+'/agentBalance']=a.agentBalance;fixes['agents/'+a.uid+'/updatedAt']=Date.now();fixes['agents/'+a.uid+'/balanceFixedBy']='admin_agents_v166'}}); if(Object.keys(fixes).length) update(ref(db),fixes).catch(()=>null);
+      const rs=await get(ref(db,'agent_recharges'));
+      const recharges=Object.values(rs.val()||{}).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,100);
+      renderAgents(agents);renderRecharges(recharges);
+    }
+  }
+  function renderAgents(list){let bal=0, charged=0, ops=0;list.forEach(a=>{bal+=Number(a.agentBalance||0);charged+=Number(a.totalCharged||0);ops+=Number(a.totalOperations||0)});$('agentsCount').textContent=list.length;$('agentsBalance').textContent=money(bal);$('agentsCharged').textContent=money(charged);$('agentsOps').textContent=ops; $('agentsList').innerHTML=list.length?list.map(a=>`<div class="row"><div><h3>${esc(a.name||'وكيل')} <span class="badge ${a.active?'ok':'bad'}">${a.active?'مفعّل':'موقوف'}</span></h3><p>دخول: ${esc(a.loginId||a.email||'')}<br>إيميل داخلي: ${esc(a.email||'')}<br>UID: ${esc(a.uid)}<br>رصيده: ${money(a.agentBalance)} | شحن: ${money(a.totalCharged)} | عمليات: ${Number(a.totalOperations||0)}</p></div><div class="actions"><button class="btn green" data-add="${esc(a.uid)}">إضافة رصيد</button><button class="btn red" data-deduct="${esc(a.uid)}">خصم</button><button class="btn ${a.active?'red':'green'}" data-toggle="${esc(a.uid)}" data-active="${a.active?'0':'1'}">${a.active?'إيقاف':'تفعيل'}</button><button class="btn blue" data-copy="${esc(a.uid)}">نسخ UID</button></div></div>`).join(''):'<div class="status">لا يوجد وكلاء بعد.</div>';document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>adjustAgent(b.dataset.add,1));document.querySelectorAll('[data-deduct]').forEach(b=>b.onclick=()=>adjustAgent(b.dataset.deduct,-1));document.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggleAgent(b.dataset.toggle,b.dataset.active==='1'));document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>navigator.clipboard.writeText(b.dataset.copy));}
+  function renderRecharges(list){$('rechargesList').innerHTML=list.length?list.map(x=>`<div class="row"><div><h3>${money(x.amount)} <span class="badge ok">مكتمل</span></h3><p>الوكيل: ${esc(x.agentName||x.agentEmail||'')}<br>المستخدم: ${esc(x.targetName||x.targetUserId||x.targetUid||'')}<br>${new Date(x.createdAt||Date.now()).toLocaleString('ar-TR')}<br>${esc(x.note||'')}</p></div><div class="actions"><button class="btn blue" data-copy="${esc(x.targetUid||'')}">نسخ UID المستخدم</button></div></div>`).join(''):'<div class="status">لا توجد عمليات شحن بعد.</div>';document.querySelectorAll('#rechargesList [data-copy]').forEach(b=>b.onclick=()=>navigator.clipboard.writeText(b.dataset.copy));}
+  async function adjustAgent(uid,sign){const amount=Number(prompt(sign>0?'كم تريد إضافة رصيد للوكيل؟':'كم تريد خصم من الوكيل؟')||0); if(!amount)return; const note=prompt('ملاحظة التعديل','تعديل رصيد وكيل')||'تعديل رصيد وكيل'; try{await call('adminAdjustAgentBalance',{agentUid:uid,amount:sign*Math.abs(amount),note});await loadAll()}catch(e){
+    if(!adminOk()) return alert(err(e));
+    const delta=sign*Math.abs(amount); const balRef=ref(db,'agents/'+uid+'/agentBalance'); let before=0, after=0;
+    const res=await runTransaction(balRef,(cur)=>{before=cleanNum(cur); after=Math.round((before+delta)*100)/100; if(after<0)return; return after;});
+    if(!res.committed) return alert('رصيد الوكيل لا يكفي.');
+    const id=nowId('agent_wallet'); const now=Date.now();
+    await update(ref(db),{['agents/'+uid+'/updatedAt']:now,['agent_wallet_logs/'+uid+'/'+id]:{id,agentUid:uid,type:delta>0?'admin_add':'admin_deduct',amount:delta,before,after,note,adminEmail:auth.currentUser.email,createdAt:now},['finance_audit/'+id]:{id,action:delta>0?'client_agent_balance_add':'client_agent_balance_deduct',agentUid:uid,amount:delta,before,after,note,adminEmail:auth.currentUser.email,createdAt:now,source:'client_fallback'}});
+    await loadAll();
+  }}
+  async function toggleAgent(uid,active){const reason=prompt(active?'سبب التفعيل':'سبب الإيقاف',active?'تفعيل الوكيل':'إيقاف الوكيل')||''; try{await call('adminToggleAgent',{agentUid:uid,active,reason});await loadAll()}catch(e){
+    if(!adminOk()) return alert(err(e));
+    const id=nowId('agent_toggle'); const now=Date.now();
+    await update(ref(db),{['agents/'+uid+'/active']:active,['agents/'+uid+'/updatedAt']:now,['agent_wallet_logs/'+uid+'/'+id]:{id,agentUid:uid,type:active?'agent_enabled':'agent_disabled',reason,adminEmail:auth.currentUser.email,createdAt:now},['finance_audit/'+id]:{id,action:active?'client_agent_enabled':'client_agent_disabled',agentUid:uid,reason,adminEmail:auth.currentUser.email,createdAt:now,source:'client_fallback'}});
+    await loadAll();
+  }}
+  $('loginBtn').onclick=async()=>{try{$('loginBtn').disabled=true;msg('loginStatus','جارٍ الدخول...');await signInWithEmailAndPassword(auth,$('adminEmail').value.trim(),$('adminPass').value);msg('loginStatus','تم الدخول','ok')}catch(e){msg('loginStatus',err(e),'bad')}finally{$('loginBtn').disabled=false}};
+  $('logoutBtn').onclick=()=>signOut(auth); $('refreshBtn').onclick=()=>loadAll().catch(e=>alert(err(e)));
+
+  async function clientCreateAgent(payload){
+    if(!adminOk()) throw new Error('هذا الوضع البديل يعمل فقط لحساب الأدمن الرسمي.');
+    if(!payload.name) throw new Error('اسم الوكيل مطلوب.');
+    if(!payload.password || payload.password.length<6) throw new Error('كلمة السر لازم تكون 6 أحرف أو أرقام على الأقل.');
+    let cred;
+    try{
+      cred=await createUserWithEmailAndPassword(creatorAuth,payload.email,payload.password);
+      await updateProfile(cred.user,{displayName:payload.name}).catch(()=>null);
+    }catch(e){
+      if(String(e.code||'').includes('email-already-in-use')) throw new Error('اسم الدخول موجود سابقاً. جرّب اسم دخول ثاني أو ارفع Functions لتعديل وكيل موجود.');
+      throw new Error('تعذر إنشاء حساب الوكيل من الصفحة: '+err(e));
+    }
+    const uid=cred.user.uid; const now=Date.now(); const loginId=loginIdFromEmail(payload.email); const initial=Number(payload.initialBalance||0);
+    const updates={};
+    updates['agents/'+uid]={uid,name:payload.name,email:payload.email,loginId,role:'agent',active:true,agentBalance:initial,totalCharged:0,totalOperations:0,dailyLimit:Number(payload.dailyLimit||0),monthlyLimit:Number(payload.monthlyLimit||0),createdAt:now,updatedAt:now,createdBy:auth.currentUser.email,source:'client_fallback'};
+    updates['users/'+uid+'/uid']=uid; updates['users/'+uid+'/name']=payload.name; updates['users/'+uid+'/email']=payload.email; updates['users/'+uid+'/loginId']=loginId; updates['users/'+uid+'/role']='agent'; updates['users/'+uid+'/isAgent']=true; updates['users/'+uid+'/realBalance']=0; updates['users/'+uid+'/bonusBalance']=0; updates['users/'+uid+'/reservedWithdrawalBalance']=0; updates['users/'+uid+'/createdAt']=now; updates['users/'+uid+'/updatedAt']=now;
+    const aid=nowId('agent_create'); updates['finance_audit/'+aid]={id:aid,action:'client_agent_created',agentUid:uid,email:payload.email,name:payload.name,initialBalance:initial,adminEmail:auth.currentUser.email,createdAt:now,source:'client_fallback'};
+    if(initial>0){const fid=nowId('agent_fund'); updates['agent_wallet_logs/'+uid+'/'+fid]={id:fid,agentUid:uid,type:'admin_agent_balance_add',amount:initial,note:'رصيد بداية من الأدمن',adminEmail:auth.currentUser.email,createdAt:now,source:'client_fallback'}}
+    await update(ref(db),updates);
+    await signOut(creatorAuth).catch(()=>null);
+    return {ok:true,uid,email:payload.email,loginId,name:payload.name,clientFallback:true};
+  }
+  $('saveAgentBtn').onclick=async()=>{try{$('saveAgentBtn').disabled=true;msg('saveStatus','جارٍ حفظ الوكيل...');const payload={name:$('agentName').value.trim(),email:normalizeAgentLogin($('agentEmail').value),password:$('agentPass').value.trim(),initialBalance:Number($('agentInitial').value||0),dailyLimit:Number($('agentDaily').value||0),monthlyLimit:Number($('agentMonthly').value||0),active:true};
+    try{await call('adminUpsertAgent',payload);msg('saveStatus','تم حفظ الوكيل بنجاح عبر السيرفر. أعطه رابط agent.html واسم الدخول وكلمة السر.','ok')}
+    catch(serverErr){console.warn('adminUpsertAgent failed; trying client fallback',serverErr); await clientCreateAgent(payload); msg('saveStatus','تم حفظ الوكيل بنجاح من داخل صفحة الأدمن. ملاحظة: إذا لم تعمل صفحة الوكيل ارفع قواعد قاعدة البيانات V163 أو Functions.','ok')}
+    ['agentName','agentEmail','agentPass','agentInitial','agentDaily','agentMonthly'].forEach(id=>$(id).value='');await loadAll()}catch(e){msg('saveStatus',err(e),'bad')}finally{$('saveAgentBtn').disabled=false}};
+  onAuthStateChanged(auth,async u=>{showAdmin(!!u);if(u){try{await loadAll()}catch(e){msg('loginStatus',err(e),'bad')}}});
+</script>
+</body>
+</html>

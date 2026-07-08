@@ -2897,14 +2897,53 @@ function setCurrentPrize(type){
       const snap=await get(userRef);
       const old=snap.val()||{};
       const refCode=old.refCode||makeRefCode(user);
-      const base={uid:user.uid,name:$('displayName').value.trim()||old.name||user.displayName||'مستخدم ADNOR',email:user.email||'',photoURL:old.photoURL||user.photoURL||'',country:$('country').value||old.country||'تركيا',birthDate:$('birthDate').value||old.birthDate||'',role:isAdmin?'admin':(old.role||'user'),isAdmin,isFrozen:old.isFrozen||false,isVIP:old.isVIP||false,refCode,referralBonusEarned:Number(old.referralBonusEarned||0),referredBy:old.referredBy||'',dailySpendLimit:Number(old.dailySpendLimit||0),selfExcludedUntil:Number(old.selfExcludedUntil||0),realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),lastLogin:now,lastLoginAt:now,lastActivityAt:now,updatedAt:now,createdAt:old.createdAt||now};
-      await update(userRef,base);
-      await set(ref(db,'referral_codes/'+refCode),{code:refCode,ownerUid:user.uid,ownerEmail:user.email||'',ownerName:base.name,type:isAdmin?'admin_user':'user',active:true,createdAt:old.createdAt||now,updatedAt:now});
+      const name=$('displayName').value.trim()||old.name||user.displayName||'مستخدم ADNOR';
+    
+      // V179 LOGIN FIX:
+      // لا نكتب حقول الرصيد أثناء تسجيل الدخول لأن قواعد Firebase تحميها.
+      // هذا يمنع PERMISSION_DENIED عند المستخدم العادي ويحافظ على الرصيد من التلاعب.
+      const profileSave={
+        uid:user.uid,
+        name,
+        displayName:name,
+        email:user.email||'',
+        photoURL:old.photoURL||user.photoURL||'',
+        country:$('country').value||old.country||'تركيا',
+        birthDate:$('birthDate').value||old.birthDate||'',
+        role:isAdmin?'admin':(old.role||'user'),
+        isAdmin,
+        isFrozen:old.isFrozen||false,
+        isVIP:old.isVIP||false,
+        refCode,
+        referredBy:old.referredBy||'',
+        referredByUid:old.referredByUid||'',
+        dailySpendLimit:Number(old.dailySpendLimit||0),
+        selfExcludedUntil:Number(old.selfExcludedUntil||0),
+        lastLogin:now,
+        lastLoginAt:now,
+        lastActivityAt:now,
+        profileUpdatedAt:now,
+        createdAt:old.createdAt||now
+      };
+    
+      // الأدمن فقط نترك له حقول إدارية غير خطرة هنا، أما الأرصدة لا تُكتب من شاشة الدخول.
+      await update(userRef,profileSave);
+    
+      try{
+        await set(ref(db,'referral_codes/'+refCode),{code:refCode,ownerUid:user.uid,ownerEmail:user.email||'',ownerName:name,type:isAdmin?'admin_user':'user',active:true,createdAt:old.createdAt||now,updatedAt:now});
+      }catch(e){console.warn('referral code save skipped',e)}
+    
       const loginData={action:'login',email:user.email||'',provider:'google',at:now,createdAt:now,host:location.host,path:location.pathname,userAgent:navigator.userAgent||'',language:navigator.language||'',platform:navigator.platform||'',screen:(screen?.width||0)+'x'+(screen?.height||0)};
-      await set(ref(db,'login_logs/'+user.uid+'/'+now),loginData);
-      if(isAdmin){await set(ref(db,'admins/'+user.uid),true);for(const em of ADMIN_EMAILS){await set(ref(db,'admin_emails/'+em.replaceAll('.','_')),true)}}
-      return base
+      try{await set(ref(db,'login_logs/'+user.uid+'/'+now),loginData)}catch(e){console.warn('login log skipped',e)}
+    
+      if(isAdmin){
+        try{await set(ref(db,'admins/'+user.uid),true)}catch(e){console.warn('admin mark skipped',e)}
+        for(const em of ADMIN_EMAILS){try{await set(ref(db,'admin_emails/'+em.replaceAll('.','_')),true)}catch(e){console.warn('admin email mark skipped',e)}}
+      }
+    
+      return {...old,...profileSave,realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0)}
     }
+
     async function doGoogle(){if(!checkAgreements())return;try{capturePendingReferralCode();const result=await signInWithPopup(auth,provider);currentProfile=await ensureUser(result.user);toast('تم تسجيل الدخول بنجاح');processPendingReferralAfterLogin()}catch(e){console.error(e);toast('خطأ تسجيل الدخول: '+(e.code||e.message))}}$('googleBtn').onclick=doGoogle;$('continueBtn').onclick=doGoogle;
 
 

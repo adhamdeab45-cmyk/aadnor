@@ -1911,7 +1911,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         <div class="account-final-grid">
           <section class="profile-card account-profile-royal">
             <div class="profile-top"><div class="avatar-ring big" id="accountAvatarInitial">A</div><div><h3 id="accountNameText">مستخدم ADNOR</h3><p id="accountEmailText">نظام آمن</p><span class="status-pill" id="accountStatusText">نشط</span></div></div>
-            <div class="account-id-line"><code id="accountUidText">UID</code><button class="copy-btn small" id="copyAccountUidBtn">نسخ UID</button></div>
+            <div class="account-id-line"><code id="accountUidText">ID: ------</code><button class="copy-btn small" id="copyAccountUidBtn">نسخ ID</button></div>
             <div class="account-kv" style="margin-top:12px">
               <div class="kv"><span>العمر</span><b>+18 مؤكد</b></div>
               <div class="kv"><span>المستوى</span><b id="accountVipText">عادي</b></div>
@@ -2036,9 +2036,9 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
             <section class="admin-section" id="admin-section-users">
               <div class="admin-wide-card">
                 <div class="admin-section-head"><div class="head-title"><h3>إدارة المستخدمين</h3><span>بحث متقدم، فلترة، فتح ملف، وتصدير CSV</span></div></div>
-                <div class="hint">هذه الصفحة مخصصة للمستخدمين فقط. تقدر تبحث بالبريد أو الاسم أو UID أو كود الدعوة، وتفلتر الحسابات النشطة والمجمدة و VIP وأصحاب الأرصدة.</div>
+                <div class="hint">هذه الصفحة مخصصة للمستخدمين فقط. تقدر تبحث برقم المستخدم الرقمي، البريد، الاسم، UID الداخلي أو كود الدعوة، وتفلتر الحسابات النشطة والمجمدة و VIP وأصحاب الأرصدة.</div>
                 <div class="user-admin-toolbar">
-                  <div class="admin-search"><input id="adminUserSearch" placeholder="ابحث باسم، بريد، UID، أو كود دعوة"></div>
+                  <div class="admin-search"><input id="adminUserSearch" placeholder="ابحث برقم المستخدم، الاسم، البريد، UID الداخلي، أو كود الدعوة"></div>
                   <div class="user-filter-row">
                     <button class="user-chip active" data-user-filter="all" type="button">الكل</button>
                     <button class="user-chip" data-user-filter="active" type="button">نشط</button>
@@ -2888,6 +2888,42 @@ function setCurrentPrize(type){
     function gmailAlertObj(type,title,text,extra={}){return {type,title,text,to:ADMIN_GMAIL_ALERT_EMAIL,status:'queued',source:'adnor-static',createdAt:Date.now(),...extra}}
     function queueGmailAlert(updates,key,type,title,text,extra={}){updates['gmail_alerts/'+key]=gmailAlertObj(type,title,text,extra)}
 
+    /* ADNOR V182 — Numeric Public User ID
+       لا نغير Firebase UID الداخلي. نضيف رقم حساب ظاهر للمستخدم والوكيل مثل 100001.
+       UID يبقى داخلي للأمان، والرقم publicId للعرض والبحث والشحن. */
+    function adnorDigitsOnly(v){return String(v||'').replace(/\D/g,'')}
+    function adnorPublicIdOf(u){
+      const pid=adnorDigitsOnly(u&&((u.publicId||u.userId||u.accountNumber||'')));
+      return pid && pid.length>=5 ? pid : '';
+    }
+    function adnorPublicIdLabel(u,uid){return adnorPublicIdOf(u)||String(uid||u?.uid||'').slice(0,8)||'------'}
+    function adnorMakeNumericPublicId(uid,salt=''){
+      const src=String(uid||'')+'|'+String(salt||'');
+      let h=2166136261;
+      for(let i=0;i<src.length;i++){h^=src.charCodeAt(i);h=Math.imul(h,16777619)}
+      h=(h>>>0)%900000;
+      return String(100000+h);
+    }
+    async function ensurePublicUserId(user,old={}){
+      const existing=adnorPublicIdOf(old);
+      if(existing)return existing;
+      const uid=String(user?.uid||'');
+      const now=Date.now();
+      for(let i=0;i<18;i++){
+        const candidate=adnorMakeNumericPublicId(uid, i===0?'stable':String(now+i));
+        try{
+          const mapRef=ref(db,'public_user_ids/'+candidate);
+          const tx=await runTransaction(mapRef,cur=>{
+            if(cur===null||cur===undefined||cur===''||cur===uid)return uid;
+            return;
+          });
+          if(tx.committed && tx.snapshot && tx.snapshot.val()===uid)return candidate;
+        }catch(e){console.warn('public id reserve skipped',e)}
+      }
+      // احتياط: لا نوقف تسجيل الدخول إذا خريطة الأرقام غير منشورة بالقواعد بعد.
+      return adnorMakeNumericPublicId(uid,'fallback');
+    }
+
     function modal(title,body){$('modalTitle').textContent=title;$('modalBody').textContent=body;$('infoModal').style.display='flex'}$('closeModal').onclick=()=>$('infoModal').style.display='none';
     function checkAgreements(){if(!$('ageOk').checked||!$('termsOk').checked||!$('rulesOk').checked){toast('قبل المتابعة لازم توافق على العمر والشروط وقواعد الاستخدام.');return false}return true}
     async function ensureUser(user){
@@ -2899,12 +2935,16 @@ function setCurrentPrize(type){
       const old=snap.val()||{};
       const refCode=old.refCode||makeRefCode(user);
       const name=$('displayName').value.trim()||old.name||user.displayName||'مستخدم ADNOR';
+      const publicId=await ensurePublicUserId(user,old);
     
       // V179 LOGIN FIX:
       // لا نكتب حقول الرصيد أثناء تسجيل الدخول لأن قواعد Firebase تحميها.
       // هذا يمنع PERMISSION_DENIED عند المستخدم العادي ويحافظ على الرصيد من التلاعب.
       const profileSave={
         uid:user.uid,
+        publicId,
+        userId:publicId,
+        accountNumber:publicId,
         name,
         displayName:name,
         email:user.email||'',
@@ -2942,7 +2982,7 @@ function setCurrentPrize(type){
         for(const em of ADMIN_EMAILS){try{await set(ref(db,'admin_emails/'+em.replaceAll('.','_')),true)}catch(e){console.warn('admin email mark skipped',e)}}
       }
     
-      return {...old,...profileSave,realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0)}
+      return {...old,...profileSave,publicId,realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0)}
     }
 
     async function doGoogle(){if(!checkAgreements())return;try{capturePendingReferralCode();const result=await signInWithPopup(auth,provider);currentProfile=await ensureUser(result.user);toast('تم تسجيل الدخول بنجاح');processPendingReferralAfterLogin()}catch(e){console.error(e);toast('خطأ تسجيل الدخول: '+(e.code||e.message))}}$('googleBtn').onclick=doGoogle;$('continueBtn').onclick=doGoogle;
@@ -2965,7 +3005,7 @@ function setCurrentPrize(type){
     function v101ResizeImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('read failed'));reader.onload=()=>{const img=new Image();img.onerror=()=>reject(new Error('image failed'));img.onload=()=>{const size=256;const canvas=document.createElement('canvas');canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d');const side=Math.min(img.width,img.height);const sx=(img.width-side)/2, sy=(img.height-side)/2;ctx.fillStyle='#050b16';ctx.fillRect(0,0,size,size);ctx.drawImage(img,sx,sy,side,side,0,0,size,size);resolve(canvas.toDataURL('image/jpeg',0.76))};img.src=reader.result};reader.readAsDataURL(file)})}
     async function v101SaveAvatarFile(file){if(!currentUser)return toast('سجل الدخول أولًا');if(!file)return;try{if(file.size>5*1024*1024)return toast('الصورة كبيرة جدًا، اختر صورة أقل من 5MB');const dataUrl=await v101ResizeImage(file);await update(ref(db,'users/'+currentUser.uid),{photoURL:dataUrl,updatedAt:Date.now()});if($('v101AvatarPreview')){$('v101AvatarPreview').style.backgroundImage='url("'+dataUrl+'")';$('v101AvatarPreview').textContent=''}toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoSaved)}catch(e){console.error(e);toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoFail)}}
 
-    function renderProfile(){if(!currentProfile)return;const real=Number(currentProfile.realBalance||0),bonus=Number(currentProfile.bonusBalance||0),res=Number(currentProfile.reservedWithdrawalBalance||0);setText('balanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBalanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBonusText',balanceHidden?'':'حقيقي '+money(real)+' — بونص '+money(bonus));setText('homeBalanceText',balanceHidden?'••••••':money(real+bonus));setText('homeReserveText','بونص '+money(bonus)+' — محجوز '+money(res));setText('topUserName',currentProfile.name||currentProfile.displayName||'مستخدم ADNOR');setText('topUserId','ID: '+String(currentProfile.refCode||currentProfile.uid||'----').slice(0,8));setText('homeWelcomeText','أهلًا '+(currentProfile.name||'مستخدم ADNOR')+' — كل شيء صار مرتب بمكانه.');setText('homeStatusText',currentProfile.isFrozen?'مجمّد':(currentProfile.isVIP?'VIP':'نشط'));setText('walletTotalText',money(real+bonus+res));setText('realBalanceText',money(real));setText('bonusBalanceText',money(bonus));setText('reservedBalanceText',money(res));setText('roleText',isAdminUser()?'أدمن رئيسي':'نظام آمن');setText('accountInfo',(currentProfile.name||'مستخدم')+' — '+(currentProfile.email||'بدون بريد')+' — الحالة: '+(currentProfile.isVIP?'VIP':'نشط'));setupAdminVisibility();renderGameStatus();renderAccountExtras();v101RenderSettings()}
+    function renderProfile(){if(!currentProfile)return;const real=Number(currentProfile.realBalance||0),bonus=Number(currentProfile.bonusBalance||0),res=Number(currentProfile.reservedWithdrawalBalance||0);const publicId=adnorPublicIdLabel(currentProfile,currentUser?.uid);setText('balanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBalanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBonusText',balanceHidden?'':'حقيقي '+money(real)+' — بونص '+money(bonus));setText('homeBalanceText',balanceHidden?'••••••':money(real+bonus));setText('homeReserveText','بونص '+money(bonus)+' — محجوز '+money(res));setText('topUserName',currentProfile.name||currentProfile.displayName||'مستخدم ADNOR');setText('topUserId','ID: '+publicId);setText('homeWelcomeText','أهلًا '+(currentProfile.name||'مستخدم ADNOR')+' — رقم حسابك '+publicId);setText('homeStatusText',currentProfile.isFrozen?'مجمّد':(currentProfile.isVIP?'VIP':'نشط'));setText('walletTotalText',money(real+bonus+res));setText('realBalanceText',money(real));setText('bonusBalanceText',money(bonus));setText('reservedBalanceText',money(res));setText('roleText',isAdminUser()?'أدمن رئيسي':'نظام آمن');setText('accountInfo',(currentProfile.name||'مستخدم')+' — ID: '+publicId+' — الحالة: '+(currentProfile.isVIP?'VIP':'نشط'));setupAdminVisibility();renderGameStatus();renderAccountExtras();v101RenderSettings()}
     function listenProfile(uid){onValue(ref(db,'users/'+uid),snap=>{currentProfile=snap.val()||currentProfile;renderProfile()});if(ticketUnsub)ticketUnsub();ticketUnsub=onValue(ref(db,'user_tickets/'+uid),snap=>{const val=snap.val()||{};renderUserTicketHistory(val)});if(transUnsub)transUnsub();transUnsub=onValue(ref(db,'transactions/'+uid),snap=>renderHistory(snap.val()||{}));if(supportUnsub)supportUnsub();supportUnsub=onValue(ref(db,'support_tickets/'+uid),snap=>renderSupportTickets(snap.val()||{}));if(userNotifUnsub)userNotifUnsub();userNotifUnsub=onValue(ref(db,'user_notifications/'+uid),snap=>{currentNotifications=snap.val()||{};renderUserNotifications()})}
     function mergeSiteControl(v){const base=JSON.parse(JSON.stringify(defaultSiteControl));v=v||{};base.maintenance=!!v.maintenance;base.maintenanceMessage=String(v.maintenanceMessage||base.maintenanceMessage);base.announcement=String(v.announcement||'');base.modules=Object.assign({},base.modules,v.modules||{});return base}
     function moduleEnabled(p){if(['admin','account','settings','notifications'].includes(p))return true;if(p==='results')return siteControl.modules.results!==false;return siteControl.modules[p]!==false}
@@ -3656,7 +3696,7 @@ function setCurrentPrize(type){
       if($('newUserRewardText'))$('newUserRewardText').textContent=referralRewardText(normalizeReferralReward(referralSettings,'newUser'));
       if($('refApplyStatus'))$('refApplyStatus').textContent=currentProfile.referredBy?'تم تفعيل كود دعوة سابقًا.':'يمكن تفعيل كود دعوة مرة واحدة فقط.';
       if($('editDisplayNameInput'))$('editDisplayNameInput').value=nm;
-      if($('accountUidText'))$('accountUidText').textContent=currentUser?.uid||'UID';
+      if($('accountUidText'))$('accountUidText').textContent='ID: '+adnorPublicIdLabel(currentProfile,currentUser?.uid);
       if($('accountRealText'))$('accountRealText').textContent=money(currentProfile.realBalance||0);
       if($('accountBonusText'))$('accountBonusText').textContent=money(currentProfile.bonusBalance||0);
       if($('accountReservedText'))$('accountReservedText').textContent=money(currentProfile.reservedWithdrawalBalance||0);
@@ -4115,7 +4155,7 @@ function setCurrentPrize(type){
     if($('v101LanguageSelect'))$('v101LanguageSelect').onchange=()=>v101ApplyLanguage($('v101LanguageSelect').value||'ar');
     if($('v101AvatarFileInput'))$('v101AvatarFileInput').onchange=e=>v101SaveAvatarFile(e.target.files&&e.target.files[0]);
     if($('saveDisplayNameBtn'))$('saveDisplayNameBtn').onclick=saveDisplayName;
-    if($('copyAccountUidBtn'))$('copyAccountUidBtn').onclick=()=>copyText(currentUser?.uid||'');
+    if($('copyAccountUidBtn'))$('copyAccountUidBtn').onclick=()=>copyText(adnorPublicIdLabel(currentProfile,currentUser?.uid));
     if($('copyRefLinkTopBtn'))$('copyRefLinkTopBtn').onclick=()=>copyText(getReferralLink());
     if($('logoutAccountBtn'))$('logoutAccountBtn').onclick=()=>v136Logout();
     if($('accountOpenAdminSettingsBtn'))$('accountOpenAdminSettingsBtn').onclick=()=>{showPage('admin');setTimeout(()=>showAdminSection('settings'),50)};
@@ -4207,9 +4247,9 @@ function setCurrentPrize(type){
       const timeline=v136BuildTimeline(uid,pack);
       const suspicious=(logins.length>8?'دخول كثير — ':'')+(Number(u.realBalance||0)<0||Number(u.bonusBalance||0)<0?'رصيد سالب — ':'')+(u.isFrozen?'مجمّد — ':'');
       panel.classList.remove('hidden');
-      panel.innerHTML='<div class="user360-head"><div><h3>ملف المستخدم الكامل — User 360</h3><p>'+escapeHtml(u.name||u.displayName||'مستخدم')+' — '+escapeHtml(u.email||'بدون بريد')+'<br><span class="uid-line">UID: '+escapeHtml(uid)+'</span></p></div><button class="user360-close" onclick="document.getElementById(\'adminUser360Panel\').classList.add(\'hidden\')">إغلاق</button></div>'+
+      panel.innerHTML='<div class="user360-head"><div><h3>ملف المستخدم الكامل — User 360</h3><p>'+escapeHtml(u.name||u.displayName||'مستخدم')+' — '+escapeHtml(u.email||'بدون بريد')+'<br><span class="uid-line">ID المستخدم: '+escapeHtml(adnorPublicIdLabel(u,uid))+'<br>UID داخلي: '+escapeHtml(uid)+'</span></p></div><button class="user360-close" onclick="document.getElementById(\'adminUser360Panel\').classList.add(\'hidden\')">إغلاق</button></div>'+
       '<div class="user360-stats"><div class="user360-stat"><span>الرصيد الحقيقي</span><b>'+money(real)+'</b></div><div class="user360-stat"><span>البونص</span><b>'+money(bonus)+'</b></div><div class="user360-stat"><span>محجوز للسحب</span><b>'+money(reserved)+'</b></div><div class="user360-stat"><span>لفات عجلة</span><b>'+freeSpins+'</b></div><div class="user360-stat"><span>تذاكر مجانية</span><b>'+freeTickets+'</b></div><div class="user360-stat"><span>الحالة</span><b>'+(u.isFrozen?'مجمّد':(u.isVIP?'VIP':'نشط'))+'</b></div></div>'+
-      '<div class="user360-actions"><button onclick="adminAdjustBalance(\''+escapeHtml(uid)+'\',\'realBalance\')">+/- رصيد حقيقي</button><button onclick="adminAdjustBalance(\''+escapeHtml(uid)+'\',\'bonusBalance\')">+/- بونص</button><button onclick="adminAdjustBalance(\''+escapeHtml(uid)+'\',\'freeSpins\')">+/- لفات</button><button class="blue" onclick="adminSendUserMessage(\''+escapeHtml(uid)+'\')">مراسلة المستخدم</button><button class="blue" onclick="adminSaveUserNote(\''+escapeHtml(uid)+'\')">ملاحظة داخلية</button><button class="bad" onclick="adminToggleFreeze(\''+escapeHtml(uid)+'\')">'+(u.isFrozen?'فك التجميد':'تجميد الحساب')+'</button><button class="dark" data-copy="'+escapeHtml(uid)+'" onclick="copyText(this.dataset.copy)">نسخ UID</button></div>'+
+      '<div class="user360-actions"><button onclick="adminAdjustBalance(\''+escapeHtml(uid)+'\',\'realBalance\')">+/- رصيد حقيقي</button><button onclick="adminAdjustBalance(\''+escapeHtml(uid)+'\',\'bonusBalance\')">+/- بونص</button><button onclick="adminAdjustBalance(\''+escapeHtml(uid)+'\',\'freeSpins\')">+/- لفات</button><button class="blue" onclick="adminSendUserMessage(\''+escapeHtml(uid)+'\')">مراسلة المستخدم</button><button class="blue" onclick="adminSaveUserNote(\''+escapeHtml(uid)+'\')">ملاحظة داخلية</button><button class="bad" onclick="adminToggleFreeze(\''+escapeHtml(uid)+'\')">'+(u.isFrozen?'فك التجميد':'تجميد الحساب')+'</button><button class="dark" data-copy="'+escapeHtml(adnorPublicIdLabel(u,uid))+'" onclick="copyText(this.dataset.copy)">نسخ ID</button><button class="dark" data-copy="'+escapeHtml(uid)+'" onclick="copyText(this.dataset.copy)">نسخ UID داخلي</button></div>'+
       '<div class="user360-grid"><div class="user360-box"><h4>ملخص مالي</h4><p>إجمالي الإيداعات: '+money(deposits)+'<br>إجمالي حركات السحب: '+money(withdrawals)+'<br>مصروف التذاكر: '+money(ticketSpend)+'<br>صافي العجلة: '+money(wheelNet)+'<br>عدد العمليات: '+tx.length+'</p></div>'+
       '<div class="user360-box '+(suspicious?'user360-warning':'')+'"><h4>الحماية والدخول</h4><p>تاريخ التسجيل: '+v136Ts(u.createdAt)+'<br>آخر دخول: '+v136Ts(u.lastLogin||u.lastLoginAt)+'<br>آخر نشاط: '+v136Ts(u.lastActivityAt||u.updatedAt)+'<br>عدد سجلات الدخول: '+logins.length+'<br>تنبيه: '+escapeHtml(suspicious||'لا توجد إشارات واضحة')+'</p></div>'+
       '<div class="user360-box"><h4>اليانصيب</h4>'+v136Mini(tickets.map(t=>({title:(t.drawLabel||t.drawType||'سحب')+' — '+(t.number||''),desc:'الحالة: '+(t.status||'active')+' — السعر: '+money(t.price||0)+' — '+v136Ts(t.createdAt)})),'لا توجد تذاكر')+'</div>'+
@@ -4233,7 +4273,7 @@ function renderAdminUsers(users){
       document.querySelectorAll('.user-chip').forEach(b=>b.classList.toggle('active',b.dataset.userFilter===currentUserFilter));
       const q=($('adminUserSearch')?.value||'').toLowerCase().trim();
       let list=users.filter(u=>{
-        const hay=[u.email,u.name,u.displayName,u.uid,u.refCode,u.referredBy,u.phone,u.country].map(x=>String(x||'').toLowerCase()).join(' ');
+        const hay=[u.publicId,u.userId,u.accountNumber,u.email,u.name,u.displayName,u.uid,u.refCode,u.referredBy,u.phone,u.country].map(x=>String(x||'').toLowerCase()).join(' ');
         if(q && !hay.includes(q))return false;
         if(currentUserFilter==='active')return !u.isFrozen;
         if(currentUserFilter==='frozen')return !!u.isFrozen;
@@ -4246,7 +4286,7 @@ function renderAdminUsers(users){
         const joined=u.createdAt?new Date(u.createdAt).toLocaleString('ar-TR'):'غير معروف';
         const last=(u.lastLogin||u.lastLoginAt)?new Date(u.lastLogin||u.lastLoginAt).toLocaleString('ar-TR'):'غير معروف';
         const totalBal=Number(u.realBalance||0)+Number(u.bonusBalance||0)+Number(u.reservedWithdrawalBalance||0);
-        return '<div class="admin-row user-row-grid"><div><h4>'+escapeHtml(u.name||u.displayName||'مستخدم')+'</h4><div class="user-flags"><span class="admin-badge '+(u.isFrozen?'rejected':'approved')+'">'+(u.isFrozen?'مجمّد':'نشط')+'</span>'+(u.isVIP?'<span class="admin-badge">VIP</span>':'')+'<span class="admin-badge">'+money(totalBal)+'</span></div><p>'+escapeHtml(u.email||'')+'</p><p class="uid-line">UID: '+escapeHtml(u.uid||'')+'</p><div class="user-balance-line"><span>حقيقي<b>'+money(u.realBalance)+'</b></span><span>بونص<b>'+money(u.bonusBalance)+'</b></span><span>محجوز<b>'+money(u.reservedWithdrawalBalance)+'</b></span></div><p>كود الدعوة: '+escapeHtml(u.refCode||'غير موجود')+'<br>انضم: '+joined+'<br>آخر دخول: '+last+'</p></div><div class="admin-actions"><button class="blue" onclick="openAdminUserCard(\''+escapeHtml(u.uid)+'\')">فتح الملف الكامل</button><button class="ok" onclick="openUserGameProfit(\''+escapeHtml(u.uid)+'\')">ربح/خسارة</button><button class="ok" onclick="adminGrantSpecialOffer(\''+escapeHtml(u.uid)+'\')">عرض خاص</button><button class="blue" onclick="adminAdjustBalance(\''+escapeHtml(u.uid)+'\')">تعديل رصيد</button><button class="blue" onclick="adminSendUserMessage(\''+escapeHtml(u.uid)+'\')">رسالة</button><button onclick="adminToggleVip(\''+escapeHtml(u.uid)+'\')">VIP</button><button class="bad" onclick="adminToggleFreeze(\''+escapeHtml(u.uid)+'\')">'+(u.isFrozen?'فك التجميد':'تجميد')+'</button><button data-copy="'+escapeHtml(u.uid||'')+'" onclick="copyText(this.dataset.copy)">نسخ UID</button></div></div>'
+        return '<div class="admin-row user-row-grid"><div><h4>'+escapeHtml(u.name||u.displayName||'مستخدم')+'</h4><div class="user-flags"><span class="admin-badge '+(u.isFrozen?'rejected':'approved')+'">'+(u.isFrozen?'مجمّد':'نشط')+'</span>'+(u.isVIP?'<span class="admin-badge">VIP</span>':'')+'<span class="admin-badge">'+money(totalBal)+'</span></div><p>'+escapeHtml(u.email||'')+'</p><p class="uid-line">ID المستخدم: '+escapeHtml(adnorPublicIdLabel(u,u.uid))+'<br><small>UID داخلي: '+escapeHtml(u.uid||'')+'</small></p><div class="user-balance-line"><span>حقيقي<b>'+money(u.realBalance)+'</b></span><span>بونص<b>'+money(u.bonusBalance)+'</b></span><span>محجوز<b>'+money(u.reservedWithdrawalBalance)+'</b></span></div><p>كود الدعوة: '+escapeHtml(u.refCode||'غير موجود')+'<br>انضم: '+joined+'<br>آخر دخول: '+last+'</p></div><div class="admin-actions"><button class="blue" onclick="openAdminUserCard(\''+escapeHtml(u.uid)+'\')">فتح الملف الكامل</button><button class="ok" onclick="openUserGameProfit(\''+escapeHtml(u.uid)+'\')">ربح/خسارة</button><button class="ok" onclick="adminGrantSpecialOffer(\''+escapeHtml(u.uid)+'\')">عرض خاص</button><button class="blue" onclick="adminAdjustBalance(\''+escapeHtml(u.uid)+'\')">تعديل رصيد</button><button class="blue" onclick="adminSendUserMessage(\''+escapeHtml(u.uid)+'\')">رسالة</button><button onclick="adminToggleVip(\''+escapeHtml(u.uid)+'\')">VIP</button><button class="bad" onclick="adminToggleFreeze(\''+escapeHtml(u.uid)+'\')">'+(u.isFrozen?'فك التجميد':'تجميد')+'</button><button data-copy="'+escapeHtml(adnorPublicIdLabel(u,u.uid))+'" onclick="copyText(this.dataset.copy)">نسخ ID</button><button data-copy="'+escapeHtml(u.uid||'')+'" onclick="copyText(this.dataset.copy)">نسخ UID داخلي</button></div></div>'
       }).join('')
     }
     async function openAdminUserCard(uid){
@@ -4263,8 +4303,8 @@ function renderAdminUsers(users){
     }
     function exportUsersCsv(){
       const users=arrObj(adminState.users||{});
-      const rows=[['uid','name','email','realBalance','bonusBalance','reservedWithdrawalBalance','isVIP','isFrozen','refCode','createdAt','lastLogin']];
-      users.forEach(u=>rows.push([u.uid||'',u.name||u.displayName||'',u.email||'',Number(u.realBalance||0),Number(u.bonusBalance||0),Number(u.reservedWithdrawalBalance||0),u.isVIP?'yes':'no',u.isFrozen?'yes':'no',u.refCode||'',u.createdAt?new Date(u.createdAt).toISOString():'',u.lastLogin?new Date(u.lastLogin).toISOString():'']));
+      const rows=[['publicId','uid','name','email','realBalance','bonusBalance','reservedWithdrawalBalance','isVIP','isFrozen','refCode','createdAt','lastLogin']];
+      users.forEach(u=>rows.push([adnorPublicIdLabel(u,u.uid),u.uid||'',u.name||u.displayName||'',u.email||'',Number(u.realBalance||0),Number(u.bonusBalance||0),Number(u.reservedWithdrawalBalance||0),u.isVIP?'yes':'no',u.isFrozen?'yes':'no',u.refCode||'',u.createdAt?new Date(u.createdAt).toISOString():'',u.lastLogin?new Date(u.lastLogin).toISOString():'']));
       const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');
       const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='adnor-users-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('تم تصدير المستخدمين CSV');
     }

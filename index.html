@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
-  <!-- ADNOR_V184_SYSTEMATIC_SERVER_AGENTS_AND_AUTO_ADN_READY -->
+  <!-- ADNOR_V183_ADN_SELL_BALANCE_GUARD_FULL_READY -->
 <!-- V146_REFERRAL_PRIVACY_NO_FREEZE: masks referral emails for referrer without database cleanup loops. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1787,7 +1787,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         </section>
 
         <section class="v142-trade-card">
-          <div class="v142-card-head"><div><h3>شراء وبيع ADN</h3><span>تنفيذ فوري من الرصيد الحقيقي — بدون طلبات موافقة</span></div><span id="adnTradePriceInfo">سعر الطلب الحالي: $0.1000</span></div>
+          <div class="v142-card-head"><div><h3>شراء وبيع ADN</h3><span>الطلب يظهر فورًا عند المستخدم والتنفيذ بعد موافقة الإدارة</span></div><span id="adnTradePriceInfo">سعر الطلب الحالي: $0.1000</span></div>
           <div class="v142-trade-tabs"><button id="adnSellTab" type="button">بيع</button><button id="adnBuyTab" class="active" type="button">شراء</button></div>
           <div class="v142-order-type-tabs" style="display:none"><button type="button" data-adn-order-type="limit">سعر محدد</button><button type="button" data-adn-order-type="market" class="active">سعر السوق</button></div>
           <div class="v142-form">
@@ -1804,12 +1804,12 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
               <div><span>ADN مؤكد</span><b id="adnUserTokenBalance">0 ADN</b></div>
               <div><span>المتاح للبيع</span><b id="adnAvailableSellToken">0 ADN</b></div>
               <div><span>قيمة العملية</span><b id="adnTradeCost">$0.00</b></div>
-              <div><span>ADN طلبات قديمة</span><b id="adnPendingBuyToken">0 ADN</b></div>
-              <div><span>قيمة شراء قديمة قيد المراجعة</span><b id="adnPendingBuyUsd">$0.00</b></div>
-              <div><span>ADN بيع قديم قيد المراجعة</span><b id="adnPendingSellToken">0 ADN</b></div>
+              <div><span>ADN قيد الشراء</span><b id="adnPendingBuyToken">0 ADN</b></div>
+              <div><span>قيمة شراء قيد الموافقة</span><b id="adnPendingBuyUsd">$0.00</b></div>
+              <div><span>ADN قيد البيع</span><b id="adnPendingSellToken">0 ADN</b></div>
             </div>
-            <button class="gold-btn big" id="adnExecuteTradeBtn" type="button">شراء ADN الآن</button>
-            <div class="v142-info-note" id="adnTradeNote">يتم التنفيذ فورًا من الرصيد الحقيقي فقط. البيع يتم فقط من رصيد ADN المؤكد والمتاح.</div><div class="v142-info-note" id="adnPendingApprovalNote">لا توجد طلبات قديمة قيد المراجعة.</div>
+            <button class="gold-btn big" id="adnExecuteTradeBtn" type="button">إرسال طلب شراء للموافقة</button>
+            <div class="v142-info-note" id="adnTradeNote">سيظهر الطلب فورًا في حسابك كـ قيد الموافقة، والتنفيذ الحقيقي يتم بعد اعتماد الإدارة.</div><div class="v142-info-note" id="adnPendingApprovalNote">لا توجد طلبات ADN قيد الموافقة.</div>
           </div>
         </section>
 
@@ -1825,7 +1825,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         </section>
 
         <section class="v142-panel-card">
-          <div class="v142-card-head"><div><h3>سجل طلباتي على ADN</h3><span>أوامر قديمة إن وجدت، مع سجل عمليات الشراء والبيع المنفذة فورًا</span></div></div>
+          <div class="v142-card-head"><div><h3>سجل طلباتي على ADN</h3><span>طلبات شراء وبيع قيد الموافقة، مع سجل العمليات المعتمدة</span></div></div>
           <div class="v142-panel-content" id="adnUserTradesList"><div class="v142-empty">لا توجد عمليات ADN بعد.</div></div>
           <div class="v142-panel-content" id="adnUserRequestsList"><div class="v142-empty">لا توجد طلبات قيد المراجعة.</div></div>
         </section>
@@ -2315,11 +2315,11 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
                 <div class="hint" style="margin-top:10px">الشراء من الرصيد الحقيقي فقط. البيع يرجع إلى الرصيد الحقيقي إذا كانت سيولة الصندوق كافية.</div>
               </div>
               <div class="admin-wide-card">
-                <div class="admin-section-head"><h3>طلبات ADN القديمة قيد المراجعة</h3><span>النظام الجديد: الشراء والبيع يتمان تلقائيًا؛ هذا القسم للأوامر القديمة فقط</span></div>
+                <div class="admin-section-head"><h3>طلبات ADN قيد المراجعة</h3><span>قفل أمني V128: التنفيذ بعد موافقة الأدمن فقط</span></div>
                 <div class="adn-trade-list" id="adminAdnRequestsList"><div class="adn-empty">لا توجد طلبات قيد المراجعة.</div></div>
               </div>
               <div class="admin-wide-card">
-                <div class="admin-section-head"><h3>آخر عمليات ADN</h3><span>عمليات السوق المنفذة تلقائيًا</span></div>
+                <div class="admin-section-head"><h3>آخر عمليات ADN</h3><span>عمليات معتمدة بعد المراجعة</span></div>
                 <div class="adn-trade-list" id="adminAdnTradesList"><div class="adn-empty">لا توجد عمليات بعد.</div></div>
               </div>
             </section>
@@ -2930,48 +2930,20 @@ function setCurrentPrize(type){
 
     function modal(title,body){$('modalTitle').textContent=title;$('modalBody').textContent=body;$('infoModal').style.display='flex'}$('closeModal').onclick=()=>$('infoModal').style.display='none';
     function checkAgreements(){if(!$('ageOk').checked||!$('termsOk').checked||!$('rulesOk').checked){toast('قبل المتابعة لازم توافق على العمر والشروط وقواعد الاستخدام.');return false}return true}
-    function localFallbackProfile(user, old={}){
-      const email=(user?.email||'').toLowerCase();
-      const isAdmin=ADMIN_EMAILS.includes(email);
-      const publicId=adnorPublicIdOf(old)||adnorMakeNumericPublicId(user?.uid||'', 'local');
-      const name=($('displayName')?.value||'').trim()||old.name||old.displayName||user?.displayName||'مستخدم ADNOR';
-      return {...old,uid:user?.uid||'',publicId,userId:publicId,accountNumber:publicId,name,displayName:name,email:user?.email||old.email||'',photoURL:old.photoURL||user?.photoURL||'',country:($('country')?.value||old.country||'تركيا'),birthDate:($('birthDate')?.value||old.birthDate||''),role:isAdmin?'admin':(old.role||'user'),isAdmin,isFrozen:old.isFrozen||false,isVIP:old.isVIP||false,refCode:old.refCode||makeRefCode(user||{}),realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0),_localOnly:true}
-    }
-
-    // V186_LOGIN_UNBLOCK: لا نسمح لأي قراءة/كتابة بقاعدة البيانات أو دالة سيرفر أن تمنع دخول المستخدم.
-    function adnorTimeout(promise, ms=4500, label='operation'){
-      return Promise.race([
-        promise,
-        new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' timeout')),ms))
-      ]);
-    }
-    function adnorSafeStart(label, fn){
-      try{return fn()}catch(e){console.warn('ADNOR safe start skipped:',label,e);return null}
-    }
-
     async function ensureUser(user){
       const now=Date.now();
       const email=(user.email||'').toLowerCase();
       const isAdmin=ADMIN_EMAILS.includes(email);
       const userRef=ref(db,'users/'+user.uid);
-      let old={};
-      try{
-        const snap=await adnorTimeout(get(userRef),3000,'profile read');
-        old=snap.val()||{};
-      }catch(e){
-        console.warn('user profile read skipped',e);
-        old={};
-      }
+      const snap=await get(userRef);
+      const old=snap.val()||{};
       const refCode=old.refCode||makeRefCode(user);
-      const name=($('displayName')?.value||'').trim()||old.name||user.displayName||'مستخدم ADNOR';
-      let publicId=adnorPublicIdOf(old)||adnorMakeNumericPublicId(user.uid,'local');
-      try{publicId=await adnorTimeout(ensurePublicUserId(user,old),3000,'public id reserve')}catch(e){console.warn('public id fallback used',e)}
+      const name=$('displayName').value.trim()||old.name||user.displayName||'مستخدم ADNOR';
+      const publicId=await ensurePublicUserId(user,old);
     
-      // V185 USER REGISTRATION FIX:
-      // المشكلة كانت أن المستخدم العادي قد يُمنع من حفظ حقول إدارية داخل users/{uid}
-      // فتفشل عملية التسجيل كاملة، بينما الأدمن ينجح بسبب صلاحياته.
-      // الحل: نطلب من Cloud Function موثوقة إنشاء/تحديث الملف، وإن لم تكن الدوال مرفوعة
-      // نحاول حفظ ملف مستخدم آمن بدون حقول إدارية، ولو فشل الحفظ لا نكسر الدخول.
+      // V179 LOGIN FIX:
+      // لا نكتب حقول الرصيد أثناء تسجيل الدخول لأن قواعد Firebase تحميها.
+      // هذا يمنع PERMISSION_DENIED عند المستخدم العادي ويحافظ على الرصيد من التلاعب.
       const profileSave={
         uid:user.uid,
         publicId,
@@ -2981,8 +2953,8 @@ function setCurrentPrize(type){
         displayName:name,
         email:user.email||'',
         photoURL:old.photoURL||user.photoURL||'',
-        country:($('country')?.value||old.country||'تركيا'),
-        birthDate:($('birthDate')?.value||old.birthDate||''),
+        country:$('country').value||old.country||'تركيا',
+        birthDate:$('birthDate').value||old.birthDate||'',
         role:isAdmin?'admin':(old.role||'user'),
         isAdmin,
         isFrozen:old.isFrozen||false,
@@ -2998,44 +2970,9 @@ function setCurrentPrize(type){
         profileUpdatedAt:now,
         createdAt:old.createdAt||now
       };
-
-      try{
-        const fn=httpsCallable(cloudFns,'ensureUserProfile');
-        const res=await adnorTimeout(fn({name,country:profileSave.country,birthDate:profileSave.birthDate,refCode}),5000,'ensureUserProfile function');
-        if(res?.data?.profile){
-          return {...old,...res.data.profile,realBalance:Number(res.data.profile.realBalance||0),bonusBalance:Number(res.data.profile.bonusBalance||0),reservedWithdrawalBalance:Number(res.data.profile.reservedWithdrawalBalance||0),freeSpins:Number(res.data.profile.freeSpins||0),freeTickets:Number(res.data.profile.freeTickets||0),adnBalance:Number(res.data.profile.adnBalance||0),referralBonusEarned:Number(res.data.profile.referralBonusEarned||0)};
-        }
-      }catch(e){
-        console.warn('ensureUserProfile function skipped/fallback to client profile',e);
-      }
-
-      const safeUserProfile={
-        uid:profileSave.uid,
-        publicId:profileSave.publicId,
-        userId:profileSave.userId,
-        accountNumber:profileSave.accountNumber,
-        name:profileSave.name,
-        displayName:profileSave.displayName,
-        email:profileSave.email,
-        photoURL:profileSave.photoURL,
-        country:profileSave.country,
-        birthDate:profileSave.birthDate,
-        refCode:profileSave.refCode,
-        referredBy:profileSave.referredBy,
-        referredByUid:profileSave.referredByUid,
-        lastLogin:profileSave.lastLogin,
-        lastLoginAt:profileSave.lastLoginAt,
-        lastActivityAt:profileSave.lastActivityAt,
-        profileUpdatedAt:profileSave.profileUpdatedAt,
-        createdAt:profileSave.createdAt
-      };
-
-      try{
-        await adnorTimeout(update(userRef,isAdmin?profileSave:safeUserProfile),3000,'profile save');
-      }catch(e){
-        console.warn('user profile save skipped; login will continue',e);
-        return localFallbackProfile(user,{...old,...safeUserProfile,publicId});
-      }
+    
+      // الأدمن فقط نترك له حقول إدارية غير خطرة هنا، أما الأرصدة لا تُكتب من شاشة الدخول.
+      await update(userRef,profileSave);
     
       try{
         await set(ref(db,'referral_codes/'+refCode),{code:refCode,ownerUid:user.uid,ownerEmail:user.email||'',ownerName:name,type:isAdmin?'admin_user':'user',active:true,createdAt:old.createdAt||now,updatedAt:now});
@@ -3052,19 +2989,7 @@ function setCurrentPrize(type){
       return {...old,...profileSave,publicId,realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0)}
     }
 
-    async function doGoogle(){
-      if(!checkAgreements())return;
-      try{
-        capturePendingReferralCode();
-        await signInWithPopup(auth,provider);
-        toast('تم تسجيل الدخول بنجاح');
-      }catch(e){
-        console.error(e);
-        const msg=(e&&e.code)?String(e.code):String(e&&e.message||e);
-        toast('خطأ تسجيل الدخول: '+msg);
-      }
-    }
-    $('googleBtn').onclick=doGoogle;$('continueBtn').onclick=doGoogle;
+    async function doGoogle(){if(!checkAgreements())return;try{capturePendingReferralCode();const result=await signInWithPopup(auth,provider);currentProfile=await ensureUser(result.user);toast('تم تسجيل الدخول بنجاح');processPendingReferralAfterLogin()}catch(e){console.error(e);toast('خطأ تسجيل الدخول: '+(e.code||e.message))}}$('googleBtn').onclick=doGoogle;$('continueBtn').onclick=doGoogle;
 
 
     /* ADNOR V101 - User Settings Center */
@@ -3085,7 +3010,7 @@ function setCurrentPrize(type){
     async function v101SaveAvatarFile(file){if(!currentUser)return toast('سجل الدخول أولًا');if(!file)return;try{if(file.size>5*1024*1024)return toast('الصورة كبيرة جدًا، اختر صورة أقل من 5MB');const dataUrl=await v101ResizeImage(file);await update(ref(db,'users/'+currentUser.uid),{photoURL:dataUrl,updatedAt:Date.now()});if($('v101AvatarPreview')){$('v101AvatarPreview').style.backgroundImage='url("'+dataUrl+'")';$('v101AvatarPreview').textContent=''}toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoSaved)}catch(e){console.error(e);toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoFail)}}
 
     function renderProfile(){if(!currentProfile)return;const real=Number(currentProfile.realBalance||0),bonus=Number(currentProfile.bonusBalance||0),res=Number(currentProfile.reservedWithdrawalBalance||0);const publicId=adnorPublicIdLabel(currentProfile,currentUser?.uid);setText('balanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBalanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBonusText',balanceHidden?'':'حقيقي '+money(real)+' — بونص '+money(bonus));setText('homeBalanceText',balanceHidden?'••••••':money(real+bonus));setText('homeReserveText','بونص '+money(bonus)+' — محجوز '+money(res));setText('topUserName',currentProfile.name||currentProfile.displayName||'مستخدم ADNOR');setText('topUserId','ID: '+publicId);setText('homeWelcomeText','أهلًا '+(currentProfile.name||'مستخدم ADNOR')+' — رقم حسابك '+publicId);setText('homeStatusText',currentProfile.isFrozen?'مجمّد':(currentProfile.isVIP?'VIP':'نشط'));setText('walletTotalText',money(real+bonus+res));setText('realBalanceText',money(real));setText('bonusBalanceText',money(bonus));setText('reservedBalanceText',money(res));setText('roleText',isAdminUser()?'أدمن رئيسي':'نظام آمن');setText('accountInfo',(currentProfile.name||'مستخدم')+' — ID: '+publicId+' — الحالة: '+(currentProfile.isVIP?'VIP':'نشط'));setupAdminVisibility();renderGameStatus();renderAccountExtras();v101RenderSettings()}
-    function listenProfile(uid){onValue(ref(db,'users/'+uid),snap=>{currentProfile=snap.val()||currentProfile;renderProfile()},err=>console.warn('user profile listen skipped',err));if(ticketUnsub)ticketUnsub();ticketUnsub=onValue(ref(db,'user_tickets/'+uid),snap=>{const val=snap.val()||{};renderUserTicketHistory(val)},err=>console.warn('tickets listen skipped',err));if(transUnsub)transUnsub();transUnsub=onValue(ref(db,'transactions/'+uid),snap=>renderHistory(snap.val()||{}),err=>console.warn('transactions listen skipped',err));if(supportUnsub)supportUnsub();supportUnsub=onValue(ref(db,'support_tickets/'+uid),snap=>renderSupportTickets(snap.val()||{}),err=>console.warn('support tickets listen skipped',err));if(userNotifUnsub)userNotifUnsub();userNotifUnsub=onValue(ref(db,'user_notifications/'+uid),snap=>{currentNotifications=snap.val()||{};renderUserNotifications()},err=>console.warn('notifications listen skipped',err))}
+    function listenProfile(uid){onValue(ref(db,'users/'+uid),snap=>{currentProfile=snap.val()||currentProfile;renderProfile()});if(ticketUnsub)ticketUnsub();ticketUnsub=onValue(ref(db,'user_tickets/'+uid),snap=>{const val=snap.val()||{};renderUserTicketHistory(val)});if(transUnsub)transUnsub();transUnsub=onValue(ref(db,'transactions/'+uid),snap=>renderHistory(snap.val()||{}));if(supportUnsub)supportUnsub();supportUnsub=onValue(ref(db,'support_tickets/'+uid),snap=>renderSupportTickets(snap.val()||{}));if(userNotifUnsub)userNotifUnsub();userNotifUnsub=onValue(ref(db,'user_notifications/'+uid),snap=>{currentNotifications=snap.val()||{};renderUserNotifications()})}
     function mergeSiteControl(v){const base=JSON.parse(JSON.stringify(defaultSiteControl));v=v||{};base.maintenance=!!v.maintenance;base.maintenanceMessage=String(v.maintenanceMessage||base.maintenanceMessage);base.announcement=String(v.announcement||'');base.modules=Object.assign({},base.modules,v.modules||{});return base}
     function moduleEnabled(p){if(['admin','account','settings','notifications'].includes(p))return true;if(p==='results')return siteControl.modules.results!==false;return siteControl.modules[p]!==false}
     function renderSiteControl(){
@@ -3104,77 +3029,11 @@ function setCurrentPrize(type){
       if($('moduleWalletInput'))$('moduleWalletInput').checked=siteControl.modules.wallet!==false;
       if($('moduleSupportInput'))$('moduleSupportInput').checked=siteControl.modules.support!==false;
     }
-    function listenSiteControl(){if(siteControlUnsub)return;siteControlUnsub=onValue(ref(db,'system_settings/site_control'),snap=>{siteControl=mergeSiteControl(snap.val());renderSiteControl()},err=>{console.warn('site control read skipped',err);siteControl=mergeSiteControl(null);renderSiteControl()})}
-    function listenAiKnowledge(){if(!isAdminUser())return;if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()},err=>console.warn('ai_knowledge read skipped',err))}
+    function listenSiteControl(){if(siteControlUnsub)return;siteControlUnsub=onValue(ref(db,'system_settings/site_control'),snap=>{siteControl=mergeSiteControl(snap.val());renderSiteControl()})}
+    function listenAiKnowledge(){if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()})}
     async function adminSaveSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl({maintenance:$('siteMaintenanceInput')?.value==='true',maintenanceMessage:$('siteMaintenanceMessageInput')?.value||'',announcement:$('siteAnnouncementInput')?.value||'',modules:{lottery:!!$('moduleLotteryInput')?.checked,results:!!$('moduleLotteryInput')?.checked,games:!!$('moduleGamesInput')?.checked,wallet:!!$('moduleWalletInput')?.checked,support:!!$('moduleSupportInput')?.checked}});data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);await set(ref(db,'finance_audit/'+Date.now()),{action:'site_control_saved',adminEmail:currentUser?.email||'',createdAt:Date.now(),note:'حفظ إعدادات تشغيل الموقع والأقسام'});toast('تم حفظ إعدادات تشغيل الموقع')}
     async function seedSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl(defaultSiteControl);data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);toast('تم استرجاع التشغيل الطبيعي')}
-    function adnorEnterAppFast(user){
-      currentUser=user;
-      const previous=(currentProfile&&currentProfile.uid===user.uid)?currentProfile:{};
-      currentProfile=localFallbackProfile(user,previous);
-      if($('loginScreen'))$('loginScreen').style.display='none';
-      if($('appScreen'))$('appScreen').style.display='flex';
-      renderProfile();
-      if(!document.querySelector('.page.active'))showPage('home');
-    }
-    async function adnorHydrateProfileInBackground(user){
-      try{
-        const profile=await adnorTimeout(ensureUser(user),8500,'user profile sync');
-        if(currentUser&&currentUser.uid===user.uid){
-          currentProfile={...(currentProfile||{}),...(profile||{})};
-          renderProfile();
-        }
-      }catch(e){
-        console.warn('profile sync skipped; user stays logged in',e);
-      }
-    }
-    function adnorStartRuntimeListeners(user){
-      if(!user||!user.uid)return;
-      if(window.__adnorRuntimeUid===user.uid)return;
-      window.__adnorRuntimeUid=user.uid;
-      adnorSafeStart('listenProfile',()=>listenProfile(user.uid));
-      adnorSafeStart('listenPaymentMethods',()=>listenPaymentMethods());
-      adnorSafeStart('listenLotterySettings',()=>listenLotterySettings());
-      adnorSafeStart('listenPublicDrawHistory',()=>listenPublicDrawHistory());
-      adnorSafeStart('listenReferralSettings',()=>listenReferralSettings());
-      adnorSafeStart('listenSupportContacts',()=>listenSupportContacts());
-      adnorSafeStart('listenSiteControl',()=>listenSiteControl());
-      adnorSafeStart('listenUserReferrals',()=>listenUserReferrals(user.uid));
-      adnorSafeStart('listenPendingReferralRewards',()=>listenPendingReferralRewards(user.uid));
-      adnorSafeStart('startAdminListeners',()=>startAdminListeners());
-      if(isAdminUser())adnorSafeStart('listenAiKnowledge',()=>listenAiKnowledge());
-      adnorSafeStart('capturePendingReferralCode',()=>capturePendingReferralCode());
-      setTimeout(()=>adnorSafeStart('processPendingReferralAfterLogin',()=>processPendingReferralAfterLogin()),800);
-    }
-    function adnorCleanupLogout(){
-      window.__adnorRuntimeUid='';
-      if($('loginScreen'))$('loginScreen').style.display='flex';
-      if($('appScreen'))$('appScreen').style.display='none';
-      currentProfile=null;
-      stopAdminListeners();
-      if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null}
-      if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null}
-      if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}}
-      if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}}
-      if(adnorLastResultUnsub){try{adnorLastResultUnsub()}catch(e){} adnorLastResultBox={}; adnorLastResultUnsub=null}
-      (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={};
-      if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null}
-      if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null}
-      if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null}
-      if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null}
-      if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null; currentNotifications={}; renderUserNotifications()}
-      if(aiKnowledgeUnsub){try{aiKnowledgeUnsub()}catch(e){} aiKnowledgeUnsub=null; aiKnowledgeCache={}}
-    }
-    onAuthStateChanged(auth,user=>{
-      currentUser=user;
-      if(user){
-        adnorEnterAppFast(user);
-        adnorStartRuntimeListeners(user);
-        adnorHydrateProfileInBackground(user);
-      }else{
-        adnorCleanupLogout();
-      }
-    });
+    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){currentProfile=await ensureUser(user);$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);listenPendingReferralRewards(user.uid);startAdminListeners();capturePendingReferralCode();processPendingReferralAfterLogin()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}} if(adnorLastResultUnsub){try{adnorLastResultUnsub()}catch(e){} adnorLastResultUnsub=null; adnorLastResultBox={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
     $('hideBalanceBtn').onclick=()=>{balanceHidden=!balanceHidden;$('hideBalanceBtn').textContent=balanceHidden?'🙈':'👁️';renderProfile()};if($('v61AccountShortcut'))$('v61AccountShortcut').onclick=()=>showPage('settings');if($('toggleLotteryTicketsBtn'))$('toggleLotteryTicketsBtn').onclick=()=>{lotteryTicketsHidden=!lotteryTicketsHidden;const card=$('lotteryActiveCard');if(card)card.classList.toggle('v61-hide-tickets',lotteryTicketsHidden);$('toggleLotteryTicketsBtn').textContent=lotteryTicketsHidden?'عرض التذاكر':'إخفاء التذاكر'};function openDrawer(){$('sideDrawer')?.classList.add('open');$('drawerOverlay')?.classList.add('open')}function closeDrawer(){$('sideDrawer')?.classList.remove('open');$('drawerOverlay')?.classList.remove('open')}$('menuBtn').onclick=openDrawer;$('drawerCloseBtn').onclick=closeDrawer;$('drawerOverlay').onclick=closeDrawer;$('drawerLogoutBtn').onclick=()=>{closeDrawer();signOut(auth)};document.querySelectorAll('[data-drawer-page]').forEach(b=>b.onclick=()=>{const p=b.dataset.drawerPage;if(p==='admin'&&!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');closeDrawer();showPage(p)});$('bellBtn').onclick=()=>{closeDrawer();showPage('notifications');};if($('markReadBtn'))$('markReadBtn').onclick=markNotificationsRead;$('depositBtn').onclick=()=>{showPage('wallet');showWalletPanel('deposit')};$('withdrawBtn').onclick=()=>{showPage('wallet');showWalletPanel('withdraw')};if($('openResultsBtn'))$('openResultsBtn').onclick=()=>showPage('results');if($('openTicketsBtn'))$('openTicketsBtn').onclick=()=>{showPage('results');currentTicketFilter='all';document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x.dataset.ticketFilter==='all'));renderUserTicketHistory(currentUserTickets)};document.querySelectorAll('[data-ticket-filter]').forEach(b=>b.onclick=()=>{currentTicketFilter=b.dataset.ticketFilter;document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x===b));renderUserTicketHistory(currentUserTickets)});
     function showPage(p){if(p==='admin'&&!isAdminUser()){toast('بوابة الإدارة للأدمن فقط');return}if(!isAdminUser()){if(siteControl.maintenance && !['account','settings','notifications'].includes(p)){toast(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');return}if(!moduleEnabled(p)){toast('هذا القسم متوقف مؤقتًا من الإدارة');return}}const page=$('page-'+p);if(!page)return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));page.classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));if($('appWrap')){$('appWrap').classList.toggle('admin-layout',p==='admin');$('appWrap').setAttribute('data-active-page',p)}if(p==='games'&&typeof showGamesHome==='function')showGamesHome();if(p==='admin')showAdminSection('overview')}document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{if(b.dataset.page==='admin'&&!isAdminUser())return toast('هذه الصفحة للأدمن فقط');showPage(b.dataset.page)});document.querySelectorAll('[data-home-go]').forEach(b=>b.onclick=()=>{const go=b.dataset.homeGo||'home';const parts=go.split(':');showPage(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>showWalletPanel(parts[1]),40)});if($('v52QuickDepositBtn'))$('v52QuickDepositBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('deposit'),40)};if($('v52QuickWithdrawBtn'))$('v52QuickWithdrawBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('withdraw'),40)};
     function showWalletPanel(p){document.querySelectorAll('.wallet-panel').forEach(x=>x.classList.add('hidden'));$('wallet-'+p).classList.remove('hidden');document.querySelectorAll('.wallet-tab').forEach(b=>b.classList.toggle('active',b.dataset.wallet===p));if(p==='deposit'){depositCategory='';depositMethod='';clearDepositStatus();renderMethods()}if(p==='withdraw'){withdrawCategory='';withdrawMethod='';clearWithdrawStatus();renderMethods()}}document.querySelectorAll('.wallet-tab').forEach(b=>b.onclick=()=>showWalletPanel(b.dataset.wallet));
@@ -3268,7 +3127,7 @@ function setCurrentPrize(type){
       setAgentContactLink('withdrawAgentWhatsappLink',whatsapp,'🟢 WhatsApp');
       setAgentContactLink('withdrawAgentTelegramLink',telegram,'🔵 Telegram');
     }
-    function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val);methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)},err=>{console.warn('payment methods read skipped',err);methods=[...defaultMethods];renderMethods()})}
+    function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val);methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)})}
     renderMethods();
     listenWheelSettings();
 
@@ -3718,7 +3577,7 @@ function setCurrentPrize(type){
         adminState.supportContacts=supportContacts;
         renderSupportContacts();
         if(Object.keys(val).length===0 && isAdminUser()) seedSupportContacts(false);
-      },err=>{console.warn('support contacts read skipped',err);supportContacts={...defaultSupportContacts};renderSupportContacts();});
+      });
     }
     function fillSupportContactForm(c){
       c=c||{};
@@ -3853,7 +3712,7 @@ function setCurrentPrize(type){
         if(val)referralSettings=Object.assign({},referralSettings,val);
         renderAccountExtras();renderReferralAdminForm();
         if(isAdminUser()&&!val)seedReferralSettings(false);
-      },err=>{console.warn('referral settings read skipped',err);renderAccountExtras();});
+      });
     }
     function listenUserReferrals(uid){
       if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null}
@@ -5662,8 +5521,8 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         return ts;
       }
       function v144NextYearly8(){
-        let p=v144Parts();let ts=v144Ts(p.y,12,31,20,0);
-        if(ts<=Date.now())ts=v144Ts(p.y+1,12,31,20,0);
+        let p=v144Parts();let ts=v144Ts(p.y,1,1,20,0);
+        if(ts<=Date.now())ts=v144Ts(p.y+1,1,1,20,0);
         return ts;
       }
       function v144DefaultPublishAt(type){return {daily:v144NextDaily8,weekly:v144NextWeekly8,monthly:v144NextMonthly8,yearly:v144NextYearly8}[type]?.()||v144NextDaily8()}
@@ -5751,7 +5610,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       function v144SetDefault(type){
         const el=$('v108Publish_'+type);if(!el)return;
         const ts=v144DefaultPublishAt(type);el.value=v144LocalInputValue(ts);
-        const label={daily:'اليومي القادم',weekly:'الجمعة القادمة',monthly:'أول يوم بالشهر القادم',yearly:'31 ديسمبر القادم'}[type]||v144Label(type);
+        const label={daily:'اليومي القادم',weekly:'الجمعة القادمة',monthly:'أول يوم بالشهر القادم',yearly:'السنوي القادم'}[type]||v144Label(type);
         toast('تم ضبط موعد '+label+' على '+v144Format(ts));
       }
       function v144FillForm(type){
@@ -5909,7 +5768,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         const canApprove=!hasUserInfo?true:(type==='sell'?confirmed>=qty:real>=usd);
         const badge=canApprove?'approved':'rejected';
         const guardText=type==='sell'
-          ? ('ADN المؤكد الحالي: '+adnQty(confirmed)+' — بيع قديم قيد المراجعة: '+adnQty(pendingSellOther)+' — المتاح بعد الطلبات الأخرى: '+adnQty(availableNow)+' ADN')
+          ? ('ADN المؤكد الحالي: '+adnQty(confirmed)+' — بيع آخر قيد الموافقة: '+adnQty(pendingSellOther)+' — المتاح بعد الطلبات الأخرى: '+adnQty(availableNow)+' ADN')
           : ('الرصيد الحقيقي الحالي: '+money(real)+' — قيمة الشراء المطلوبة: '+money(usd));
         const warn=!hasUserInfo?'جاري تحميل رصيد المستخدم من قائمة المستخدمين...':(canApprove?'يمكن المراجعة والاعتماد':'لا يمكن الاعتماد: الرصيد الحالي غير كافٍ');
         const approveAttr=(!hasUserInfo||canApprove)?'':' disabled title="الرصيد غير كافٍ"';
@@ -6113,17 +5972,48 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     function v183PendingSellTotalForUid(uid,excludeId){return Object.values(adnRequests||{}).filter(r=>String(r.status||'pending')==='pending' && ((r.type||r.tradeMode)==='sell') && r.uid===uid && (!excludeId || r.id!==excludeId)).reduce((a,r)=>a+adnNum(r.amountToken),0)}
     function v178PendingRows(){return Object.values(adnUserRequests||{}).filter(r=>String(r.status||'pending')==='pending')}
     function v178PendingTotals(){const rows=v178PendingRows();let buyToken=0,buyUsd=0,sellToken=0,sellUsd=0;rows.forEach(r=>{const type=(r.type||r.tradeMode)==='sell'?'sell':'buy';const q=adnNum(r.amountToken);const u=adnNum(r.amountUsd||r.estimatedUsd);if(type==='sell'){sellToken+=q;sellUsd+=u}else{buyToken+=q;buyUsd+=u}});return {buyToken,buyUsd,sellToken,sellUsd,count:rows.length}}
-    function v178RenderPendingSummary(){const t=v178PendingTotals();const b=v183AdnBalanceSummary();setText('adnPendingBuyToken',adnQty(t.buyToken)+' ADN');setText('adnPendingBuyUsd',money(t.buyUsd));setText('adnPendingSellToken',adnQty(t.sellToken)+' ADN');setText('adnAvailableSellToken',adnQty(b.availableSell)+' ADN');setText('adnWalletPendingBuy',adnQty(t.buyToken)+' ADN');setText('adnWalletPendingSell',adnQty(t.sellToken)+' ADN');setText('adnWalletAvailableSell',adnQty(b.availableSell)+' ADN');const note=$('adnPendingApprovalNote');if(note)note.textContent=t.count?('لديك '+t.count+' طلب ADN قديم قيد المراجعة. المتاح للبيع الآن: '+adnQty(b.availableSell)+' ADN.'): 'لا توجد طلبات قديمة قيد المراجعة.';}
+    function v178RenderPendingSummary(){const t=v178PendingTotals();const b=v183AdnBalanceSummary();setText('adnPendingBuyToken',adnQty(t.buyToken)+' ADN');setText('adnPendingBuyUsd',money(t.buyUsd));setText('adnPendingSellToken',adnQty(t.sellToken)+' ADN');setText('adnAvailableSellToken',adnQty(b.availableSell)+' ADN');setText('adnWalletPendingBuy',adnQty(t.buyToken)+' ADN');setText('adnWalletPendingSell',adnQty(t.sellToken)+' ADN');setText('adnWalletAvailableSell',adnQty(b.availableSell)+' ADN');const note=$('adnPendingApprovalNote');if(note)note.textContent=t.count?('لديك '+t.count+' طلب ADN قيد موافقة الإدارة. المتاح للبيع الآن: '+adnQty(b.availableSell)+' ADN.'): 'لا توجد طلبات ADN قيد الموافقة.';}
     const __v178RenderAdnTradeCalc=renderAdnTradeCalc;
     renderAdnTradeCalc=function(){
       const q=adnNum($('adnAmountInput')?.value);const price=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();const cost=q*price;const b=v183AdnBalanceSummary();
       setText('adnTradeCost',money(cost));setText('adnTradePriceInfo','سعر الطلب الحالي: '+adnFmt(price,4));
-      const btn=$('adnExecuteTradeBtn');if(btn)btn.textContent=adnTradeMode==='buy'?'شراء الآن':'بيع الآن';
-      const sellWarn=(adnTradeMode==='sell'&&q>b.availableSell&&q>0)?(' المتاح للبيع فقط: '+adnQty(b.availableSell)+' ADN لأن '+adnQty(b.pendingSellToken)+' ADN بيع قديم قيد المراجعة.'):'';
-      setText('adnTradeNote','تنفيذ فوري عبر السيرفر. الشراء من الرصيد الحقيقي فقط، والبيع من ADN المؤكد والمتاح فقط.'+sellWarn);
+      const btn=$('adnExecuteTradeBtn');if(btn)btn.textContent=adnTradeMode==='buy'?'إرسال طلب شراء للموافقة':'إرسال طلب بيع للموافقة';
+      const sellWarn=(adnTradeMode==='sell'&&q>b.availableSell&&q>0)?(' المتاح للبيع فقط: '+adnQty(b.availableSell)+' ADN لأن '+adnQty(b.pendingSellToken)+' ADN قيد البيع.'):'';
+      setText('adnTradeNote','سيظهر الطلب فورًا في حسابك كـ قيد الموافقة. البيع مسموح فقط من ADN المؤكد والمتاح.'+sellWarn);
       v178RenderPendingSummary();
     };
-    // V184: التنفيذ التلقائي محمي بالدوال buyAdnDirect / sellAdnDirect؛ لا ننشئ طلبات موافقة جديدة.
+    executeAdnTrade=async function(){
+      if(adnTradeBusy)return toast('يوجد طلب قيد الإرسال');
+      adnTradeBusy=true;const btn=$('adnExecuteTradeBtn');if(btn)btn.disabled=true;
+      try{
+        if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');
+        if(adnSettings.enabled===false)return toast('سوق ADN متوقف من الإدارة');
+        const qty=Math.floor(adnNum($('adnAmountInput')?.value));
+        if(qty<=0)return toast('اكتب كمية ADN صحيحة');
+        const type=adnTradeMode==='sell'?'sell':'buy';
+        const price=type==='buy'?adnCurrentPrice():adnSellPrice();
+        const usd=Number((qty*price).toFixed(4));
+        const real=adnNum(currentProfile.realBalance),token=adnNum(currentProfile.adnBalance);const b=v183AdnBalanceSummary();const pendingSell=adnNum(b.pendingSellToken);const availableSell=adnNum(b.availableSell);
+        if(type==='buy'){
+          if(adnSettings.buyEnabled===false)return toast('الشراء متوقف من الإدارة');
+          if(qty<adnNum(adnSettings.minBuy,1))return toast('أقل شراء هو '+adnQty(adnSettings.minBuy)+' ADN');
+          if(qty>adnNum(adnSettings.maxBuy,100000))return toast('أعلى شراء هو '+adnQty(adnSettings.maxBuy)+' ADN');
+          if(qty>adnNum(adnState.remainingSupply))return toast('الكمية أكبر من المتبقي للبيع');
+          if(real<usd)return toast('الرصيد الحقيقي لا يكفي. البونص لا يشتري ADN.');
+        }else{
+          if(adnSettings.sellEnabled===false)return toast('البيع متوقف من الإدارة');
+          if(availableSell<qty)return toast('المتاح للبيع فقط '+adnQty(availableSell)+' ADN. لديك '+adnQty(token)+' ADN مؤكد، ويوجد '+adnQty(pendingSell)+' ADN قيد البيع.');
+        }
+        const now=Date.now();const id=push(ref(db,'adn_trade_requests')).key||('ADN_REQ_'+now);
+        const req={id,status:'pending',type,uid:currentUser.uid,publicId:currentProfile.publicId||currentProfile.userId||currentProfile.accountNumber||'',email:currentUser.email||currentProfile.email||'',userName:currentProfile.name||currentProfile.displayName||currentUser.email||'مستخدم ADNOR',amountToken:qty,amountUsd:usd,estimatedUsd:usd,priceSnapshot:price,confirmedAdnAtRequest:token,pendingBuyAtRequest:b.pendingBuyToken,pendingSellAtRequest:pendingSell,availableSellAtRequest:availableSell,realBalanceAtRequest:real,createdAt:now,updatedAt:now,reviewMode:'admin_approval',visibleForUser:true};
+        const updates={};updates['adn_trade_requests/'+id]=req;updates['user_adn_requests/'+currentUser.uid+'/'+id]=req;
+        await update(ref(db),updates);
+        adnUserRequests={...(adnUserRequests||{}),[id]:req};
+        try{const opt={};opt['admin_notifications/adn_req_'+now]={type:'adn_trade_request',uid:currentUser.uid,email:req.email,title:'طلب '+(type==='buy'?'شراء':'بيع')+' ADN',message:req.userName+' — '+adnQty(qty)+' ADN — '+money(usd),createdAt:now,read:false};opt['user_notifications/'+currentUser.uid+'/adn_req_'+now]={type:'adn',title:'طلب ADN قيد الموافقة',message:(type==='buy'?'تم إرسال طلب شراء ':'تم إرسال طلب بيع ')+adnQty(qty)+' ADN بقيمة '+money(usd)+' وهو بانتظار موافقة الإدارة.',createdAt:now,read:false};await update(ref(db),opt);}catch(optionalNotifyErr){console.warn('ADN optional notification skipped',optionalNotifyErr)}
+        $('adnAmountInput').value='';$('adnUsdInput').value='';renderAdnTradeCalc();renderAdnUserRequests();renderAdnAll();toast('✅ تم إرسال طلب '+(type==='buy'?'شراء':'بيع')+' ADN بنجاح — الحالة: قيد موافقة الإدارة');
+      }catch(e){console.error(e);toast('تعذر إرسال طلب ADN: '+String(e?.message||e||'خطأ غير معروف'))}
+      finally{adnTradeBusy=false;if(btn)btn.disabled=false;}
+    };
     renderAdnUserRequests=function(){
       const box=$('adnUserRequestsList');if(!box)return;v178RenderPendingSummary();
       const limitRows=Object.values(adnLimitOrders||{}).sort((a,b)=>adnNum(b.createdAt)-adnNum(a.createdAt)).slice(0,10);
@@ -6131,7 +6021,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       const html=[];
       reviewRows.forEach(r=>{const type=(r.type||r.tradeMode)==='sell'?'sell':'buy';const pending=String(r.status||'pending')==='pending';html.push('<div class="v142-trade-row '+adnRequestClass(r.status)+' '+(type==='sell'?'sell':'buy')+'"><div><h4>'+(type==='sell'?'طلب بيع ADN':'طلب شراء ADN')+' — '+adnRequestStatusText(r.status)+'</h4><p>'+new Date(r.createdAt||Date.now()).toLocaleString('ar-TR')+'<br>الكمية: '+adnQty(r.amountToken)+' ADN — القيمة: '+money(r.amountUsd||r.estimatedUsd||0)+'<br>'+(pending?'✅ ظاهر في حسابك وينتظر اعتماد الإدارة.':'تمت معالجة الطلب.')+(r.adminNote?'<br>ملاحظة: '+escapeHtml(r.adminNote):'')+'</p></div><strong>'+adnRequestStatusText(r.status)+'</strong></div>')});
       limitRows.forEach(o=>html.push('<div class="v142-trade-row '+(o.type==='sell'?'sell':'buy')+'"><div><h4>'+(o.type==='sell'?'أمر بيع محدد':'أمر شراء محدد')+' — '+adnRequestStatusText(o.status)+'</h4><p>السعر المطلوب: '+adnFmt(o.targetPrice,4)+' — الكمية: '+adnQty(o.amountToken)+' ADN<br>'+new Date(o.createdAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+adnRequestStatusText(o.status)+'</strong></div>'));
-      box.innerHTML=html.length?html.join(''):'<div class="v142-empty">لا توجد طلبات قديمة قيد المراجعة.</div>';
+      box.innerHTML=html.length?html.join(''):'<div class="v142-empty">لا توجد طلبات ADN قيد الموافقة.</div>';
     };
     const __v178RenderAdnMarket=renderAdnMarket;
     renderAdnMarket=function(){__v178RenderAdnMarket();v178RenderPendingSummary();};

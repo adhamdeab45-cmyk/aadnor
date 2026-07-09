@@ -2930,20 +2930,36 @@ function setCurrentPrize(type){
 
     function modal(title,body){$('modalTitle').textContent=title;$('modalBody').textContent=body;$('infoModal').style.display='flex'}$('closeModal').onclick=()=>$('infoModal').style.display='none';
     function checkAgreements(){if(!$('ageOk').checked||!$('termsOk').checked||!$('rulesOk').checked){toast('قبل المتابعة لازم توافق على العمر والشروط وقواعد الاستخدام.');return false}return true}
+    function localFallbackProfile(user, old={}){
+      const email=(user?.email||'').toLowerCase();
+      const isAdmin=ADMIN_EMAILS.includes(email);
+      const publicId=adnorPublicIdOf(old)||adnorMakeNumericPublicId(user?.uid||'', 'local');
+      const name=($('displayName')?.value||'').trim()||old.name||old.displayName||user?.displayName||'مستخدم ADNOR';
+      return {...old,uid:user?.uid||'',publicId,userId:publicId,accountNumber:publicId,name,displayName:name,email:user?.email||old.email||'',photoURL:old.photoURL||user?.photoURL||'',country:($('country')?.value||old.country||'تركيا'),birthDate:($('birthDate')?.value||old.birthDate||''),role:isAdmin?'admin':(old.role||'user'),isAdmin,isFrozen:old.isFrozen||false,isVIP:old.isVIP||false,refCode:old.refCode||makeRefCode(user||{}),realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0),_localOnly:true}
+    }
+
     async function ensureUser(user){
       const now=Date.now();
       const email=(user.email||'').toLowerCase();
       const isAdmin=ADMIN_EMAILS.includes(email);
       const userRef=ref(db,'users/'+user.uid);
-      const snap=await get(userRef);
-      const old=snap.val()||{};
+      let old={};
+      try{
+        const snap=await get(userRef);
+        old=snap.val()||{};
+      }catch(e){
+        console.warn('user profile read skipped',e);
+        old={};
+      }
       const refCode=old.refCode||makeRefCode(user);
-      const name=$('displayName').value.trim()||old.name||user.displayName||'مستخدم ADNOR';
+      const name=($('displayName')?.value||'').trim()||old.name||user.displayName||'مستخدم ADNOR';
       const publicId=await ensurePublicUserId(user,old);
     
-      // V179 LOGIN FIX:
-      // لا نكتب حقول الرصيد أثناء تسجيل الدخول لأن قواعد Firebase تحميها.
-      // هذا يمنع PERMISSION_DENIED عند المستخدم العادي ويحافظ على الرصيد من التلاعب.
+      // V185 USER REGISTRATION FIX:
+      // المشكلة كانت أن المستخدم العادي قد يُمنع من حفظ حقول إدارية داخل users/{uid}
+      // فتفشل عملية التسجيل كاملة، بينما الأدمن ينجح بسبب صلاحياته.
+      // الحل: نطلب من Cloud Function موثوقة إنشاء/تحديث الملف، وإن لم تكن الدوال مرفوعة
+      // نحاول حفظ ملف مستخدم آمن بدون حقول إدارية، ولو فشل الحفظ لا نكسر الدخول.
       const profileSave={
         uid:user.uid,
         publicId,
@@ -2953,8 +2969,8 @@ function setCurrentPrize(type){
         displayName:name,
         email:user.email||'',
         photoURL:old.photoURL||user.photoURL||'',
-        country:$('country').value||old.country||'تركيا',
-        birthDate:$('birthDate').value||old.birthDate||'',
+        country:($('country')?.value||old.country||'تركيا'),
+        birthDate:($('birthDate')?.value||old.birthDate||''),
         role:isAdmin?'admin':(old.role||'user'),
         isAdmin,
         isFrozen:old.isFrozen||false,
@@ -2970,9 +2986,44 @@ function setCurrentPrize(type){
         profileUpdatedAt:now,
         createdAt:old.createdAt||now
       };
-    
-      // الأدمن فقط نترك له حقول إدارية غير خطرة هنا، أما الأرصدة لا تُكتب من شاشة الدخول.
-      await update(userRef,profileSave);
+
+      try{
+        const fn=httpsCallable(cloudFns,'ensureUserProfile');
+        const res=await fn({name,country:profileSave.country,birthDate:profileSave.birthDate,refCode});
+        if(res?.data?.profile){
+          return {...old,...res.data.profile,realBalance:Number(res.data.profile.realBalance||0),bonusBalance:Number(res.data.profile.bonusBalance||0),reservedWithdrawalBalance:Number(res.data.profile.reservedWithdrawalBalance||0),freeSpins:Number(res.data.profile.freeSpins||0),freeTickets:Number(res.data.profile.freeTickets||0),adnBalance:Number(res.data.profile.adnBalance||0),referralBonusEarned:Number(res.data.profile.referralBonusEarned||0)};
+        }
+      }catch(e){
+        console.warn('ensureUserProfile function skipped/fallback to client profile',e);
+      }
+
+      const safeUserProfile={
+        uid:profileSave.uid,
+        publicId:profileSave.publicId,
+        userId:profileSave.userId,
+        accountNumber:profileSave.accountNumber,
+        name:profileSave.name,
+        displayName:profileSave.displayName,
+        email:profileSave.email,
+        photoURL:profileSave.photoURL,
+        country:profileSave.country,
+        birthDate:profileSave.birthDate,
+        refCode:profileSave.refCode,
+        referredBy:profileSave.referredBy,
+        referredByUid:profileSave.referredByUid,
+        lastLogin:profileSave.lastLogin,
+        lastLoginAt:profileSave.lastLoginAt,
+        lastActivityAt:profileSave.lastActivityAt,
+        profileUpdatedAt:profileSave.profileUpdatedAt,
+        createdAt:profileSave.createdAt
+      };
+
+      try{
+        await update(userRef,isAdmin?profileSave:safeUserProfile);
+      }catch(e){
+        console.warn('user profile save skipped; login will continue',e);
+        return localFallbackProfile(user,{...old,...safeUserProfile,publicId});
+      }
     
       try{
         await set(ref(db,'referral_codes/'+refCode),{code:refCode,ownerUid:user.uid,ownerEmail:user.email||'',ownerName:name,type:isAdmin?'admin_user':'user',active:true,createdAt:old.createdAt||now,updatedAt:now});
@@ -3033,7 +3084,7 @@ function setCurrentPrize(type){
     function listenAiKnowledge(){if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()})}
     async function adminSaveSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl({maintenance:$('siteMaintenanceInput')?.value==='true',maintenanceMessage:$('siteMaintenanceMessageInput')?.value||'',announcement:$('siteAnnouncementInput')?.value||'',modules:{lottery:!!$('moduleLotteryInput')?.checked,results:!!$('moduleLotteryInput')?.checked,games:!!$('moduleGamesInput')?.checked,wallet:!!$('moduleWalletInput')?.checked,support:!!$('moduleSupportInput')?.checked}});data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);await set(ref(db,'finance_audit/'+Date.now()),{action:'site_control_saved',adminEmail:currentUser?.email||'',createdAt:Date.now(),note:'حفظ إعدادات تشغيل الموقع والأقسام'});toast('تم حفظ إعدادات تشغيل الموقع')}
     async function seedSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl(defaultSiteControl);data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);toast('تم استرجاع التشغيل الطبيعي')}
-    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){currentProfile=await ensureUser(user);$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);listenPendingReferralRewards(user.uid);startAdminListeners();capturePendingReferralCode();processPendingReferralAfterLogin()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}} if(adnorLastResultUnsub){try{adnorLastResultUnsub()}catch(e){} adnorLastResultUnsub=null; adnorLastResultBox={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
+    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){try{currentProfile=await ensureUser(user)}catch(e){console.warn('ensureUser fatal fallback',e);currentProfile=localFallbackProfile(user,{})}$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);listenPendingReferralRewards(user.uid);startAdminListeners();capturePendingReferralCode();processPendingReferralAfterLogin()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}} if(adnorLastResultUnsub){try{adnorLastResultUnsub()}catch(e){} adnorLastResultUnsub=null; adnorLastResultBox={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
     $('hideBalanceBtn').onclick=()=>{balanceHidden=!balanceHidden;$('hideBalanceBtn').textContent=balanceHidden?'🙈':'👁️';renderProfile()};if($('v61AccountShortcut'))$('v61AccountShortcut').onclick=()=>showPage('settings');if($('toggleLotteryTicketsBtn'))$('toggleLotteryTicketsBtn').onclick=()=>{lotteryTicketsHidden=!lotteryTicketsHidden;const card=$('lotteryActiveCard');if(card)card.classList.toggle('v61-hide-tickets',lotteryTicketsHidden);$('toggleLotteryTicketsBtn').textContent=lotteryTicketsHidden?'عرض التذاكر':'إخفاء التذاكر'};function openDrawer(){$('sideDrawer')?.classList.add('open');$('drawerOverlay')?.classList.add('open')}function closeDrawer(){$('sideDrawer')?.classList.remove('open');$('drawerOverlay')?.classList.remove('open')}$('menuBtn').onclick=openDrawer;$('drawerCloseBtn').onclick=closeDrawer;$('drawerOverlay').onclick=closeDrawer;$('drawerLogoutBtn').onclick=()=>{closeDrawer();signOut(auth)};document.querySelectorAll('[data-drawer-page]').forEach(b=>b.onclick=()=>{const p=b.dataset.drawerPage;if(p==='admin'&&!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');closeDrawer();showPage(p)});$('bellBtn').onclick=()=>{closeDrawer();showPage('notifications');};if($('markReadBtn'))$('markReadBtn').onclick=markNotificationsRead;$('depositBtn').onclick=()=>{showPage('wallet');showWalletPanel('deposit')};$('withdrawBtn').onclick=()=>{showPage('wallet');showWalletPanel('withdraw')};if($('openResultsBtn'))$('openResultsBtn').onclick=()=>showPage('results');if($('openTicketsBtn'))$('openTicketsBtn').onclick=()=>{showPage('results');currentTicketFilter='all';document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x.dataset.ticketFilter==='all'));renderUserTicketHistory(currentUserTickets)};document.querySelectorAll('[data-ticket-filter]').forEach(b=>b.onclick=()=>{currentTicketFilter=b.dataset.ticketFilter;document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x===b));renderUserTicketHistory(currentUserTickets)});
     function showPage(p){if(p==='admin'&&!isAdminUser()){toast('بوابة الإدارة للأدمن فقط');return}if(!isAdminUser()){if(siteControl.maintenance && !['account','settings','notifications'].includes(p)){toast(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');return}if(!moduleEnabled(p)){toast('هذا القسم متوقف مؤقتًا من الإدارة');return}}const page=$('page-'+p);if(!page)return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));page.classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));if($('appWrap')){$('appWrap').classList.toggle('admin-layout',p==='admin');$('appWrap').setAttribute('data-active-page',p)}if(p==='games'&&typeof showGamesHome==='function')showGamesHome();if(p==='admin')showAdminSection('overview')}document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{if(b.dataset.page==='admin'&&!isAdminUser())return toast('هذه الصفحة للأدمن فقط');showPage(b.dataset.page)});document.querySelectorAll('[data-home-go]').forEach(b=>b.onclick=()=>{const go=b.dataset.homeGo||'home';const parts=go.split(':');showPage(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>showWalletPanel(parts[1]),40)});if($('v52QuickDepositBtn'))$('v52QuickDepositBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('deposit'),40)};if($('v52QuickWithdrawBtn'))$('v52QuickWithdrawBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('withdraw'),40)};
     function showWalletPanel(p){document.querySelectorAll('.wallet-panel').forEach(x=>x.classList.add('hidden'));$('wallet-'+p).classList.remove('hidden');document.querySelectorAll('.wallet-tab').forEach(b=>b.classList.toggle('active',b.dataset.wallet===p));if(p==='deposit'){depositCategory='';depositMethod='';clearDepositStatus();renderMethods()}if(p==='withdraw'){withdrawCategory='';withdrawMethod='';clearWithdrawStatus();renderMethods()}}document.querySelectorAll('.wallet-tab').forEach(b=>b.onclick=()=>showWalletPanel(b.dataset.wallet));

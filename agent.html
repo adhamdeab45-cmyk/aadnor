@@ -14,7 +14,7 @@
 <body>
   <main class="wrap">
     <div class="top"><div><div class="brand">ADNOR</div><div class="mini">بوابة وكيل الشحن</div></div><button id="logoutBtn" class="btn red hidden" style="width:auto;min-height:42px;padding:0 13px">خروج</button></div>
-    <section class="card hero"><div class="icon">💳</div><h1>وكيل شحن ADNOR</h1><p>ادخل بحساب الوكيل، ثم اشحن المستخدم عبر UID أو كود الدعوة أو البريد. الرصيد ينخصم من محفظتك فقط.</p></section>
+    <section class="card hero"><div class="icon">💳</div><h1>وكيل شحن ADNOR</h1><p>ادخل بحساب الوكيل، ثم اشحن المستخدم عبر UID أو الرقم العام أو كود الدعوة أو البريد. التنفيذ محمي من السيرفر وينخصم من محفظتك فقط.</p></section>
     <section class="card" id="loginCard">
       <h2 style="color:#ffe184;font-size:21px">تسجيل دخول الوكيل</h2>
       <div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="loginEmail" type="text" autocomplete="username" placeholder="adhamagent أو agent@gmail.com"></div></div>
@@ -24,7 +24,7 @@
     </section>
     <section class="card hidden" id="dashboardCard">
       <div class="profile"><div><b id="agentName">وكيل شحن</b><span id="agentEmail">—</span></div><div class="mini" id="agentState">مفعّل</div></div>
-      <div class="stats" style="margin-top:12px"><div class="stat"><span>رصيد الوكيل</span><b id="agentBalance">$0.00</b></div><div class="stat"><span>إجمالي الشحن</span><b id="agentTotal">$0.00</b></div></div>
+      <div class="stats" style="margin-top:12px"><div class="stat"><span>رصيد الوكيل</span><b id="agentBalance">$0.00</b></div><div class="stat"><span>إجمالي الشحن</span><b id="agentTotal">$0.00</b></div><div class="stat"><span>شحن اليوم / الحد</span><b id="agentDailyUsage">$0.00</b></div><div class="stat"><span>شحن الشهر / الحد</span><b id="agentMonthlyUsage">$0.00</b></div></div>
     </section>
     <section class="card hidden" id="rechargeCard">
       <h2 style="color:#ffe184;font-size:21px">شحن مستخدم</h2>
@@ -88,100 +88,16 @@
     const a=snap.val();
     if(!a)throw new Error('هذا الحساب ليس مسجلاً كوكيل شحن بالنظام.');
     if(a.active===false)throw new Error('تم إيقاف حساب الوكيل من قبل الإدارة.');
-    let parsed=agentBalanceFrom(a);
-    const cached=cleanNum(window.__ADNOR_AGENT_BALANCE_CACHE||0);
-    if(parsed<=0&&cached>0)parsed=cached;
-    const raw=a.agentBalance;a.agentBalance=parsed;
-    if(raw!==parsed){update(ref(db,'agents/'+u.uid),{agentBalance:parsed,updatedAt:Date.now(),balanceFixedBy:'agent_page_v166'}).catch(()=>null)}
+    a.agentBalance=agentBalanceFrom(a);
     return {uid:u.uid,email:u.email,agent:a};
   }
   
-  async function directFindUser(raw){
-    const q=String(raw||'').trim();if(!q)throw new Error('رقم المستخدم مطلوب بالفحص.');
-    if(/^\d{5,12}$/.test(q)){
-      try{
-        const m=await get(ref(db,'public_user_ids/'+q));
-        if(m.exists()){
-          const uid=String(m.val()||'');
-          const us=await get(ref(db,'users/'+uid));
-          if(us.exists())return {uid,user:us.val()||{}}
-        }
-      }catch(e){console.warn('public id lookup skipped',e)}
-    }
-    let s=await get(ref(db,'users/'+q));
-    if(s.exists())return {uid:q,user:s.val()||{}};
-    const all=(await get(ref(db,'users'))).val()||{};
-    const lower=q.toLowerCase();
-    for(const [uid,u] of Object.entries(all)){
-      if(!u)continue;
-      const arr=[u.publicId,u.userId,u.accountNumber,u.uid,u.refCode,u.email,u.phone].filter(Boolean).map(x=>String(x).toLowerCase());
-      if(arr.includes(lower))return {uid,user:u}
-    }
-    throw new Error('لم يتم العثور على المستخدم بالنظام، يرجى التثبت من الـ UID.');
-  }
-  
-  async function directLoadDash(){
-    const a=await getMyAgent();
-    const logsSnap=await get(ref(db,'agent_recharges_by_agent/'+a.uid));
-    const logs=Object.values(logsSnap.val()||{}).sort((x,y)=>(y.createdAt||0)-(x.createdAt||0)).slice(0,60);
-    return {agent:{...a.agent,active:a.agent.active!==false},logs};
-  }
-  
-  async function directRechargeUser(targetId,amount,note){
-    const me=await getMyAgent();
-    amount=Math.round(Number(amount||0)*100)/100;
-    if(!amount||amount<=0)throw new Error('المبلغ غير صحيح.');
-    const found=await directFindUser(targetId);
-    const targetUid=found.uid,targetUser=found.user||{};
-    let agentBefore=0,agentAfter=0,userBefore=0,userAfter=0;
-    const fallbackBalance=Math.max(agentBalanceFrom(me.agent),cleanNum(window.__ADNOR_AGENT_BALANCE_CACHE||0));
-    
-    const ares=await runTransaction(ref(db,'agents/'+me.uid+'/agentBalance'),cur=>{
-      const current=cleanNum(cur);
-      agentBefore=Math.max(current,fallbackBalance);
-      agentAfter=Math.round((agentBefore-amount)*100)/100;
-      if(agentAfter<0)return;
-      return agentAfter;
-    });
-    if(!ares.committed)throw new Error('رصيدك كوكيل لا يكفي لتغطية مبلغ الشحن.');
-    
-    try{
-      const ures=await runTransaction(ref(db,'users/'+targetUid+'/realBalance'),cur=>{
-        userBefore=Number(cur||0);
-        userAfter=Math.round((userBefore+amount)*100)/100;
-        return userAfter;
-      });
-      if(!ures.committed)throw new Error('تعذر تعديل حساب المستخدم.');
-    }catch(e){
-      await runTransaction(ref(db,'agents/'+me.uid+'/agentBalance'),cur=>Math.round((Number(cur||0)+amount)*100)/100).catch(()=>null);
-      throw e;
-    }
-    
-    window.__ADNOR_AGENT_BALANCE_CACHE=agentAfter;
-    const now=Date.now(),id=nowId('agent_recharge'),targetName=targetUser.name||targetUser.displayName||targetUser.email||'مستخدم',agentName=me.agent.name||me.email||'وكيل شحن';
-    const row={id,agentUid:me.uid,agentName,agentEmail:me.agent.email||me.email||'',targetUid,targetName,targetUserId:String(targetId||''),targetPublicId:String(targetUser.publicId||targetUser.userId||targetUser.accountNumber||''),amount,note:String(note||''),status:'completed',beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,createdAt:now,source:'client_agent_v166'};
-    const updates={};
-    updates['agents/'+me.uid+'/agentBalance']=agentAfter;
-    updates['agents/'+me.uid+'/totalCharged']=(Number(me.agent.totalCharged||0)+amount);
-    updates['agents/'+me.uid+'/totalOperations']=(Number(me.agent.totalOperations||0)+1);
-    updates['agents/'+me.uid+'/lastRechargeAt']=now;
-    updates['agents/'+me.uid+'/updatedAt']=now;
-    updates['agent_recharges/'+id]=row;
-    updates['agent_recharges_by_agent/'+me.uid+'/'+id]=row;
-    updates['agent_recharges_by_user/'+targetUid+'/'+id]=row;
-    updates['transactions/'+targetUid+'/'+id+'_user']={id:id+'_user',type:'agent_recharge_credit',amount,balanceBefore:userBefore,balanceAfter:userAfter,status:'completed',note,agentUid:me.uid,agentName,createdAt:now,source:'client_agent_v166'};
-    updates['transactions/'+me.uid+'/'+id+'_agent']={id:id+'_agent',type:'agent_wallet_debit',amount:-amount,balanceBefore:agentBefore,balanceAfter:agentAfter,status:'completed',note:'شحن المستخدم '+targetName,targetUid,createdAt:now,source:'client_agent_v166'};
-    updates['finance_audit/'+id]={id,action:'client_agent_recharge',agentUid:me.uid,targetUid,amount,beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,note,createdAt:now,source:'client_agent_v166'};
-    updates['user_notifications/'+targetUid+'/'+id]={type:'agent_recharge',title:'تم شحن رصيدك',message:'تم إضافة '+amount+'$ إلى رصيدك عبر الوكيل.',read:false,amount,agentName,rechargeId:id,createdAt:now};
-    updates['admin_notifications/'+id]={id,type:'agent_recharge_completed',agentUid:me.uid,targetUid,text:agentName+' شحن '+amount+'$ للمستخدم '+targetName,status:'done',createdAt:now};
-    await update(ref(db),updates);
-    return {ok:true,id,agentAfter,userAfter,targetName,amount};
-  }
-
-  async function loadDash(){
-    let res; try{res=await call('getAgentDashboard')}catch(e){console.warn('getAgentDashboard failed; using direct database fallback',e);res=await directLoadDash()}
+async function loadDash(){
+    let res; try{res=await call('getAgentDashboard')}catch(e){console.warn('getAgentDashboard failed',e); throw new Error('دوال السيرفر غير جاهزة. لا يمكن تشغيل بوابة الوكيل بدون Firebase Functions حفاظًا على الأمان.');}
     const a=res.agent||{};
     const shownBal=agentBalanceFrom(a); window.__ADNOR_AGENT_BALANCE_CACHE=shownBal; $('agentName').textContent=a.name||'وكيل شحن'; $('agentEmail').textContent=a.loginId||a.email||''; $('agentState').textContent=a.active?'مفعّل':'موقوف'; $('agentBalance').textContent=money(shownBal); $('agentTotal').textContent=money(a.totalCharged);
+    if($('agentDailyUsage'))$('agentDailyUsage').textContent=money(res.todayCharged||0)+' / '+(a.dailyLimit?money(a.dailyLimit):'بدون');
+    if($('agentMonthlyUsage'))$('agentMonthlyUsage').textContent=money(res.monthCharged||0)+' / '+(a.monthlyLimit?money(a.monthlyLimit):'بدون');
     const logs=res.logs||[]; $('logsList').innerHTML=logs.length?logs.map(x=>`<div class="log"><b>${money(x.amount)} إلى ${escapeHtml(x.targetName||x.targetUserId||'مستخدم')}</b><p>ID: ${escapeHtml(x.targetPublicId||x.targetUserId||x.targetUid||'')}<br>${new Date(x.createdAt||Date.now()).toLocaleString('ar-TR')}<br>${escapeHtml(x.note||'')}</p></div>`).join(''):'<div class="status">لا توجد عمليات بعد.</div>';
   }
   function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
@@ -205,9 +121,9 @@
   $('findUserBtn').onclick=async()=>{
     try{
       msg('rechargeStatus','جارٍ فحص المستخدم...');
-      let r;try{r=await call('agentFindUser',{targetId:$('targetId').value.trim()})}catch(serverErr){console.warn('agentFindUser failed; using direct database fallback',serverErr);const f=await directFindUser($('targetId').value.trim());r={user:{uid:f.uid,...(f.user||{})},fallback:true}}
+      let r;try{r=await call('agentFindUser',{targetId:$('targetId').value.trim()})}catch(serverErr){console.warn('agentFindUser failed',serverErr);throw new Error('تعذر فحص المستخدم عبر السيرفر: '+err(serverErr));}
       const u=r.user||{};$('targetUserBox').classList.add('show');$('targetUserName').textContent=u.name||u.displayName||u.email||'مستخدم';$('targetUserInfo').textContent=`ID: ${u.publicId||u.userId||u.accountNumber||'—'}\nUID داخلي: ${u.uid}\nEmail: ${u.email||'—'}\nReal: ${money(u.realBalance)} | Bonus: ${money(u.bonusBalance)}`;
-      msg('rechargeStatus',r.fallback?'تم جلب حساب المستخدم بنجاح. تحقق من الاسم بدقة قبل المتابعة.':'تم العثور على المستخدم. تأكد من الاسم قبل الشحن.','ok');
+      msg('rechargeStatus','تم العثور على المستخدم عبر السيرفر. تأكد من الاسم قبل الشحن.','ok');
     }catch(e){
       $('targetUserBox').classList.remove('show');msg('rechargeStatus',err(e),'bad');
     }
@@ -219,7 +135,7 @@
       if(!targetId||!amount||amount<=0) return msg('rechargeStatus','اكتب معرف المستخدم والمبلغ بشكل صحيح.','bad'); 
       if(!confirm(`هل تود تأكيد شحن ${money(amount)} للمعرف: ${targetId}؟`)) return; 
       $('rechargeBtn').disabled=true;msg('rechargeStatus','جارٍ شحن الحساب الحقيقي...');
-      let r;try{r=await call('agentRechargeUser',{targetId,amount,note})}catch(serverErr){console.warn('agentRechargeUser failed; trying direct execution',serverErr);r=await directRechargeUser(targetId,amount,note);r.fallback=true}
+      let r;try{r=await call('agentRechargeUser',{targetId,amount,note})}catch(serverErr){console.warn('agentRechargeUser failed',serverErr);throw new Error('تعذر تنفيذ الشحن عبر السيرفر: '+err(serverErr));}
       msg('rechargeStatus',`تم الشحن بنجاح. رصيدك الحالي: ${money(r.agentAfter)} | رصيد العميل الجديد: ${money(r.userAfter)}.`,'ok');
       $('amount').value='';$('note').value='';$('targetUserBox').classList.remove('show');
       await loadDash();

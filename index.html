@@ -2615,7 +2615,7 @@ function setCurrentPrize(type){
 </script>
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
     import { getDatabase, ref, set, update, get, onValue, push, increment, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
@@ -2789,6 +2789,60 @@ function setCurrentPrize(type){
     function renderUserTicketHistory(val){currentUserTickets=val||currentUserTickets||{};const all=Object.values(currentUserTickets||{}).sort((a,b)=>(b.createdAt||b.movedAt||0)-(a.createdAt||a.movedAt||0));const activeList=all.filter(t=>t.status==='active');const active=activeList.length;const won=all.filter(t=>t.status==='winner').length;setText('myTicketsTotalText',all.length);setText('myTicketsActiveText',active);setText('myTicketsWonText',won);setText('ticketsCountText',active?('لديك '+active+' تذكرة نشطة'):(all.length?'لا توجد تذاكر نشطة':'لا توجد تذاكر بعد'));setText('activeTicketsText',active);setText('homeTicketsText',all.length);const lbox=$('lotteryActiveTicketsList');if(lbox){if(!activeList.length){lbox.innerHTML='<div class="v61-mini-empty">لا توجد تذاكر نشطة بعد</div>'}else{lbox.innerHTML=activeList.slice(0,8).map(t=>'<div class="v61-mini-ticket"><i>🎟️</i><b>'+escapeHtml(t.number||'')+'</b><span>'+escapeHtml(t.drawLabel||drawLabel(t.drawType))+'</span></div>').join('')}}const box=$('myTicketsList');if(!box)return;let list=all;if(currentTicketFilter!=='all')list=all.filter(t=>t.status===currentTicketFilter);if(!list.length){box.innerHTML='<div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر في هذا القسم</h4><p>استخدم الفلتر الآخر أو اشترِ تذكرة جديدة.</p></div><strong>0</strong></div>';return}box.innerHTML=list.slice(0,80).map(t=>{const cls=drawTicketStatusClass(t);const status=drawTicketStatusLabel(t);const detail=(t.status==='moved'&&t.movedTo)?('انتقلت إلى '+drawLabel(t.movedTo)):(t.status==='winner'?'ربحت '+drawLabel(t.drawType):'محفوظة في '+(t.drawLabel||drawLabel(t.drawType)));return '<div class="draw-item"><div class="medal">🎟️</div><div><h4>رقم '+escapeHtml(t.number||'')+' <span class="ticket-mini '+cls+'">'+status+'</span></h4><p>'+escapeHtml(detail)+'<br>النوع: '+escapeHtml(t.drawLabel||drawLabel(t.drawType))+' — السعر: '+money(t.price||0)+'<br>الوقت: '+new Date(t.createdAt||t.movedAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+escapeHtml(t.number||'')+'</strong></div>'}).join('')}
 
     const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app);provider.setCustomParameters({prompt:'select_account'});
+    // V188_AUTH_PERSISTENCE_GUARD: يمنع رجوع المستخدم لشاشة الدخول بسبب null مؤقت من Firebase Auth.
+    let adnorRedirectChecked=false;
+    let adnorNullAuthTimer=null;
+    let adnorManualLogout=false;
+    const adnorAuthPersistenceReady=setPersistence(auth,browserLocalPersistence).catch(e=>{
+      console.warn('ADNOR auth persistence local failed; continuing with Firebase default persistence',e);
+    });
+    function adnorMarkLoginAttempt(){
+      try{sessionStorage.setItem('adnorLoginAttemptAt',String(Date.now()))}catch(e){}
+    }
+    function adnorRecentLoginAttempt(ms=25000){
+      try{return Date.now()-Number(sessionStorage.getItem('adnorLoginAttemptAt')||0)<ms}catch(e){return false}
+    }
+    function adnorClearLoginAttempt(){try{sessionStorage.removeItem('adnorLoginAttemptAt')}catch(e){}}
+    function adnorDelayNullAuth(reason){
+      if(adnorManualLogout)return false;
+      if(!adnorRedirectChecked || adnorRecentLoginAttempt(25000)){
+        console.warn('ADNOR delayed temporary null auth:',reason);
+        if(adnorNullAuthTimer)clearTimeout(adnorNullAuthTimer);
+        adnorNullAuthTimer=setTimeout(()=>{
+          adnorNullAuthTimer=null;
+          const u=auth.currentUser;
+          if(u){
+            currentUser=u;
+            adnorEnterAppFast(u);
+            adnorStartRuntimeListeners(u);
+            adnorHydrateProfileInBackground(u);
+          }else if(adnorRedirectChecked && !adnorRecentLoginAttempt(25000)){
+            adnorCleanupLogout();
+          }else{
+            // ننتظر دورة أخيرة لأن بعض المتصفحات تتأخر بحفظ جلسة Google.
+            setTimeout(()=>{
+              const again=auth.currentUser;
+              if(again){
+                currentUser=again;
+                adnorEnterAppFast(again);
+                adnorStartRuntimeListeners(again);
+                adnorHydrateProfileInBackground(again);
+              }else{
+                adnorClearLoginAttempt();
+                adnorCleanupLogout();
+              }
+            },2500);
+          }
+        },3200);
+        return true;
+      }
+      return false;
+    }
+    async function adnorLogoutNow(){
+      adnorManualLogout=true;
+      adnorClearLoginAttempt();
+      try{await signOut(auth)}finally{adnorCleanupLogout();adnorManualLogout=false}
+    }
     // V187_GOOGLE_LOGIN_FINAL: رسائل واضحة + fallback redirect عندما يفشل popup عند المستخدم العادي.
     function adnorAuthMessage(e){
       const code=String(e?.code||e?.message||e||'');
@@ -3066,8 +3120,11 @@ function setCurrentPrize(type){
     async function doGoogle(){
       if(!checkAgreements())return;
       try{
+        adnorMarkLoginAttempt();
+        await adnorAuthPersistenceReady;
         capturePendingReferralCode();
         await signInWithPopup(auth,provider);
+        adnorClearLoginAttempt();
         toast('تم تسجيل الدخول بنجاح');
       }catch(e){
         console.warn('Google popup failed; trying redirect fallback',e);
@@ -3075,6 +3132,8 @@ function setCurrentPrize(type){
         if(code.includes('popup-blocked') || code.includes('popup-closed-by-user') || code.includes('operation-not-supported-in-this-environment') || code.includes('cancelled-popup-request')){
           try{
             toast('جارٍ فتح تسجيل Google بطريقة آمنة...');
+            adnorMarkLoginAttempt();
+            await adnorAuthPersistenceReady;
             await signInWithRedirect(auth,provider);
             return;
           }catch(rErr){
@@ -3090,11 +3149,18 @@ function setCurrentPrize(type){
     $('googleBtn').onclick=doGoogle;$('continueBtn').onclick=doGoogle;
     (async function adnorHandleRedirectResult(){
       try{
+        await adnorAuthPersistenceReady;
         const r=await getRedirectResult(auth);
-        if(r&&r.user)toast('تم تسجيل الدخول بنجاح');
+        adnorRedirectChecked=true;
+        if(r&&r.user){adnorClearLoginAttempt();toast('تم تسجيل الدخول بنجاح')}
       }catch(e){
         console.error('Google redirect login failed',e);
+        adnorRedirectChecked=true;
+        adnorClearLoginAttempt();
         toast('خطأ تسجيل الدخول: '+adnorAuthMessage(e));
+      }
+      finally{
+        adnorRedirectChecked=true;
       }
     })();
 
@@ -3198,16 +3264,19 @@ function setCurrentPrize(type){
       if(aiKnowledgeUnsub){try{aiKnowledgeUnsub()}catch(e){} aiKnowledgeUnsub=null; aiKnowledgeCache={}}
     }
     onAuthStateChanged(auth,user=>{
+      if(adnorNullAuthTimer){clearTimeout(adnorNullAuthTimer);adnorNullAuthTimer=null;}
       currentUser=user;
       if(user){
+        adnorClearLoginAttempt();
         adnorEnterAppFast(user);
         adnorStartRuntimeListeners(user);
         adnorHydrateProfileInBackground(user);
       }else{
+        if(adnorDelayNullAuth('onAuthStateChanged null'))return;
         adnorCleanupLogout();
       }
     });
-    $('hideBalanceBtn').onclick=()=>{balanceHidden=!balanceHidden;$('hideBalanceBtn').textContent=balanceHidden?'🙈':'👁️';renderProfile()};if($('v61AccountShortcut'))$('v61AccountShortcut').onclick=()=>showPage('settings');if($('toggleLotteryTicketsBtn'))$('toggleLotteryTicketsBtn').onclick=()=>{lotteryTicketsHidden=!lotteryTicketsHidden;const card=$('lotteryActiveCard');if(card)card.classList.toggle('v61-hide-tickets',lotteryTicketsHidden);$('toggleLotteryTicketsBtn').textContent=lotteryTicketsHidden?'عرض التذاكر':'إخفاء التذاكر'};function openDrawer(){$('sideDrawer')?.classList.add('open');$('drawerOverlay')?.classList.add('open')}function closeDrawer(){$('sideDrawer')?.classList.remove('open');$('drawerOverlay')?.classList.remove('open')}$('menuBtn').onclick=openDrawer;$('drawerCloseBtn').onclick=closeDrawer;$('drawerOverlay').onclick=closeDrawer;$('drawerLogoutBtn').onclick=()=>{closeDrawer();signOut(auth)};document.querySelectorAll('[data-drawer-page]').forEach(b=>b.onclick=()=>{const p=b.dataset.drawerPage;if(p==='admin'&&!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');closeDrawer();showPage(p)});$('bellBtn').onclick=()=>{closeDrawer();showPage('notifications');};if($('markReadBtn'))$('markReadBtn').onclick=markNotificationsRead;$('depositBtn').onclick=()=>{showPage('wallet');showWalletPanel('deposit')};$('withdrawBtn').onclick=()=>{showPage('wallet');showWalletPanel('withdraw')};if($('openResultsBtn'))$('openResultsBtn').onclick=()=>showPage('results');if($('openTicketsBtn'))$('openTicketsBtn').onclick=()=>{showPage('results');currentTicketFilter='all';document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x.dataset.ticketFilter==='all'));renderUserTicketHistory(currentUserTickets)};document.querySelectorAll('[data-ticket-filter]').forEach(b=>b.onclick=()=>{currentTicketFilter=b.dataset.ticketFilter;document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x===b));renderUserTicketHistory(currentUserTickets)});
+    $('hideBalanceBtn').onclick=()=>{balanceHidden=!balanceHidden;$('hideBalanceBtn').textContent=balanceHidden?'🙈':'👁️';renderProfile()};if($('v61AccountShortcut'))$('v61AccountShortcut').onclick=()=>showPage('settings');if($('toggleLotteryTicketsBtn'))$('toggleLotteryTicketsBtn').onclick=()=>{lotteryTicketsHidden=!lotteryTicketsHidden;const card=$('lotteryActiveCard');if(card)card.classList.toggle('v61-hide-tickets',lotteryTicketsHidden);$('toggleLotteryTicketsBtn').textContent=lotteryTicketsHidden?'عرض التذاكر':'إخفاء التذاكر'};function openDrawer(){$('sideDrawer')?.classList.add('open');$('drawerOverlay')?.classList.add('open')}function closeDrawer(){$('sideDrawer')?.classList.remove('open');$('drawerOverlay')?.classList.remove('open')}$('menuBtn').onclick=openDrawer;$('drawerCloseBtn').onclick=closeDrawer;$('drawerOverlay').onclick=closeDrawer;$('drawerLogoutBtn').onclick=()=>{closeDrawer();adnorLogoutNow()};document.querySelectorAll('[data-drawer-page]').forEach(b=>b.onclick=()=>{const p=b.dataset.drawerPage;if(p==='admin'&&!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');closeDrawer();showPage(p)});$('bellBtn').onclick=()=>{closeDrawer();showPage('notifications');};if($('markReadBtn'))$('markReadBtn').onclick=markNotificationsRead;$('depositBtn').onclick=()=>{showPage('wallet');showWalletPanel('deposit')};$('withdrawBtn').onclick=()=>{showPage('wallet');showWalletPanel('withdraw')};if($('openResultsBtn'))$('openResultsBtn').onclick=()=>showPage('results');if($('openTicketsBtn'))$('openTicketsBtn').onclick=()=>{showPage('results');currentTicketFilter='all';document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x.dataset.ticketFilter==='all'));renderUserTicketHistory(currentUserTickets)};document.querySelectorAll('[data-ticket-filter]').forEach(b=>b.onclick=()=>{currentTicketFilter=b.dataset.ticketFilter;document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x===b));renderUserTicketHistory(currentUserTickets)});
     function showPage(p){if(p==='admin'&&!isAdminUser()){toast('بوابة الإدارة للأدمن فقط');return}if(!isAdminUser()){if(siteControl.maintenance && !['account','settings','notifications'].includes(p)){toast(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');return}if(!moduleEnabled(p)){toast('هذا القسم متوقف مؤقتًا من الإدارة');return}}const page=$('page-'+p);if(!page)return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));page.classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));if($('appWrap')){$('appWrap').classList.toggle('admin-layout',p==='admin');$('appWrap').setAttribute('data-active-page',p)}if(p==='games'&&typeof showGamesHome==='function')showGamesHome();if(p==='admin')showAdminSection('overview')}document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{if(b.dataset.page==='admin'&&!isAdminUser())return toast('هذه الصفحة للأدمن فقط');showPage(b.dataset.page)});document.querySelectorAll('[data-home-go]').forEach(b=>b.onclick=()=>{const go=b.dataset.homeGo||'home';const parts=go.split(':');showPage(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>showWalletPanel(parts[1]),40)});if($('v52QuickDepositBtn'))$('v52QuickDepositBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('deposit'),40)};if($('v52QuickWithdrawBtn'))$('v52QuickWithdrawBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('withdraw'),40)};
     function showWalletPanel(p){document.querySelectorAll('.wallet-panel').forEach(x=>x.classList.add('hidden'));$('wallet-'+p).classList.remove('hidden');document.querySelectorAll('.wallet-tab').forEach(b=>b.classList.toggle('active',b.dataset.wallet===p));if(p==='deposit'){depositCategory='';depositMethod='';clearDepositStatus();renderMethods()}if(p==='withdraw'){withdrawCategory='';withdrawMethod='';clearWithdrawStatus();renderMethods()}}document.querySelectorAll('.wallet-tab').forEach(b=>b.onclick=()=>showWalletPanel(b.dataset.wallet));
     
@@ -4655,7 +4724,7 @@ function renderAdminUsers(users){
       updates['finance_audit/usernote_'+now]={action:'admin_private_note',uid,email:u.email||'',note,adminEmail:currentUser.email||'',createdAt:now,source:'admin_user_control_center'};
       await update(ref(db),updates);toast('تم حفظ الملاحظة الداخلية');openAdminUserCard(uid)
     }
-    async function v136Logout(){try{if(currentUser){const now=Date.now();const updates={};updates['login_logs/'+currentUser.uid+'/'+now]={action:'logout',email:currentUser.email||'',at:now,createdAt:now,host:location.host,path:location.pathname,userAgent:navigator.userAgent||'',platform:navigator.platform||''};updates['users/'+currentUser.uid+'/lastActivityAt']=now;await update(ref(db),updates)}}catch(e){console.warn(e)}return signOut(auth)}
+    async function v136Logout(){try{if(currentUser){const now=Date.now();const updates={};updates['login_logs/'+currentUser.uid+'/'+now]={action:'logout',email:currentUser.email||'',at:now,createdAt:now,host:location.host,path:location.pathname,userAgent:navigator.userAgent||'',platform:navigator.platform||''};updates['users/'+currentUser.uid+'/lastActivityAt']=now;await update(ref(db),updates)}}catch(e){console.warn(e)}return adnorLogoutNow()}
 async function adminToggleVip(uid){const snap=await get(ref(db,'users/'+uid));const u=snap.val();if(!u)return;const now=Date.now();const vip=!u.isVIP;const updates={};updates['users/'+uid+'/isVIP']=vip;updates['users/'+uid+'/updatedAt']=now;updates['finance_audit/'+now]={action:vip?'vip_on':'vip_off',uid,email:u.email||'',adminEmail:currentUser.email,createdAt:now};updates['user_notifications/'+uid+'/'+now]=notifObj(vip?'vip_on':'vip_off',vip?'تم منحك VIP':'تم إلغاء VIP',vip?'حسابك أصبح ضمن نادي النخبة.':'تمت إعادة حسابك إلى الوضع العادي.');await update(ref(db),updates);toast(vip?'تم منح VIP':'تم إلغاء VIP')}
     async function adminApproveDeposit(id){if(!(await uiConfirm('قبول الإيداع وإضافة الرصيد للمستخدم؟')))return;const snap=await get(ref(db,'finance/deposits/'+id));const d=snap.val();if(!d||d.status!=='pending')return toast('الطلب غير متاح');const us=await get(ref(db,'users/'+d.uid));const u=us.val()||{};const before=Number(u.realBalance||0),amount=Number(d.amount||0),after=Number((before+amount).toFixed(2)),now=Date.now();const depBonusPercent=(referralSettings.depositBonusEnabled?Number(referralSettings.depositBonusPercent||0):0);const bonusAdd=Number((amount*depBonusPercent/100).toFixed(2));const oldBonus=Number(u.bonusBalance||0),afterBonus=Number((oldBonus+bonusAdd).toFixed(2));const updates={};updates['finance/deposits/'+id+'/status']='approved';updates['finance/deposits/'+id+'/approvedAt']=now;updates['finance/deposits/'+id+'/approvedBy']=currentUser.email;updates['finance/deposits/'+id+'/balanceBefore']=before;updates['finance/deposits/'+id+'/balanceAfter']=after;updates['user_finance/'+d.uid+'/deposits/'+id+'/status']='approved';updates['user_finance/'+d.uid+'/deposits/'+id+'/approvedAt']=now;updates['user_finance/'+d.uid+'/deposits/'+id+'/balanceAfter']=after;updates['users/'+d.uid+'/realBalance']=after;if(bonusAdd>0){updates['users/'+d.uid+'/bonusBalance']=afterBonus;updates['transactions/'+d.uid+'/'+(now+1)]={type:'deposit_bonus',amount:bonusAdd,status:'bonus',note:'بونص إيداع '+depBonusPercent+'%',balanceBefore:oldBonus,balanceAfter:afterBonus,adminEmail:currentUser.email,createdAt:now+1};updates['user_notifications/'+d.uid+'/'+(now+1)]=notifObj('referral_bonus','تم إضافة بونص الإيداع','وصل إلى رصيد البونص '+money(bonusAdd)+' بنسبة '+depBonusPercent+'%.',{amount:bonusAdd})}updates['users/'+d.uid+'/updatedAt']=now;updates['transactions/'+d.uid+'/'+now]={type:'deposit_approved',amount,balanceBefore:before,balanceAfter:after,status:'approved',note:'قبول طلب إيداع رقم '+id,adminEmail:currentUser.email,createdAt:now};updates['finance_audit/'+now]={action:'deposit_approved',requestId:id,uid:d.uid,email:d.email||'',amount,before,after,adminEmail:currentUser.email,createdAt:now};updates['admin_notifications/'+now]={type:'deposit_approved',uid:d.uid,email:d.email||'',text:'تم قبول إيداع '+money(amount)+' للمستخدم '+(d.email||''),createdAt:now,status:'done'};updates['user_notifications/'+d.uid+'/'+now]=notifObj('deposit_approved','تم قبول الإيداع','تم إضافة '+money(amount)+' إلى رصيدك الحقيقي.',{amount,requestId:id});await update(ref(db),updates);toast('تم قبول الإيداع وإضافة الرصيد')}
     async function adminRejectDeposit(id){const reason=await uiPrompt('سبب رفض الإيداع','الإيصال غير واضح')||'مرفوض من الإدارة';const snap=await get(ref(db,'finance/deposits/'+id));const d=snap.val();if(!d||d.status!=='pending')return toast('الطلب غير متاح');const now=Date.now(),amount=Number(d.amount||0);const updates={};updates['finance/deposits/'+id+'/status']='rejected';updates['finance/deposits/'+id+'/rejectedAt']=now;updates['finance/deposits/'+id+'/rejectedBy']=currentUser.email;updates['finance/deposits/'+id+'/rejectReason']=reason;updates['user_finance/'+d.uid+'/deposits/'+id+'/status']='rejected';updates['user_finance/'+d.uid+'/deposits/'+id+'/rejectedAt']=now;updates['user_finance/'+d.uid+'/deposits/'+id+'/rejectReason']=reason;updates['transactions/'+d.uid+'/'+now]={type:'deposit_rejected',amount,status:'rejected',note:'رفض الإيداع: '+reason,adminEmail:currentUser.email,createdAt:now};updates['finance_audit/'+now]={action:'deposit_rejected',requestId:id,uid:d.uid,email:d.email||'',amount,reason,adminEmail:currentUser.email,createdAt:now};updates['admin_notifications/'+now]={type:'deposit_rejected',uid:d.uid,email:d.email||'',text:'تم رفض إيداع '+money(amount)+' — '+reason,createdAt:now,status:'done'};updates['user_notifications/'+d.uid+'/'+now]=notifObj('deposit_rejected','تم رفض الإيداع','تم رفض طلب الإيداع '+money(amount)+' — السبب: '+reason,{amount,requestId:id});await update(ref(db),updates);toast('تم رفض الإيداع مع حفظ السبب')}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR | المنصة الرسمية</title>
+  <title>ADNOR V189 | المنصة الرسمية</title>
   <!-- ADNOR_V184_SYSTEMATIC_SERVER_AGENTS_AND_AUTO_ADN_READY -->
 <!-- V146_REFERRAL_PRIVACY_NO_FREEZE: masks referral emails for referrer without database cleanup loops. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2789,6 +2789,92 @@ function setCurrentPrize(type){
     function renderUserTicketHistory(val){currentUserTickets=val||currentUserTickets||{};const all=Object.values(currentUserTickets||{}).sort((a,b)=>(b.createdAt||b.movedAt||0)-(a.createdAt||a.movedAt||0));const activeList=all.filter(t=>t.status==='active');const active=activeList.length;const won=all.filter(t=>t.status==='winner').length;setText('myTicketsTotalText',all.length);setText('myTicketsActiveText',active);setText('myTicketsWonText',won);setText('ticketsCountText',active?('لديك '+active+' تذكرة نشطة'):(all.length?'لا توجد تذاكر نشطة':'لا توجد تذاكر بعد'));setText('activeTicketsText',active);setText('homeTicketsText',all.length);const lbox=$('lotteryActiveTicketsList');if(lbox){if(!activeList.length){lbox.innerHTML='<div class="v61-mini-empty">لا توجد تذاكر نشطة بعد</div>'}else{lbox.innerHTML=activeList.slice(0,8).map(t=>'<div class="v61-mini-ticket"><i>🎟️</i><b>'+escapeHtml(t.number||'')+'</b><span>'+escapeHtml(t.drawLabel||drawLabel(t.drawType))+'</span></div>').join('')}}const box=$('myTicketsList');if(!box)return;let list=all;if(currentTicketFilter!=='all')list=all.filter(t=>t.status===currentTicketFilter);if(!list.length){box.innerHTML='<div class="draw-item"><div class="medal">🎟️</div><div><h4>لا توجد تذاكر في هذا القسم</h4><p>استخدم الفلتر الآخر أو اشترِ تذكرة جديدة.</p></div><strong>0</strong></div>';return}box.innerHTML=list.slice(0,80).map(t=>{const cls=drawTicketStatusClass(t);const status=drawTicketStatusLabel(t);const detail=(t.status==='moved'&&t.movedTo)?('انتقلت إلى '+drawLabel(t.movedTo)):(t.status==='winner'?'ربحت '+drawLabel(t.drawType):'محفوظة في '+(t.drawLabel||drawLabel(t.drawType)));return '<div class="draw-item"><div class="medal">🎟️</div><div><h4>رقم '+escapeHtml(t.number||'')+' <span class="ticket-mini '+cls+'">'+status+'</span></h4><p>'+escapeHtml(detail)+'<br>النوع: '+escapeHtml(t.drawLabel||drawLabel(t.drawType))+' — السعر: '+money(t.price||0)+'<br>الوقت: '+new Date(t.createdAt||t.movedAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+escapeHtml(t.number||'')+'</strong></div>'}).join('')}
 
     const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app);provider.setCustomParameters({prompt:'select_account'});
+
+    // ADNOR V189 - Stable/Staging diagnostics. No financial logic here; only visibility and safe reporting.
+    const ADNOR_VERSION='V189_STABLE_STAGING';
+    const ADNOR_DEPLOY_MODE=(location.hostname.includes('localhost')||location.hostname.includes('127.0.0.1'))?'local':(location.hostname.includes('netlify.app')||location.hostname.includes('render.com')||location.hostname.includes('onrender.com'))?'staging_or_hosted':'production_or_custom_domain';
+    window.ADNOR_VERSION=ADNOR_VERSION;
+    window.ADNOR_DEPLOY_MODE=ADNOR_DEPLOY_MODE;
+    let adnorErrorSeq=0;
+    function adnorErrorPayload(stage,err,extra={}){
+      const e=err||{};
+      return {
+        version:ADNOR_VERSION,
+        deployMode:ADNOR_DEPLOY_MODE,
+        stage:String(stage||'unknown').slice(0,90),
+        code:String(e.code||extra.code||'').slice(0,120),
+        message:String(e.message||err||'').slice(0,700),
+        stack:String(e.stack||'').slice(0,2200),
+        uid:auth.currentUser?.uid||'',
+        email:auth.currentUser?.email||'',
+        host:location.host,
+        path:location.pathname+location.search,
+        userAgent:String(navigator.userAgent||'').slice(0,500),
+        language:navigator.language||'',
+        online:navigator.onLine,
+        createdAt:Date.now(),
+        extra:extra||{}
+      };
+    }
+    async function logClientError(stage,err,extra={}){
+      try{
+        adnorErrorSeq++;
+        if(adnorErrorSeq>70)return;
+        const payload=adnorErrorPayload(stage,err,extra);
+        console.warn('[ADNOR CLIENT ERROR]',payload);
+        try{
+          await httpsCallable(cloudFns,'clientErrorReport')(payload);
+          return;
+        }catch(fnErr){
+          try{
+            const d=new Date(Date.now()+3*60*60*1000).toISOString().slice(0,10);
+            await push(ref(db,'client_errors/'+d),{...payload,functionLogFailed:String(fnErr?.message||fnErr).slice(0,350)});
+          }catch(dbErr){
+            console.warn('ADNOR error log skipped',dbErr);
+          }
+        }
+      }catch(finalErr){console.warn('ADNOR logClientError failed',finalErr)}
+    }
+    window.adnorLogClientError=logClientError;
+    window.addEventListener('error',ev=>logClientError('window.error',ev.error||ev.message,{filename:ev.filename,lineno:ev.lineno,colno:ev.colno}));
+    window.addEventListener('unhandledrejection',ev=>logClientError('window.unhandledrejection',ev.reason||'unhandled promise'));
+    function adnorSystemRow(name,ok,detail){return {name,ok:!!ok,detail:String(detail||'')}}
+    async function adnorSystemCheck(){
+      const rows=[];
+      rows.push(adnorSystemRow('Version',true,ADNOR_VERSION));
+      rows.push(adnorSystemRow('Domain',true,location.host));
+      try{localStorage.setItem('adnor_v189_storage_test','ok');rows.push(adnorSystemRow('Local storage',localStorage.getItem('adnor_v189_storage_test')==='ok','Browser storage works'))}catch(e){rows.push(adnorSystemRow('Local storage',false,e.message))}
+      try{sessionStorage.setItem('adnor_v189_session_test','ok');rows.push(adnorSystemRow('Session storage',sessionStorage.getItem('adnor_v189_session_test')==='ok','Session storage works'))}catch(e){rows.push(adnorSystemRow('Session storage',false,e.message))}
+      rows.push(adnorSystemRow('Auth current user',!!auth.currentUser,auth.currentUser?auth.currentUser.email:'No current user'));
+      try{await get(ref(db,'system_settings/site_control'));rows.push(adnorSystemRow('Database read',true,'system_settings/site_control readable'))}catch(e){rows.push(adnorSystemRow('Database read',false,(e.code||'')+' '+(e.message||e)))}
+      try{await logClientError('manual_system_check',new Error('manual diagnostics test'),{manual:true});rows.push(adnorSystemRow('Client error logging',true,'Log request sent/fallback attempted'))}catch(e){rows.push(adnorSystemRow('Client error logging',false,e.message||e))}
+      try{const res=await httpsCallable(cloudFns,'systemHealthCheck')({version:ADNOR_VERSION,host:location.host});rows.push(adnorSystemRow('Cloud Functions',!!res?.data?.ok,JSON.stringify(res.data||{}).slice(0,300)))}catch(e){rows.push(adnorSystemRow('Cloud Functions',false,(e.code||'')+' '+(e.message||e)))}
+      adnorRenderSystemCheck(rows);
+      return rows;
+    }
+    window.adnorSystemCheck=adnorSystemCheck;
+    function adnorRenderSystemCheck(rows){
+      try{
+        const old=document.getElementById('adnorDiagModal'); if(old)old.remove();
+        const okCount=rows.filter(r=>r.ok).length;
+        const div=document.createElement('div'); div.id='adnorDiagModal'; div.dir='rtl';
+        div.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.72);display:flex;align-items:flex-end;justify-content:center;padding:12px;font-family:IBM Plex Sans Arabic,system-ui,sans-serif;color:#fff';
+        div.innerHTML='<div style="width:min(100%,520px);max-height:82vh;overflow:auto;border:1px solid rgba(255,216,102,.62);border-radius:24px;background:linear-gradient(180deg,#081a34,#020a16);padding:15px;box-shadow:0 0 35px rgba(0,0,0,.65)"><h3 style="margin:0 0 8px;color:#ffe184">فحص نظام ADNOR '+ADNOR_VERSION+'</h3><p style="margin:0 0 12px;color:#cbd4e5;font-weight:800">النتيجة: '+okCount+' / '+rows.length+' ناجحة</p><div>'+rows.map(r=>'<div style="border:1px solid '+(r.ok?'rgba(34,224,162,.45)':'rgba(255,92,105,.52)')+';background:'+(r.ok?'rgba(34,224,162,.08)':'rgba(255,92,105,.09)')+';border-radius:14px;padding:10px;margin-bottom:8px"><b style="color:'+(r.ok?'#8fffd8':'#ffb3bc')+'">'+(r.ok?'✅':'❌')+' '+String(r.name).replace(/[<>&]/g,'')+'</b><div style="margin-top:4px;color:#dbe6f7;font-size:12px;direction:ltr;text-align:left;white-space:pre-wrap">'+String(r.detail).replace(/[<>&]/g,'')+'</div></div>').join('')+'</div><button id="adnorDiagCopyBtn" style="width:100%;height:46px;border:0;border-radius:14px;background:linear-gradient(180deg,#fff0a5,#d89524);font-weight:900;margin-top:4px">نسخ التقرير</button><button id="adnorDiagCloseBtn" style="width:100%;height:42px;border:1px solid rgba(255,216,102,.4);border-radius:14px;background:#061225;color:#ffe184;font-weight:900;margin-top:8px">إغلاق</button></div>';
+        document.body.appendChild(div);
+        document.getElementById('adnorDiagCloseBtn').onclick=()=>div.remove();
+        document.getElementById('adnorDiagCopyBtn').onclick=async()=>{const txt=rows.map(r=>(r.ok?'OK':'FAIL')+' - '+r.name+': '+r.detail).join('\n');try{await navigator.clipboard.writeText(txt);toast('تم نسخ تقرير الفحص')}catch(e){console.log(txt)}};
+      }catch(e){console.table(rows);alert('تم الفحص — افتح Console لرؤية التقرير')}
+    }
+    function adnorShowDiagButton(){
+      try{
+        const email=String(auth.currentUser?.email||'').toLowerCase();
+        if(!ADMIN_EMAILS.includes(email))return;
+        if(document.getElementById('adnorDiagBtn'))return;
+        const b=document.createElement('button'); b.id='adnorDiagBtn'; b.textContent='🛠 فحص النظام';
+        b.style.cssText='position:fixed;left:12px;bottom:158px;z-index:9999;border:1px solid rgba(255,216,102,.65);border-radius:999px;background:linear-gradient(180deg,#fff0a5,#d89524);color:#151007;font-weight:1000;padding:10px 13px;box-shadow:0 0 18px rgba(255,188,39,.22);font-family:IBM Plex Sans Arabic,system-ui,sans-serif;cursor:pointer';
+        b.onclick=()=>adnorSystemCheck(); document.body.appendChild(b);
+      }catch(e){}
+    }
     // V188_AUTH_PERSISTENCE_GUARD: يمنع رجوع المستخدم لشاشة الدخول بسبب null مؤقت من Firebase Auth.
     let adnorRedirectChecked=false;
     let adnorNullAuthTimer=null;
@@ -2859,9 +2945,14 @@ function setCurrentPrize(type){
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){await uiPrompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
     async function callServer(name,data){
-      const fn=httpsCallable(cloudFns,name);
-      const res=await fn(data||{});
-      return res.data||{};
+      try{
+        const fn=httpsCallable(cloudFns,name);
+        const res=await fn(data||{});
+        return res.data||{};
+      }catch(e){
+        logClientError('callServer:'+name,e,{payloadKeys:Object.keys(data||{})});
+        throw e;
+      }
     }
     function serverErr(e){
       return (e&&e.message)||String(e||'خطأ غير معروف');
@@ -3128,6 +3219,7 @@ function setCurrentPrize(type){
         toast('تم تسجيل الدخول بنجاح');
       }catch(e){
         console.warn('Google popup failed; trying redirect fallback',e);
+        logClientError('google_popup_failed',e);
         const code=String(e?.code||'');
         if(code.includes('popup-blocked') || code.includes('popup-closed-by-user') || code.includes('operation-not-supported-in-this-environment') || code.includes('cancelled-popup-request')){
           try{
@@ -3138,11 +3230,13 @@ function setCurrentPrize(type){
             return;
           }catch(rErr){
             console.error(rErr);
+            logClientError('google_redirect_start_failed',rErr);
             toast('خطأ تسجيل الدخول: '+adnorAuthMessage(rErr));
             return;
           }
         }
         console.error(e);
+        logClientError('google_login_failed',e);
         toast('خطأ تسجيل الدخول: '+adnorAuthMessage(e));
       }
     }
@@ -3155,6 +3249,7 @@ function setCurrentPrize(type){
         if(r&&r.user){adnorClearLoginAttempt();toast('تم تسجيل الدخول بنجاح')}
       }catch(e){
         console.error('Google redirect login failed',e);
+        logClientError('google_redirect_result_failed',e);
         adnorRedirectChecked=true;
         adnorClearLoginAttempt();
         toast('خطأ تسجيل الدخول: '+adnorAuthMessage(e));
@@ -3213,6 +3308,7 @@ function setCurrentPrize(type){
       if($('loginScreen'))$('loginScreen').style.display='none';
       if($('appScreen'))$('appScreen').style.display='flex';
       renderProfile();
+      adnorShowDiagButton();
       if(!document.querySelector('.page.active'))showPage('home');
     }
     async function adnorHydrateProfileInBackground(user){
@@ -3224,6 +3320,7 @@ function setCurrentPrize(type){
         }
       }catch(e){
         console.warn('profile sync skipped; user stays logged in',e);
+        logClientError('profile_sync_skipped',e);
       }
     }
     function adnorStartRuntimeListeners(user){
@@ -3272,6 +3369,7 @@ function setCurrentPrize(type){
         adnorStartRuntimeListeners(user);
         adnorHydrateProfileInBackground(user);
       }else{
+        logClientError('auth_state_null_seen',new Error('Firebase Auth returned null'),{redirectChecked:adnorRedirectChecked,recentLogin:adnorRecentLoginAttempt(25000),manualLogout:adnorManualLogout});
         if(adnorDelayNullAuth('onAuthStateChanged null'))return;
         adnorCleanupLogout();
       }

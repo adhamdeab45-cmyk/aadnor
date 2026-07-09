@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>ADNOR | المنصة الرسمية</title>
-  <!-- ADNOR_V183_ADN_SELL_BALANCE_GUARD_FULL_READY -->
+  <!-- ADNOR_V184_SYSTEMATIC_SERVER_AGENTS_AND_AUTO_ADN_READY -->
 <!-- V146_REFERRAL_PRIVACY_NO_FREEZE: masks referral emails for referrer without database cleanup loops. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1787,7 +1787,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         </section>
 
         <section class="v142-trade-card">
-          <div class="v142-card-head"><div><h3>شراء وبيع ADN</h3><span>الطلب يظهر فورًا عند المستخدم والتنفيذ بعد موافقة الإدارة</span></div><span id="adnTradePriceInfo">سعر الطلب الحالي: $0.1000</span></div>
+          <div class="v142-card-head"><div><h3>شراء وبيع ADN</h3><span>تنفيذ فوري من الرصيد الحقيقي — بدون طلبات موافقة</span></div><span id="adnTradePriceInfo">سعر الطلب الحالي: $0.1000</span></div>
           <div class="v142-trade-tabs"><button id="adnSellTab" type="button">بيع</button><button id="adnBuyTab" class="active" type="button">شراء</button></div>
           <div class="v142-order-type-tabs" style="display:none"><button type="button" data-adn-order-type="limit">سعر محدد</button><button type="button" data-adn-order-type="market" class="active">سعر السوق</button></div>
           <div class="v142-form">
@@ -1804,12 +1804,12 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
               <div><span>ADN مؤكد</span><b id="adnUserTokenBalance">0 ADN</b></div>
               <div><span>المتاح للبيع</span><b id="adnAvailableSellToken">0 ADN</b></div>
               <div><span>قيمة العملية</span><b id="adnTradeCost">$0.00</b></div>
-              <div><span>ADN قيد الشراء</span><b id="adnPendingBuyToken">0 ADN</b></div>
-              <div><span>قيمة شراء قيد الموافقة</span><b id="adnPendingBuyUsd">$0.00</b></div>
-              <div><span>ADN قيد البيع</span><b id="adnPendingSellToken">0 ADN</b></div>
+              <div><span>ADN طلبات قديمة</span><b id="adnPendingBuyToken">0 ADN</b></div>
+              <div><span>قيمة شراء قديمة قيد المراجعة</span><b id="adnPendingBuyUsd">$0.00</b></div>
+              <div><span>ADN بيع قديم قيد المراجعة</span><b id="adnPendingSellToken">0 ADN</b></div>
             </div>
-            <button class="gold-btn big" id="adnExecuteTradeBtn" type="button">إرسال طلب شراء للموافقة</button>
-            <div class="v142-info-note" id="adnTradeNote">سيظهر الطلب فورًا في حسابك كـ قيد الموافقة، والتنفيذ الحقيقي يتم بعد اعتماد الإدارة.</div><div class="v142-info-note" id="adnPendingApprovalNote">لا توجد طلبات ADN قيد الموافقة.</div>
+            <button class="gold-btn big" id="adnExecuteTradeBtn" type="button">شراء ADN الآن</button>
+            <div class="v142-info-note" id="adnTradeNote">يتم التنفيذ فورًا من الرصيد الحقيقي فقط. البيع يتم فقط من رصيد ADN المؤكد والمتاح.</div><div class="v142-info-note" id="adnPendingApprovalNote">لا توجد طلبات قديمة قيد المراجعة.</div>
           </div>
         </section>
 
@@ -1825,7 +1825,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         </section>
 
         <section class="v142-panel-card">
-          <div class="v142-card-head"><div><h3>سجل طلباتي على ADN</h3><span>طلبات شراء وبيع قيد الموافقة، مع سجل العمليات المعتمدة</span></div></div>
+          <div class="v142-card-head"><div><h3>سجل طلباتي على ADN</h3><span>أوامر قديمة إن وجدت، مع سجل عمليات الشراء والبيع المنفذة فورًا</span></div></div>
           <div class="v142-panel-content" id="adnUserTradesList"><div class="v142-empty">لا توجد عمليات ADN بعد.</div></div>
           <div class="v142-panel-content" id="adnUserRequestsList"><div class="v142-empty">لا توجد طلبات قيد المراجعة.</div></div>
         </section>
@@ -2315,11 +2315,11 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
                 <div class="hint" style="margin-top:10px">الشراء من الرصيد الحقيقي فقط. البيع يرجع إلى الرصيد الحقيقي إذا كانت سيولة الصندوق كافية.</div>
               </div>
               <div class="admin-wide-card">
-                <div class="admin-section-head"><h3>طلبات ADN قيد المراجعة</h3><span>قفل أمني V128: التنفيذ بعد موافقة الأدمن فقط</span></div>
+                <div class="admin-section-head"><h3>طلبات ADN القديمة قيد المراجعة</h3><span>النظام الجديد: الشراء والبيع يتمان تلقائيًا؛ هذا القسم للأوامر القديمة فقط</span></div>
                 <div class="adn-trade-list" id="adminAdnRequestsList"><div class="adn-empty">لا توجد طلبات قيد المراجعة.</div></div>
               </div>
               <div class="admin-wide-card">
-                <div class="admin-section-head"><h3>آخر عمليات ADN</h3><span>عمليات معتمدة بعد المراجعة</span></div>
+                <div class="admin-section-head"><h3>آخر عمليات ADN</h3><span>عمليات السوق المنفذة تلقائيًا</span></div>
                 <div class="adn-trade-list" id="adminAdnTradesList"><div class="adn-empty">لا توجد عمليات بعد.</div></div>
               </div>
             </section>
@@ -5521,8 +5521,8 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         return ts;
       }
       function v144NextYearly8(){
-        let p=v144Parts();let ts=v144Ts(p.y,1,1,20,0);
-        if(ts<=Date.now())ts=v144Ts(p.y+1,1,1,20,0);
+        let p=v144Parts();let ts=v144Ts(p.y,12,31,20,0);
+        if(ts<=Date.now())ts=v144Ts(p.y+1,12,31,20,0);
         return ts;
       }
       function v144DefaultPublishAt(type){return {daily:v144NextDaily8,weekly:v144NextWeekly8,monthly:v144NextMonthly8,yearly:v144NextYearly8}[type]?.()||v144NextDaily8()}
@@ -5610,7 +5610,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       function v144SetDefault(type){
         const el=$('v108Publish_'+type);if(!el)return;
         const ts=v144DefaultPublishAt(type);el.value=v144LocalInputValue(ts);
-        const label={daily:'اليومي القادم',weekly:'الجمعة القادمة',monthly:'أول يوم بالشهر القادم',yearly:'السنوي القادم'}[type]||v144Label(type);
+        const label={daily:'اليومي القادم',weekly:'الجمعة القادمة',monthly:'أول يوم بالشهر القادم',yearly:'31 ديسمبر القادم'}[type]||v144Label(type);
         toast('تم ضبط موعد '+label+' على '+v144Format(ts));
       }
       function v144FillForm(type){
@@ -5768,7 +5768,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         const canApprove=!hasUserInfo?true:(type==='sell'?confirmed>=qty:real>=usd);
         const badge=canApprove?'approved':'rejected';
         const guardText=type==='sell'
-          ? ('ADN المؤكد الحالي: '+adnQty(confirmed)+' — بيع آخر قيد الموافقة: '+adnQty(pendingSellOther)+' — المتاح بعد الطلبات الأخرى: '+adnQty(availableNow)+' ADN')
+          ? ('ADN المؤكد الحالي: '+adnQty(confirmed)+' — بيع قديم قيد المراجعة: '+adnQty(pendingSellOther)+' — المتاح بعد الطلبات الأخرى: '+adnQty(availableNow)+' ADN')
           : ('الرصيد الحقيقي الحالي: '+money(real)+' — قيمة الشراء المطلوبة: '+money(usd));
         const warn=!hasUserInfo?'جاري تحميل رصيد المستخدم من قائمة المستخدمين...':(canApprove?'يمكن المراجعة والاعتماد':'لا يمكن الاعتماد: الرصيد الحالي غير كافٍ');
         const approveAttr=(!hasUserInfo||canApprove)?'':' disabled title="الرصيد غير كافٍ"';
@@ -5972,48 +5972,17 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     function v183PendingSellTotalForUid(uid,excludeId){return Object.values(adnRequests||{}).filter(r=>String(r.status||'pending')==='pending' && ((r.type||r.tradeMode)==='sell') && r.uid===uid && (!excludeId || r.id!==excludeId)).reduce((a,r)=>a+adnNum(r.amountToken),0)}
     function v178PendingRows(){return Object.values(adnUserRequests||{}).filter(r=>String(r.status||'pending')==='pending')}
     function v178PendingTotals(){const rows=v178PendingRows();let buyToken=0,buyUsd=0,sellToken=0,sellUsd=0;rows.forEach(r=>{const type=(r.type||r.tradeMode)==='sell'?'sell':'buy';const q=adnNum(r.amountToken);const u=adnNum(r.amountUsd||r.estimatedUsd);if(type==='sell'){sellToken+=q;sellUsd+=u}else{buyToken+=q;buyUsd+=u}});return {buyToken,buyUsd,sellToken,sellUsd,count:rows.length}}
-    function v178RenderPendingSummary(){const t=v178PendingTotals();const b=v183AdnBalanceSummary();setText('adnPendingBuyToken',adnQty(t.buyToken)+' ADN');setText('adnPendingBuyUsd',money(t.buyUsd));setText('adnPendingSellToken',adnQty(t.sellToken)+' ADN');setText('adnAvailableSellToken',adnQty(b.availableSell)+' ADN');setText('adnWalletPendingBuy',adnQty(t.buyToken)+' ADN');setText('adnWalletPendingSell',adnQty(t.sellToken)+' ADN');setText('adnWalletAvailableSell',adnQty(b.availableSell)+' ADN');const note=$('adnPendingApprovalNote');if(note)note.textContent=t.count?('لديك '+t.count+' طلب ADN قيد موافقة الإدارة. المتاح للبيع الآن: '+adnQty(b.availableSell)+' ADN.'): 'لا توجد طلبات ADN قيد الموافقة.';}
+    function v178RenderPendingSummary(){const t=v178PendingTotals();const b=v183AdnBalanceSummary();setText('adnPendingBuyToken',adnQty(t.buyToken)+' ADN');setText('adnPendingBuyUsd',money(t.buyUsd));setText('adnPendingSellToken',adnQty(t.sellToken)+' ADN');setText('adnAvailableSellToken',adnQty(b.availableSell)+' ADN');setText('adnWalletPendingBuy',adnQty(t.buyToken)+' ADN');setText('adnWalletPendingSell',adnQty(t.sellToken)+' ADN');setText('adnWalletAvailableSell',adnQty(b.availableSell)+' ADN');const note=$('adnPendingApprovalNote');if(note)note.textContent=t.count?('لديك '+t.count+' طلب ADN قديم قيد المراجعة. المتاح للبيع الآن: '+adnQty(b.availableSell)+' ADN.'): 'لا توجد طلبات قديمة قيد المراجعة.';}
     const __v178RenderAdnTradeCalc=renderAdnTradeCalc;
     renderAdnTradeCalc=function(){
       const q=adnNum($('adnAmountInput')?.value);const price=adnTradeMode==='buy'?adnCurrentPrice():adnSellPrice();const cost=q*price;const b=v183AdnBalanceSummary();
       setText('adnTradeCost',money(cost));setText('adnTradePriceInfo','سعر الطلب الحالي: '+adnFmt(price,4));
-      const btn=$('adnExecuteTradeBtn');if(btn)btn.textContent=adnTradeMode==='buy'?'إرسال طلب شراء للموافقة':'إرسال طلب بيع للموافقة';
-      const sellWarn=(adnTradeMode==='sell'&&q>b.availableSell&&q>0)?(' المتاح للبيع فقط: '+adnQty(b.availableSell)+' ADN لأن '+adnQty(b.pendingSellToken)+' ADN قيد البيع.'):'';
-      setText('adnTradeNote','سيظهر الطلب فورًا في حسابك كـ قيد الموافقة. البيع مسموح فقط من ADN المؤكد والمتاح.'+sellWarn);
+      const btn=$('adnExecuteTradeBtn');if(btn)btn.textContent=adnTradeMode==='buy'?'شراء الآن':'بيع الآن';
+      const sellWarn=(adnTradeMode==='sell'&&q>b.availableSell&&q>0)?(' المتاح للبيع فقط: '+adnQty(b.availableSell)+' ADN لأن '+adnQty(b.pendingSellToken)+' ADN بيع قديم قيد المراجعة.'):'';
+      setText('adnTradeNote','تنفيذ فوري عبر السيرفر. الشراء من الرصيد الحقيقي فقط، والبيع من ADN المؤكد والمتاح فقط.'+sellWarn);
       v178RenderPendingSummary();
     };
-    executeAdnTrade=async function(){
-      if(adnTradeBusy)return toast('يوجد طلب قيد الإرسال');
-      adnTradeBusy=true;const btn=$('adnExecuteTradeBtn');if(btn)btn.disabled=true;
-      try{
-        if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');
-        if(adnSettings.enabled===false)return toast('سوق ADN متوقف من الإدارة');
-        const qty=Math.floor(adnNum($('adnAmountInput')?.value));
-        if(qty<=0)return toast('اكتب كمية ADN صحيحة');
-        const type=adnTradeMode==='sell'?'sell':'buy';
-        const price=type==='buy'?adnCurrentPrice():adnSellPrice();
-        const usd=Number((qty*price).toFixed(4));
-        const real=adnNum(currentProfile.realBalance),token=adnNum(currentProfile.adnBalance);const b=v183AdnBalanceSummary();const pendingSell=adnNum(b.pendingSellToken);const availableSell=adnNum(b.availableSell);
-        if(type==='buy'){
-          if(adnSettings.buyEnabled===false)return toast('الشراء متوقف من الإدارة');
-          if(qty<adnNum(adnSettings.minBuy,1))return toast('أقل شراء هو '+adnQty(adnSettings.minBuy)+' ADN');
-          if(qty>adnNum(adnSettings.maxBuy,100000))return toast('أعلى شراء هو '+adnQty(adnSettings.maxBuy)+' ADN');
-          if(qty>adnNum(adnState.remainingSupply))return toast('الكمية أكبر من المتبقي للبيع');
-          if(real<usd)return toast('الرصيد الحقيقي لا يكفي. البونص لا يشتري ADN.');
-        }else{
-          if(adnSettings.sellEnabled===false)return toast('البيع متوقف من الإدارة');
-          if(availableSell<qty)return toast('المتاح للبيع فقط '+adnQty(availableSell)+' ADN. لديك '+adnQty(token)+' ADN مؤكد، ويوجد '+adnQty(pendingSell)+' ADN قيد البيع.');
-        }
-        const now=Date.now();const id=push(ref(db,'adn_trade_requests')).key||('ADN_REQ_'+now);
-        const req={id,status:'pending',type,uid:currentUser.uid,publicId:currentProfile.publicId||currentProfile.userId||currentProfile.accountNumber||'',email:currentUser.email||currentProfile.email||'',userName:currentProfile.name||currentProfile.displayName||currentUser.email||'مستخدم ADNOR',amountToken:qty,amountUsd:usd,estimatedUsd:usd,priceSnapshot:price,confirmedAdnAtRequest:token,pendingBuyAtRequest:b.pendingBuyToken,pendingSellAtRequest:pendingSell,availableSellAtRequest:availableSell,realBalanceAtRequest:real,createdAt:now,updatedAt:now,reviewMode:'admin_approval',visibleForUser:true};
-        const updates={};updates['adn_trade_requests/'+id]=req;updates['user_adn_requests/'+currentUser.uid+'/'+id]=req;
-        await update(ref(db),updates);
-        adnUserRequests={...(adnUserRequests||{}),[id]:req};
-        try{const opt={};opt['admin_notifications/adn_req_'+now]={type:'adn_trade_request',uid:currentUser.uid,email:req.email,title:'طلب '+(type==='buy'?'شراء':'بيع')+' ADN',message:req.userName+' — '+adnQty(qty)+' ADN — '+money(usd),createdAt:now,read:false};opt['user_notifications/'+currentUser.uid+'/adn_req_'+now]={type:'adn',title:'طلب ADN قيد الموافقة',message:(type==='buy'?'تم إرسال طلب شراء ':'تم إرسال طلب بيع ')+adnQty(qty)+' ADN بقيمة '+money(usd)+' وهو بانتظار موافقة الإدارة.',createdAt:now,read:false};await update(ref(db),opt);}catch(optionalNotifyErr){console.warn('ADN optional notification skipped',optionalNotifyErr)}
-        $('adnAmountInput').value='';$('adnUsdInput').value='';renderAdnTradeCalc();renderAdnUserRequests();renderAdnAll();toast('✅ تم إرسال طلب '+(type==='buy'?'شراء':'بيع')+' ADN بنجاح — الحالة: قيد موافقة الإدارة');
-      }catch(e){console.error(e);toast('تعذر إرسال طلب ADN: '+String(e?.message||e||'خطأ غير معروف'))}
-      finally{adnTradeBusy=false;if(btn)btn.disabled=false;}
-    };
+    // V184: التنفيذ التلقائي محمي بالدوال buyAdnDirect / sellAdnDirect؛ لا ننشئ طلبات موافقة جديدة.
     renderAdnUserRequests=function(){
       const box=$('adnUserRequestsList');if(!box)return;v178RenderPendingSummary();
       const limitRows=Object.values(adnLimitOrders||{}).sort((a,b)=>adnNum(b.createdAt)-adnNum(a.createdAt)).slice(0,10);
@@ -6021,7 +5990,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       const html=[];
       reviewRows.forEach(r=>{const type=(r.type||r.tradeMode)==='sell'?'sell':'buy';const pending=String(r.status||'pending')==='pending';html.push('<div class="v142-trade-row '+adnRequestClass(r.status)+' '+(type==='sell'?'sell':'buy')+'"><div><h4>'+(type==='sell'?'طلب بيع ADN':'طلب شراء ADN')+' — '+adnRequestStatusText(r.status)+'</h4><p>'+new Date(r.createdAt||Date.now()).toLocaleString('ar-TR')+'<br>الكمية: '+adnQty(r.amountToken)+' ADN — القيمة: '+money(r.amountUsd||r.estimatedUsd||0)+'<br>'+(pending?'✅ ظاهر في حسابك وينتظر اعتماد الإدارة.':'تمت معالجة الطلب.')+(r.adminNote?'<br>ملاحظة: '+escapeHtml(r.adminNote):'')+'</p></div><strong>'+adnRequestStatusText(r.status)+'</strong></div>')});
       limitRows.forEach(o=>html.push('<div class="v142-trade-row '+(o.type==='sell'?'sell':'buy')+'"><div><h4>'+(o.type==='sell'?'أمر بيع محدد':'أمر شراء محدد')+' — '+adnRequestStatusText(o.status)+'</h4><p>السعر المطلوب: '+adnFmt(o.targetPrice,4)+' — الكمية: '+adnQty(o.amountToken)+' ADN<br>'+new Date(o.createdAt||Date.now()).toLocaleString('ar-TR')+'</p></div><strong>'+adnRequestStatusText(o.status)+'</strong></div>'));
-      box.innerHTML=html.length?html.join(''):'<div class="v142-empty">لا توجد طلبات ADN قيد الموافقة.</div>';
+      box.innerHTML=html.length?html.join(''):'<div class="v142-empty">لا توجد طلبات قديمة قيد المراجعة.</div>';
     };
     const __v178RenderAdnMarket=renderAdnMarket;
     renderAdnMarket=function(){__v178RenderAdnMarket();v178RenderPendingSummary();};

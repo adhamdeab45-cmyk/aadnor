@@ -20,7 +20,7 @@
       <div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="loginEmail" type="text" autocomplete="username" placeholder="adhamagent أو agent@gmail.com"></div></div>
       <div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div></div>
       <button class="btn" id="loginBtn">دخول الوكيل</button>
-      <div class="status" id="loginStatus">استخدم اسم الدخول وكلمة السر التي أنشأها الأدمن. يمكن كتابة الاسم فقط مثل muhammed200400 بدون @adnor-agent.com.</div>
+      <div class="status" id="loginStatus">استخدم اسم الدخول وكلمة السر التي أنشأها الأدمن. اكتب الاسم فقط مثل muhammed200400 بدون @adnor-agent.com.</div>
     </section>
     <section class="card hidden" id="dashboardCard">
       <div class="profile"><div><b id="agentName">وكيل شحن</b><span id="agentEmail">—</span></div><div class="mini" id="agentState">مفعّل</div></div>
@@ -45,7 +45,7 @@
   import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
   import { getDatabase, ref, get, update, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
   
-  const VERSION='V193_AGENT_DIRECT_ADMIN_RESTORED';
+  const VERSION='V194_AGENT_DIRECT_RULES_FIXED';
   const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
   const app=initializeApp(firebaseConfig), auth=getAuth(app), fns=getFunctions(app), db=getDatabase(app);
   setPersistence(auth,browserLocalPersistence).catch(e=>console.warn('agent persistence warning',e));
@@ -209,14 +209,14 @@
       const month=cur.usageMonthKey===mKey?cleanNum(cur.monthCharged):0;
       if(dailyLimit>0 && today+amount>dailyLimit) return;
       if(monthlyLimit>0 && month+amount>monthlyLimit) return;
-      agentBefore=cleanNum(cur.agentBalance);
+      agentBefore=agentBalanceFrom(cur);
       agentAfter=round2(agentBefore-amount);
       if(agentAfter<0) return;
       todayAfter=round2(today+amount);
       monthAfter=round2(month+amount);
       return {...cur,agentBalance:agentAfter,totalCharged:round2(cleanNum(cur.totalCharged)+amount),totalOperations:cleanNum(cur.totalOperations)+1,usageDayKey:dKey,usageMonthKey:mKey,todayCharged:todayAfter,monthCharged:monthAfter,lastRechargeAt:now,updatedAt:now,lastDirectRechargeAt:now};
     });
-    if(!agentTxn.committed) throw new Error('رصيد الوكيل غير كافٍ أو تم تجاوز الحد اليومي/الشهري أو الحساب موقوف.');
+    if(!agentTxn.committed) throw new Error('لم يتم خصم رصيد الوكيل. السبب غالباً: رصيد الوكيل غير كافٍ، أو الحد اليومي/الشهري متجاوز، أو الحساب موقوف، أو ملف الوكيل غير موجود في agents.');
 
     let userBefore=0,userAfter=0;
     try{
@@ -230,7 +230,7 @@
     }catch(userErr){
       await runTransaction(agentRef,cur=>{
         if(!cur) return cur;
-        return {...cur,agentBalance:round2(cleanNum(cur.agentBalance)+amount),totalCharged:Math.max(0,round2(cleanNum(cur.totalCharged)-amount)),totalOperations:Math.max(0,cleanNum(cur.totalOperations)-1),todayCharged:Math.max(0,round2(cleanNum(cur.todayCharged)-amount)),monthCharged:Math.max(0,round2(cleanNum(cur.monthCharged)-amount)),updatedAt:Date.now(),rollbackReason:'direct_user_balance_update_failed'};
+        return {...cur,agentBalance:round2(agentBalanceFrom(cur)+amount),totalCharged:Math.max(0,round2(cleanNum(cur.totalCharged)-amount)),totalOperations:Math.max(0,cleanNum(cur.totalOperations)-1),todayCharged:Math.max(0,round2(cleanNum(cur.todayCharged)-amount)),monthCharged:Math.max(0,round2(cleanNum(cur.monthCharged)-amount)),updatedAt:Date.now(),rollbackReason:'direct_user_balance_update_failed'};
       }).catch(()=>null);
       throw userErr;
     }

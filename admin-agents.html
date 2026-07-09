@@ -13,11 +13,11 @@
   <main class="wrap">
     <div class="top"><div><div class="brand">ADNOR</div><div class="mini">إدارة وكلاء الشحن</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn dark" style="display:grid;place-items:center" href="index.html">الرئيسية</a><a class="btn blue" style="display:grid;place-items:center" href="agent.html" target="_blank">رابط الوكيل</a><button id="logoutBtn" class="btn red hidden">خروج</button></div></div>
     <section class="card hero"><div><h1>إدارة وكلاء الشحن</h1><p>أنشئ وكيل، أعطه كلمة سر، عبّي محفظته 100 أو 200 أو 1000 دولار، والوكيل يشحن المستخدمين من رصيده فقط.</p></div><button class="btn" id="refreshBtn">تحديث البيانات</button></section>
-    <section class="card login" id="loginCard"><h2 style="color:#ffe184;margin:0 0 10px">دخول الأدمن</h2><div class="field"><label>إيميل الأدمن الرسمي</label><div class="input"><span>📧</span><input id="adminEmail" type="email" placeholder="admin@email.com"></div></div><div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="adminPass" type="password" placeholder="••••••••"></div></div><button class="btn" id="loginBtn" style="width:100%;margin-top:10px">دخول</button><div class="status" id="loginStatus">هذا دخول الأدمن فقط. الوكيل يدخل من صفحة agent.html وليس من هنا.</div></section>
+    <section class="card login" id="loginCard"><h2 style="color:#ffe184;margin:0 0 10px">دخول الأدمن</h2><div class="field"><label>إيميل الأدمن الرسمي</label><div class="input"><span>📧</span><input id="adminEmail" type="email" placeholder="admin@email.com"></div></div><div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="adminPass" type="password" placeholder="••••••••"></div></div><button class="btn" id="loginBtn" style="width:100%;margin-top:10px">دخول بإيميل/كلمة سر</button><button class="btn blue" id="googleAdminBtn" style="width:100%;margin-top:10px">دخول الأدمن عبر Google</button><div class="status" id="loginStatus">هذا دخول الأدمن فقط. الوكيل يدخل من صفحة agent.html وليس من هنا. إذا كان حسابك الأدمن Google فقط، استخدم زر Google.</div></section>
     <section id="adminArea" class="hidden">
       <div class="stats card"><div class="stat"><span>عدد الوكلاء</span><b id="agentsCount">0</b></div><div class="stat"><span>رصيد الوكلاء</span><b id="agentsBalance">$0.00</b></div><div class="stat"><span>إجمالي الشحن</span><b id="agentsCharged">$0.00</b></div><div class="stat"><span>العمليات</span><b id="agentsOps">0</b></div></div>
       <div class="grid">
-        <section class="card"><h2 style="color:#ffe184;margin:0 0 12px">إضافة / تعديل وكيل</h2><div class="formgrid"><div class="field"><label>اسم الوكيل</label><div class="input"><span>👤</span><input id="agentName" placeholder="وكيل إسطنبول"></div></div><div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="agentEmail" type="text" placeholder="adhamagent أو agent@gmail.com"></div></div><div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="agentPass" type="text" placeholder="اكتبها عند الإنشاء أو للتغيير"></div></div><div class="field"><label>رصيد بداية</label><div class="input"><span>💵</span><input id="agentInitial" type="number" min="0" step="0.01" placeholder="100"></div></div><div class="field"><label>حد يومي اختياري</label><div class="input"><span>📆</span><input id="agentDaily" type="number" min="0" step="0.01" placeholder="0 = بدون حد"></div></div><div class="field"><label>حد شهري اختياري</label><div class="input"><span>🗓️</span><input id="agentMonthly" type="number" min="0" step="0.01" placeholder="0 = بدون حد"></div></div></div><button class="btn" id="saveAgentBtn" style="width:100%;margin-top:10px">حفظ الوكيل</button><div class="status" id="saveStatus">بعد الحفظ أعطِ الوكيل رابط agent.html واسم الدخول وكلمة السر. تم إرجاع إدارة الوكلاء الكاملة مع الوضع المباشر المؤقت.</div></section>
+        <section class="card"><h2 style="color:#ffe184;margin:0 0 12px">إضافة / تعديل وكيل</h2><div class="formgrid"><div class="field"><label>اسم الوكيل</label><div class="input"><span>👤</span><input id="agentName" placeholder="وكيل إسطنبول"></div></div><div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="agentEmail" type="text" placeholder="adhamagent أو agent@gmail.com"></div></div><div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="agentPass" type="text" placeholder="اكتبها عند الإنشاء أو للتغيير"></div></div><div class="field"><label>رصيد بداية</label><div class="input"><span>💵</span><input id="agentInitial" type="number" min="0" step="0.01" placeholder="100"></div></div><div class="field"><label>حد يومي اختياري</label><div class="input"><span>📆</span><input id="agentDaily" type="number" min="0" step="0.01" placeholder="0 = بدون حد"></div></div><div class="field"><label>حد شهري اختياري</label><div class="input"><span>🗓️</span><input id="agentMonthly" type="number" min="0" step="0.01" placeholder="0 = بدون حد"></div></div></div><button class="btn" id="saveAgentBtn" style="width:100%;margin-top:10px">حفظ الوكيل</button><div class="status" id="saveStatus">بعد الحفظ أعطِ الوكيل رابط agent.html واسم الدخول وكلمة السر. تم إرجاع إدارة الوكلاء الكاملة. إذا ظهر Permission denied ارفع قواعد V194 المؤقتة من الملف المرفق.</div></section>
         <section class="card"><h2 style="color:#ffe184;margin:0 0 12px">الوكلاء</h2><div class="table" id="agentsList"><div class="status">لا توجد بيانات بعد.</div></div></section>
       </div>
       <section class="card"><h2 style="color:#ffe184;margin:0 0 12px">آخر شحنات الوكلاء</h2><div class="table" id="rechargesList"><div class="status">لا توجد عمليات بعد.</div></div></section>
@@ -25,7 +25,7 @@
   </main>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
   import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
   import { getDatabase, ref, get, update, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
   
@@ -33,6 +33,7 @@
   const app=initializeApp(firebaseConfig), auth=getAuth(app), fns=getFunctions(app), db=getDatabase(app);
   const creatorApp=initializeApp(firebaseConfig,'adnor-agent-creator'), creatorAuth=getAuth(creatorApp);
   const ADMIN_EMAILS=['adhamdeab2@gmail.com','adhamdeab45@gmail.com'];
+  const googleProvider=new GoogleAuthProvider();
   const $=id=>document.getElementById(id);
   
   function toEnglishDigits(v){return String(v??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));}
@@ -59,6 +60,7 @@
     let m=(e&&e.message?e.message:String(e||'خطأ'));
     m=m.replace('Firebase:','').replace(/\(functions\/.+?\)\.?/g,'').trim();
     if(m==='internal'||code==='functions/internal') return 'تعذر تنفيذ دالة السيرفر، تم تشغيل وضع بديل داخل الصفحة.';
+    if(code.includes('permission-denied') || m.toLowerCase().includes('permission_denied') || m.toLowerCase().includes('permission denied')) return 'Permission denied: قواعد Firebase تمنع إدارة الوكلاء مباشرة. ارفع قواعد V194 المؤقتة الموجودة مع الملف، أو ادخل بحساب الأدمن الرسمي.';
     return m;
   }
   
@@ -157,12 +159,15 @@
     try{
       $('loginBtn').disabled=true;
       msg('loginStatus','جارٍ الدخول...');
-      const email=$('adminEmail').value.trim();
-      if(!ADMIN_EMAILS.includes(email.toLowerCase())){
-        throw new Error('هذا الإيميل ليس مسجلاً كأدمن رسمي بالنظام.');
+      const email=$('adminEmail').value.trim().toLowerCase();
+      if(!email.includes('@')){
+        throw new Error('أنت الآن في صفحة الأدمن. لا تكتب اسم الوكيل هنا. الوكيل يدخل من زر رابط الوكيل / agent.html.');
+      }
+      if(!ADMIN_EMAILS.includes(email)){
+        throw new Error('هذا الإيميل ليس أدمن. استخدم إيميل الأدمن الرسمي أو اضغط رابط الوكيل إذا هذا حساب وكيل.');
       }
       await signInWithEmailAndPassword(auth,email,$('adminPass').value);
-      msg('loginStatus','تم الدخول بنجاح','ok');
+      msg('loginStatus','تم دخول الأدمن بنجاح','ok');
     }catch(e){
       msg('loginStatus',err(e),'bad');
     }finally{
@@ -170,6 +175,28 @@
     }
   };
   
+
+  const gBtn=$('googleAdminBtn');
+  if(gBtn){
+    gBtn.onclick=async()=>{
+      try{
+        gBtn.disabled=true;
+        msg('loginStatus','جارٍ دخول الأدمن عبر Google...');
+        const cred=await signInWithPopup(auth,googleProvider);
+        const email=String((cred.user&&cred.user.email)||'').toLowerCase();
+        if(!ADMIN_EMAILS.includes(email)){
+          await signOut(auth).catch(()=>null);
+          throw new Error('هذا الحساب ليس أدمن: '+email);
+        }
+        msg('loginStatus','تم دخول الأدمن عبر Google بنجاح.','ok');
+      }catch(e){
+        msg('loginStatus',err(e),'bad');
+      }finally{
+        gBtn.disabled=false;
+      }
+    };
+  }
+
   $('logoutBtn').onclick=()=>signOut(auth); 
   $('refreshBtn').onclick=()=>loadAll().catch(e=>alert(err(e)));
   ['adminEmail','adminPass'].forEach(id=>{const el=$(id); if(el) el.addEventListener('keydown',ev=>{if(ev.key==='Enter') $('loginBtn').click()})});

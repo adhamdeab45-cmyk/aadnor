@@ -2938,6 +2938,17 @@ function setCurrentPrize(type){
       return {...old,uid:user?.uid||'',publicId,userId:publicId,accountNumber:publicId,name,displayName:name,email:user?.email||old.email||'',photoURL:old.photoURL||user?.photoURL||'',country:($('country')?.value||old.country||'تركيا'),birthDate:($('birthDate')?.value||old.birthDate||''),role:isAdmin?'admin':(old.role||'user'),isAdmin,isFrozen:old.isFrozen||false,isVIP:old.isVIP||false,refCode:old.refCode||makeRefCode(user||{}),realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0),_localOnly:true}
     }
 
+    // V186_LOGIN_UNBLOCK: لا نسمح لأي قراءة/كتابة بقاعدة البيانات أو دالة سيرفر أن تمنع دخول المستخدم.
+    function adnorTimeout(promise, ms=4500, label='operation'){
+      return Promise.race([
+        promise,
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+' timeout')),ms))
+      ]);
+    }
+    function adnorSafeStart(label, fn){
+      try{return fn()}catch(e){console.warn('ADNOR safe start skipped:',label,e);return null}
+    }
+
     async function ensureUser(user){
       const now=Date.now();
       const email=(user.email||'').toLowerCase();
@@ -2945,7 +2956,7 @@ function setCurrentPrize(type){
       const userRef=ref(db,'users/'+user.uid);
       let old={};
       try{
-        const snap=await get(userRef);
+        const snap=await adnorTimeout(get(userRef),3000,'profile read');
         old=snap.val()||{};
       }catch(e){
         console.warn('user profile read skipped',e);
@@ -2953,7 +2964,8 @@ function setCurrentPrize(type){
       }
       const refCode=old.refCode||makeRefCode(user);
       const name=($('displayName')?.value||'').trim()||old.name||user.displayName||'مستخدم ADNOR';
-      const publicId=await ensurePublicUserId(user,old);
+      let publicId=adnorPublicIdOf(old)||adnorMakeNumericPublicId(user.uid,'local');
+      try{publicId=await adnorTimeout(ensurePublicUserId(user,old),3000,'public id reserve')}catch(e){console.warn('public id fallback used',e)}
     
       // V185 USER REGISTRATION FIX:
       // المشكلة كانت أن المستخدم العادي قد يُمنع من حفظ حقول إدارية داخل users/{uid}
@@ -2989,7 +3001,7 @@ function setCurrentPrize(type){
 
       try{
         const fn=httpsCallable(cloudFns,'ensureUserProfile');
-        const res=await fn({name,country:profileSave.country,birthDate:profileSave.birthDate,refCode});
+        const res=await adnorTimeout(fn({name,country:profileSave.country,birthDate:profileSave.birthDate,refCode}),5000,'ensureUserProfile function');
         if(res?.data?.profile){
           return {...old,...res.data.profile,realBalance:Number(res.data.profile.realBalance||0),bonusBalance:Number(res.data.profile.bonusBalance||0),reservedWithdrawalBalance:Number(res.data.profile.reservedWithdrawalBalance||0),freeSpins:Number(res.data.profile.freeSpins||0),freeTickets:Number(res.data.profile.freeTickets||0),adnBalance:Number(res.data.profile.adnBalance||0),referralBonusEarned:Number(res.data.profile.referralBonusEarned||0)};
         }
@@ -3019,7 +3031,7 @@ function setCurrentPrize(type){
       };
 
       try{
-        await update(userRef,isAdmin?profileSave:safeUserProfile);
+        await adnorTimeout(update(userRef,isAdmin?profileSave:safeUserProfile),3000,'profile save');
       }catch(e){
         console.warn('user profile save skipped; login will continue',e);
         return localFallbackProfile(user,{...old,...safeUserProfile,publicId});
@@ -3040,7 +3052,19 @@ function setCurrentPrize(type){
       return {...old,...profileSave,publicId,realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0)}
     }
 
-    async function doGoogle(){if(!checkAgreements())return;try{capturePendingReferralCode();const result=await signInWithPopup(auth,provider);currentProfile=await ensureUser(result.user);toast('تم تسجيل الدخول بنجاح');processPendingReferralAfterLogin()}catch(e){console.error(e);toast('خطأ تسجيل الدخول: '+(e.code||e.message))}}$('googleBtn').onclick=doGoogle;$('continueBtn').onclick=doGoogle;
+    async function doGoogle(){
+      if(!checkAgreements())return;
+      try{
+        capturePendingReferralCode();
+        await signInWithPopup(auth,provider);
+        toast('تم تسجيل الدخول بنجاح');
+      }catch(e){
+        console.error(e);
+        const msg=(e&&e.code)?String(e.code):String(e&&e.message||e);
+        toast('خطأ تسجيل الدخول: '+msg);
+      }
+    }
+    $('googleBtn').onclick=doGoogle;$('continueBtn').onclick=doGoogle;
 
 
     /* ADNOR V101 - User Settings Center */
@@ -3061,7 +3085,7 @@ function setCurrentPrize(type){
     async function v101SaveAvatarFile(file){if(!currentUser)return toast('سجل الدخول أولًا');if(!file)return;try{if(file.size>5*1024*1024)return toast('الصورة كبيرة جدًا، اختر صورة أقل من 5MB');const dataUrl=await v101ResizeImage(file);await update(ref(db,'users/'+currentUser.uid),{photoURL:dataUrl,updatedAt:Date.now()});if($('v101AvatarPreview')){$('v101AvatarPreview').style.backgroundImage='url("'+dataUrl+'")';$('v101AvatarPreview').textContent=''}toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoSaved)}catch(e){console.error(e);toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoFail)}}
 
     function renderProfile(){if(!currentProfile)return;const real=Number(currentProfile.realBalance||0),bonus=Number(currentProfile.bonusBalance||0),res=Number(currentProfile.reservedWithdrawalBalance||0);const publicId=adnorPublicIdLabel(currentProfile,currentUser?.uid);setText('balanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBalanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBonusText',balanceHidden?'':'حقيقي '+money(real)+' — بونص '+money(bonus));setText('homeBalanceText',balanceHidden?'••••••':money(real+bonus));setText('homeReserveText','بونص '+money(bonus)+' — محجوز '+money(res));setText('topUserName',currentProfile.name||currentProfile.displayName||'مستخدم ADNOR');setText('topUserId','ID: '+publicId);setText('homeWelcomeText','أهلًا '+(currentProfile.name||'مستخدم ADNOR')+' — رقم حسابك '+publicId);setText('homeStatusText',currentProfile.isFrozen?'مجمّد':(currentProfile.isVIP?'VIP':'نشط'));setText('walletTotalText',money(real+bonus+res));setText('realBalanceText',money(real));setText('bonusBalanceText',money(bonus));setText('reservedBalanceText',money(res));setText('roleText',isAdminUser()?'أدمن رئيسي':'نظام آمن');setText('accountInfo',(currentProfile.name||'مستخدم')+' — ID: '+publicId+' — الحالة: '+(currentProfile.isVIP?'VIP':'نشط'));setupAdminVisibility();renderGameStatus();renderAccountExtras();v101RenderSettings()}
-    function listenProfile(uid){onValue(ref(db,'users/'+uid),snap=>{currentProfile=snap.val()||currentProfile;renderProfile()});if(ticketUnsub)ticketUnsub();ticketUnsub=onValue(ref(db,'user_tickets/'+uid),snap=>{const val=snap.val()||{};renderUserTicketHistory(val)});if(transUnsub)transUnsub();transUnsub=onValue(ref(db,'transactions/'+uid),snap=>renderHistory(snap.val()||{}));if(supportUnsub)supportUnsub();supportUnsub=onValue(ref(db,'support_tickets/'+uid),snap=>renderSupportTickets(snap.val()||{}));if(userNotifUnsub)userNotifUnsub();userNotifUnsub=onValue(ref(db,'user_notifications/'+uid),snap=>{currentNotifications=snap.val()||{};renderUserNotifications()})}
+    function listenProfile(uid){onValue(ref(db,'users/'+uid),snap=>{currentProfile=snap.val()||currentProfile;renderProfile()},err=>console.warn('user profile listen skipped',err));if(ticketUnsub)ticketUnsub();ticketUnsub=onValue(ref(db,'user_tickets/'+uid),snap=>{const val=snap.val()||{};renderUserTicketHistory(val)},err=>console.warn('tickets listen skipped',err));if(transUnsub)transUnsub();transUnsub=onValue(ref(db,'transactions/'+uid),snap=>renderHistory(snap.val()||{}),err=>console.warn('transactions listen skipped',err));if(supportUnsub)supportUnsub();supportUnsub=onValue(ref(db,'support_tickets/'+uid),snap=>renderSupportTickets(snap.val()||{}),err=>console.warn('support tickets listen skipped',err));if(userNotifUnsub)userNotifUnsub();userNotifUnsub=onValue(ref(db,'user_notifications/'+uid),snap=>{currentNotifications=snap.val()||{};renderUserNotifications()},err=>console.warn('notifications listen skipped',err))}
     function mergeSiteControl(v){const base=JSON.parse(JSON.stringify(defaultSiteControl));v=v||{};base.maintenance=!!v.maintenance;base.maintenanceMessage=String(v.maintenanceMessage||base.maintenanceMessage);base.announcement=String(v.announcement||'');base.modules=Object.assign({},base.modules,v.modules||{});return base}
     function moduleEnabled(p){if(['admin','account','settings','notifications'].includes(p))return true;if(p==='results')return siteControl.modules.results!==false;return siteControl.modules[p]!==false}
     function renderSiteControl(){
@@ -3080,11 +3104,77 @@ function setCurrentPrize(type){
       if($('moduleWalletInput'))$('moduleWalletInput').checked=siteControl.modules.wallet!==false;
       if($('moduleSupportInput'))$('moduleSupportInput').checked=siteControl.modules.support!==false;
     }
-    function listenSiteControl(){if(siteControlUnsub)return;siteControlUnsub=onValue(ref(db,'system_settings/site_control'),snap=>{siteControl=mergeSiteControl(snap.val());renderSiteControl()})}
-    function listenAiKnowledge(){if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()})}
+    function listenSiteControl(){if(siteControlUnsub)return;siteControlUnsub=onValue(ref(db,'system_settings/site_control'),snap=>{siteControl=mergeSiteControl(snap.val());renderSiteControl()},err=>{console.warn('site control read skipped',err);siteControl=mergeSiteControl(null);renderSiteControl()})}
+    function listenAiKnowledge(){if(!isAdminUser())return;if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()},err=>console.warn('ai_knowledge read skipped',err))}
     async function adminSaveSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl({maintenance:$('siteMaintenanceInput')?.value==='true',maintenanceMessage:$('siteMaintenanceMessageInput')?.value||'',announcement:$('siteAnnouncementInput')?.value||'',modules:{lottery:!!$('moduleLotteryInput')?.checked,results:!!$('moduleLotteryInput')?.checked,games:!!$('moduleGamesInput')?.checked,wallet:!!$('moduleWalletInput')?.checked,support:!!$('moduleSupportInput')?.checked}});data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);await set(ref(db,'finance_audit/'+Date.now()),{action:'site_control_saved',adminEmail:currentUser?.email||'',createdAt:Date.now(),note:'حفظ إعدادات تشغيل الموقع والأقسام'});toast('تم حفظ إعدادات تشغيل الموقع')}
     async function seedSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl(defaultSiteControl);data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);toast('تم استرجاع التشغيل الطبيعي')}
-    onAuthStateChanged(auth,async user=>{currentUser=user;if(user){try{currentProfile=await ensureUser(user)}catch(e){console.warn('ensureUser fatal fallback',e);currentProfile=localFallbackProfile(user,{})}$('loginScreen').style.display='none';$('appScreen').style.display='flex';renderProfile();if(!document.querySelector('.page.active'))showPage('home');listenProfile(user.uid);listenPaymentMethods();listenLotterySettings();listenPublicDrawHistory();listenReferralSettings();listenSupportContacts();listenSiteControl();listenAiKnowledge();listenUserReferrals(user.uid);listenPendingReferralRewards(user.uid);startAdminListeners();capturePendingReferralCode();processPendingReferralAfterLogin()}else{$('loginScreen').style.display='flex';$('appScreen').style.display='none';currentProfile=null;stopAdminListeners();if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null} if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null} if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}} if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}} if(adnorLastResultUnsub){try{adnorLastResultUnsub()}catch(e){} adnorLastResultUnsub=null; adnorLastResultBox={}} (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={}; if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null} if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null} if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null;currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;renderUserNotifications()}}});
+    function adnorEnterAppFast(user){
+      currentUser=user;
+      const previous=(currentProfile&&currentProfile.uid===user.uid)?currentProfile:{};
+      currentProfile=localFallbackProfile(user,previous);
+      if($('loginScreen'))$('loginScreen').style.display='none';
+      if($('appScreen'))$('appScreen').style.display='flex';
+      renderProfile();
+      if(!document.querySelector('.page.active'))showPage('home');
+    }
+    async function adnorHydrateProfileInBackground(user){
+      try{
+        const profile=await adnorTimeout(ensureUser(user),8500,'user profile sync');
+        if(currentUser&&currentUser.uid===user.uid){
+          currentProfile={...(currentProfile||{}),...(profile||{})};
+          renderProfile();
+        }
+      }catch(e){
+        console.warn('profile sync skipped; user stays logged in',e);
+      }
+    }
+    function adnorStartRuntimeListeners(user){
+      if(!user||!user.uid)return;
+      if(window.__adnorRuntimeUid===user.uid)return;
+      window.__adnorRuntimeUid=user.uid;
+      adnorSafeStart('listenProfile',()=>listenProfile(user.uid));
+      adnorSafeStart('listenPaymentMethods',()=>listenPaymentMethods());
+      adnorSafeStart('listenLotterySettings',()=>listenLotterySettings());
+      adnorSafeStart('listenPublicDrawHistory',()=>listenPublicDrawHistory());
+      adnorSafeStart('listenReferralSettings',()=>listenReferralSettings());
+      adnorSafeStart('listenSupportContacts',()=>listenSupportContacts());
+      adnorSafeStart('listenSiteControl',()=>listenSiteControl());
+      adnorSafeStart('listenUserReferrals',()=>listenUserReferrals(user.uid));
+      adnorSafeStart('listenPendingReferralRewards',()=>listenPendingReferralRewards(user.uid));
+      adnorSafeStart('startAdminListeners',()=>startAdminListeners());
+      if(isAdminUser())adnorSafeStart('listenAiKnowledge',()=>listenAiKnowledge());
+      adnorSafeStart('capturePendingReferralCode',()=>capturePendingReferralCode());
+      setTimeout(()=>adnorSafeStart('processPendingReferralAfterLogin',()=>processPendingReferralAfterLogin()),800);
+    }
+    function adnorCleanupLogout(){
+      window.__adnorRuntimeUid='';
+      if($('loginScreen'))$('loginScreen').style.display='flex';
+      if($('appScreen'))$('appScreen').style.display='none';
+      currentProfile=null;
+      stopAdminListeners();
+      if(lotteryUnsub){try{lotteryUnsub()}catch(e){} lotteryUnsub=null}
+      if(publicDrawUnsub){try{publicDrawUnsub()}catch(e){} publicDrawUnsub=null}
+      if(publicDrawResultsUnsub){try{publicDrawResultsUnsub()}catch(e){} publicDrawResultsUnsub=null; publicDrawResults={}}
+      if(displayDrawResultsUnsub){try{displayDrawResultsUnsub()}catch(e){} displayDrawResultsUnsub=null; displayDrawResults={}}
+      if(adnorLastResultUnsub){try{adnorLastResultUnsub()}catch(e){} adnorLastResultBox={}; adnorLastResultUnsub=null}
+      (publicDrawRoundUnsubs||[]).forEach(fn=>{try{fn()}catch(e){}}); publicDrawRoundUnsubs=[]; publicDrawRounds={};
+      if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null}
+      if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null}
+      if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null}
+      if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null}
+      if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null; currentNotifications={}; renderUserNotifications()}
+      if(aiKnowledgeUnsub){try{aiKnowledgeUnsub()}catch(e){} aiKnowledgeUnsub=null; aiKnowledgeCache={}}
+    }
+    onAuthStateChanged(auth,user=>{
+      currentUser=user;
+      if(user){
+        adnorEnterAppFast(user);
+        adnorStartRuntimeListeners(user);
+        adnorHydrateProfileInBackground(user);
+      }else{
+        adnorCleanupLogout();
+      }
+    });
     $('hideBalanceBtn').onclick=()=>{balanceHidden=!balanceHidden;$('hideBalanceBtn').textContent=balanceHidden?'🙈':'👁️';renderProfile()};if($('v61AccountShortcut'))$('v61AccountShortcut').onclick=()=>showPage('settings');if($('toggleLotteryTicketsBtn'))$('toggleLotteryTicketsBtn').onclick=()=>{lotteryTicketsHidden=!lotteryTicketsHidden;const card=$('lotteryActiveCard');if(card)card.classList.toggle('v61-hide-tickets',lotteryTicketsHidden);$('toggleLotteryTicketsBtn').textContent=lotteryTicketsHidden?'عرض التذاكر':'إخفاء التذاكر'};function openDrawer(){$('sideDrawer')?.classList.add('open');$('drawerOverlay')?.classList.add('open')}function closeDrawer(){$('sideDrawer')?.classList.remove('open');$('drawerOverlay')?.classList.remove('open')}$('menuBtn').onclick=openDrawer;$('drawerCloseBtn').onclick=closeDrawer;$('drawerOverlay').onclick=closeDrawer;$('drawerLogoutBtn').onclick=()=>{closeDrawer();signOut(auth)};document.querySelectorAll('[data-drawer-page]').forEach(b=>b.onclick=()=>{const p=b.dataset.drawerPage;if(p==='admin'&&!isAdminUser())return toast('بوابة الإدارة للأدمن فقط');closeDrawer();showPage(p)});$('bellBtn').onclick=()=>{closeDrawer();showPage('notifications');};if($('markReadBtn'))$('markReadBtn').onclick=markNotificationsRead;$('depositBtn').onclick=()=>{showPage('wallet');showWalletPanel('deposit')};$('withdrawBtn').onclick=()=>{showPage('wallet');showWalletPanel('withdraw')};if($('openResultsBtn'))$('openResultsBtn').onclick=()=>showPage('results');if($('openTicketsBtn'))$('openTicketsBtn').onclick=()=>{showPage('results');currentTicketFilter='all';document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x.dataset.ticketFilter==='all'));renderUserTicketHistory(currentUserTickets)};document.querySelectorAll('[data-ticket-filter]').forEach(b=>b.onclick=()=>{currentTicketFilter=b.dataset.ticketFilter;document.querySelectorAll('[data-ticket-filter]').forEach(x=>x.classList.toggle('active',x===b));renderUserTicketHistory(currentUserTickets)});
     function showPage(p){if(p==='admin'&&!isAdminUser()){toast('بوابة الإدارة للأدمن فقط');return}if(!isAdminUser()){if(siteControl.maintenance && !['account','settings','notifications'].includes(p)){toast(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا');return}if(!moduleEnabled(p)){toast('هذا القسم متوقف مؤقتًا من الإدارة');return}}const page=$('page-'+p);if(!page)return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));page.classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===p));if($('appWrap')){$('appWrap').classList.toggle('admin-layout',p==='admin');$('appWrap').setAttribute('data-active-page',p)}if(p==='games'&&typeof showGamesHome==='function')showGamesHome();if(p==='admin')showAdminSection('overview')}document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{if(b.dataset.page==='admin'&&!isAdminUser())return toast('هذه الصفحة للأدمن فقط');showPage(b.dataset.page)});document.querySelectorAll('[data-home-go]').forEach(b=>b.onclick=()=>{const go=b.dataset.homeGo||'home';const parts=go.split(':');showPage(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>showWalletPanel(parts[1]),40)});if($('v52QuickDepositBtn'))$('v52QuickDepositBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('deposit'),40)};if($('v52QuickWithdrawBtn'))$('v52QuickWithdrawBtn').onclick=()=>{showPage('wallet');setTimeout(()=>showWalletPanel('withdraw'),40)};
     function showWalletPanel(p){document.querySelectorAll('.wallet-panel').forEach(x=>x.classList.add('hidden'));$('wallet-'+p).classList.remove('hidden');document.querySelectorAll('.wallet-tab').forEach(b=>b.classList.toggle('active',b.dataset.wallet===p));if(p==='deposit'){depositCategory='';depositMethod='';clearDepositStatus();renderMethods()}if(p==='withdraw'){withdrawCategory='';withdrawMethod='';clearWithdrawStatus();renderMethods()}}document.querySelectorAll('.wallet-tab').forEach(b=>b.onclick=()=>showWalletPanel(b.dataset.wallet));
@@ -3178,7 +3268,7 @@ function setCurrentPrize(type){
       setAgentContactLink('withdrawAgentWhatsappLink',whatsapp,'🟢 WhatsApp');
       setAgentContactLink('withdrawAgentTelegramLink',telegram,'🔵 Telegram');
     }
-    function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val);methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)})}
+    function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val);methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)},err=>{console.warn('payment methods read skipped',err);methods=[...defaultMethods];renderMethods()})}
     renderMethods();
     listenWheelSettings();
 
@@ -3628,7 +3718,7 @@ function setCurrentPrize(type){
         adminState.supportContacts=supportContacts;
         renderSupportContacts();
         if(Object.keys(val).length===0 && isAdminUser()) seedSupportContacts(false);
-      });
+      },err=>{console.warn('support contacts read skipped',err);supportContacts={...defaultSupportContacts};renderSupportContacts();});
     }
     function fillSupportContactForm(c){
       c=c||{};
@@ -3763,7 +3853,7 @@ function setCurrentPrize(type){
         if(val)referralSettings=Object.assign({},referralSettings,val);
         renderAccountExtras();renderReferralAdminForm();
         if(isAdminUser()&&!val)seedReferralSettings(false);
-      });
+      },err=>{console.warn('referral settings read skipped',err);renderAccountExtras();});
     }
     function listenUserReferrals(uid){
       if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null} if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADNOR | بوابة وكيل الشحن</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#020a16;--card:#081a34;--gold:#ffd866;--gold2:#d89524;--line:rgba(255,216,102,.42);--txt:#ecf4ff;--muted:#aebbd0;--green:#4dffc6;--red:#ff6f7d;--blue:#91eaff}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -5%,rgba(255,216,102,.18),transparent 32%),radial-gradient(circle at 0 100%,rgba(0,201,255,.12),transparent 30%),linear-gradient(180deg,#061225,#020a16 72%);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--txt)}
+    .wrap{width:min(100%,460px);margin:auto;padding:18px 13px 92px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.brand{font-family:Cinzel,serif;font-size:32px;font-weight:900;background:linear-gradient(180deg,#fff3b4,#d89524,#ffe184);-webkit-background-clip:text;color:transparent}.mini{font-size:12px;color:var(--muted);font-weight:900}.card{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(8,26,52,.92),rgba(2,10,22,.96));box-shadow:0 0 28px rgba(255,188,39,.12),inset 0 0 28px rgba(255,216,102,.04);padding:16px;margin-bottom:13px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;inset:8px;border-radius:22px;border:1px solid rgba(255,239,169,.08);pointer-events:none}.hero{text-align:center;padding:24px 16px}.hero .icon{width:74px;height:74px;border-radius:24px;display:grid;place-items:center;margin:0 auto 10px;background:radial-gradient(circle at 30% 20%,#fff3ad,#d89524 58%,#6d3b08);font-size:38px;box-shadow:0 0 24px rgba(255,216,102,.28)}h1,h2,h3,p{margin:0}.hero h1{font-size:27px;color:#ffe184}.hero p{color:var(--muted);font-size:13px;font-weight:800;line-height:1.8;margin-top:7px}.field{margin:10px 0}.field label{display:block;color:#ffe184;font-size:13px;font-weight:900;margin-bottom:6px}.input{height:52px;border:1px solid rgba(255,216,102,.38);border-radius:17px;background:rgba(2,10,22,.72);display:flex;align-items:center;gap:8px;padding:0 12px}.input span{font-size:20px}.input input,.input textarea{width:100%;height:100%;border:0;outline:0;background:transparent;color:#fff;font:inherit;font-weight:800}.input textarea{height:96px;padding:13px 0;resize:none}.input.textarea{height:106px;align-items:flex-start}.btn{width:100%;min-height:52px;border:0;border-radius:18px;background:linear-gradient(180deg,#fff1a5,#d89524 62%,#8d510d);color:#151007;font:inherit;font-weight:1000;cursor:pointer;box-shadow:0 0 18px rgba(255,188,39,.18);margin-top:8px}.btn.dark{background:rgba(2,10,22,.72);color:#ffe184;border:1px solid rgba(255,216,102,.38);box-shadow:none}.btn.red{background:rgba(255,111,125,.12);color:#ffb7bf;border:1px solid rgba(255,111,125,.45);box-shadow:none}.btn:disabled{opacity:.55;cursor:not-allowed}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{border:1px solid rgba(255,216,102,.32);background:rgba(2,10,22,.55);border-radius:20px;padding:13px;text-align:center}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:900}.stat b{display:block;color:#ffe184;font-size:20px;margin-top:4px;direction:ltr}.profile{display:flex;align-items:center;justify-content:space-between;gap:10px}.profile b{color:#ffe184}.profile span{display:block;color:var(--muted);font-size:12px;font-weight:800;direction:ltr;text-align:right}.status{margin-top:10px;border-radius:16px;padding:11px;background:rgba(2,10,22,.58);border:1px dashed rgba(255,216,102,.28);color:var(--muted);font-weight:800;line-height:1.7;font-size:13px}.status.ok{border-color:rgba(77,255,198,.45);color:#b9ffe8}.status.bad{border-color:rgba(255,111,125,.45);color:#ffd1d6}.userbox{display:none}.userbox.show{display:block}.user-info{border:1px solid rgba(145,234,255,.35);background:rgba(0,201,255,.08);border-radius:18px;padding:12px;margin-top:10px}.user-info h3{color:#bdf3ff;font-size:16px}.user-info p{color:#cbd7e7;font-size:12px;font-weight:800;line-height:1.7;margin-top:4px;direction:ltr;text-align:right}.logs{display:grid;gap:9px}.log {border:1px solid rgba(255,216,102,.28);border-radius:18px;background:rgba(2,10,22,.52);padding:11px}.log b{color:#ffe184}.log p{color:#aebbd0;font-size:12px;font-weight:800;line-height:1.7;margin-top:3px}.hidden{display:none!important}.footerNav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(100% - 20px,440px);display:grid;grid-template-columns:1fr 1fr;gap:8px}.footerNav a,.footerNav button{height:50px;border-radius:17px;border:1px solid rgba(255,216,102,.36);background:rgba(2,10,22,.88);color:#ffe184;text-decoration:none;font:inherit;font-weight:900;display:grid;place-items:center;cursor:pointer}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top"><div><div class="brand">ADNOR</div><div class="mini">بوابة وكيل الشحن</div></div><button id="logoutBtn" class="btn red hidden" style="width:auto;min-height:42px;padding:0 13px">خروج</button></div>
+    <section class="card hero"><div class="icon">💳</div><h1>وكيل شحن ADNOR</h1><p>ادخل بحساب الوكيل، ثم اشحن المستخدم عبر UID أو الرقم العام أو كود الدعوة أو البريد. الشحن المباشر مفعّل من حساب الوكيل.</p></section>
+    <section class="card" id="loginCard">
+      <h2 style="color:#ffe184;font-size:21px">تسجيل دخول الوكيل</h2>
+      <div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="loginEmail" type="text" autocomplete="username" placeholder="adhamagent أو agent@gmail.com"></div></div>
+      <div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div></div>
+      <button class="btn" id="loginBtn">دخول الوكيل</button>
+      <div class="status" id="loginStatus">استخدم اسم الدخول وكلمة السر التي أنشأها الأدمن. اكتب الاسم فقط مثل muhammed200400 بدون @adnor-agent.com.</div>
+    </section>
+    <section class="card hidden" id="dashboardCard">
+      <div class="profile"><div><b id="agentName">وكيل شحن</b><span id="agentEmail">—</span></div><div class="mini" id="agentState">مفعّل</div></div>
+      <div class="stats" style="margin-top:12px"><div class="stat"><span>رصيد الوكيل</span><b id="agentBalance">$0.00</b></div><div class="stat"><span>إجمالي الشحن</span><b id="agentTotal">$0.00</b></div><div class="stat"><span>شحن اليوم / الحد</span><b id="agentDailyUsage">$0.00</b></div><div class="stat"><span>شحن الشهر / الحد</span><b id="agentMonthlyUsage">$0.00</b></div></div>
+    </section>
+    <section class="card hidden" id="rechargeCard">
+      <h2 style="color:#ffe184;font-size:21px">شحن مستخدم</h2>
+      <div class="field"><label>رقم المستخدم / UID داخلي / كود الدعوة / البريد</label><div class="input"><span>🆔</span><input id="targetId" placeholder="مثال: 100001 أو كود الدعوة"></div></div>
+      <button class="btn dark" id="findUserBtn">فحص المستخدم قبل الشحن</button>
+      <div class="userbox" id="targetUserBox"><div class="user-info"><h3 id="targetUserName">—</h3><p id="targetUserInfo">—</p></div></div>
+      <div class="field"><label>المبلغ بالدولار</label><div class="input"><span>💵</span><input id="amount" type="number" min="0.01" step="0.01" placeholder="مثال: 50"></div></div>
+      <div class="field"><label>ملاحظة اختيارية</label><div class="input textarea"><span>🧾</span><textarea id="note" placeholder="مثال: شحن كاش"></textarea></div></div>
+      <button class="btn" id="rechargeBtn">تنفيذ الشحن</button>
+      <div class="status" id="rechargeStatus">بعد التنفيذ سيزيد رصيد المستخدم وينقص رصيد الوكيل بنفس المبلغ مباشرةً.</div>
+    </section>
+    <section class="card hidden" id="logsCard"><h2 style="color:#ffe184;font-size:21px;margin-bottom:10px">آخر عملياتي</h2><div class="logs" id="logsList"></div></section>
+  </main>
+  <div class="footerNav"><a href="index.html">الرئيسية</a><button id="refreshBtn" type="button">تحديث</button></div>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+  import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
+  import { getDatabase, ref, get, update, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
+  
+  const VERSION='ADNOR_AGENT_DIRECT';
+  const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
+  const app=initializeApp(firebaseConfig), auth=getAuth(app), fns=getFunctions(app), db=getDatabase(app);
+  setPersistence(auth,browserLocalPersistence).catch(e=>console.warn('agent persistence warning',e));
+  const $=id=>document.getElementById(id);
+  
+  function toEnglishDigits(v){return String(v??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));}
+  function cleanNum(v){
+    if(typeof v==='number') return Number.isFinite(v)?Math.round(v*100)/100:0;
+    if(v==null) return 0;
+    let s=toEnglishDigits(v).trim();
+    if(!s) return 0;
+    s=s.replace(/\s/g,'').replace(/,/g,'.').replace(/[^0-9.\-]/g,'');
+    const parts=s.split('.'); if(parts.length>2) s=parts.shift()+'.'+parts.join('');
+    const n=Number(s); return Number.isFinite(n)?Math.round(n*100)/100:0;
+  }
+  function round2(n){return Math.round(cleanNum(n)*100)/100}
+  function money(n){return '$'+cleanNum(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function msg(id,t,cls=''){const el=$(id); if(el){el.textContent=t; el.className='status '+cls;}}
+  function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+  function normalizeAgentLogin(v){const raw=String(v||'').trim().toLowerCase(); if(!raw) throw new Error('اكتب اسم الدخول أو الإيميل.'); if(raw.includes('@')) return raw; const id=raw.replace(/\s+/g,''); if(!/^[a-z0-9._-]{3,60}$/.test(id)) throw new Error('اسم الدخول غير صحيح.'); return id+'@adnor-agent.com'}
+  function nowId(prefix){return prefix+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
+  function dayKey(ts=Date.now()){const d=new Date(ts+3*60*60*1000);return d.toISOString().slice(0,10)}
+  function monthKey(ts=Date.now()){return dayKey(ts).slice(0,7)}
+  function err(e){
+    const code=e&&e.code?String(e.code):'';
+    let m=(e&&e.message?e.message:String(e||'خطأ')).replace('Firebase:','').replace(/\(functions\/.+?\)\.?/g,'').trim();
+    if(code.includes('permission-denied')||m.includes('PERMISSION_DENIED')) return 'صلاحيات Firebase لا تسمح بهذه العملية. راجع قواعد Firebase الخاصة بالوكلاء.';
+    if(m==='internal'||code==='functions/internal') return 'تم استخدام الشحن المباشر من بوابة الوكيل.';
+    return m;
+  }
+  async function call(name,data){return (await httpsCallable(fns,name)(data||{})).data||{}}
+  function agentBalanceFrom(a){
+    if(!a) return 0;
+    const candidates=[a.agentBalance,a.balance,a.walletBalance,a.credit,a.amount,a.agentWalletBalance,a.walletAmount,a.wallet&&a.wallet.balance,a.wallet&&a.wallet.agentBalance];
+    let sawZero=false;
+    for(const v of candidates){const n=cleanNum(v); if(n>0) return n; if(v===0 || v==='0') sawZero=true;}
+    return sawZero?0:0;
+  }
+  window.__ADNOR_AGENT_BALANCE_CACHE=0;
+
+  async function getMyAgent(){
+    const u=auth.currentUser; if(!u) throw new Error('يجب تسجيل الدخول.');
+    let a=null, sourcePath='agents';
+    try{
+      const snap=await get(ref(db,'agents/'+u.uid));
+      if(snap.exists()) a=snap.val();
+    }catch(e){ console.warn('agents profile read failed; trying users fallback',e); }
+    if(!a){
+      try{
+        const us=await get(ref(db,'users/'+u.uid));
+        if(us.exists()) { a=us.val(); sourcePath='users'; }
+      }catch(e){ console.warn('users profile fallback failed',e); }
+    }
+    if(!a) throw new Error('هذا الحساب ليس مسجلاً كوكيل شحن بالنظام.');
+    const isAgent=a.role==='agent'||a.isAgent===true||a.agent===true||String(a.email||u.email||'').includes('@adnor-agent.com');
+    if(!isAgent) throw new Error('هذا الحساب ليس مسجلاً كوكيل شحن بالنظام.');
+    if(a.active===false || a.agentActive===false) throw new Error('تم إيقاف حساب الوكيل من قبل الإدارة.');
+    a.uid=u.uid;
+    a.email=a.email||u.email;
+    a.agentBalance=agentBalanceFrom(a);
+    a._agentSourcePath=sourcePath;
+    return {uid:u.uid,email:u.email,agent:a,sourcePath};
+  }
+
+  function publicUser(uid,u){
+    u=u||{};
+    return {uid,publicId:u.publicId||u.userId||u.accountNumber||'',userId:u.userId||u.publicId||u.accountNumber||'',accountNumber:u.accountNumber||u.publicId||u.userId||'',name:u.name||u.displayName||'',displayName:u.displayName||u.name||'',email:u.email||'',phone:u.phone||'',realBalance:cleanNum(u.realBalance),bonusBalance:cleanNum(u.bonusBalance),role:u.role||'',frozen:!!u.frozen,refCode:u.refCode||''};
+  }
+
+  async function directFindUserByAny(targetId){
+    const q=String(targetId||'').trim();
+    if(!q) throw new Error('رقم المستخدم مطلوب.');
+    const lower=q.toLowerCase();
+
+    if(/^\d{4,14}$/.test(q)){
+      try{
+        const m=await get(ref(db,'public_user_ids/'+q));
+        if(m.exists()){
+          const uid=String(m.val()||'');
+          const us=await get(ref(db,'users/'+uid));
+          if(us.exists()) return {uid,user:us.val()||{}};
+        }
+      }catch(e){console.warn('public_user_ids lookup failed',e)}
+    }
+
+    try{
+      const direct=await get(ref(db,'users/'+q));
+      if(direct.exists()) return {uid:q,user:direct.val()||{}};
+    }catch(e){console.warn('direct uid lookup failed',e)}
+
+    const allSnap=await get(ref(db,'users'));
+    const all=allSnap.val()||{};
+    for(const [uid,u] of Object.entries(all)){
+      if(!u) continue;
+      const values=[u.publicId,u.userId,u.accountNumber,u.uid,u.refCode,u.email,u.phone].filter(Boolean).map(x=>String(x).toLowerCase());
+      if(values.includes(lower)) return {uid,user:u};
+    }
+    throw new Error('لم يتم العثور على المستخدم. تأكد من UID أو الرقم العام أو الكود.');
+  }
+
+  async function directLoadDashboard(){
+    const me=await getMyAgent();
+    const a=me.agent||{};
+    const now=Date.now(), dKey=dayKey(now), mKey=monthKey(now);
+    const logsSnap=await get(ref(db,'agent_recharges_by_agent/'+me.uid)).catch(()=>({val:()=>({})}));
+    const logs=Object.values(logsSnap.val()||{}).sort((x,y)=>cleanNum(y.createdAt)-cleanNum(x.createdAt)).slice(0,60);
+    const todayCharged=a.usageDayKey===dKey?cleanNum(a.todayCharged):0;
+    const monthCharged=a.usageMonthKey===mKey?cleanNum(a.monthCharged):0;
+    return {ok:true,agent:{...a,active:a.active!==false,agentBalance:agentBalanceFrom(a)},logs,todayCharged,monthCharged,source:'direct_agent'};
+  }
+
+  async function loadDash(){
+    let res;
+    try{
+      res=await call('getAgentDashboard');
+    }catch(e){
+      console.warn('Agent dashboard server unavailable, using direct mode',e);
+      res=await directLoadDashboard();
+      msg('rechargeStatus','الشحن المباشر مفعّل من بوابة الوكيل.','ok');
+    }
+    const a=res.agent||{};
+    const shownBal=agentBalanceFrom(a);
+    window.__ADNOR_AGENT_BALANCE_CACHE=shownBal;
+    $('agentName').textContent=a.name||'وكيل شحن';
+    $('agentEmail').textContent=a.loginId||a.email||'';
+    $('agentState').textContent=(a.active!==false?'مفعّل':'موقوف')+(res.source==='direct_agent'?' | مباشر':'');
+    $('agentBalance').textContent=money(shownBal);
+    $('agentTotal').textContent=money(a.totalCharged);
+    if($('agentDailyUsage'))$('agentDailyUsage').textContent=money(res.todayCharged||0)+' / '+(a.dailyLimit?money(a.dailyLimit):'بدون');
+    if($('agentMonthlyUsage'))$('agentMonthlyUsage').textContent=money(res.monthCharged||0)+' / '+(a.monthlyLimit?money(a.monthlyLimit):'بدون');
+    const logs=res.logs||[];
+    $('logsList').innerHTML=logs.length?logs.map(x=>`<div class="log"><b>${money(x.amount)} إلى ${escapeHtml(x.targetName||x.targetUserId||'مستخدم')}</b><p>ID: ${escapeHtml(x.targetPublicId||x.targetUserId||x.targetUid||'')}<br>${new Date(x.createdAt||Date.now()).toLocaleString('ar-TR')}<br>${escapeHtml(x.note||'')}</p></div>`).join(''):'<div class="status">لا توجد عمليات بعد.</div>';
+  }
+
+  async function directFindUser(targetId){
+    await getMyAgent();
+    const found=await directFindUserByAny(targetId);
+    return {ok:true,user:publicUser(found.uid,found.user)};
+  }
+
+  async function directRechargeUser({targetId,amount,note}){
+    const me=await getMyAgent();
+    amount=round2(amount);
+    note=String(note||'').trim();
+    if(!amount||amount<=0) throw new Error('المبلغ غير صحيح.');
+    const found=await directFindUserByAny(targetId);
+    const targetUid=found.uid;
+    const targetUser=found.user||{};
+    if(String(targetUid)===String(me.uid)) throw new Error('لا يمكن للوكيل شحن حسابه من بوابة الوكيل.');
+    if(String(targetUser.role||'').toLowerCase()==='admin') throw new Error('لا يمكن شحن حساب أدمن من بوابة الوكيل.');
+    if(targetUser.frozen===true) throw new Error('حساب المستخدم مجمّد ولا يمكن شحنه.');
+
+    const now=Date.now(), dKey=dayKey(now), mKey=monthKey(now);
+    let agentBefore=0, agentAfter=0, todayAfter=0, monthAfter=0;
+    const agentPath=(me.sourcePath||me.agent._agentSourcePath||'agents')+'/'+me.uid;
+    const agentRef=ref(db,agentPath);
+    const agentTxn=await runTransaction(agentRef,cur=>{
+      if(!cur || cur.active===false) return;
+      const dailyLimit=cleanNum(cur.dailyLimit), monthlyLimit=cleanNum(cur.monthlyLimit);
+      const today=cur.usageDayKey===dKey?cleanNum(cur.todayCharged):0;
+      const month=cur.usageMonthKey===mKey?cleanNum(cur.monthCharged):0;
+      if(dailyLimit>0 && today+amount>dailyLimit) return;
+      if(monthlyLimit>0 && month+amount>monthlyLimit) return;
+      agentBefore=agentBalanceFrom(cur);
+      agentAfter=round2(agentBefore-amount);
+      if(agentAfter<0) return;
+      todayAfter=round2(today+amount);
+      monthAfter=round2(month+amount);
+      return {...cur,agentBalance:agentAfter,totalCharged:round2(cleanNum(cur.totalCharged)+amount),totalOperations:cleanNum(cur.totalOperations)+1,usageDayKey:dKey,usageMonthKey:mKey,todayCharged:todayAfter,monthCharged:monthAfter,lastRechargeAt:now,updatedAt:now,lastDirectRechargeAt:now};
+    });
+    if(!agentTxn.committed) throw new Error('لم يتم خصم رصيد الوكيل. السبب غالباً: رصيد الوكيل غير كافٍ، أو الحد اليومي/الشهري متجاوز، أو الحساب موقوف، أو ملف الوكيل غير موجود في agents.');
+
+    let userBefore=0,userAfter=0;
+    try{
+      const userBalanceRef=ref(db,'users/'+targetUid+'/realBalance');
+      const userTxn=await runTransaction(userBalanceRef,cur=>{
+        userBefore=cleanNum(cur);
+        userAfter=round2(userBefore+amount);
+        return userAfter;
+      });
+      if(!userTxn.committed) throw new Error('تعذر إضافة الرصيد للمستخدم.');
+    }catch(userErr){
+      await runTransaction(agentRef,cur=>{
+        if(!cur) return cur;
+        return {...cur,agentBalance:round2(agentBalanceFrom(cur)+amount),totalCharged:Math.max(0,round2(cleanNum(cur.totalCharged)-amount)),totalOperations:Math.max(0,cleanNum(cur.totalOperations)-1),todayCharged:Math.max(0,round2(cleanNum(cur.todayCharged)-amount)),monthCharged:Math.max(0,round2(cleanNum(cur.monthCharged)-amount)),updatedAt:Date.now(),rollbackReason:'direct_user_balance_update_failed'};
+      }).catch(()=>null);
+      throw userErr;
+    }
+
+    const id=nowId('agent_recharge');
+    const targetName=targetUser.name||targetUser.displayName||targetUser.email||'مستخدم';
+    const agentName=me.agent.name||me.email||'وكيل شحن';
+    const row={id,agentUid:me.uid,agentName,agentEmail:me.agent.email||me.email||'',targetUid,targetName,targetUserId:String(targetId||''),targetPublicId:String(targetUser.publicId||targetUser.userId||targetUser.accountNumber||''),amount,note,status:'completed',beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,todayCharged:todayAfter,monthCharged:monthAfter,createdAt:now,source:'direct_agent',version:VERSION};
+    const updates={};
+    updates[`users/${targetUid}/updatedAt`]=now;
+    updates[`agent_recharges/${id}`]=row;
+    updates[`agent_recharges_by_agent/${me.uid}/${id}`]=row;
+    updates[`agent_recharges_by_user/${targetUid}/${id}`]=row;
+    updates[`transactions/${targetUid}/${id}_user`]={id:`${id}_user`,type:'agent_recharge_credit',amount,balanceBefore:userBefore,balanceAfter:userAfter,status:'completed',note,agentUid:me.uid,agentName,createdAt:now,source:'direct_agent'};
+    updates[`transactions/${me.uid}/${id}_agent`]={id:`${id}_agent`,type:'agent_wallet_debit',amount:-amount,balanceBefore:agentBefore,balanceAfter:agentAfter,status:'completed',note:`شحن المستخدم ${targetName}`,targetUid,createdAt:now,source:'direct_agent'};
+    updates[`finance_audit/${id}`]={id,action:'agent_recharge_direct',agentUid:me.uid,targetUid,amount,beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,note,createdAt:now,version:VERSION};
+    updates[`user_notifications/${targetUid}/${id}`]={type:'agent_recharge',title:'تم شحن رصيدك',message:`تم إضافة ${amount}$ إلى رصيدك عبر الوكيل.`,read:false,amount,agentName,rechargeId:id,createdAt:now};
+    updates[`admin_notifications/${id}`]={id,type:'agent_recharge_completed_direct',agentUid:me.uid,targetUid,text:`${agentName} شحن ${amount}$ للمستخدم ${targetName}`,status:'done',createdAt:now};
+    await update(ref(db),updates).catch(e=>{console.warn('logs update failed after direct recharge',e);});
+    return {ok:true,id,agentAfter,userAfter,targetName,amount,todayCharged:todayAfter,monthCharged:monthAfter,source:'direct_agent'};
+  }
+
+  function showAuthed(ok){['dashboardCard','rechargeCard','logsCard','logoutBtn'].forEach(id=>$(id).classList.toggle('hidden',!ok)); $('loginCard').classList.toggle('hidden',ok)}
+  
+  $('loginBtn').onclick=async()=>{
+    try{
+      $('loginBtn').disabled=true; msg('loginStatus','جارٍ الدخول...');
+      await signInWithEmailAndPassword(auth,normalizeAgentLogin($('loginEmail').value),$('loginPass').value);
+      msg('loginStatus','تم الدخول بنجاح','ok');
+    }catch(e){ msg('loginStatus',err(e),'bad'); }
+    finally{ $('loginBtn').disabled=false; }
+  };
+  ['loginEmail','loginPass'].forEach(id=>{const el=$(id); if(el) el.addEventListener('keydown',ev=>{if(ev.key==='Enter') $('loginBtn').click()})});
+  $('logoutBtn').onclick=()=>signOut(auth);
+  $('refreshBtn').onclick=()=>loadDash().catch(e=>msg('rechargeStatus',err(e),'bad'));
+
+  $('findUserBtn').onclick=async()=>{
+    try{
+      msg('rechargeStatus','جارٍ فحص المستخدم...');
+      let r;
+      try{ r=await call('agentFindUser',{targetId:$('targetId').value.trim()}); }
+      catch(serverErr){ console.warn('Agent find server unavailable, using direct mode',serverErr); r=await directFindUser($('targetId').value.trim()); }
+      const u=r.user||{};
+      $('targetUserBox').classList.add('show');
+      $('targetUserName').textContent=u.name||u.displayName||u.email||'مستخدم';
+      $('targetUserInfo').textContent=`ID: ${u.publicId||u.userId||u.accountNumber||'—'}
+UID داخلي: ${u.uid}
+Email: ${u.email||'—'}
+Real: ${money(u.realBalance)} | Bonus: ${money(u.bonusBalance)}`;
+      msg('rechargeStatus','تم العثور على المستخدم. تأكد من الاسم قبل الشحن.','ok');
+    }catch(e){ $('targetUserBox').classList.remove('show'); msg('rechargeStatus',err(e),'bad'); }
+  };
+
+  $('rechargeBtn').onclick=async()=>{
+    try{
+      const targetId=$('targetId').value.trim(), amount=Number($('amount').value||0), note=$('note').value.trim();
+      if(!targetId||!amount||amount<=0) return msg('rechargeStatus','اكتب معرف المستخدم والمبلغ بشكل صحيح.','bad');
+      if(!confirm(`هل تود تأكيد شحن ${money(amount)} للمعرف: ${targetId}؟`)) return;
+      $('rechargeBtn').disabled=true; msg('rechargeStatus','جارٍ شحن الحساب الحقيقي...');
+      let r;
+      try{ r=await call('agentRechargeUser',{targetId,amount,note}); }
+      catch(serverErr){ console.warn('Agent recharge server unavailable, using direct mode',serverErr); r=await directRechargeUser({targetId,amount,note}); }
+      msg('rechargeStatus',`تم الشحن بنجاح. رصيدك الحالي: ${money(r.agentAfter)} | رصيد العميل الجديد: ${money(r.userAfter)}.`,'ok');
+      $('amount').value=''; $('note').value=''; $('targetUserBox').classList.remove('show');
+      await loadDash();
+    }catch(e){ msg('rechargeStatus',err(e),'bad'); }
+    finally{ $('rechargeBtn').disabled=false; }
+  };
+
+  onAuthStateChanged(auth,async u=>{
+    showAuthed(!!u);
+    if(u){
+      try{await loadDash()}catch(e){showAuthed(false);msg('loginStatus',err(e),'bad')}
+    }
+  });
+</script>
+</body>
+</html>

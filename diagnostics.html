@@ -12,7 +12,7 @@
 <body>
   <main class="wrap">
     <div class="brand">ADNOR</div>
-    <div class="mini">V189 STABLE / STAGING — صفحة فحص النظام</div>
+    <div class="mini">V190 FUNCTIONS FIX / STAGING — صفحة فحص النظام</div>
     <div class="toplinks"><a class="btn dark" href="index.html">فتح الموقع</a><a class="btn dark" href="admin-agents.html">إدارة الوكلاء</a><a class="btn dark" href="agent.html">بوابة الوكيل</a></div>
     <section class="card hero"><h1>فحص قبل الرفع الرسمي</h1><p>هذه الصفحة لا تغيّر أرصدة ولا تنفذ عمليات مالية. وظيفتها تعرف هل المشكلة من Google Auth أو Firebase Rules أو Functions أو المتصفح/الدومين.</p><button id="loginBtn" class="btn">تسجيل Google للفحص</button><button id="runBtn" class="btn">تشغيل الفحص</button><button id="copyBtn" class="btn dark">نسخ التقرير</button><div id="status" class="status">جاهز للفحص.</div></section>
     <section class="card"><h2 style="margin:0 0 12px;color:#ffe184">نتائج الفحص</h2><div id="results"></div></section>
@@ -25,7 +25,7 @@ import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/
 const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),cloudFns=getFunctions(app),provider=new GoogleAuthProvider();
 provider.setCustomParameters({prompt:'select_account'});
-const VERSION='V189_STABLE_STAGING';
+const VERSION='V190_FUNCTIONS_DBURL_FIX';
 let rows=[];
 const $=id=>document.getElementById(id);
 function setStatus(t){$('status').textContent=t}

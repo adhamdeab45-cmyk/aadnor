@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADNOR V191 | فحص النظام</title>
+  <title>ADNOR V193 | فحص النظام</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root{--bg:#020a16;--card:#081a34;--gold:#ffd866;--gold2:#d89524;--line:rgba(255,216,102,.42);--txt:#ecf4ff;--muted:#aebbd0;--green:#4dffc6;--red:#ff6f7d;--blue:#91eaff}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -5%,rgba(255,216,102,.18),transparent 32%),radial-gradient(circle at 0 100%,rgba(0,201,255,.12),transparent 30%),linear-gradient(180deg,#061225,#020a16 72%);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--txt)}.wrap{width:min(100%,780px);margin:auto;padding:20px 13px 60px}.brand{font-family:Cinzel,serif;font-size:42px;font-weight:900;text-align:center;background:linear-gradient(180deg,#fff3b4,#d89524,#ffe184);-webkit-background-clip:text;color:transparent}.mini{text-align:center;color:var(--muted);font-weight:900;margin-bottom:14px}.card{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(8,26,52,.92),rgba(2,10,22,.96));box-shadow:0 0 28px rgba(255,188,39,.12),inset 0 0 28px rgba(255,216,102,.04);padding:16px;margin-bottom:13px;overflow:hidden}.hero{text-align:center}.hero h1{color:#ffe184;margin:0;font-size:27px}.hero p{color:#cbd4e5;font-weight:800;line-height:1.7}.btn{min-height:50px;border:0;border-radius:16px;background:linear-gradient(180deg,#fff1a5,#d89524 62%,#8d510d);color:#151007;font:inherit;font-weight:1000;cursor:pointer;padding:0 16px;margin:5px;box-shadow:0 0 18px rgba(255,188,39,.18)}.btn.dark{background:rgba(2,10,22,.72);color:#ffe184;border:1px solid rgba(255,216,102,.38);box-shadow:none}.row{border:1px solid rgba(255,216,102,.28);border-radius:18px;background:rgba(2,10,22,.52);padding:12px;margin-bottom:9px;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}.row.ok{border-color:rgba(77,255,198,.45);background:rgba(77,255,198,.07)}.row.bad{border-color:rgba(255,111,125,.45);background:rgba(255,111,125,.08)}.mark{font-size:23px}.row b{color:#ffe184}.row p{margin:4px 0 0;color:#cbd4e5;font-size:12px;line-height:1.65;font-weight:800;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-word}.status{border:1px dashed rgba(255,216,102,.32);border-radius:16px;padding:12px;color:#cbd4e5;font-weight:800;line-height:1.7;background:rgba(2,10,22,.44)}a{color:#ffe184;text-decoration:none}.toplinks{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
@@ -12,7 +12,7 @@
 <body>
   <main class="wrap">
     <div class="brand">ADNOR</div>
-    <div class="mini">V191 NO ADN STABLE / STAGING — صفحة فحص النظام</div>
+    <div class="mini">V193 AGENT DIRECT + FULL ADMIN — صفحة فحص النظام</div>
     <div class="toplinks"><a class="btn dark" href="index.html">فتح الموقع</a><a class="btn dark" href="admin-agents.html">إدارة الوكلاء</a><a class="btn dark" href="agent.html">بوابة الوكيل</a></div>
     <section class="card hero"><h1>فحص قبل الرفع الرسمي</h1><p>هذه الصفحة لا تغيّر أرصدة ولا تنفذ عمليات مالية. بعد V191 تم حذف العملة الرقمية ADN؛ الفحص يركز على الدخول وقاعدة البيانات، وCloud Functions صارت اختيارية للوكلاء فقط.</p><button id="loginBtn" class="btn">تسجيل Google للفحص</button><button id="runBtn" class="btn">تشغيل الفحص</button><button id="copyBtn" class="btn dark">نسخ التقرير</button><div id="status" class="status">جاهز للفحص.</div></section>
     <section class="card"><h2 style="margin:0 0 12px;color:#ffe184">نتائج الفحص</h2><div id="results"></div></section>
@@ -25,7 +25,7 @@ import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/
 const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
 const app=getApps().length?getApp():initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),cloudFns=getFunctions(app),provider=new GoogleAuthProvider();
 provider.setCustomParameters({prompt:'select_account'});
-const VERSION='V192_AGENT_DIRECT_TEMP';
+const VERSION='V193_AGENT_DIRECT_ADMIN_RESTORED';
 let rows=[];
 const $=id=>document.getElementById(id);
 function setStatus(t){$('status').textContent=t}
@@ -41,7 +41,7 @@ async function run(){rows=[];render();setStatus('جارٍ الفحص...');
   row('Auth current user',!!auth.currentUser,auth.currentUser?auth.currentUser.email:'لا يوجد مستخدم مسجل حالياً');
   await test('Database read',async()=>{await get(ref(db,'system_settings/site_control'));return 'تمت قراءة إعدادات النظام أو المسار مسموح'});
   row('Client error DB fallback',true,'اختياري: الكتابة المباشرة إلى client_errors مقفلة بالقواعد وهذا طبيعي وآمن.');
-  row('Cloud Functions',true,'اختياري في V191: العملة الرقمية ADN محذوفة. دوال الوكلاء تحتاج Blaze فقط إذا أردت تشغيل شحن الوكيل المحمي من السيرفر.');
+  row('Cloud Functions',true,'V193: العملة الرقمية ADN محذوفة. الوكيل يعمل بالشحن المباشر المؤقت بدون Functions، ومع Blaze لاحقاً نرجع الحماية من السيرفر.');
   setStatus('انتهى الفحص. انسخ التقرير إذا بدك تبعته لي.');
 }
 $('runBtn').onclick=run;

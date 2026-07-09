@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR V191 | المنصة الرسمية</title>
-  <!-- ADNOR_V191_NO_ADN_STABLE_READY: ADN digital currency/market removed; agent system kept. -->
+  <title>ADNOR V193 | المنصة الرسمية</title>
+  <!-- ADNOR_V193_AGENT_DIRECT_ADMIN_RESTORED: ADN removed; full agent admin restored; temporary direct agent recharge. -->
 <!-- V146_REFERRAL_PRIVACY_NO_FREEZE: masks referral emails for referrer without database cleanup loops. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2622,7 +2622,7 @@ function setCurrentPrize(type){
     const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),provider=new GoogleAuthProvider(),cloudFns=getFunctions(app);provider.setCustomParameters({prompt:'select_account'});
 
     // ADNOR V189 - Stable/Staging diagnostics. No financial logic here; only visibility and safe reporting.
-    const ADNOR_VERSION='V191_NO_ADN_STABLE';
+    const ADNOR_VERSION='V193_AGENT_DIRECT_ADMIN_RESTORED';
     const ADNOR_DEPLOY_MODE=(location.hostname.includes('localhost')||location.hostname.includes('127.0.0.1'))?'local':(location.hostname.includes('netlify.app')||location.hostname.includes('render.com')||location.hostname.includes('onrender.com'))?'staging_or_hosted':'production_or_custom_domain';
     window.ADNOR_VERSION=ADNOR_VERSION;
     window.ADNOR_DEPLOY_MODE=ADNOR_DEPLOY_MODE;
@@ -2679,7 +2679,7 @@ function setCurrentPrize(type){
       rows.push(adnorSystemRow('Auth current user',!!auth.currentUser,auth.currentUser?auth.currentUser.email:'No current user'));
       try{await get(ref(db,'system_settings/site_control'));rows.push(adnorSystemRow('Database read',true,'system_settings/site_control readable'))}catch(e){rows.push(adnorSystemRow('Database read',false,(e.code||'')+' '+(e.message||e)))}
       try{await logClientError('manual_system_check',new Error('manual diagnostics test'),{manual:true});rows.push(adnorSystemRow('Client error logging',true,'Log request sent/fallback attempted'))}catch(e){rows.push(adnorSystemRow('Client error logging',false,e.message||e))}
-      try{const res=await httpsCallable(cloudFns,'systemHealthCheck')({version:ADNOR_VERSION,host:location.host});rows.push(adnorSystemRow('Cloud Functions',!!res?.data?.ok,JSON.stringify(res.data||{}).slice(0,300)))}catch(e){rows.push(adnorSystemRow('Cloud Functions',false,(e.code||'')+' '+(e.message||e)))}
+      rows.push(adnorSystemRow('Cloud Functions',true,'اختياري في V193: ADN محذوف، والوكيل يعمل بالوضع المباشر المؤقت حتى تفعيل Blaze لاحقاً.'))
       adnorRenderSystemCheck(rows);
       return rows;
     }

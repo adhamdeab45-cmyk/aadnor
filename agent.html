@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADNOR | بوابة وكيل الشحن</title>
+  <title>ADNOR V193 | بوابة وكيل الشحن</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root{--bg:#020a16;--card:#081a34;--gold:#ffd866;--gold2:#d89524;--line:rgba(255,216,102,.42);--txt:#ecf4ff;--muted:#aebbd0;--green:#4dffc6;--red:#ff6f7d;--blue:#91eaff}
@@ -20,7 +20,7 @@
       <div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="loginEmail" type="text" autocomplete="username" placeholder="adhamagent أو agent@gmail.com"></div></div>
       <div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div></div>
       <button class="btn" id="loginBtn">دخول الوكيل</button>
-      <div class="status" id="loginStatus">استخدم البيانات التي أعطاها لك أدمن ADNOR.</div>
+      <div class="status" id="loginStatus">استخدم اسم الدخول وكلمة السر التي أنشأها الأدمن. يمكن كتابة الاسم فقط مثل muhammed200400 بدون @adnor-agent.com.</div>
     </section>
     <section class="card hidden" id="dashboardCard">
       <div class="profile"><div><b id="agentName">وكيل شحن</b><span id="agentEmail">—</span></div><div class="mini" id="agentState">مفعّل</div></div>
@@ -41,13 +41,14 @@
   <div class="footerNav"><a href="index.html">الرئيسية</a><button id="refreshBtn" type="button">تحديث</button></div>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
   import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
   import { getDatabase, ref, get, update, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
   
-  const VERSION='V192_AGENT_DIRECT_TEMP';
+  const VERSION='V193_AGENT_DIRECT_ADMIN_RESTORED';
   const firebaseConfig={apiKey:"AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g",authDomain:"adhamnnn-8a4d2.firebaseapp.com",databaseURL:"https://adhamnnn-8a4d2-default-rtdb.firebaseio.com",projectId:"adhamnnn-8a4d2",storageBucket:"adhamnnn-8a4d2.firebasestorage.app",messagingSenderId:"812431761704",appId:"1:812431761704:web:2b85a0532574cc4378301d",measurementId:"G-59WKJBRDG8"};
   const app=initializeApp(firebaseConfig), auth=getAuth(app), fns=getFunctions(app), db=getDatabase(app);
+  setPersistence(auth,browserLocalPersistence).catch(e=>console.warn('agent persistence warning',e));
   const $=id=>document.getElementById(id);
   
   function toEnglishDigits(v){return String(v??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));}
@@ -87,14 +88,26 @@
 
   async function getMyAgent(){
     const u=auth.currentUser; if(!u) throw new Error('يجب تسجيل الدخول.');
-    const snap=await get(ref(db,'agents/'+u.uid));
-    const a=snap.val();
+    let a=null, sourcePath='agents';
+    try{
+      const snap=await get(ref(db,'agents/'+u.uid));
+      if(snap.exists()) a=snap.val();
+    }catch(e){ console.warn('agents profile read failed; trying users fallback',e); }
+    if(!a){
+      try{
+        const us=await get(ref(db,'users/'+u.uid));
+        if(us.exists()) { a=us.val(); sourcePath='users'; }
+      }catch(e){ console.warn('users profile fallback failed',e); }
+    }
     if(!a) throw new Error('هذا الحساب ليس مسجلاً كوكيل شحن بالنظام.');
-    if(a.active===false) throw new Error('تم إيقاف حساب الوكيل من قبل الإدارة.');
+    const isAgent=a.role==='agent'||a.isAgent===true||a.agent===true||String(a.email||u.email||'').includes('@adnor-agent.com');
+    if(!isAgent) throw new Error('هذا الحساب ليس مسجلاً كوكيل شحن بالنظام.');
+    if(a.active===false || a.agentActive===false) throw new Error('تم إيقاف حساب الوكيل من قبل الإدارة.');
     a.uid=u.uid;
     a.email=a.email||u.email;
     a.agentBalance=agentBalanceFrom(a);
-    return {uid:u.uid,email:u.email,agent:a};
+    a._agentSourcePath=sourcePath;
+    return {uid:u.uid,email:u.email,agent:a,sourcePath};
   }
 
   function publicUser(uid,u){
@@ -141,7 +154,7 @@
     const logs=Object.values(logsSnap.val()||{}).sort((x,y)=>cleanNum(y.createdAt)-cleanNum(x.createdAt)).slice(0,60);
     const todayCharged=a.usageDayKey===dKey?cleanNum(a.todayCharged):0;
     const monthCharged=a.usageMonthKey===mKey?cleanNum(a.monthCharged):0;
-    return {ok:true,agent:{...a,active:a.active!==false,agentBalance:agentBalanceFrom(a)},logs,todayCharged,monthCharged,source:'direct_browser_v192'};
+    return {ok:true,agent:{...a,active:a.active!==false,agentBalance:agentBalanceFrom(a)},logs,todayCharged,monthCharged,source:'direct_browser_v193'};
   }
 
   async function loadDash(){
@@ -158,7 +171,7 @@
     window.__ADNOR_AGENT_BALANCE_CACHE=shownBal;
     $('agentName').textContent=a.name||'وكيل شحن';
     $('agentEmail').textContent=a.loginId||a.email||'';
-    $('agentState').textContent=(a.active!==false?'مفعّل':'موقوف')+(res.source==='direct_browser_v192'?' | مباشر مؤقت':'');
+    $('agentState').textContent=(a.active!==false?'مفعّل':'موقوف')+(res.source==='direct_browser_v193'?' | مباشر مؤقت':'');
     $('agentBalance').textContent=money(shownBal);
     $('agentTotal').textContent=money(a.totalCharged);
     if($('agentDailyUsage'))$('agentDailyUsage').textContent=money(res.todayCharged||0)+' / '+(a.dailyLimit?money(a.dailyLimit):'بدون');
@@ -187,7 +200,8 @@
 
     const now=Date.now(), dKey=dayKey(now), mKey=monthKey(now);
     let agentBefore=0, agentAfter=0, todayAfter=0, monthAfter=0;
-    const agentRef=ref(db,'agents/'+me.uid);
+    const agentPath=(me.sourcePath||me.agent._agentSourcePath||'agents')+'/'+me.uid;
+    const agentRef=ref(db,agentPath);
     const agentTxn=await runTransaction(agentRef,cur=>{
       if(!cur || cur.active===false) return;
       const dailyLimit=cleanNum(cur.dailyLimit), monthlyLimit=cleanNum(cur.monthlyLimit);
@@ -224,19 +238,19 @@
     const id=nowId('agent_recharge');
     const targetName=targetUser.name||targetUser.displayName||targetUser.email||'مستخدم';
     const agentName=me.agent.name||me.email||'وكيل شحن';
-    const row={id,agentUid:me.uid,agentName,agentEmail:me.agent.email||me.email||'',targetUid,targetName,targetUserId:String(targetId||''),targetPublicId:String(targetUser.publicId||targetUser.userId||targetUser.accountNumber||''),amount,note,status:'completed',beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,todayCharged:todayAfter,monthCharged:monthAfter,createdAt:now,source:'direct_browser_v192_temporary',version:VERSION};
+    const row={id,agentUid:me.uid,agentName,agentEmail:me.agent.email||me.email||'',targetUid,targetName,targetUserId:String(targetId||''),targetPublicId:String(targetUser.publicId||targetUser.userId||targetUser.accountNumber||''),amount,note,status:'completed',beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,todayCharged:todayAfter,monthCharged:monthAfter,createdAt:now,source:'direct_browser_v193_temporary',version:VERSION};
     const updates={};
     updates[`users/${targetUid}/updatedAt`]=now;
     updates[`agent_recharges/${id}`]=row;
     updates[`agent_recharges_by_agent/${me.uid}/${id}`]=row;
     updates[`agent_recharges_by_user/${targetUid}/${id}`]=row;
-    updates[`transactions/${targetUid}/${id}_user`]={id:`${id}_user`,type:'agent_recharge_credit',amount,balanceBefore:userBefore,balanceAfter:userAfter,status:'completed',note,agentUid:me.uid,agentName,createdAt:now,source:'direct_browser_v192_temporary'};
-    updates[`transactions/${me.uid}/${id}_agent`]={id:`${id}_agent`,type:'agent_wallet_debit',amount:-amount,balanceBefore:agentBefore,balanceAfter:agentAfter,status:'completed',note:`شحن المستخدم ${targetName}`,targetUid,createdAt:now,source:'direct_browser_v192_temporary'};
+    updates[`transactions/${targetUid}/${id}_user`]={id:`${id}_user`,type:'agent_recharge_credit',amount,balanceBefore:userBefore,balanceAfter:userAfter,status:'completed',note,agentUid:me.uid,agentName,createdAt:now,source:'direct_browser_v193_temporary'};
+    updates[`transactions/${me.uid}/${id}_agent`]={id:`${id}_agent`,type:'agent_wallet_debit',amount:-amount,balanceBefore:agentBefore,balanceAfter:agentAfter,status:'completed',note:`شحن المستخدم ${targetName}`,targetUid,createdAt:now,source:'direct_browser_v193_temporary'};
     updates[`finance_audit/${id}`]={id,action:'agent_recharge_direct_browser_temporary',agentUid:me.uid,targetUid,amount,beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,note,createdAt:now,version:VERSION};
     updates[`user_notifications/${targetUid}/${id}`]={type:'agent_recharge',title:'تم شحن رصيدك',message:`تم إضافة ${amount}$ إلى رصيدك عبر الوكيل.`,read:false,amount,agentName,rechargeId:id,createdAt:now};
     updates[`admin_notifications/${id}`]={id,type:'agent_recharge_completed_direct',agentUid:me.uid,targetUid,text:`${agentName} شحن ${amount}$ للمستخدم ${targetName}`,status:'done',createdAt:now};
     await update(ref(db),updates).catch(e=>{console.warn('logs update failed after direct recharge',e);});
-    return {ok:true,id,agentAfter,userAfter,targetName,amount,todayCharged:todayAfter,monthCharged:monthAfter,source:'direct_browser_v192_temporary'};
+    return {ok:true,id,agentAfter,userAfter,targetName,amount,todayCharged:todayAfter,monthCharged:monthAfter,source:'direct_browser_v193_temporary'};
   }
 
   function showAuthed(ok){['dashboardCard','rechargeCard','logsCard','logoutBtn'].forEach(id=>$(id).classList.toggle('hidden',!ok)); $('loginCard').classList.toggle('hidden',ok)}
@@ -249,6 +263,7 @@
     }catch(e){ msg('loginStatus',err(e),'bad'); }
     finally{ $('loginBtn').disabled=false; }
   };
+  ['loginEmail','loginPass'].forEach(id=>{const el=$(id); if(el) el.addEventListener('keydown',ev=>{if(ev.key==='Enter') $('loginBtn').click()})});
   $('logoutBtn').onclick=()=>signOut(auth);
   $('refreshBtn').onclick=()=>loadDash().catch(e=>msg('rechargeStatus',err(e),'bad'));
 

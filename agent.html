@@ -73,7 +73,7 @@
     const code=e&&e.code?String(e.code):'';
     let m=(e&&e.message?e.message:String(e||'خطأ')).replace('Firebase:','').replace(/\(functions\/.+?\)\.?/g,'').trim();
     if(code.includes('permission-denied')||m.includes('PERMISSION_DENIED')) return 'صلاحيات Firebase لا تسمح بهذه العملية. راجع قواعد Firebase الخاصة بالوكلاء.';
-    if(m==='internal'||code==='functions/internal') return 'تم استخدام الشحن المباشر من بوابة الوكيل.';
+    if(m==='internal'||code==='functions/internal') return 'بوابة الوكيل جاهزة.';
     return m;
   }
   async function call(name,data){return (await httpsCallable(fns,name)(data||{})).data||{}}
@@ -164,14 +164,14 @@
     }catch(e){
       console.warn('Agent dashboard server unavailable, using direct mode',e);
       res=await directLoadDashboard();
-      msg('rechargeStatus','الشحن المباشر مفعّل من بوابة الوكيل.','ok');
+      msg('rechargeStatus','بوابة الوكيل جاهزة للشحن المباشر.','ok');
     }
     const a=res.agent||{};
     const shownBal=agentBalanceFrom(a);
     window.__ADNOR_AGENT_BALANCE_CACHE=shownBal;
     $('agentName').textContent=a.name||'وكيل شحن';
     $('agentEmail').textContent=a.loginId||a.email||'';
-    $('agentState').textContent=(a.active!==false?'مفعّل':'موقوف')+(res.source==='direct_agent'?' | مباشر':'');
+    $('agentState').textContent=(a.active!==false?'مفعّل':'موقوف')+(res.source==='direct_agent'?'':'');
     $('agentBalance').textContent=money(shownBal);
     $('agentTotal').textContent=money(a.totalCharged);
     if($('agentDailyUsage'))$('agentDailyUsage').textContent=money(res.todayCharged||0)+' / '+(a.dailyLimit?money(a.dailyLimit):'بدون');
@@ -198,25 +198,32 @@
     if(String(targetUser.role||'').toLowerCase()==='admin') throw new Error('لا يمكن شحن حساب أدمن من بوابة الوكيل.');
     if(targetUser.frozen===true) throw new Error('حساب المستخدم مجمّد ولا يمكن شحنه.');
 
+    if((me.sourcePath||me.agent._agentSourcePath||'agents')!=='agents'){
+      throw new Error('ملف الوكيل غير موجود في agents. افتح صفحة إدارة الوكلاء واضغط تحديث البيانات أو أنشئ الوكيل من جديد.');
+    }
+
     const now=Date.now(), dKey=dayKey(now), mKey=monthKey(now);
-    let agentBefore=0, agentAfter=0, todayAfter=0, monthAfter=0;
-    const agentPath=(me.sourcePath||me.agent._agentSourcePath||'agents')+'/'+me.uid;
-    const agentRef=ref(db,agentPath);
-    const agentTxn=await runTransaction(agentRef,cur=>{
-      if(!cur || cur.active===false) return;
-      const dailyLimit=cleanNum(cur.dailyLimit), monthlyLimit=cleanNum(cur.monthlyLimit);
-      const today=cur.usageDayKey===dKey?cleanNum(cur.todayCharged):0;
-      const month=cur.usageMonthKey===mKey?cleanNum(cur.monthCharged):0;
-      if(dailyLimit>0 && today+amount>dailyLimit) return;
-      if(monthlyLimit>0 && month+amount>monthlyLimit) return;
-      agentBefore=agentBalanceFrom(cur);
-      agentAfter=round2(agentBefore-amount);
-      if(agentAfter<0) return;
-      todayAfter=round2(today+amount);
-      monthAfter=round2(month+amount);
-      return {...cur,agentBalance:agentAfter,totalCharged:round2(cleanNum(cur.totalCharged)+amount),totalOperations:cleanNum(cur.totalOperations)+1,usageDayKey:dKey,usageMonthKey:mKey,todayCharged:todayAfter,monthCharged:monthAfter,lastRechargeAt:now,updatedAt:now,lastDirectRechargeAt:now};
+    const agentBefore=agentBalanceFrom(me.agent);
+    const dailyLimit=cleanNum(me.agent.dailyLimit), monthlyLimit=cleanNum(me.agent.monthlyLimit);
+    const today=me.agent.usageDayKey===dKey?cleanNum(me.agent.todayCharged):0;
+    const month=me.agent.usageMonthKey===mKey?cleanNum(me.agent.monthCharged):0;
+    if(me.agent.active===false) throw new Error('حساب الوكيل موقوف من الإدارة.');
+    if(agentBefore<amount) throw new Error('رصيد الوكيل غير كافٍ. رصيدك الحالي: '+money(agentBefore)+' والمبلغ المطلوب: '+money(amount)+'. اطلب إضافة رصيد من الأدمن.');
+    if(dailyLimit>0 && today+amount>dailyLimit) throw new Error('تجاوزت الحد اليومي للوكيل. المتاح اليوم: '+money(Math.max(0,dailyLimit-today))+'.');
+    if(monthlyLimit>0 && month+amount>monthlyLimit) throw new Error('تجاوزت الحد الشهري للوكيل. المتاح هذا الشهر: '+money(Math.max(0,monthlyLimit-month))+'.');
+
+    let agentTxnBefore=0, agentAfter=0;
+    const agentBalanceRef=ref(db,'agents/'+me.uid+'/agentBalance');
+    const agentTxn=await runTransaction(agentBalanceRef,cur=>{
+      let current=cleanNum(cur);
+      if(!current && agentBefore>0) current=agentBefore;
+      agentTxnBefore=current;
+      const next=round2(current-amount);
+      if(next<0) return;
+      agentAfter=next;
+      return next;
     });
-    if(!agentTxn.committed) throw new Error('لم يتم خصم رصيد الوكيل. السبب غالباً: رصيد الوكيل غير كافٍ، أو الحد اليومي/الشهري متجاوز، أو الحساب موقوف، أو ملف الوكيل غير موجود في agents.');
+    if(!agentTxn.committed) throw new Error('لم يتم خصم رصيد الوكيل. رصيدك الحالي غير كافٍ أو قواعد Firebase منعت تعديل رصيد الوكيل.');
 
     let userBefore=0,userAfter=0;
     try{
@@ -228,29 +235,35 @@
       });
       if(!userTxn.committed) throw new Error('تعذر إضافة الرصيد للمستخدم.');
     }catch(userErr){
-      await runTransaction(agentRef,cur=>{
-        if(!cur) return cur;
-        return {...cur,agentBalance:round2(agentBalanceFrom(cur)+amount),totalCharged:Math.max(0,round2(cleanNum(cur.totalCharged)-amount)),totalOperations:Math.max(0,cleanNum(cur.totalOperations)-1),todayCharged:Math.max(0,round2(cleanNum(cur.todayCharged)-amount)),monthCharged:Math.max(0,round2(cleanNum(cur.monthCharged)-amount)),updatedAt:Date.now(),rollbackReason:'direct_user_balance_update_failed'};
-      }).catch(()=>null);
+      await runTransaction(agentBalanceRef,cur=>round2(cleanNum(cur)+amount)).catch(()=>null);
       throw userErr;
     }
 
+    const todayAfter=round2(today+amount), monthAfter=round2(month+amount);
     const id=nowId('agent_recharge');
     const targetName=targetUser.name||targetUser.displayName||targetUser.email||'مستخدم';
     const agentName=me.agent.name||me.email||'وكيل شحن';
-    const row={id,agentUid:me.uid,agentName,agentEmail:me.agent.email||me.email||'',targetUid,targetName,targetUserId:String(targetId||''),targetPublicId:String(targetUser.publicId||targetUser.userId||targetUser.accountNumber||''),amount,note,status:'completed',beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,todayCharged:todayAfter,monthCharged:monthAfter,createdAt:now,source:'direct_agent',version:VERSION};
+    const row={id,agentUid:me.uid,agentName,agentEmail:me.agent.email||me.email||'',targetUid,targetName,targetUserId:String(targetId||''),targetPublicId:String(targetUser.publicId||targetUser.userId||targetUser.accountNumber||''),amount,note,status:'completed',beforeAgentBalance:agentTxnBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,todayCharged:todayAfter,monthCharged:monthAfter,createdAt:now,source:'agent_direct'};
     const updates={};
+    updates[`agents/${me.uid}/totalCharged`]=round2(cleanNum(me.agent.totalCharged)+amount);
+    updates[`agents/${me.uid}/totalOperations`]=cleanNum(me.agent.totalOperations)+1;
+    updates[`agents/${me.uid}/usageDayKey`]=dKey;
+    updates[`agents/${me.uid}/usageMonthKey`]=mKey;
+    updates[`agents/${me.uid}/todayCharged`]=todayAfter;
+    updates[`agents/${me.uid}/monthCharged`]=monthAfter;
+    updates[`agents/${me.uid}/lastRechargeAt`]=now;
+    updates[`agents/${me.uid}/updatedAt`]=now;
     updates[`users/${targetUid}/updatedAt`]=now;
     updates[`agent_recharges/${id}`]=row;
     updates[`agent_recharges_by_agent/${me.uid}/${id}`]=row;
     updates[`agent_recharges_by_user/${targetUid}/${id}`]=row;
-    updates[`transactions/${targetUid}/${id}_user`]={id:`${id}_user`,type:'agent_recharge_credit',amount,balanceBefore:userBefore,balanceAfter:userAfter,status:'completed',note,agentUid:me.uid,agentName,createdAt:now,source:'direct_agent'};
-    updates[`transactions/${me.uid}/${id}_agent`]={id:`${id}_agent`,type:'agent_wallet_debit',amount:-amount,balanceBefore:agentBefore,balanceAfter:agentAfter,status:'completed',note:`شحن المستخدم ${targetName}`,targetUid,createdAt:now,source:'direct_agent'};
-    updates[`finance_audit/${id}`]={id,action:'agent_recharge_direct',agentUid:me.uid,targetUid,amount,beforeAgentBalance:agentBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,note,createdAt:now,version:VERSION};
+    updates[`transactions/${targetUid}/${id}_user`]={id:`${id}_user`,type:'agent_recharge_credit',amount,balanceBefore:userBefore,balanceAfter:userAfter,status:'completed',note,agentUid:me.uid,agentName,createdAt:now,source:'agent_direct'};
+    updates[`transactions/${me.uid}/${id}_agent`]={id:`${id}_agent`,type:'agent_wallet_debit',amount:-amount,balanceBefore:agentTxnBefore,balanceAfter:agentAfter,status:'completed',note:`شحن المستخدم ${targetName}`,targetUid,createdAt:now,source:'agent_direct'};
+    updates[`finance_audit/${id}`]={id,action:'agent_recharge_direct',agentUid:me.uid,targetUid,amount,beforeAgentBalance:agentTxnBefore,afterAgentBalance:agentAfter,beforeUserBalance:userBefore,afterUserBalance:userAfter,note,createdAt:now};
     updates[`user_notifications/${targetUid}/${id}`]={type:'agent_recharge',title:'تم شحن رصيدك',message:`تم إضافة ${amount}$ إلى رصيدك عبر الوكيل.`,read:false,amount,agentName,rechargeId:id,createdAt:now};
     updates[`admin_notifications/${id}`]={id,type:'agent_recharge_completed_direct',agentUid:me.uid,targetUid,text:`${agentName} شحن ${amount}$ للمستخدم ${targetName}`,status:'done',createdAt:now};
     await update(ref(db),updates).catch(e=>{console.warn('logs update failed after direct recharge',e);});
-    return {ok:true,id,agentAfter,userAfter,targetName,amount,todayCharged:todayAfter,monthCharged:monthAfter,source:'direct_agent'};
+    return {ok:true,id,agentAfter,userAfter,targetName,amount,todayCharged:todayAfter,monthCharged:monthAfter,source:'agent_direct'};
   }
 
   function showAuthed(ok){['dashboardCard','rechargeCard','logsCard','logoutBtn'].forEach(id=>$(id).classList.toggle('hidden',!ok)); $('loginCard').classList.toggle('hidden',ok)}

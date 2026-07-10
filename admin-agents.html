@@ -59,7 +59,7 @@
     const code=e&&e.code?String(e.code):'';
     let m=(e&&e.message?e.message:String(e||'خطأ'));
     m=m.replace('Firebase:','').replace(/\(functions\/.+?\)\.?/g,'').trim();
-    if(m==='internal'||code==='functions/internal') return 'تعذر تنفيذ دالة السيرفر، تم تشغيل وضع بديل داخل الصفحة.';
+    if(m==='internal'||code==='functions/internal') return 'تعذر تنفيذ العملية عبر السيرفر.';
     if(code.includes('permission-denied') || m.toLowerCase().includes('permission_denied') || m.toLowerCase().includes('permission denied')) return 'Permission denied: قواعد Firebase تمنع إدارة الوكلاء مباشرة. راجع قواعد Firebase الخاصة بالوكلاء أو ادخل بحساب الأدمن الرسمي.';
     return m;
   }
@@ -131,7 +131,7 @@
       await update(ref(db),{
         ['agents/'+uid+'/updatedAt']:now,
         ['agent_wallet_logs/'+uid+'/'+id]:{id,agentUid:uid,type:delta>0?'admin_add':'admin_deduct',amount:delta,before,after,note,adminEmail:auth.currentUser.email,createdAt:now},
-        ['finance_audit/'+id]:{id,action:delta>0?'client_agent_balance_add':'client_agent_balance_deduct',agentUid:uid,amount:delta,before,after,note,adminEmail:auth.currentUser.email,createdAt:now,source:'direct_admin'}
+        ['finance_audit/'+id]:{id,action:delta>0?'client_agent_balance_add':'client_agent_balance_deduct',agentUid:uid,amount:delta,before,after,note,adminEmail:auth.currentUser.email,createdAt:now,source:'admin'}
       });
       await loadAll();
     }
@@ -149,7 +149,7 @@
         ['agents/'+uid+'/active']:active,
         ['agents/'+uid+'/updatedAt']:now,
         ['agent_wallet_logs/'+uid+'/'+id]:{id,agentUid:uid,type:active?'agent_enabled':'agent_disabled',reason,adminEmail:auth.currentUser.email,createdAt:now},
-        ['finance_audit/'+id]:{id,action:active?'client_agent_enabled':'client_agent_disabled',agentUid:uid,reason,adminEmail:auth.currentUser.email,createdAt:now,source:'direct_admin'}
+        ['finance_audit/'+id]:{id,action:active?'client_agent_enabled':'client_agent_disabled',agentUid:uid,reason,adminEmail:auth.currentUser.email,createdAt:now,source:'admin'}
       });
       await loadAll();
     }
@@ -215,10 +215,10 @@
     }
     const uid=cred.user.uid; const now=Date.now(); const loginId=loginIdFromEmail(payload.email); const initial=Number(payload.initialBalance||0);
     const updates={};
-    updates['agents/'+uid]={uid,name:payload.name,email:payload.email,loginId,role:'agent',active:true,agentBalance:initial,totalCharged:0,totalOperations:0,dailyLimit:Number(payload.dailyLimit||0),monthlyLimit:Number(payload.monthlyLimit||0),createdAt:now,updatedAt:now,createdBy:auth.currentUser.email,source:'direct_admin'};
+    updates['agents/'+uid]={uid,name:payload.name,email:payload.email,loginId,role:'agent',active:true,agentBalance:initial,totalCharged:0,totalOperations:0,dailyLimit:Number(payload.dailyLimit||0),monthlyLimit:Number(payload.monthlyLimit||0),createdAt:now,updatedAt:now,createdBy:auth.currentUser.email,source:'admin'};
     updates['users/'+uid+'/uid']=uid; updates['users/'+uid+'/name']=payload.name; updates['users/'+uid+'/email']=payload.email; updates['users/'+uid+'/loginId']=loginId; updates['users/'+uid+'/role']='agent'; updates['users/'+uid+'/isAgent']=true; updates['users/'+uid+'/realBalance']=0; updates['users/'+uid+'/bonusBalance']=0; updates['users/'+uid+'/reservedWithdrawalBalance']=0; updates['users/'+uid+'/createdAt']=now; updates['users/'+uid+'/updatedAt']=now;
-    const aid=nowId('agent_create'); updates['finance_audit/'+aid]={id:aid,action:'client_agent_created',agentUid:uid,email:payload.email,name:payload.name,initialBalance:initial,adminEmail:auth.currentUser.email,createdAt:now,source:'direct_admin'};
-    if(initial>0){const fid=nowId('agent_fund'); updates['agent_wallet_logs/'+uid+'/'+fid]={id:fid,agentUid:uid,type:'admin_agent_balance_add',amount:initial,note:'رصيد بداية من الأدمن',adminEmail:auth.currentUser.email,createdAt:now,source:'direct_admin'}}
+    const aid=nowId('agent_create'); updates['finance_audit/'+aid]={id:aid,action:'client_agent_created',agentUid:uid,email:payload.email,name:payload.name,initialBalance:initial,adminEmail:auth.currentUser.email,createdAt:now,source:'admin'};
+    if(initial>0){const fid=nowId('agent_fund'); updates['agent_wallet_logs/'+uid+'/'+fid]={id:fid,agentUid:uid,type:'admin_agent_balance_add',amount:initial,note:'رصيد بداية من الأدمن',adminEmail:auth.currentUser.email,createdAt:now,source:'admin'}}
     await update(ref(db),updates);
     await signOut(creatorAuth).catch(()=>null);
     return {ok:true,uid};
@@ -235,7 +235,7 @@
       }catch(serverErr){
         console.warn('adminUpsertAgent failed; trying client fallback',serverErr); 
         await clientCreateAgent(payload); 
-        msg('saveStatus','تم حفظ الوكيل بنجاح من داخل صفحة الأدمن.','ok');
+        msg('saveStatus','تم حفظ الوكيل بنجاح.','ok');
       }
       ['agentName','agentEmail','agentPass','agentInitial','agentDaily','agentMonthly'].forEach(id=>$(id).value='');
       await loadAll();

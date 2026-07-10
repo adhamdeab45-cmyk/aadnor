@@ -7119,5 +7119,111 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 })();
 </script>
 
+
+
+<style id="adnor-royal-ui-complete-css">
+  :root{--adnor-royal-gold:#ffd866;--adnor-royal-gold2:#d89524;--adnor-royal-deep:#06152b;--adnor-royal-ink:#020711;--adnor-royal-cyan:#18d6ff;--adnor-royal-green:#25e6a8}
+  body{background:#020711!important;}
+  body:before{background:
+    radial-gradient(circle at 50% -10%,rgba(255,216,102,.26),transparent 30%),
+    radial-gradient(circle at 8% 22%,rgba(24,214,255,.14),transparent 28%),
+    radial-gradient(circle at 95% 70%,rgba(255,196,54,.12),transparent 28%),
+    linear-gradient(180deg,#01040b,#06182f 46%,#01040b)!important;}
+  body:after{opacity:.42!important;background-size:240px 240px,42px 42px!important;}
+  .app-wrap{padding-bottom:116px!important;}
+  .royal-card,.profile-card,.wallet-stat,.game-card,.support-hero,.jackpot,#page-lottery .v63-hero-draw,#v91LatestResultCard{box-shadow:0 18px 42px rgba(0,0,0,.48),0 0 24px rgba(255,196,54,.10),inset 0 0 24px rgba(255,216,102,.035)!important;}
+  .royal-card,.profile-card{border-color:rgba(255,216,102,.54)!important;background:linear-gradient(180deg,rgba(8,26,54,.93),rgba(1,7,18,.96))!important;}
+  .gold-btn,.home-actions .gold,.seg button.active,.wallet-tab.active{position:relative!important;overflow:hidden!important;isolation:isolate;}
+  .gold-btn:before,.home-actions .gold:before,.wallet-tab.active:before{content:"";position:absolute;inset:-40% auto -40% -30%;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.62),transparent);transform:rotate(18deg);animation:adnorRoyalSweep 3.4s linear infinite;z-index:-1}
+  @keyframes adnorRoyalSweep{0%{left:-45%}55%,100%{left:125%}}
+  @keyframes adnorRoyalFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes adnorRoyalPulse{0%,100%{filter:drop-shadow(0 0 8px rgba(255,216,102,.42));transform:scale(1)}50%{filter:drop-shadow(0 0 16px rgba(255,216,102,.75));transform:scale(1.05)}}
+  @keyframes adnorRoyalStar{0%{transform:translateY(0) rotate(0deg);opacity:.35}50%{transform:translateY(-12px) rotate(12deg);opacity:1}100%{transform:translateY(0) rotate(0deg);opacity:.35}}
+  @keyframes adnorRoyalBall{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-13px) scale(1.08)}}
+
+  /* الصفحة الرئيسية المختصرة */
+  .home-hero{border-radius:32px!important;border:1px solid rgba(255,216,102,.62)!important;background:radial-gradient(circle at 50% 0,rgba(255,216,102,.19),transparent 36%),linear-gradient(180deg,rgba(9,30,62,.96),rgba(2,9,21,.96))!important;box-shadow:0 0 32px rgba(255,190,40,.16),inset 0 0 28px rgba(255,216,102,.04)!important}
+  .home-money-card{border:1px solid rgba(37,230,168,.38)!important;background:linear-gradient(180deg,rgba(0,18,28,.70),rgba(1,8,18,.88))!important;}
+  .home-actions{grid-template-columns:repeat(4,1fr)!important;gap:8px!important}.home-actions button{min-height:58px!important;border-radius:18px!important;box-shadow:0 0 18px rgba(0,0,0,.20)!important}
+  .home-grid .home-tile{border-radius:22px!important;text-align:center!important;background:radial-gradient(circle at 50% 0,rgba(255,216,102,.10),transparent 35%),linear-gradient(180deg,rgba(9,27,54,.91),rgba(2,9,20,.95))!important;}
+
+  /* اليانصيب الفخم */
+  #page-lottery .v63-hero-draw{position:relative!important;overflow:hidden!important;border-radius:34px!important;border:1px solid rgba(255,216,102,.72)!important;padding:24px 14px 20px!important;background:
+    radial-gradient(circle at 50% 0,rgba(255,216,102,.22),transparent 34%),
+    radial-gradient(circle at 12% 18%,rgba(24,214,255,.16),transparent 26%),
+    linear-gradient(180deg,rgba(7,24,50,.97),rgba(1,7,18,.98))!important;}
+  #page-lottery .v63-hero-draw:before{content:"";position:absolute;inset:10px;border-radius:27px;border:1px solid rgba(255,236,161,.12);pointer-events:none;z-index:1}
+  #page-lottery .v63-hero-draw:after{content:"7\A0 8\A0 9\A0 6\A0 1";white-space:pre;position:absolute;inset:0;display:block;color:rgba(255,216,102,.28);font-size:17px;font-weight:1000;letter-spacing:40px;line-height:58px;text-align:center;animation:adnorRoyalFloat 5s ease-in-out infinite;pointer-events:none;z-index:0}
+  #page-lottery .v63-hero-draw>*{position:relative;z-index:2}
+  #page-lottery .v63-crown-stage span{animation:adnorRoyalPulse 2.8s ease-in-out infinite;display:inline-block!important;color:#ffe184!important}
+  #page-lottery .drawname,#page-lottery .v63-hero-draw .drawname{font-size:38px!important;line-height:1.15!important;text-shadow:0 0 18px rgba(255,216,102,.38)!important;}
+  #page-lottery .v63-prize-amount,#jackpotText{font-size:49px!important;border-radius:24px!important;background:linear-gradient(180deg,rgba(0,10,16,.72),rgba(0,0,0,.36))!important;border:1px solid rgba(37,230,168,.28)!important;color:#20e6aa!important;box-shadow:inset 0 0 18px rgba(37,230,168,.08),0 0 24px rgba(37,230,168,.13)!important;}
+  #page-lottery .tabs{border-radius:24px!important;padding:6px!important;gap:6px!important;border:1px solid rgba(255,216,102,.52)!important;background:linear-gradient(180deg,rgba(4,17,36,.96),rgba(1,8,18,.98))!important;overflow:visible!important}
+  #page-lottery .tab{border-radius:18px!important;border:1px solid rgba(255,216,102,.18)!important;height:54px!important}
+  #page-lottery .tab.active{background:linear-gradient(180deg,#fff1a5,#d89524 58%,#8d510d)!important;color:#151007!important;box-shadow:0 0 18px rgba(255,190,40,.28)!important}
+
+  /* مسارات سريعة واضحة */
+  .adnor-royal-quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 14px;position:relative;z-index:3}
+  .adnor-royal-quick button{min-height:70px;border-radius:23px;border:1px solid rgba(255,216,102,.42);background:radial-gradient(circle at 75% 0,rgba(255,216,102,.12),transparent 36%),linear-gradient(180deg,rgba(9,31,60,.92),rgba(2,10,22,.96));color:#fff;font:inherit;font-weight:1000;display:grid;grid-template-columns:44px 1fr;align-items:center;gap:10px;text-align:right;padding:10px 12px;cursor:pointer;box-shadow:0 14px 26px rgba(0,0,0,.32)}
+  .adnor-royal-quick button i{width:42px;height:42px;border-radius:15px;display:grid;place-items:center;font-style:normal;font-size:24px;background:radial-gradient(circle at 30% 20%,#fff5bd,#d89524 62%,#704008);color:#140d04;box-shadow:0 0 16px rgba(255,196,54,.26);animation:adnorRoyalFloat 3.4s ease-in-out infinite}
+  .adnor-royal-quick button b{display:block;color:#ffe184;font-size:15px}.adnor-royal-quick button span{display:block;color:#c5cfdf;font-size:11px;font-weight:800;margin-top:3px;line-height:1.35}
+  .adnor-royal-quick button:nth-child(1){grid-column:1/-1;min-height:78px;background:radial-gradient(circle at 85% 0,rgba(37,230,168,.16),transparent 34%),linear-gradient(180deg,rgba(14,45,74,.95),rgba(2,10,22,.97))}
+  @media(max-width:370px){.adnor-royal-quick{grid-template-columns:1fr}.adnor-royal-quick button:nth-child(1){grid-column:auto}}
+
+  /* آخر فائز: بطاقة احتفال */
+  #v91LatestResultCard{position:relative!important;overflow:hidden!important;border-radius:30px!important;border:1px solid rgba(255,216,102,.70)!important;background:
+    radial-gradient(circle at 50% 0,rgba(255,216,102,.23),transparent 34%),
+    linear-gradient(180deg,rgba(8,25,51,.96),rgba(1,7,18,.98))!important;}
+  #v91LatestResultCard:before{content:"✦ ✧ ✦ ✧ ✦";position:absolute;top:12px;left:0;right:0;text-align:center;color:rgba(255,229,139,.55);font-size:20px;letter-spacing:13px;animation:adnorRoyalStar 3s ease-in-out infinite;pointer-events:none}
+  #v91LatestResultCard .v91-result-head{justify-content:center!important;text-align:center!important;gap:10px!important;margin-top:12px!important}
+  #v91LatestResultCard .v91-result-head h3{font-size:23px!important;color:#ffe184!important;text-shadow:0 0 16px rgba(255,216,102,.32)!important}
+  #v91LatestResultCard .v91-result-paper{border-radius:25px!important;border:1px solid rgba(255,216,102,.45)!important;background:linear-gradient(180deg,rgba(1,8,18,.58),rgba(0,0,0,.22))!important;box-shadow:inset 0 0 20px rgba(255,216,102,.04)!important;}
+  #v91LatestResultCard .v91-result-digits span{border-radius:16px!important;background:radial-gradient(circle at 35% 20%,#fff1a5,#d89524 64%,#6d3b08)!important;color:#140d04!important;text-shadow:none!important;box-shadow:0 0 14px rgba(255,196,54,.25)!important}
+  .adnor-share-win-btn{width:100%;min-height:52px;margin-top:12px;border:1px solid rgba(37,230,168,.45);border-radius:18px;background:linear-gradient(180deg,rgba(17,69,76,.92),rgba(2,12,22,.96));color:#bfffe9;font:inherit;font-weight:1000;cursor:pointer;box-shadow:0 0 16px rgba(37,230,168,.12)}
+
+  /* بطاقة شراء التذكرة */
+  #page-lottery .v63-ticket-card{border-radius:30px!important;border-color:rgba(255,216,102,.66)!important;background:radial-gradient(circle at 0 0,rgba(24,214,255,.10),transparent 28%),linear-gradient(180deg,rgba(8,26,54,.96),rgba(1,7,18,.98))!important}
+  #page-lottery .v63-number-box{border-radius:24px!important;border:1.5px solid rgba(255,216,102,.85)!important;background:linear-gradient(180deg,rgba(0,6,16,.86),rgba(0,0,0,.38))!important;box-shadow:inset 0 0 22px rgba(255,216,102,.06),0 0 18px rgba(255,196,54,.10)!important}
+  #page-lottery .v63-side-action{border-radius:20px!important}
+  #page-lottery .v63-buy-btn{height:68px!important;border-radius:24px!important;font-size:24px!important;}
+
+  /* المحفظة والألعاب والحساب */
+  #page-wallet .wallet-stats{gap:10px!important}.wallet-stat{border-radius:22px!important;border-color:rgba(255,216,102,.38)!important;background:radial-gradient(circle at 50% 0,rgba(255,216,102,.11),transparent 35%),linear-gradient(180deg,rgba(7,23,47,.92),rgba(2,9,20,.96))!important}.wallet-stat b{font-size:17px!important}
+  #page-wallet .v69-step-head{border-radius:20px!important;background:linear-gradient(180deg,rgba(2,10,22,.72),rgba(1,7,18,.88))!important;border:1px solid rgba(255,216,102,.26)!important;padding:12px!important;margin-bottom:10px!important}
+  #page-games .games-hero-clean,#page-account .jackpot{border-radius:32px!important;background:radial-gradient(circle at 50% 0,rgba(255,216,102,.20),transparent 36%),linear-gradient(180deg,rgba(8,27,56,.96),rgba(1,7,18,.98))!important}
+  #page-games .game-card{border-radius:28px!important;border-color:rgba(255,216,102,.58)!important}.game-icon{animation:adnorRoyalFloat 3.2s ease-in-out infinite!important}
+  #page-account .ref-box{border-radius:25px!important;padding:14px!important;border:1px solid rgba(37,230,168,.36)!important;background:radial-gradient(circle at 85% 0,rgba(37,230,168,.12),transparent 33%),linear-gradient(180deg,rgba(3,22,34,.82),rgba(1,8,18,.96))!important;box-shadow:0 0 20px rgba(37,230,168,.08)!important}
+  #page-account .royal-card:has(.ref-box){border-color:rgba(37,230,168,.45)!important}
+  #page-account .royal-card:has(.ref-box) .section-title h3:before{content:"🎁 ";}
+  .copy-btn,.account-danger-btn{border-radius:16px!important}
+
+  /* شريط سفلي ملكي نهائي */
+  .bottom-nav,.bottom-nav.v139-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;width:min(95%,430px)!important;min-height:82px!important;padding:9px!important;bottom:10px!important;border-radius:30px!important;background:radial-gradient(circle at 50% 0,rgba(255,216,102,.20),transparent 42%),linear-gradient(180deg,rgba(5,16,34,.98),rgba(0,5,13,.99))!important;border:1px solid rgba(255,216,102,.62)!important;box-shadow:0 20px 42px rgba(0,0,0,.78),0 0 26px rgba(255,196,54,.18),inset 0 0 24px rgba(255,216,102,.04)!important;overflow:hidden!important}
+  .bottom-nav .nav-btn{height:66px!important;border-radius:22px!important;background:linear-gradient(180deg,rgba(8,22,45,.58),rgba(2,9,21,.72))!important;border:1px solid rgba(255,216,102,.16)!important;color:#d5deee!important;}
+  .bottom-nav .nav-btn.active{background:linear-gradient(180deg,#fff4bd,#e6bd4a 42%,#b87914 74%,#ffe184 100%)!important;color:#130d04!important;box-shadow:0 0 20px rgba(255,196,54,.40),inset 0 0 0 1px rgba(255,255,255,.28)!important;transform:translateY(-2px)}
+  .bottom-nav .nav-btn .nav-label{font-size:10.7px!important;font-weight:1000!important}
+</style>
+<script id="adnor-royal-ui-complete-js">
+(function(){
+  function q(s,r){return (r||document).querySelector(s)}
+  function qa(s,r){return Array.from((r||document).querySelectorAll(s))}
+  function clickPage(page){var b=q('.bottom-nav .nav-btn[data-page="'+page+'"]'); if(b){b.click(); return true;} var el=q('#page-'+page); if(el){qa('.page').forEach(function(p){p.classList.remove('active')});el.classList.add('active');return true} return false}
+  function scrollToEl(sel){setTimeout(function(){var el=q(sel); if(el){try{el.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){el.scrollIntoView()}}},160)}
+  function makeQuick(){var page=q('#page-lottery'); var hero=q('#page-lottery .v63-hero-draw'); if(!page||!hero||q('#adnorRoyalQuick')) return; var box=document.createElement('section'); box.id='adnorRoyalQuick'; box.className='adnor-royal-quick'; box.innerHTML=''
+    +'<button type="button" data-royal-action="buy"><i>🎟️</i><div><b>شراء تذكرة الآن</b><span>اختصر الطريق وادخل السحب مباشرة</span></div></button>'
+    +'<button type="button" data-royal-action="invite"><i>🎁</i><div><b>ادعُ صديق</b><span>كودك ورابطك بمكان واضح</span></div></button>'
+    +'<button type="button" data-royal-action="deposit"><i>💳</i><div><b>شحن المحفظة</b><span>إيداع سريع ومنظم</span></div></button>'
+    +'<button type="button" data-royal-action="results"><i>🏆</i><div><b>الفائزون والنتائج</b><span>آخر النتائج الرسمية</span></div></button>';
+    hero.insertAdjacentElement('afterend',box);
+  }
+  function winnerShareText(){var draw=(q('#v91ResultDrawLabel')||{}).textContent||'ADNOR'; var prize=(q('#v91ResultPrize')||{}).textContent||''; var ticket=qa('#v91ResultDigits span').map(function(s){return (s.textContent||'').trim()}).join(''); return 'أنا ربحت في ADNOR 🎉\nالسحب: '+draw+'\nالجائزة: '+prize+'\nرقم التذكرة: '+ticket+'\nجرّب حظك الآن 👑';}
+  function makeWinnerShare(){var paper=q('#v91LatestResultCard .v91-result-paper'); if(!paper||q('#adnorShareWinBtn')) return; var btn=document.createElement('button'); btn.id='adnorShareWinBtn'; btn.className='adnor-share-win-btn'; btn.type='button'; btn.textContent='مشاركة الفوز والتسويق لـ ADNOR'; paper.appendChild(btn);}
+  function bind(){document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('[data-royal-action]'); if(!a) return; var act=a.getAttribute('data-royal-action'); if(act==='buy'){clickPage('lottery');scrollToEl('#buyTicketBtn')} if(act==='invite'){clickPage('account');scrollToEl('.ref-box')} if(act==='deposit'){clickPage('wallet');setTimeout(function(){var b=q('.wallet-tab[data-wallet="deposit"]'); if(b)b.click();},120);scrollToEl('#wallet-deposit')} if(act==='results'){clickPage('results');scrollToEl('#allDrawResultsList')} }); document.addEventListener('click',function(e){var btn=e.target&&e.target.closest&&e.target.closest('#adnorShareWinBtn'); if(!btn) return; var text=winnerShareText(); if(navigator.share){navigator.share({text:text}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){ if(window.toast) window.toast('تم نسخ نص المشاركة'); else alert('تم نسخ نص المشاركة');})}else alert(text);});}
+  function install(){makeQuick();makeWinnerShare();}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){install();bind();}); else {install();bind();}
+  [300,900,1800,3300,6000].forEach(function(t){setTimeout(install,t)});
+})();
+</script>
+
 </body>
 </html>

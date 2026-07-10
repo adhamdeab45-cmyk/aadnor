@@ -7005,5 +7005,119 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 </script>
 
 
+
+
+<style id="adnor-final-luxury-bottom-nav-css">
+  .bottom-nav,
+  .bottom-nav.v139-bottom-nav{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:8px!important;
+    width:min(94%,430px)!important;
+    min-height:78px!important;
+    padding:8px!important;
+    bottom:12px!important;
+    border-radius:28px!important;
+    background:
+      radial-gradient(circle at 50% 0,rgba(255,216,102,.16),transparent 42%),
+      linear-gradient(180deg,rgba(5,16,34,.97),rgba(1,6,15,.98))!important;
+    border:1px solid rgba(255,214,92,.52)!important;
+    box-shadow:0 16px 34px rgba(0,0,0,.72),0 0 25px rgba(255,188,39,.16),inset 0 0 22px rgba(255,216,102,.04)!important;
+    overflow:hidden!important;
+  }
+  .bottom-nav:before{content:"";position:absolute;inset:5px;border-radius:23px;border:1px solid rgba(255,238,166,.09);pointer-events:none}
+  .bottom-nav .nav-btn{
+    position:relative!important;
+    height:64px!important;
+    min-width:0!important;
+    border-radius:21px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:4px!important;
+    overflow:hidden!important;
+    color:#c8d2e4!important;
+    background:linear-gradient(180deg,rgba(8,22,45,.35),rgba(2,9,21,.56))!important;
+    border:1px solid rgba(255,216,102,.13)!important;
+  }
+  .bottom-nav .nav-btn:after{content:"";position:absolute;inset:auto 14px 5px;height:2px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(255,216,102,.75),transparent);opacity:0;transition:.22s ease}
+  .bottom-nav .nav-btn.active{
+    color:#130d04!important;
+    background:linear-gradient(180deg,#fff3bd 0%,#f0c85a 42%,#c28719 73%,#f7dc84 100%)!important;
+    border-color:rgba(255,242,178,.9)!important;
+    box-shadow:0 0 18px rgba(255,198,52,.36),inset 0 0 0 1px rgba(255,255,255,.25)!important;
+  }
+  .bottom-nav .nav-btn.active:after{opacity:1;background:linear-gradient(90deg,transparent,rgba(21,10,0,.42),transparent)}
+  .bottom-nav .nav-btn i{font-style:normal!important;font-size:0!important;width:36px!important;height:32px!important;position:relative!important;display:block!important;line-height:1!important;filter:drop-shadow(0 0 8px rgba(255,213,88,.32))}
+  .bottom-nav .nav-btn .nav-label{font-size:10.5px!important;font-weight:900!important;line-height:1!important;white-space:nowrap!important;color:inherit!important;letter-spacing:0!important}
+  .bottom-nav .nav-btn.active .nav-label{color:#130d04!important}
+
+  .nav-lottery b{position:absolute;display:grid;place-items:center;width:16px;height:16px;border-radius:50%;font-size:9px;font-weight:1000;color:#140d04;background:radial-gradient(circle at 32% 22%,#fff6c7,#ffd760 48%,#a7680b 100%);box-shadow:0 0 9px rgba(255,213,88,.42);animation:adnorNavBall 2.4s ease-in-out infinite}
+  .nav-lottery b:nth-child(1){right:1px;top:4px;animation-delay:0s}.nav-lottery b:nth-child(2){left:10px;top:1px;animation-delay:.28s}.nav-lottery b:nth-child(3){left:1px;bottom:4px;animation-delay:.55s}
+  .nav-lottery em{position:absolute;right:6px;bottom:2px;width:24px;height:11px;border-radius:4px;background:linear-gradient(180deg,#fff1a5,#d89524 65%,#7a4308);box-shadow:0 0 9px rgba(255,193,48,.35);transform:skewX(-8deg)}
+
+  .nav-games:before{content:"";position:absolute;left:4px;right:4px;bottom:4px;height:17px;border-radius:10px 10px 13px 13px;background:linear-gradient(180deg,#ffe992,#d89524 62%,#6f3c08);box-shadow:0 0 10px rgba(255,205,80,.35);animation:adnorNavGame 2.2s ease-in-out infinite}
+  .nav-games:after{content:"";position:absolute;left:15px;top:2px;width:5px;height:16px;border-radius:999px;background:#ffe992;box-shadow:0 0 0 3px rgba(216,149,36,.55)}
+  .nav-games b{position:absolute;border-radius:50%;background:#071225;z-index:2}.nav-games b:nth-child(1){right:9px;bottom:10px;width:5px;height:5px}.nav-games b:nth-child(2){right:17px;bottom:8px;width:5px;height:5px}.nav-games em{position:absolute;left:9px;bottom:11px;width:12px;height:3px;background:#071225;border-radius:999px;z-index:2}.nav-games s{position:absolute;left:13px;bottom:7px;width:3px;height:11px;background:#071225;border-radius:999px;z-index:2}
+
+  .nav-wallet b{position:absolute;left:3px;right:3px;top:5px;height:22px;border-radius:8px;background:linear-gradient(135deg,#fff2a9,#d89524 55%,#704008);box-shadow:0 0 11px rgba(255,205,80,.34);animation:adnorNavWallet 2.6s ease-in-out infinite;overflow:hidden}
+  .nav-wallet b:before{content:"";position:absolute;left:6px;right:6px;top:6px;height:4px;border-radius:999px;background:rgba(4,16,34,.75);box-shadow:0 7px 0 rgba(4,16,34,.42)}
+  .nav-wallet b:after{content:"";position:absolute;top:-9px;bottom:-9px;width:9px;background:rgba(255,255,255,.55);transform:rotate(22deg);animation:adnorNavShine 2.7s linear infinite}
+  .nav-wallet em{position:absolute;right:4px;bottom:2px;width:11px;height:11px;border-radius:50%;background:#18e7a7;box-shadow:0 0 10px rgba(24,231,167,.55)}
+
+  .nav-account b{position:absolute;left:50%;top:2px;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;background:linear-gradient(180deg,#fff2a9,#d89524);box-shadow:0 0 11px rgba(255,205,80,.38);animation:adnorNavPulse 2.3s ease-in-out infinite}
+  .nav-account em{position:absolute;left:6px;right:6px;bottom:4px;height:15px;border-radius:14px 14px 8px 8px;background:linear-gradient(180deg,#ffe184,#b87516);box-shadow:0 0 10px rgba(255,205,80,.28)}
+  .nav-account s{position:absolute;left:14px;top:7px;width:8px;height:8px;border-radius:50%;background:rgba(4,16,34,.9);z-index:2;box-shadow:0 0 0 1px rgba(255,238,166,.28)}
+
+  @keyframes adnorNavBall{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.08)}}
+  @keyframes adnorNavGame{0%,100%{transform:rotate(0deg)}35%{transform:rotate(-4deg)}70%{transform:rotate(4deg)}}
+  @keyframes adnorNavWallet{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes adnorNavShine{0%{left:-16px}55%,100%{left:45px}}
+  @keyframes adnorNavPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.12)}}
+  @media(max-width:390px){.bottom-nav,.bottom-nav.v139-bottom-nav{gap:6px!important;padding:7px!important}.bottom-nav .nav-btn{height:61px!important;border-radius:18px!important}.bottom-nav .nav-btn i{width:32px!important;height:29px!important}.bottom-nav .nav-btn .nav-label{font-size:9.7px!important}}
+</style>
+<script id="adnor-final-luxury-bottom-nav-js">
+(function(){
+  function q(s,r){return (r||document).querySelector(s)}
+  function qa(s,r){return Array.from((r||document).querySelectorAll(s))}
+  function labels(){
+    var lang=(document.body&&document.body.dataset&&document.body.dataset.adnorLang)||document.documentElement.lang||'ar';
+    if(lang==='en') return {lottery:'Lottery',games:'Games',wallet:'Wallet',account:'Account'};
+    if(lang==='tr') return {lottery:'Çekiliş',games:'Oyunlar',wallet:'Cüzdan',account:'Hesabım'};
+    return {lottery:'اليانصيب',games:'الألعاب',wallet:'المحفظة',account:'حسابي'};
+  }
+  function fallback(page){
+    var el=q('#page-'+page); if(!el) return;
+    qa('.page').forEach(function(x){x.classList.remove('active')});
+    el.classList.add('active');
+    qa('.bottom-nav .nav-btn').forEach(function(b){b.classList.toggle('active',b.dataset.page===page)});
+    var wrap=q('#appWrap'); if(wrap){wrap.dataset.activePage=page;wrap.classList.toggle('admin-layout',page==='admin')}
+  }
+  function go(page){
+    if(window.showPage) window.showPage(page); else fallback(page);
+    setTimeout(sync,40);
+    try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}
+  }
+  function activePage(){return (q('#appWrap')&&q('#appWrap').dataset.activePage)||((q('.page.active')&&q('.page.active').id)||'page-lottery').replace('page-','')||'lottery'}
+  function sync(){var p=activePage();qa('.bottom-nav .nav-btn').forEach(function(b){b.classList.toggle('active',b.dataset.page===p)})}
+  function build(){
+    var nav=q('.bottom-nav'); if(!nav) return;
+    var t=labels();
+    nav.className='bottom-nav v139-bottom-nav adnor-final-luxury-nav';
+    nav.innerHTML=''
+      +'<button class="nav-btn" data-page="lottery" type="button"><i class="nav-lottery" aria-hidden="true"><b>7</b><b>8</b><b>9</b><em></em></i><span class="nav-label">'+t.lottery+'</span></button>'
+      +'<button class="nav-btn" data-page="games" type="button"><i class="nav-games" aria-hidden="true"><b></b><b></b><em></em><s></s></i><span class="nav-label">'+t.games+'</span></button>'
+      +'<button class="nav-btn" data-page="wallet" type="button"><i class="nav-wallet" aria-hidden="true"><b></b><em></em></i><span class="nav-label">'+t.wallet+'</span></button>'
+      +'<button class="nav-btn" data-page="account" type="button"><i class="nav-account" aria-hidden="true"><b></b><em></em><s></s></i><span class="nav-label">'+t.account+'</span></button>';
+    qa('.nav-btn',nav).forEach(function(btn){btn.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation()}go(btn.dataset.page);return false}});
+    sync();
+  }
+  function install(){build();sync()}
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+  [150,500,1200,2400,4200,7000].forEach(function(t){setTimeout(install,t)});
+  window.ADNOR_FINAL_LUXURY_BOTTOM_NAV=install;
+})();
+</script>
+
 </body>
 </html>

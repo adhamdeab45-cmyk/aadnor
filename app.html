@@ -1901,6 +1901,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 
       <div id="page-admin" class="page admin-overview">
         <section class="jackpot"><div class="label">بوابة الإدارة الملكية</div><div class="amount">ADNOR CONTROL</div><div class="drawname">كل قسم داخل صفحة مستقلة — بدون ازدحام</div>
+          <a href="admin-command-center.html" style="display:block;margin-top:14px;width:100%;border:0;border-radius:18px;padding:16px;background:linear-gradient(135deg,#fff1a6,#c98613);color:#170d02;font-weight:1000;font-size:17px;text-align:center;text-decoration:none;box-shadow:0 14px 34px rgba(212,175,55,.30)">🏛️ فتح ADNor Admin Command Center الجديد</a>
           <button type="button" onclick="showAdminSection('agents')" style="margin-top:14px;width:100%;border:0;border-radius:18px;padding:14px 16px;background:linear-gradient(135deg,#ffd56b,#b8860b);color:#120b02;font-weight:900;font-size:16px;box-shadow:0 12px 30px rgba(212,175,55,.28);cursor:pointer">🧾 فتح وكلاء الشحن داخل الأدمن</button>
           <a href="energy-admin.html" style="display:block;margin-top:10px;width:100%;border:1px solid rgba(94,226,255,.5);border-radius:18px;padding:14px 16px;background:linear-gradient(135deg,rgba(29,155,201,.22),rgba(4,18,37,.94));color:#a9f2ff;font-weight:900;font-size:15px;text-align:center;text-decoration:none;box-shadow:0 12px 30px rgba(49,207,255,.10)">⚡ إدارة ADN Energy والإعلانات</a>
         </section>
@@ -2496,7 +2497,7 @@ function setCurrentPrize(type){
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-    import { getDatabase, ref, set, update, get, onValue, push, increment, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
+    import { getDatabase, ref, set, update, get, onValue, push, increment, runTransaction, onDisconnect } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js';
 
@@ -3333,11 +3334,36 @@ function setCurrentPrize(type){
       if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null; currentNotifications={}; renderUserNotifications()}
       if(aiKnowledgeUnsub){try{aiKnowledgeUnsub()}catch(e){} aiKnowledgeUnsub=null; aiKnowledgeCache={}}
     }
+    let adnorPresenceTimer=null;
+    async function adnorStartPresence(user){
+      try{
+        if(adnorPresenceTimer){clearInterval(adnorPresenceTimer);adnorPresenceTimer=null}
+        const presenceRef=ref(db,'presence/'+user.uid);
+        const writePresence=async()=>{
+          const now=Date.now();
+          try{
+            await update(presenceRef,{uid:user.uid,email:user.email||'',online:true,lastSeen:now,updatedAt:now,platform:navigator.platform||'',screen:(screen?.width||0)+'x'+(screen?.height||0)});
+            await update(ref(db,'users/'+user.uid),{lastActivityAt:now});
+          }catch(e){console.warn('presence update skipped',e)}
+        };
+        try{await onDisconnect(presenceRef).set({uid:user.uid,email:user.email||'',online:false,lastSeen:Date.now(),updatedAt:Date.now()})}catch(e){console.warn('presence onDisconnect skipped',e)}
+        await writePresence();
+        adnorPresenceTimer=setInterval(writePresence,60000);
+        ['click','keydown','touchstart','visibilitychange'].forEach(ev=>document.addEventListener(ev,()=>{if(document.visibilityState!=='hidden')writePresence()},{passive:true,once:true}));
+      }catch(e){console.warn('presence start skipped',e)}
+    }
+    async function adnorStopPresence(){
+      if(adnorPresenceTimer){clearInterval(adnorPresenceTimer);adnorPresenceTimer=null}
+      if(currentUser){try{await update(ref(db,'presence/'+currentUser.uid),{online:false,lastSeen:Date.now(),updatedAt:Date.now()})}catch(e){}}
+    }
+    window.addEventListener('beforeunload',()=>{try{if(currentUser)update(ref(db,'presence/'+currentUser.uid),{online:false,lastSeen:Date.now(),updatedAt:Date.now()})}catch(e){}});
+
     onAuthStateChanged(auth,user=>{
       if(adnorNullAuthTimer){clearTimeout(adnorNullAuthTimer);adnorNullAuthTimer=null;}
       currentUser=user;
       if(user){
         adnorClearLoginAttempt();
+        adnorStartPresence(user);
         adnorHandleAuthenticatedUser(user);
       }else{
         adnorServerVerifiedUid='';
@@ -3345,6 +3371,7 @@ function setCurrentPrize(type){
         window.ADNOR_SERVER_AUTH={verified:false};
         logClientError('auth_state_null_seen',new Error('Firebase Auth returned null'),{redirectChecked:adnorRedirectChecked,recentLogin:adnorRecentLoginAttempt(25000),manualLogout:adnorManualLogout});
         if(adnorDelayNullAuth('onAuthStateChanged null'))return;
+        adnorStopPresence();
         adnorCleanupLogout();
       }
     });

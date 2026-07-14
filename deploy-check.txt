@@ -1,0 +1,3 @@
+ADNOR V300.1 RENDER READY
+Build: 2026-07-14
+If you can read this URL, Render is serving the new public folder.

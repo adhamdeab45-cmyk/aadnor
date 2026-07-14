@@ -1,281 +1,468 @@
 {
   "rules": {
-    ".read": false,
-    ".write": false,
-    "settings": {
-      ".read": true,
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-    },
-    "payment_methods": {
-      ".read": true,
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-    },
-    "tasks": {
-      ".read": true,
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-    },
-    "public_draws": {
-      ".read": true,
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".indexOn": [
-        "publishedAt",
-        "status"
-      ]
-    },
-    "public_agents": {
-      ".read": true,
-      "$uid": {
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-      },
-      ".indexOn": [
-        "country",
-        "active"
-      ]
-    },
-    "admins": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-    },
     "users": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true || root.child('agents').child(auth.uid).child('active').val() === true)",
+      ".read": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true || root.child('agents').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
+        ".read": "$uid === auth.uid || ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
         "realBalance": {
-          ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true || root.child('agents').child(auth.uid).child('active').val() === true)"
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ((root.child('agents').child(auth.uid).child('active').val() === true) && newData.isNumber() && newData.val() >= 0) || ($uid === auth.uid && newData.isNumber() && newData.val() >= 0 && ((!data.exists() && newData.val() === 0) || (data.exists() && newData.val() === data.val()))))",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
         },
-        "lastActivityAt": {
-          ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true || root.child('agents').child(auth.uid).child('active').val() === true)"
+        "updatedAt": {
+          ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber()"
+        },
+        "profileUpdatedAt": {
+          ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber()"
         }
-      },
-      ".indexOn": [
-        "isVIP",
-        "status",
-        "publicId"
-      ]
-    },
-    "profiles": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true || root.child('agents').child(auth.uid).child('active').val() === true)",
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true || root.child('agents').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
       }
     },
-    "indexes": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+    "admins": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
     },
-    "referral_codes": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "counters": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+    "admin_emails": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
     },
     "login_logs": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')",
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')",
+        ".write": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')"
+      }
+    },
+    "tickets": {
+      "$draw": {
+        ".read": "auth != null",
+        "$ticketId": {
+          ".read": "auth != null",
+          ".write": "auth != null && (newData.child('uid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
       }
     },
     "user_tickets": {
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true)"
       }
-    },
-    "draw_tickets": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      "$drawKey": {
-        "$id": {
-          ".write": "auth != null && ((data.exists() == false && newData.child('uid').val() === auth.uid) || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-        }
-      }
-    },
-    "draw_ticket_numbers": {
-      ".read": "auth != null",
-      "$drawKey": {
-        "$number": {
-          ".write": "auth != null && ((data.exists() == false && newData.child('uid').val() === auth.uid) || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-        }
-      }
-    },
-    "user_draw_counts": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-      }
-    },
-    "draw_cycles": {
-      ".read": "auth != null",
-      "$drawKey": {
-        ".write": "auth != null && ((data.exists() == false) || (newData.child('drawType').val() === data.child('drawType').val() && newData.child('publishAt').val() === data.child('publishAt').val() && newData.child('prize').val() === data.child('prize').val() && newData.child('ticketPrice').val() === data.child('ticketPrice').val() && newData.child('status').val() === data.child('status').val()) || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-      }
-    },
-    "draw_jobs": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".indexOn": [
-        "status",
-        "publishAt",
-        "drawKey"
-      ]
-    },
-    "draw_status": {
-      ".read": true,
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
     },
     "transactions": {
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true || root.child('agents').child(auth.uid).child('active').val() === true)",
-        ".indexOn": [
-          "createdAt"
-        ]
-      }
-    },
-    "game_history": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && auth.uid === $uid",
-        ".indexOn": [
-          "createdAt"
-        ]
-      }
-    },
-    "user_tasks": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-      }
-    },
-    "daily_claims": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && auth.uid === $uid"
-      }
-    },
-    "finance": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      "deposits": {
-        ".indexOn": [
-          "status",
-          "createdAt"
-        ],
-        "$id": {
-          ".read": "auth != null && (auth.uid === data.child('uid').val() || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-          ".write": "auth != null && ((data.exists() == false && newData.child('uid').val() === auth.uid) || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-        }
-      },
-      "withdrawals": {
-        ".indexOn": [
-          "status",
-          "createdAt"
-        ],
-        "$id": {
-          ".read": "auth != null && (auth.uid === data.child('uid').val() || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-          ".write": "auth != null && ((data.exists() == false && newData.child('uid').val() === auth.uid) || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-        }
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true)"
       }
     },
     "user_finance": {
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
       }
+    },
+    "finance": {
+      "deposits": {
+        ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        "$id": {
+          ".read": "auth != null && (data.child('uid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || !data.exists())",
+          ".write": "auth != null && (newData.child('uid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      },
+      "withdrawals": {
+        ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        "$id": {
+          ".read": "auth != null && (data.child('uid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || !data.exists())",
+          ".write": "auth != null && (newData.child('uid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      }
+    },
+    "admin_notifications": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      "$id": {
+        ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true) || ((newData.child('type').val() === 'ticket_purchase' || newData.child('type').val() === 'wheel_spin' || newData.child('type').val() === 'daily_lucky_box' || newData.child('type').val() === 'deposit' || newData.child('type').val() === 'withdraw' || newData.child('type').val() === 'deposit_request' || newData.child('type').val() === 'withdraw_request' || newData.child('type').val() === 'deposit_pending' || newData.child('type').val() === 'withdraw_pending') && newData.child('uid').val() === auth.uid))"
+      }
+    },
+    "wheel_logs": {
+      "$uid": {
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+      }
+    },
+    "lucky_box_logs": {
+      "$uid": {
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+      }
+    },
+    "support_tickets": {
+      "$uid": {
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+      }
+    },
+    "admin_support_tickets": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      "$id": {
+        ".write": "auth != null && (newData.child('uid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+      }
+    },
+    "draw_history": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "payment_methods": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+      }
+    },
+    "finance_audit": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      "$id": {
+        ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))"
+      }
+    },
+    "system_settings": {
+      ".read": "auth != null",
+      "$key": {
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+      }
+    },
+    "referral_codes": {
+      ".read": "auth != null",
+      "$code": {
+        ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || newData.child('ownerUid').val() === auth.uid)"
+      }
+    },
+    "referrals": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      "$id": {
+        ".write": "auth != null && (newData.child('referredUid').val() === auth.uid || newData.child('referrerUid').val() === auth.uid || data.child('referrerUid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+      }
+    },
+    "user_referrals": {
+      "$uid": {
+        ".read": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
+        "$id": {
+          ".write": "auth != null && ($uid === auth.uid || newData.child('referredUid').val() === auth.uid || newData.child('referrerUid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      }
+    },
+    "lottery_settings": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "draw_rounds": {
+      ".read": "auth != null",
+      "$draw": {
+        "$id": {
+          ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+        }
+      }
+    },
+    "support_contacts": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+      }
+    },
+    "wheel_settings": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
     },
     "user_notifications": {
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null",
-        ".indexOn": [
-          "createdAt",
-          "publishAt"
-        ]
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))"
       }
     },
-    "global_notifications": {
+    "gmail_alerts": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      "$id": {
+        ".write": "auth != null"
+      }
+    },
+    "gmail_alert_settings": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "promo_codes": {
       ".read": "auth != null",
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".indexOn": [
-        "createdAt",
-        "publishAt"
-      ]
-    },
-    "notification_reads": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+      "$code": {
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
       }
     },
-    "support": {
+    "promo_redemptions": {
+      "$code": {
+        "$uid": {
+          ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+          ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      }
+    },
+    "admin_backups": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "admin_backup_payloads": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "admin_imports": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "admin_import_payloads": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "ai_knowledge": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+      }
+    },
+    "ai_unanswered": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      "$id": {
+        ".write": "auth != null"
+      }
+    },
+    "ai_unanswered_events": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      "$id": {
+        "$eventId": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "public_draw_results": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "game_center": {
+      "games": {
+        ".read": "auth != null",
+        "$gameId": {
+          ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+        }
+      }
+    },
+    "custom_game_logs": {
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+      }
+    },
+    "pending_referral_rewards": {
+      "$uid": {
+        ".read": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
+        "$id": {
+          ".write": "auth != null && ($uid === auth.uid || newData.child('referredUid').val() === auth.uid || data.child('referredUid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      }
+    },
+    "user_referrals_received": {
+      "$uid": {
+        ".read": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
+        ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
+        "$id": {
+          ".write": "auth != null && ($uid === auth.uid || newData.child('referrerUid').val() === auth.uid || data.child('referrerUid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      }
+    },
+    "game_treasury": {
+      "settings": {
+        ".read": "auth != null",
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+      },
+      "current": {
+        ".read": "auth != null",
+        "platformProfit": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "playerPool": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "paidOut": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "totalBetsReal": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "totalBetsBonus": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "roundsCount": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "lastReportDate": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() || newData.isString()"
+        },
+        "updatedAt": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() || newData.isString() || newData.isBoolean()"
+        }
+      },
+      "rounds": {
+        ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        "$id": {
+          ".write": "auth != null && (newData.child('uid').val() === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      },
+      "user_rounds": {
+        "$uid": {
+          ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+          ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
+      },
+      "reports": {
+        ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+      }
+    },
+    "promo_offers": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "daily_box": {
+      ".read": "auth != null",
+      ".write": "auth != null && ((auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com') || root.child('admins').child(auth.uid).val() === true)"
+    },
+    "daily_rewards": {
+      ".read": "auth != null",
+      ".write": "auth != null && ((auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com') || root.child('admins').child(auth.uid).val() === true)"
+    },
+    "daily_claims": {
+      "$uid": {
+        ".read": "auth != null && ($uid === auth.uid || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com') || root.child('admins').child(auth.uid).val() === true)",
+        ".write": "auth != null && ($uid === auth.uid || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com') || root.child('admins').child(auth.uid).val() === true)"
+      }
+    },
+    "referral_daily_counts": {
+      "$uid": {
+        ".read": "auth != null",
+        "$date": {
+          ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com') || (newData.child('lastReferredUid').val() === auth.uid && (data.exists() ? newData.child('count').val() == data.child('count').val() + 1 || newData.child('count').val() == data.child('count').val() - 1 : newData.child('count').val() == 1)))",
+          ".validate": "newData.hasChildren(['count','ownerUid','updatedAt']) && newData.child('count').isNumber() && newData.child('count').val() >= 0"
+        }
+      }
+    },
+    "security_lock_v128": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))"
+    },
+    "user_direct_messages": {
+      "$uid": {
+        ".read": "$uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')",
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')"
+      }
+    },
+    "admin_user_messages": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')",
+      ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')"
+    },
+    "admin_user_notes": {
+      "$uid": {
+        ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')",
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')"
+      }
+    },
+    "admin_user_audit": {
+      "$uid": {
+        ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')",
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')"
       }
     },
     "agents": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".read": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
+        ".read": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
+        ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
+        "agentBalance": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true && newData.isNumber() && newData.val() >= 0 && (data.exists() ? newData.val() <= data.val() : (root.child('agents').child(auth.uid).child('balance').isNumber() && newData.val() <= root.child('agents').child(auth.uid).child('balance').val()))))",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "totalCharged": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber() && newData.val() >= data.val()"
+        },
+        "totalOperations": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber() && newData.val() >= data.val()"
+        },
+        "lastRechargeAt": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber()"
+        },
+        "todayCharged": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "monthCharged": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "lastDirectRechargeAt": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isNumber()"
+        },
+        "usageDayKey": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isString()"
+        },
+        "usageMonthKey": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || ($uid === auth.uid && root.child('agents').child(auth.uid).child('active').val() === true))",
+          ".validate": "newData.isString()"
+        }
       }
     },
     "agent_recharges": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".write": "auth != null && root.child('agents').child(auth.uid).child('active').val() === true",
-      ".indexOn": [
-        "createdAt",
-        "agentUid",
-        "targetUid"
-      ]
+      ".read": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
+      "$id": {
+        ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
+        ".read": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))"
+      }
     },
     "agent_recharges_by_agent": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
+      "$agentUid": {
+        ".read": "auth != null && ($agentUid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
+        "$id": {
+          ".write": "auth != null && ($agentUid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
       }
     },
     "agent_recharges_by_user": {
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null && root.child('agents').child(auth.uid).child('active').val() === true"
+        ".read": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
+        "$id": {
+          ".write": "auth != null && ((root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))"
+        }
       }
     },
-    "agent_balance_history": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".write": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)"
-    },
-    "referrals": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-        ".write": "auth != null"
+    "agent_wallet_logs": {
+      "$agentUid": {
+        ".read": "auth != null && ($agentUid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))",
+        "$id": {
+          ".write": "auth != null && ($agentUid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')))"
+        }
       }
-    },
-    "referral_daily_counts": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "referral_abuse": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "audit": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".write": "auth != null",
-      ".indexOn": [
-        "createdAt",
-        "action"
-      ]
-    },
-    "admin_notifications": {
-      ".read": "auth != null && (auth.token.email === 'adhamdeab45@gmail.com' || auth.token.email === 'adhamdeab2@gmail.com' || root.child('admins').child(auth.uid).child('active').val() === true)",
-      ".write": "auth != null",
-      ".indexOn": [
-        "createdAt",
-        "type"
-      ]
     }
   }
 }

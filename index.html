@@ -1343,6 +1343,15 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
 </style>
 
 
+
+<style id="adnor-server-auth-css">
+  .adnor-server-auth-status{display:none;margin:10px 0 0;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,204,77,.28);background:rgba(2,10,22,.55);color:#d8e2f1;font-size:12px;font-weight:900;line-height:1.6;text-align:center}
+  .adnor-server-auth-status.show{display:block}
+  .adnor-server-auth-status.checking{color:#ffe184;border-color:rgba(255,204,77,.42)}
+  .adnor-server-auth-status.ok{color:#7dffd9;border-color:rgba(35,255,200,.38);background:rgba(35,255,200,.07)}
+  .adnor-server-auth-status.error{color:#ffadb8;border-color:rgba(255,96,116,.42);background:rgba(255,96,116,.07)}
+</style>
+
 </head>
 <body>
   <div class="aurora"></div>
@@ -1364,6 +1373,7 @@ html[lang="tr"] #v91LatestResultCard.v121-result-board .v91-result-winner::befor
         <button class="gold-btn big" id="continueBtn">المتابعة الآمنة</button>
         <div class="or">أو</div>
         <button class="google-btn" id="googleBtn"><span class="g-logo"></span><span>المتابعة عبر Google</span></button>
+        <div id="serverAuthStatus" class="adnor-server-auth-status" aria-live="polite"></div>
         <div class="secure"><div class="shield">🛡️</div><div><h3>ADNOR Secure</h3><p>جميع البيانات والأرصدة محفوظة داخل نظام ADNOR الآمن.</p></div><div class="lock">🔒</div></div>
       </section>
     </div>
@@ -2615,9 +2625,7 @@ function setCurrentPrize(type){
           const u=auth.currentUser;
           if(u){
             currentUser=u;
-            adnorEnterAppFast(u);
-            adnorStartRuntimeListeners(u);
-            adnorHydrateProfileInBackground(u);
+            adnorHandleAuthenticatedUser(u);
           }else if(adnorRedirectChecked && !adnorRecentLoginAttempt(25000)){
             adnorCleanupLogout();
           }else{
@@ -2626,9 +2634,7 @@ function setCurrentPrize(type){
               const again=auth.currentUser;
               if(again){
                 currentUser=again;
-                adnorEnterAppFast(again);
-                adnorStartRuntimeListeners(again);
-                adnorHydrateProfileInBackground(again);
+                adnorHandleAuthenticatedUser(again);
               }else{
                 adnorClearLoginAttempt();
                 adnorCleanupLogout();
@@ -2660,6 +2666,145 @@ function setCurrentPrize(type){
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){await uiPrompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
+
+    const ADNOR_API_BASE='https://adnor-api.onrender.com';
+    const ADNOR_AUTH_ME_URL=ADNOR_API_BASE+'/auth/me';
+    let adnorServerVerifiedUid='';
+    let adnorServerAuthUser=null;
+    let adnorAuthHandlePromise=null;
+    let adnorAuthHandleUid='';
+
+    function adnorSetServerAuthStatus(message,state='checking'){
+      const el=$('serverAuthStatus');
+      if(!el)return;
+      const text=String(message||'').trim();
+      el.textContent=text;
+      el.className='adnor-server-auth-status'+(text?' show '+state:'');
+    }
+
+    async function adnorFetchWithTimeout(url,options={},timeoutMs=25000){
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),timeoutMs);
+      try{
+        return await fetch(url,{...options,signal:controller.signal,cache:'no-store'});
+      }finally{
+        clearTimeout(timer);
+      }
+    }
+
+    async function adnorRequestServerAuth(user,forceRefresh=false){
+      const idToken=await user.getIdToken(forceRefresh);
+      let response;
+      try{
+        response=await adnorFetchWithTimeout(ADNOR_AUTH_ME_URL,{
+          method:'GET',
+          headers:{
+            'Accept':'application/json',
+            'Authorization':'Bearer '+idToken
+          }
+        },25000);
+      }catch(e){
+        const err=new Error(e?.name==='AbortError'?'انتهت مهلة اتصال السيرفر':'تعذر الاتصال بسيرفر ADNOR');
+        err.code=e?.name==='AbortError'?'SERVER_TIMEOUT':'SERVER_NETWORK_ERROR';
+        err.cause=e;
+        throw err;
+      }
+
+      let data={};
+      try{data=await response.json()}catch(e){}
+
+      if(!response.ok || data?.ok!==true || data?.authenticated!==true){
+        const err=new Error(data?.message||('رفض السيرفر التحقق — HTTP '+response.status));
+        err.code=data?.error||'SERVER_AUTH_REJECTED';
+        err.status=response.status;
+        err.payload=data;
+        throw err;
+      }
+
+      if(!data.user?.uid || data.user.uid!==user.uid){
+        const err=new Error('هوية المستخدم في السيرفر غير مطابقة');
+        err.code='SERVER_UID_MISMATCH';
+        throw err;
+      }
+
+      return data;
+    }
+
+    async function adnorVerifyUserWithServer(user){
+      if(!user?.uid)throw new Error('لا يوجد مستخدم للتحقق');
+      if(adnorServerVerifiedUid===user.uid && adnorServerAuthUser){
+        return {ok:true,authenticated:true,user:adnorServerAuthUser};
+      }
+
+      try{
+        const data=await adnorRequestServerAuth(user,false);
+        adnorServerVerifiedUid=user.uid;
+        adnorServerAuthUser=data.user;
+        window.ADNOR_SERVER_AUTH={verified:true,verifiedAt:Date.now(),user:data.user};
+        return data;
+      }catch(firstError){
+        if(firstError?.status===401 || firstError?.code==='AUTH_TOKEN_INVALID'){
+          const data=await adnorRequestServerAuth(user,true);
+          adnorServerVerifiedUid=user.uid;
+          adnorServerAuthUser=data.user;
+          window.ADNOR_SERVER_AUTH={verified:true,verifiedAt:Date.now(),user:data.user};
+          return data;
+        }
+        throw firstError;
+      }
+    }
+
+    async function adnorApiFetch(path,options={}){
+      const user=auth.currentUser;
+      if(!user)throw new Error('يجب تسجيل الدخول أولًا');
+      await adnorVerifyUserWithServer(user);
+      const token=await user.getIdToken(false);
+      const headers=new Headers(options.headers||{});
+      headers.set('Authorization','Bearer '+token);
+      if(!headers.has('Accept'))headers.set('Accept','application/json');
+      return adnorFetchWithTimeout(ADNOR_API_BASE+String(path||''),{...options,headers},25000);
+    }
+    window.adnorApiFetch=adnorApiFetch;
+
+    async function adnorHandleAuthenticatedUser(user){
+      if(!user?.uid)return;
+      if(adnorAuthHandlePromise && adnorAuthHandleUid===user.uid)return adnorAuthHandlePromise;
+
+      adnorAuthHandleUid=user.uid;
+      adnorAuthHandlePromise=(async()=>{
+        currentUser=user;
+        adnorSetServerAuthStatus('جارٍ التحقق من الحساب عبر سيرفر ADNOR...','checking');
+        const verified=await adnorVerifyUserWithServer(user);
+        if(!auth.currentUser || auth.currentUser.uid!==user.uid)return;
+        adnorSetServerAuthStatus('تم التحقق من الحساب بنجاح ✅','ok');
+        adnorEnterAppFast(user);
+        adnorStartRuntimeListeners(user);
+        adnorHydrateProfileInBackground(user);
+        console.log('ADNOR_SERVER_AUTH_VERIFIED',verified.user?.uid||'');
+      })().catch(async e=>{
+        console.error('ADNOR_SERVER_AUTH_FAILED',e);
+        logClientError('server_auth_failed',e,{code:e?.code||'',status:e?.status||0});
+        adnorServerVerifiedUid='';
+        adnorServerAuthUser=null;
+        window.ADNOR_SERVER_AUTH={verified:false,error:e?.code||e?.message||'unknown'};
+        adnorSetServerAuthStatus('فشل التحقق الآمن من السيرفر. جرّب تسجيل الدخول من جديد.','error');
+        toast('تعذر التحقق من الحساب عبر السيرفر');
+        try{
+          adnorManualLogout=true;
+          await signOut(auth);
+        }catch(signOutError){
+          console.warn('server auth sign-out skipped',signOutError);
+        }finally{
+          adnorCleanupLogout();
+          adnorManualLogout=false;
+        }
+      }).finally(()=>{
+        adnorAuthHandlePromise=null;
+        adnorAuthHandleUid='';
+      });
+
+      return adnorAuthHandlePromise;
+    }
     async function callServer(name,data){
       try{
         const fn=httpsCallable(cloudFns,name);
@@ -3059,6 +3204,8 @@ function setCurrentPrize(type){
     }
     function adnorCleanupLogout(){
       window.__adnorRuntimeUid='';
+      adnorServerVerifiedUid='';
+      adnorServerAuthUser=null;
       if($('loginScreen'))$('loginScreen').style.display='flex';
       if($('appScreen'))$('appScreen').style.display='none';
       currentProfile=null;
@@ -3081,10 +3228,11 @@ function setCurrentPrize(type){
       currentUser=user;
       if(user){
         adnorClearLoginAttempt();
-        adnorEnterAppFast(user);
-        adnorStartRuntimeListeners(user);
-        adnorHydrateProfileInBackground(user);
+        adnorHandleAuthenticatedUser(user);
       }else{
+        adnorServerVerifiedUid='';
+        adnorServerAuthUser=null;
+        window.ADNOR_SERVER_AUTH={verified:false};
         logClientError('auth_state_null_seen',new Error('Firebase Auth returned null'),{redirectChecked:adnorRedirectChecked,recentLogin:adnorRecentLoginAttempt(25000),manualLogout:adnorManualLogout});
         if(adnorDelayNullAuth('onAuthStateChanged null'))return;
         adnorCleanupLogout();

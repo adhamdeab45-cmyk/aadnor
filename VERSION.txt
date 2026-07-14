@@ -1,0 +1,19 @@
+ADNOR LEGENDARY V300
+PRODUCTION COMPLETE SOURCE PROJECT
+Build date: 2026-07-14
+
+- Public landing before login
+- Permanent official gold ticker using published results only
+- Five-section user application
+- Independent desktop admin control center
+- Secure agent portal and public verified directory
+- 33 Firebase Cloud Functions
+- Atomic server financial operations and locks
+- Fixed draw-cycle snapshots and scheduled publishing
+- Deposit, withdrawal, tickets, wheel, tasks, VIP and referrals
+- Live role checks, audit logs and immutable evidence
+- Database, Storage, Hosting and Functions configuration
+- PWA + offline shell
+- Arabic / Turkish / English core UI
+- ADN token market completely removed
+- Automated QA command: npm run qa

@@ -1,0 +1,28 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+
+    match /deposit-proofs/{uid}/{fileName} {
+      allow create: if signedIn()
+                    && request.auth.uid == uid
+                    && request.resource.size < 8 * 1024 * 1024
+                    && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
+      // Evidence is immutable after submission. Only Firebase Admin SDK can manage it.
+      allow update, delete: if false;
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+    }
+
+    match /support-attachments/{uid}/{fileName} {
+      allow create: if signedIn()
+                    && request.auth.uid == uid
+                    && request.resource.size < 8 * 1024 * 1024
+                    && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
+      allow update, delete: if false;
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+    }
+
+    match /{allPaths=**} { allow read, write: if false; }
+  }
+}

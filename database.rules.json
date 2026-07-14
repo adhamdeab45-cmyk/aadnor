@@ -1,0 +1,287 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)"
+    },
+    "public_draws": {
+      ".read": true,
+      ".write": false,
+      ".indexOn": [
+        "publishedAt",
+        "status"
+      ]
+    },
+    "public_agents": {
+      ".read": true,
+      ".write": false,
+      ".indexOn": [
+        "country",
+        "active"
+      ]
+    },
+    "payment_methods": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)"
+    },
+    "users": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      },
+      ".indexOn": [
+        "isVIP",
+        "status",
+        "publicId"
+      ]
+    },
+    "profiles": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": "auth != null && ((auth.uid === $uid && root.child('users').child($uid).child('status').val() === 'active') || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        "displayName": {
+          ".validate": "newData.isString() && newData.val().length <= 60"
+        },
+        "country": {
+          ".validate": "newData.isString() && newData.val().length <= 60"
+        },
+        "city": {
+          ".validate": "newData.isString() && newData.val().length <= 60"
+        },
+        "language": {
+          ".validate": "newData.isString() && (newData.val() === 'ar' || newData.val() === 'tr' || newData.val() === 'en')"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "user_tickets": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      }
+    },
+    "transactions": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false,
+        ".indexOn": [
+          "createdAt"
+        ]
+      }
+    },
+    "game_history": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false,
+        ".indexOn": [
+          "createdAt"
+        ]
+      }
+    },
+    "user_tasks": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      }
+    },
+    "daily_claims": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      }
+    },
+    "tasks": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)"
+    },
+    "finance": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false,
+      "deposits": {
+        ".indexOn": [
+          "status",
+          "createdAt"
+        ]
+      },
+      "withdrawals": {
+        ".indexOn": [
+          "status",
+          "createdAt"
+        ]
+      }
+    },
+    "user_finance": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      }
+    },
+    "user_notifications": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false,
+        ".indexOn": [
+          "createdAt",
+          "publishAt"
+        ]
+      }
+    },
+    "global_notifications": {
+      ".read": "auth != null",
+      ".write": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".indexOn": [
+        "createdAt",
+        "publishAt"
+      ]
+    },
+    "notification_reads": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": "auth != null && auth.uid === $uid",
+        "lastReadAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "support": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        "$ticket": {
+          ".write": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)"
+        }
+      }
+    },
+    "admins": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false
+    },
+    "agents": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      }
+    },
+    "agent_recharges_by_agent": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false,
+        ".indexOn": [
+          "createdAt"
+        ]
+      }
+    },
+    "agent_recharges_by_user": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      }
+    },
+    "agent_recharges": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false,
+      ".indexOn": [
+        "createdAt",
+        "agentUid",
+        "targetUid"
+      ]
+    },
+    "agent_balance_history": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false
+    },
+    "draw_jobs": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false,
+      ".indexOn": [
+        "status",
+        "publishAt",
+        "drawKey"
+      ]
+    },
+    "draw_tickets": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false
+    },
+    "draw_status": {
+      ".read": true,
+      ".write": false
+    },
+    "audit": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false,
+      ".indexOn": [
+        "createdAt",
+        "action"
+      ]
+    },
+    "admin_notifications": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false,
+      ".indexOn": [
+        "createdAt",
+        "type"
+      ]
+    },
+    "referrals": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false
+      }
+    },
+    "indexes": {
+      ".read": false,
+      ".write": false
+    },
+    "referral_codes": {
+      ".read": false,
+      ".write": false
+    },
+    "counters": {
+      ".read": false,
+      ".write": false
+    },
+    "locks": {
+      ".read": false,
+      ".write": false
+    },
+    "login_logs": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true))",
+        ".write": false,
+        ".indexOn": [
+          "createdAt"
+        ]
+      }
+    },
+    "draw_job_by_key": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false
+    },
+    "draw_cycles": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false,
+      ".indexOn": [
+        "publishAt",
+        "status"
+      ]
+    },
+    "deposit_proof_usage": {
+      ".read": "auth != null && (auth.token.admin === true && root.child('admins').child(auth.uid).child('active').val() === true)",
+      ".write": false
+    }
+  }
+}

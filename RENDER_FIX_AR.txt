@@ -1,0 +1,27 @@
+ADNOR V301 — تعليمات الرفع الصحيحة
+=================================
+
+سبب العطل السابق:
+كان package.json في جذر المشروع يحتوي مكتبات تطوير كبيرة، لذلك Render شغّل npm install على Node 24 وتعطل.
+
+هذه النسخة أصلحت الملف نفسه:
+1) package.json في الجذر بلا أي dependencies.
+2) Node مثبت على 20.18.0 عبر .node-version و .nvmrc.
+3) نسخة الموقع موجودة في الجذر وداخل public.
+4) Service Worker محدث حتى لا يعرض المتصفح النسخة القديمة.
+
+إعداد Render الموصى به:
+Root Directory: اتركه فارغاً
+Build Command: npm run build
+Publish Directory: .
+
+أو الإعداد الأنظف:
+Root Directory: اتركه فارغاً
+Build Command: bash render-build.sh
+Publish Directory: dist
+
+بعد رفع الملفات:
+Manual Deploy > Clear build cache & deploy
+
+علامة نجاح النسخة:
+افتح /deploy-check.txt ويجب أن يظهر ADNO​R V301 RENDER FIXED.

@@ -1,3 +1,7 @@
+# تنبيه V301 الخاص بـ Render
+
+تم إصلاح سبب فشل النشر داخل الملف نفسه. استخدم `npm run build` مع Publish Directory `.`، أو استخدم `bash render-build.sh` مع Publish Directory `dist`. لا تنقل ملفات `developer-tools` إلى الجذر.
+
 # ADNOR LEGENDARY V300 — مشروع الإنتاج الكامل
 
 هذه النسخة إعادة بناء منظمة لـ ADNOR، وليست طبقة تصميم فوق الملف القديم. تم حذف سوق ADN نهائياً، وفصل الواجهات عن العمليات الحساسة، ونقل الرصيد والتذاكر والألعاب والسحب والوكلاء إلى Firebase Cloud Functions.

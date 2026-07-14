@@ -1,11 +1,100 @@
 {
-  "name": "ADNOR Royal Platform",
+  "id": "/index.html",
+  "name": "ADNOR Royal Lottery",
   "short_name": "ADNOR",
-  "start_url": "./index.html",
+  "description": "منصة ADNOR الملكية للسحوبات والألعاب والمحفظة.",
+  "start_url": "/index.html?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#030914",
   "theme_color": "#071224",
   "lang": "ar",
   "dir": "rtl",
-  "icons": []
+  "orientation": "any",
+  "categories": [
+    "entertainment",
+    "games",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "/assets/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "اليانصيب",
+      "short_name": "اليانصيب",
+      "url": "/app.html?section=lottery",
+      "icons": [
+        {
+          "src": "/assets/icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "الألعاب",
+      "short_name": "الألعاب",
+      "url": "/app.html?section=games",
+      "icons": [
+        {
+          "src": "/assets/icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "المحفظة",
+      "short_name": "المحفظة",
+      "url": "/app.html?section=wallet",
+      "icons": [
+        {
+          "src": "/assets/icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/screenshots/app-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ADNOR member app on mobile"
+    },
+    {
+      "src": "/assets/screenshots/app-desktop.png",
+      "sizes": "1440x1000",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ADNOR member app on desktop"
+    }
+  ]
 }

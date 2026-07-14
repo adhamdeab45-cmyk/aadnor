@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>ADNOR | المنصة الرسمية</title>
+  <title>ADNOR | التطبيق الملكي</title>
+  <meta name="theme-color" content="#071224">
+  <meta name="description" content="تطبيق ADNOR الملكي للسحوبات والألعاب والمحفظة.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <!-- V146_REFERRAL_PRIVACY_NO_FREEZE: masks referral emails for referrer without database cleanup loops. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1401,7 +1405,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
   </main>
 
   <main class="screen" id="appScreen">
-    <div class="app-wrap" id="appWrap" data-active-page="lottery">
+    <div class="app-wrap" id="appWrap" data-active-page="home">
       <div class="v61-top-ticker site-alert" id="siteControlAlert">مبروك للفائزين بسحب أمس، ترقبوا السحب الكبير القادم.<span class="sub" id="siteControlAlertSub"></span></div>
       <section class="v62-royal-head" aria-label="رأس صفحة ADNOR">
         <div class="v62-balance-card">
@@ -1493,30 +1497,48 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
         </div>
       </div>
 
-      <div id="page-home" class="page">
-        <section class="home-hero">
-          <div class="home-hero-inner">
-            <div class="home-hello"><div><h2>أهلاً بك في ADNOR</h2><p id="homeWelcomeText">بوابتك المختصرة لكل شيء: رصيدك، تذاكرك، ألعابك، ودعمك.</p></div><div class="home-badge">ROYAL</div></div>
-            <div class="home-money-card"><span>رصيدك المتاح</span><b id="homeBalanceText">$0.00</b><small id="homeReserveText">بونص $0.00 — محجوز $0.00</small></div>
-            <div class="home-actions">
+      <div id="page-home" class="page active v195-home-page">
+        <section class="v195-home-hero">
+          <div class="v195-home-copy">
+            <div class="v195-home-eyebrow"><span class="v195-live-dot"></span><span>ADNOR ROYAL MEMBER</span></div>
+            <div class="home-hello"><div><h2>أهلاً بك في قصر ADNOR</h2><p id="homeWelcomeText">كل شيء أمامك بوضوح: رصيدك، السحب القادم، تذاكرك، الألعاب والدعم.</p></div><div class="home-badge">ROYAL</div></div>
+            <div class="home-money-card"><span>الرصيد المتاح</span><b id="homeBalanceText">$0.00</b><small id="homeReserveText">بونص $0.00 — محجوز $0.00</small></div>
+            <div class="home-actions v195-home-actions">
               <button class="gold" data-home-go="wallet:deposit"><i>➕</i><span>إيداع</span></button>
               <button data-home-go="wallet:withdraw"><i>↗️</i><span>سحب</span></button>
               <button data-home-go="lottery"><i>🎟️</i><span>شراء تذكرة</span></button>
-              <button data-home-go="games"><i>🎡</i><span>العجلة</span></button>
+              <button data-home-go="games"><i>🎡</i><span>دخول الألعاب</span></button>
             </div>
           </div>
+          <div class="v195-mini-machine" aria-label="آلة سحب ADNOR">
+            <div class="v195-machine-title"><small>السحب الرسمي القادم</small><b>ADNOR DAILY</b></div>
+            <div class="v195-ball-arena" id="v195HomeBalls"></div>
+            <div class="v195-machine-foot"><span>الجائزة الحالية</span><strong id="homeJackpotText">$4,500</strong></div>
+          </div>
         </section>
-        <div class="home-grid">
-          <div class="home-tile"><span>الجائزة الحالية</span><b id="homeJackpotText">$4,500</b></div>
-          <div class="home-tile"><span>تذاكري</span><b id="homeTicketsText">0</b></div>
-          <div class="home-tile"><span>إشعارات جديدة</span><b id="homeNotifText">0</b></div>
-          <div class="home-tile"><span>حالة الحساب</span><b id="homeStatusText">نشط</b></div>
+        <section class="v195-system-strip">
+          <div><i id="v195ServerDot"></i><span>السيرفر</span><b id="v195ServerState">جاري الفحص</b></div>
+          <div><i class="secure"></i><span>الحساب</span><b id="homeStatusText">نشط</b></div>
+          <div><i class="gold"></i><span>تذاكري</span><b id="homeTicketsText">0</b></div>
+          <div><i class="blue"></i><span>الإشعارات</span><b id="homeNotifText">0</b></div>
+        </section>
+        <div class="v195-home-layout">
+          <div class="v195-home-main">
+            <section class="royal-card v195-next-draw-card">
+              <div class="section-title"><h3>السحب الأقرب</h3><span>النتيجة تظهر بعد نشرها رسميًا</span></div>
+              <div class="v195-next-row"><div class="v195-number-cluster"><span>1</span><span>8</span><span>3</span><span>6</span><span>9</span><span>2</span><span>7</span></div><div><b id="v195NextDrawName">السحب اليومي</b><small>20:00 بتوقيت تركيا</small><button class="gold-btn" data-home-go="lottery">دخول قاعة اليانصيب</button></div></div>
+            </section>
+            <section class="royal-card home-section-clean"><div class="section-title"><h3>آخر نتيجة رسمية</h3><span>تأتي مباشرة من نظام النتائج</span></div><div class="draw-list"><div class="draw-item"><div class="medal">🏆</div><div><h4 id="homeLastResultTitle">بانتظار أول نتيجة</h4><p id="homeLastResultSub">بانتظار نشر النتيجة الرسمية.</p></div><strong id="homeLastResultPrize">$0</strong></div></div><button class="v195-wide-link" data-home-go="results">عرض كل النتائج وتذاكري</button></section>
+            <section class="royal-card v195-missions"><div class="section-title"><h3>مهام اليوم</h3><span>طرق بسيطة للوصول إلى أقسامك</span></div><div class="v195-mission-grid"><button data-home-go="lottery"><i>🎟️</i><b>راجع السحب</b><span>شاهد الجائزة والوقت</span></button><button data-home-go="games"><i>🎮</i><b>استكشف الألعاب</b><span>العجلة والألعاب المفعلة</span></button><button data-home-go="account"><i>🎁</i><b>شارك دعوتك</b><span>انسخ الكود والرابط</span></button><button id="v195InstallAppBtn"><i>📲</i><b>ثبّت ADNOR</b><span>كتطبيق على جهازك</span></button></div></section>
+          </div>
+          <aside class="v195-home-side">
+            <section class="royal-card v195-game-spotlight"><div class="v195-wheel-mini"><span>ADNOR</span></div><h3>عجلة الحظ الملكية</h3><p>ادخل صالة الألعاب، اختر الرهان، واترك السيرفر ينفذ الجولة ويسجل نتيجتها.</p><button class="gold-btn" data-home-go="games">العب الآن</button></section>
+            <section class="royal-card v195-support-card"><div class="section-title"><h3>مركز المساعدة</h3><span>لا تضيع بين الأقسام</span></div><p>تذاكر الدعم وWhatsApp وTelegram في مكان واحد.</p><button class="v195-wide-link" data-home-go="support">فتح الدعم الفني</button></section>
+            <section class="royal-card v195-trust-card"><b>🛡️ ADNOR SECURE</b><span>تسجيل الدخول وشحن الوكيل وعمليات السيرفر المحمية تعمل عبر ADNOR API.</span></section>
+          </aside>
         </div>
-        <section class="royal-card home-section-clean"><div class="section-title"><h3>آخر نتيجة</h3><span>تظهر النتائج المنشورة فقط</span></div><div class="draw-list"><div class="draw-item"><div class="medal">🏆</div><div><h4 id="homeLastResultTitle">بانتظار أول نتيجة</h4><p id="homeLastResultSub">بانتظار نشر النتيجة الرسمية.</p></div><strong id="homeLastResultPrize">$0</strong></div></div></section>
-        <section class="royal-card home-section-clean"><div class="section-title"><h3>اختصارات منظمة</h3><span>كل شيء صار في مكانه الصحيح</span></div><div class="feature-grid"><button class="feature vip-home-highlight" data-home-go="vip"><div>👑</div><b>VIP الملكي</b><span>مستويات، مهام يومية، وصندوق جوائز</span></button><button class="feature" data-home-go="results"><div>🏆</div><b>النتائج وتذاكري</b><span>سجل التذاكر والنتائج</span></button><button class="feature" data-home-go="support"><div>💬</div><b>الدعم الفني</b><span>واتساب، تليجرام، وتذاكر الدعم</span></button></div></section>
       </div>
-
-      <div id="page-lottery" class="page active v63-lottery-page">
+      <div id="page-lottery" class="page v63-lottery-page">
         <nav class="tabs v63-tabs" aria-label="أنواع السحب">
           <button class="tab active" data-draw="daily">اليومي 💎</button>
           <button class="tab" data-draw="weekly">الأسبوعي 💎</button>
@@ -2361,7 +2383,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 
 
       <nav class="bottom-nav v139-bottom-nav">
-        <button class="nav-btn active" data-page="lottery" type="button"><i>🎟️</i><span>اليانصيب</span></button>
+        <button class="nav-btn active" data-page="home" type="button"><i>⌂</i><span>الرئيسية</span></button>
+        <button class="nav-btn" data-page="lottery" type="button"><i>🎟️</i><span>اليانصيب</span></button>
         <button class="nav-btn" data-page="games" type="button"><i>🎮</i><span>الألعاب</span></button>
         <button class="nav-btn" data-page="wallet" type="button"><i>💳</i><span>المحفظة</span></button>
         <button class="nav-btn" data-page="account" type="button"><i>👤</i><span>حسابي</span></button>
@@ -6925,6 +6948,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   .bottom-nav .nav-btn.active{background:linear-gradient(180deg,#fff2cc,#d4af37 46%,#aa7c11 82%)!important;color:#100c05!important}
   .v139-drawer-menu .drawer-link{min-height:54px!important;border-radius:17px!important;margin-bottom:8px!important}
   #page-home{display:none!important}
+  #page-home.page.active{display:block!important}
   .v139-invest-hero .amount{font-size:44px!important}
   .v139-invest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
   .v139-invest-box{border:1px solid rgba(255,204,77,.32);border-radius:18px;background:rgba(2,10,22,.58);padding:12px;text-align:center}
@@ -6949,7 +6973,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     setTimeout(()=>sync(page),60);
   }
   function sync(page){
-    const active=page || (q('.page.active')?.id||'page-lottery').replace('page-','');
+    const active=page || (q('.page.active')?.id||'page-home').replace('page-','');
     qa('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===active));
     const wrap=q('#appWrap'); if(wrap) wrap.dataset.activePage=active;
   }
@@ -6957,6 +6981,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     const nav=q('.bottom-nav'); if(!nav) return;
     nav.className='bottom-nav v139-bottom-nav';
     nav.innerHTML=`
+      <button class="nav-btn" data-page="home" type="button"><i>⌂</i><span>الرئيسية</span></button>
       <button class="nav-btn" data-page="lottery" type="button"><i>🎟️</i><span>اليانصيب</span></button>
       <button class="nav-btn" data-page="games" type="button"><i>🎮</i><span>الألعاب</span></button>
       <button class="nav-btn" data-page="wallet" type="button"><i>💳</i><span>المحفظة</span></button>
@@ -6971,6 +6996,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       <button class="drawer-link v52-primary" data-v139-page="support" type="button"><span>💬 الدعم الفني</span><span>›</span></button>
       <button class="drawer-link v52-secondary" data-v139-page="notifications" type="button"><span>🔔 الإشعارات</span><span>›</span></button>
       <button class="drawer-link v52-secondary" data-v139-page="settings" type="button"><span>⚙️ الإعدادات</span><span>›</span></button>
+      <button class="drawer-link v52-secondary" id="v195DrawerInstall" type="button"><span>📲 تثبيت التطبيق</span><span>›</span></button>
       <button class="drawer-link v52-secondary hidden" id="drawerAdminBtn" data-v139-page="admin" type="button"><span>🛡️ لوحة الأدمن</span><span>›</span></button>
       <button class="drawer-link" id="drawerLogoutBtn" type="button"><span>🚪 تسجيل الخروج</span><span>›</span></button>`;
     qa('[data-v139-page]',menu).forEach(btn=>btn.onclick=()=>go(btn.dataset.v139Page));
@@ -6990,7 +7016,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   }
   function forceStart(){
     const active=q('.page.active');
-    if(!active || active.id==='page-home') fallbackShow('lottery');
+    if(!active) fallbackShow('home');
   }
   function bindInvestmentButtons(){qa('[data-v139-go]').forEach(b=>{if(b.dataset.bound==='1')return;b.dataset.bound='1';b.onclick=()=>go(b.dataset.v139Go)})}
   function install(){installBottom();installDrawer();keepReferralsInsideAccount();forceStart();bindInvestmentButtons();sync()}
@@ -7343,7 +7369,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   const requested=params.get('section')||sessionStorage.getItem('adnorRequestedSection')||'';
   if(!requested)return;
   sessionStorage.removeItem('adnorRequestedSection');
-  const map={lottery:'lottery',games:'games',wallet:'wallet',winners:'lottery',account:'account'};
+  const map={home:'home',lottery:'lottery',games:'games',wallet:'wallet',winners:'results',account:'account'};
   const page=map[requested];
   if(!page)return;
   let attempts=0;
@@ -7356,6 +7382,54 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       clearInterval(timer);
     } else if(attempts>80){clearInterval(timer)}
   },250);
+})();
+</script>
+
+
+<style id="adnor-v195-legendary-internal-css">
+  :root{--v195-gold:#f0c95a;--v195-gold2:#fff0ad;--v195-panel:rgba(5,18,38,.92);--v195-line:rgba(255,216,104,.32)}
+  #appWrap:not(.admin-layout){background:radial-gradient(circle at 50% -8%,rgba(25,118,207,.15),transparent 34%)}
+  #page-home.page.active{display:block!important}.v195-home-page{padding-top:4px}
+  .v195-home-hero{display:grid;grid-template-columns:1.12fr .88fr;gap:14px;padding:18px;border:1px solid rgba(255,218,111,.55);border-radius:34px;background:radial-gradient(circle at 0 0,rgba(30,194,255,.14),transparent 32%),radial-gradient(circle at 100% 0,rgba(255,207,79,.18),transparent 34%),linear-gradient(145deg,rgba(9,30,60,.98),rgba(1,7,18,.99));box-shadow:0 25px 70px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.025);overflow:hidden;position:relative}
+  .v195-home-hero:before{content:"";position:absolute;inset:-100px;background:conic-gradient(from 70deg,transparent,rgba(255,221,118,.06),transparent 28%);animation:v195Aura 10s linear infinite;pointer-events:none}.v195-home-hero>*{position:relative;z-index:1}
+  .v195-home-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,218,111,.3);color:#ffe69c;font:900 9px Cinzel,serif;letter-spacing:.13em}.v195-live-dot{width:7px;height:7px;border-radius:50%;background:#49f0b6;box-shadow:0 0 0 5px rgba(73,240,182,.09),0 0 15px #49f0b6}
+  .v195-home-hero .home-hello{margin:13px 0 10px}.v195-home-hero .home-hello h2{font-size:clamp(23px,4vw,37px);margin:0;color:#fff1b5}.v195-home-hero .home-hello p{max-width:560px}.v195-home-hero .home-money-card{border-radius:23px;background:linear-gradient(145deg,rgba(255,232,153,.13),rgba(3,12,26,.65));border:1px solid rgba(255,222,120,.34);padding:14px 16px}.v195-home-hero .home-money-card b{font-size:31px}
+  .v195-home-actions{grid-template-columns:repeat(4,1fr)!important}.v195-home-actions button{min-height:65px!important;border-radius:20px!important}.v195-home-actions button i{font-size:23px}
+  .v195-mini-machine{min-height:300px;border-radius:30px;border:1px solid rgba(89,218,255,.28);background:radial-gradient(circle at 50% 40%,rgba(40,160,224,.24),transparent 50%),linear-gradient(180deg,rgba(2,15,31,.74),rgba(0,5,13,.92));position:relative;overflow:hidden;box-shadow:inset 0 0 45px rgba(0,0,0,.65)}.v195-mini-machine:after{content:"OFFICIAL LOTTERY HALL";position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font:800 8px Cinzel,serif;letter-spacing:.15em;color:#ffe59b}.v195-machine-title{text-align:center;padding:13px;position:relative;z-index:2}.v195-machine-title small{display:block;color:#8ea5c0;font-size:10px}.v195-machine-title b{display:block;color:#ffe49a;font:900 14px Cinzel,serif;margin-top:3px}.v195-ball-arena{position:absolute;inset:54px 12px 53px;border-radius:45%;overflow:hidden;border:1px solid rgba(255,255,255,.08)}.v195-home-ball{position:absolute;width:43px;height:43px;border-radius:50%;display:grid;place-items:center;color:#101007;font:900 14px Arial;background:radial-gradient(circle at 34% 23%,#fff8ce,#e3ad2e 55%,#7c4808);border:2px solid rgba(255,255,255,.65);box-shadow:inset -7px -8px 12px rgba(0,0,0,.28),0 7px 15px rgba(0,0,0,.42);animation:v195Ball var(--dur) ease-in-out infinite alternate;animation-delay:var(--delay)}.v195-home-ball:nth-child(3n+2){background:radial-gradient(circle at 34% 23%,#d3fbff,#37c9ef 55%,#125f91)}.v195-home-ball:nth-child(3n){background:radial-gradient(circle at 34% 23%,#d7ffe9,#40dfa7 55%,#12684f)}.v195-machine-foot{position:absolute;bottom:27px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:15px;background:rgba(1,7,16,.84);border:1px solid rgba(255,217,108,.3)}.v195-machine-foot span{color:#9cafc7;font-size:10px}.v195-machine-foot strong{color:#ffe69a;font-size:18px;direction:ltr}
+  .v195-system-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}.v195-system-strip>div{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:8px;padding:11px 12px;border-radius:18px;border:1px solid rgba(255,216,104,.25);background:linear-gradient(180deg,rgba(7,25,49,.87),rgba(2,9,20,.94))}.v195-system-strip i{grid-row:1/3;width:10px;height:10px;margin-top:7px;border-radius:50%;background:#f1c655;box-shadow:0 0 12px currentColor}.v195-system-strip i.secure{background:#48e9ac}.v195-system-strip i.blue{background:#4bd8ff}.v195-system-strip span{color:#8fa1ba;font-size:9px;font-weight:900}.v195-system-strip b{color:#fff0ad;font-size:12px}.v195-system-strip i.online{background:#42edaa}.v195-system-strip i.offline{background:#ff6579}
+  .v195-home-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);gap:12px}.v195-home-main,.v195-home-side{display:grid;gap:12px;align-content:start}.v195-next-row{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:center}.v195-number-cluster{display:flex;flex-wrap:wrap;gap:6px;direction:ltr}.v195-number-cluster span{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 22%,#fff8d0,#dfa92a 58%,#704008);color:#120c04;font-weight:1000;box-shadow:inset -5px -6px 9px rgba(0,0,0,.25),0 6px 13px rgba(0,0,0,.25)}.v195-next-row>div:last-child b{display:block;color:#ffe49a;font-size:19px}.v195-next-row>div:last-child small{display:block;color:#97a8c0;margin:5px 0 10px}.v195-wide-link{width:100%;min-height:48px;border-radius:16px;border:1px solid rgba(255,216,104,.34);background:linear-gradient(180deg,rgba(10,31,58,.9),rgba(2,10,22,.97));color:#ffe49a;font:inherit;font-weight:1000;cursor:pointer;margin-top:10px}
+  .v195-mission-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.v195-mission-grid button{min-height:118px;border-radius:20px;border:1px solid rgba(255,216,104,.24);background:linear-gradient(180deg,rgba(8,27,52,.88),rgba(2,10,22,.96));color:#fff;padding:11px;cursor:pointer;text-align:center}.v195-mission-grid i{display:block;font-style:normal;font-size:25px}.v195-mission-grid b{display:block;color:#ffe49a;margin:6px 0 3px}.v195-mission-grid span{display:block;color:#8fa1ba;font-size:10px;line-height:1.55}
+  .v195-game-spotlight{text-align:center;background:radial-gradient(circle at 50% 0,rgba(255,211,82,.16),transparent 38%),linear-gradient(180deg,rgba(8,27,53,.95),rgba(1,7,18,.98))!important}.v195-wheel-mini{width:156px;height:156px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#e5b53a 0 45deg,#173664 45deg 90deg,#4bd8ff 90deg 135deg,#92551a 135deg 180deg,#f6d76c 180deg 225deg,#14305b 225deg 270deg,#35d6a0 270deg 315deg,#9b73ff 315deg);border:9px solid #d9a52a;box-shadow:0 0 30px rgba(228,178,48,.25);animation:v195Wheel 18s linear infinite}.v195-wheel-mini:before{content:"";width:74px;height:74px;border-radius:50%;background:#061426;border:4px solid #ffe59b;position:absolute}.v195-wheel-mini span{position:relative;z-index:2;color:#ffe59b;font:900 10px Cinzel,serif}.v195-game-spotlight h3{color:#ffe49a}.v195-game-spotlight p,.v195-support-card p{color:#9baac0;line-height:1.7;font-size:12px}.v195-trust-card{text-align:center;border-color:rgba(72,233,172,.34)!important}.v195-trust-card b{display:block;color:#7effce}.v195-trust-card span{display:block;color:#9cafc3;line-height:1.7;font-size:11px;margin-top:6px}
+  .v195-desktop-nav{display:none}.v195-install-toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);z-index:9999;width:min(92%,420px);padding:14px 16px;border-radius:18px;background:rgba(2,9,20,.98);border:1px solid rgba(255,216,104,.48);color:#fff;text-align:center;font-weight:900;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+  .v195-support-orb{position:fixed;left:16px;bottom:102px;z-index:50;width:52px;height:52px;border-radius:18px;display:grid;place-items:center;text-decoration:none;background:linear-gradient(145deg,#8effd5,#25bd88);color:#072217;font-size:24px;border:1px solid rgba(255,255,255,.42);box-shadow:0 14px 35px rgba(0,0,0,.45),0 0 20px rgba(59,224,165,.2)}
+  @keyframes v195Aura{to{transform:rotate(360deg)}}@keyframes v195Ball{0%{transform:translate3d(-5px,-8px,0) rotate(-12deg)}100%{transform:translate3d(18px,25px,0) rotate(22deg)}}@keyframes v195Wheel{to{transform:rotate(360deg)}}
+  @media(min-width:980px){
+    body{background-attachment:fixed}#appWrap:not(.admin-layout){max-width:1080px!important;width:calc(100% - 310px)!important;margin-right:278px!important;margin-left:auto!important;padding-bottom:35px!important}.bottom-nav{display:none!important}.v195-desktop-nav{display:flex;position:fixed;right:22px;top:22px;bottom:22px;width:230px;z-index:32;flex-direction:column;padding:16px;border-radius:30px;border:1px solid rgba(255,216,104,.48);background:radial-gradient(circle at 50% 0,rgba(255,214,91,.13),transparent 32%),linear-gradient(180deg,rgba(7,24,48,.98),rgba(1,7,17,.99));box-shadow:0 22px 70px rgba(0,0,0,.55)}.v195-desktop-logo{text-align:center;padding:12px 8px 20px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:13px}.v195-desktop-logo b{display:block;color:#ffe59b;font:900 29px Cinzel,serif;letter-spacing:.12em}.v195-desktop-logo span{color:#8799b1;font-size:9px}.v195-desktop-links{display:grid;gap:7px}.v195-desktop-links button{min-height:52px;border-radius:17px;border:1px solid transparent;background:transparent;color:#b9c5d7;font:inherit;font-weight:1000;display:flex;align-items:center;gap:10px;padding:0 13px;cursor:pointer;text-align:right}.v195-desktop-links button i{font-style:normal;font-size:20px}.v195-desktop-links button.active{color:#171004;background:linear-gradient(180deg,#fff1ad,#d6a229 62%,#915b0d);box-shadow:0 0 20px rgba(225,174,43,.2)}.v195-desktop-bottom{margin-top:auto;display:grid;gap:8px}.v195-desktop-bottom button,.v195-desktop-bottom a{min-height:45px;border-radius:15px;border:1px solid rgba(255,216,104,.25);background:rgba(3,13,28,.75);color:#ffe49a;text-decoration:none;font:inherit;font-weight:900;display:grid;place-items:center;cursor:pointer}.v195-home-hero{min-height:390px}.v62-royal-head{position:sticky;top:10px;z-index:25;backdrop-filter:blur(14px)}#page-wallet .wallet-stats{grid-template-columns:repeat(3,1fr)!important}#page-games .games-grid{grid-template-columns:repeat(3,1fr)!important}.royal-card{padding:18px!important}}
+  @media(max-width:979px){.v195-home-layout{grid-template-columns:1fr}.v195-home-side{grid-template-columns:1fr 1fr}.v195-trust-card{grid-column:1/-1}}
+  @media(max-width:700px){.v195-home-hero{grid-template-columns:1fr}.v195-mini-machine{min-height:260px}.v195-system-strip{grid-template-columns:1fr 1fr}.v195-home-side{grid-template-columns:1fr}.v195-trust-card{grid-column:auto}.v195-mission-grid{grid-template-columns:1fr 1fr}.v195-next-row{grid-template-columns:1fr}.v195-home-actions{grid-template-columns:1fr 1fr!important}.v195-support-orb{left:10px;bottom:98px;width:46px;height:46px;border-radius:15px}}
+  @media(max-width:410px){.v195-system-strip{grid-template-columns:1fr 1fr}.v195-number-cluster span{width:38px;height:38px}.v195-home-hero{padding:13px;border-radius:28px}.v195-mini-machine{min-height:235px}.v195-mission-grid button{min-height:106px}}
+  @media(prefers-reduced-motion:reduce){.v195-home-hero:before,.v195-home-ball,.v195-wheel-mini{animation:none!important}}
+</style>
+<script src="install-app.js"></script>
+<script id="adnor-v195-legendary-internal-js">
+(function(){
+  'use strict';
+  const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  function go(page){const btn=q('.nav-btn[data-page="'+page+'"]');if(btn){btn.click();return}if(window.showPage){window.showPage(page);return}qa('.page').forEach(x=>x.classList.remove('active'));q('#page-'+page)?.classList.add('active')}
+  function createBalls(){const box=q('#v195HomeBalls');if(!box||box.children.length)return;[7,2,9,1,5,8,3,6,4,0,7,8].forEach((n,i)=>{const b=document.createElement('span');b.className='v195-home-ball';b.textContent=n;b.style.left=(5+(i*23)%78)+'%';b.style.top=(8+(i*31)%68)+'%';b.style.setProperty('--dur',(2.3+(i%5)*.42)+'s');b.style.setProperty('--delay',(-i*.19)+'s');box.appendChild(b)})}
+  function toast(t){const n=document.createElement('div');n.className='v195-install-toast';n.textContent=t;document.body.appendChild(n);setTimeout(()=>n.remove(),4200)}
+  async function install(){if(!window.ADNOR_INSTALL)return toast('افتح ADNOR في Chrome أو Edge ثم اختر تثبيت التطبيق.');const r=await window.ADNOR_INSTALL.prompt();if(r&&r.outcome==='instructions')toast(window.ADNOR_INSTALL.instructions())}
+  function bindHome(){qa('[data-home-go]').forEach(b=>{if(b.dataset.v195Bound)return;b.dataset.v195Bound='1';b.addEventListener('click',()=>{const raw=b.dataset.homeGo||'home',parts=raw.split(':');go(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>q('.wallet-tab[data-wallet="'+parts[1]+'"]')?.click(),140)})});q('#v195InstallAppBtn')?.addEventListener('click',install);q('#v195DrawerInstall')?.addEventListener('click',install)}
+  function desktopNav(){if(q('#v195DesktopNav'))return;const nav=document.createElement('aside');nav.id='v195DesktopNav';nav.className='v195-desktop-nav';nav.innerHTML='<div class="v195-desktop-logo"><b>ADNOR</b><span>ROYAL LOTTERY PLATFORM</span></div><div class="v195-desktop-links"><button data-v195-page="home"><i>⌂</i>الرئيسية</button><button data-v195-page="lottery"><i>🎟️</i>اليانصيب</button><button data-v195-page="games"><i>🎮</i>الألعاب</button><button data-v195-page="wallet"><i>💳</i>المحفظة</button><button data-v195-page="results"><i>🏆</i>النتائج</button><button data-v195-page="account"><i>👤</i>حسابي</button></div><div class="v195-desktop-bottom"><button data-v195-page="support">💬 الدعم الفني</button><button id="v195DesktopInstall">📲 تثبيت التطبيق</button><a href="index.html">الواجهة العامة</a></div>';document.body.appendChild(nav);qa('[data-v195-page]',nav).forEach(b=>b.addEventListener('click',()=>go(b.dataset.v195Page)));q('#v195DesktopInstall')?.addEventListener('click',install);syncNav()}
+  function syncNav(){const page=(q('.page.active')?.id||'page-home').replace('page-','');qa('[data-v195-page]').forEach(b=>b.classList.toggle('active',b.dataset.v195Page===page));qa('.bottom-nav .nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page))}
+  function supportOrb(){if(q('#v195SupportOrb'))return;const a=document.createElement('a');a.id='v195SupportOrb';a.className='v195-support-orb';a.textContent='💬';a.href='#';a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','WhatsApp support');a.addEventListener('click',e=>{if(!a.href||a.href.endsWith('#')){e.preventDefault();go('support')}});document.body.appendChild(a);let tries=0;const t=setInterval(()=>{tries++;const link=q('#depositAgentWhatsappLink')||q('[href*="wa.me"]');if(link&&link.href&&link.href!=='#'){a.href=link.href;clearInterval(t)}if(tries>30)clearInterval(t)},500)}
+  async function serverCheck(){const dot=q('#v195ServerDot'),label=q('#v195ServerState');try{const r=await fetch('https://adnor-api.onrender.com/health',{cache:'no-store'});const j=await r.json();if(!r.ok||!j.ok)throw 0;dot?.classList.add('online');if(label)label.textContent='متصل وآمن'}catch(_){dot?.classList.add('offline');if(label)label.textContent='تعذر الفحص'}}
+  function forceHomeOnce(){const params=new URLSearchParams(location.search);const requested=params.get('section')||sessionStorage.getItem('adnorRequestedSection')||'';if(requested)return;const app=q('#appScreen');if(app&&getComputedStyle(app).display!=='none'&&!sessionStorage.getItem('adnorV195HomeShown')){sessionStorage.setItem('adnorV195HomeShown','1');go('home')}}
+  function installAll(){createBalls();bindHome();desktopNav();supportOrb();syncNav();forceHomeOnce()}
+  document.addEventListener('click',e=>{if(e.target.closest('.nav-btn,[data-v195-page],[data-home-go]'))setTimeout(syncNav,80)});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{installAll();serverCheck()});else{installAll();serverCheck()}
+  [350,950,1800,3400].forEach(t=>setTimeout(installAll,t));
+  new MutationObserver(()=>syncNav()).observe(document.documentElement,{attributes:true,subtree:true,attributeFilter:['class']});
 })();
 </script>
 

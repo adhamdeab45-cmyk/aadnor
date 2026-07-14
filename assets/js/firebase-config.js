@@ -1,5 +1,5 @@
 window.ADNOR_CONFIG = {
-  version: 'V301_RENDER_FIXED',
+  version: 'V302_FIREBASE_ONLY',
   functionsRegion: 'us-central1',
   firebase: {
     apiKey: 'AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g',
@@ -28,7 +28,6 @@ window.ADNOR_CONFIG = {
     auth: firebase.auth(),
     db: firebase.database(),
     storage: firebase.storage(),
-    functions: firebase.app().functions(window.ADNOR_CONFIG.functionsRegion),
     analytics
   };
   ADNOR.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.warn);

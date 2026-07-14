@@ -20,9 +20,7 @@
     auth.onAuthStateChanged(async u=>{
       cleanup();S.user=u;
       if(!u){$('adminLogin').classList.remove('hidden');$('adminApp').classList.add('hidden');return}
-      const token=await u.getIdTokenResult(true).catch(()=>null);
-      if(!token?.claims?.admin){$('adminLogin').classList.remove('hidden');$('adminApp').classList.add('hidden');setStatus('adminLoginStatus','الحساب مسجل لكنه لا يحمل صلاحية Admin. استخدم bootstrapAdmin الموضح في README.','bad');return}
-      $('adminLogin').classList.add('hidden');$('adminApp').classList.remove('hidden');$('adminIdentity').innerHTML=`<b>${escape(u.displayName||'Admin')}</b><br>${escape(u.email||u.uid)}<br>UID: ${escape(u.uid)}`;listenAll();
+      const allowed=await ADNOR.roles.isAdmin(u).catch(()=>false);if(!allowed){$('adminLogin').classList.remove('hidden');$('adminApp').classList.add('hidden');setStatus('adminLoginStatus','هذا الحساب ليس ضمن حسابات الإدارة المسموحة.','bad');return}$('adminLogin').classList.add('hidden');$('adminApp').classList.remove('hidden');$('adminIdentity').innerHTML=`<b>${escape(u.displayName||'Admin')}</b><br>${escape(u.email||u.uid)}<br>UID: ${escape(u.uid)}`;listenAll();
     })
   }
   function listenAll(){
@@ -79,10 +77,10 @@
   function renderAudit(){const q=$('auditSearch').value.trim().toLowerCase();let list=auditEntries();if(q)list=list.filter(a=>JSON.stringify(a).toLowerCase().includes(q));$('auditList').innerHTML=list.length?list.slice(0,300).map(auditRow).join(''):'<div class="empty-card">لا يوجد سجل.</div>'}
   function renderDashboardAudit(){$('dashboardAudit').innerHTML=auditEntries().slice(0,8).map(auditRow).join('')||'<div class="empty-card">لا يوجد نشاط.</div>'}
   async function health(){
-    const checks=[['Firebase Auth',!!auth.currentUser],['Realtime Database',false],['Cloud Functions',false],['صلاحية الأدمن',false],['Storage',!!ADNOR.storage],['طرق دفع جاهزة',false],['مواعيد السحوبات',false],['الشروط والخصوصية',false]];
+    const checks=[['Firebase Auth',!!auth.currentUser],['Realtime Database',false],['وضع Firebase المباشر',true],['صلاحية الأدمن',false],['Storage',!!ADNOR.storage],['طرق دفع جاهزة',false],['مواعيد السحوبات',false],['الشروط والخصوصية',false]];
     $('healthList').innerHTML=checks.map(x=>`<div class="health-item"><span>${x[0]}</span><b>جاري الفحص...</b></div>`).join('');
     try{const [connected,payments,lottery,legal]=await Promise.all([db.ref('.info/connected').once('value'),db.ref('payment_methods').once('value'),db.ref('settings/lottery').once('value'),db.ref('settings/legal').once('value')]);checks[1][1]=connected.val()===true;const methods=Object.values(payments.val()||{});checks[5][1]=methods.some(m=>m.active!==false&&String(m.instructions||'').trim().length>15);const l=lottery.val()||{},now=Date.now();checks[6][1]=drawTypes.filter(t=>l[t]?.enabled!==false).every(t=>Number(l[t]?.nextPublishAt||0)>now);const lg=legal.val()||{};checks[7][1]=String(lg.terms||'').trim().length>100&&String(lg.privacy||'').trim().length>100}catch(e){}
-    try{const r=await call('healthCheck',{});checks[2][1]=r.data.ok}catch(e){}try{const t=await auth.currentUser.getIdTokenResult(true);checks[3][1]=!!t.claims.admin}catch(e){}
+    try{const r=await call('healthCheck',{});checks[2][1]=r.data.ok}catch(e){}try{checks[3][1]=await ADNOR.roles.isAdmin(auth.currentUser)}catch(e){}
     $('healthList').innerHTML=checks.map(x=>`<div class="health-item"><span>${x[0]}</span><b class="${x[1]?'':'bad'}">${x[1]?'OK':'NEEDS SETUP'}</b></div>`).join('')
   }
   async function saveSystem(){const clamp=(id,def)=>Math.max(1,Math.min(50,Math.floor(Number($(id).value||def))));const data={registrationEnabled:$('setRegistration').checked,loginEnabled:$('setLogin').checked,depositEnabled:$('setDeposit').checked,withdrawEnabled:$('setWithdraw').checked,lotteryEnabled:$('setLottery').checked,wheelEnabled:$('setWheel').checked,supportEnabled:$('setSupport').checked,agentReportsEnabled:$('setAgentReports').checked,maintenanceEnabled:$('setMaintenance').checked,maintenanceMessage:$('setMaintenanceMessage').value.trim(),maxPendingDeposits:clamp('setMaxPendingDeposits',5),maxPendingWithdrawals:clamp('setMaxPendingWithdrawals',3),maxOpenSupportTickets:clamp('setMaxOpenSupportTickets',5),updatedAt:firebase.database.ServerValue.TIMESTAMP,updatedBy:S.user.email};await db.ref('settings/global').update(data);await auditAdmin('system_settings_updated',JSON.stringify({maxPendingDeposits:data.maxPendingDeposits,maxPendingWithdrawals:data.maxPendingWithdrawals,maxOpenSupportTickets:data.maxOpenSupportTickets}));toast('تم حفظ إعدادات النظام')}

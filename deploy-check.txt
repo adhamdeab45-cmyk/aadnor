@@ -1,3 +1,1 @@
-ADNOR V301 RENDER FIXED
-Static root package is dependency-free.
-Build marker: 2026-07-14
+ADNOR V302 FIREBASE ONLY READY

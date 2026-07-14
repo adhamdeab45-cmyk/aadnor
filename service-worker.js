@@ -1,10 +1,10 @@
 'use strict';
-const CACHE='adnor-v195-shell-1';
+const CACHE='adnor-v196-shell-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',
   '/assets/icons/icon-96.png','/assets/icons/icon-192.png','/assets/icons/icon-512.png','/assets/icons/icon-maskable-512.png',
-  '/install-app.js'
+  '/install-app.js', '/energy-admin.html'
 ];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));

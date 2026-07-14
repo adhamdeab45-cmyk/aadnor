@@ -2,7 +2,7 @@
   "id": "/index.html",
   "name": "ADNOR Royal Lottery",
   "short_name": "ADNOR",
-  "description": "منصة ADNOR الملكية للسحوبات والألعاب والمحفظة.",
+  "description": "منصة ADNOR الملكية للسحوبات والألعاب والمحفظة ونظام ADN Energy الداخلي.",
   "start_url": "/index.html?source=pwa",
   "scope": "/",
   "display": "standalone",
@@ -73,6 +73,17 @@
       "name": "المحفظة",
       "short_name": "المحفظة",
       "url": "/app.html?section=wallet",
+      "icons": [
+        {
+          "src": "/assets/icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "ADN Energy",
+      "short_name": "Energy",
+      "url": "/app.html?section=energy",
       "icons": [
         {
           "src": "/assets/icons/icon-96.png",

@@ -1,1 +1,11 @@
-{"name":"ADNOR Official","short_name":"ADNOR","description":"ADNOR official Firebase-based draws, games and wallet platform.","start_url":"./index.html","scope":"./","display":"standalone","background_color":"#030812","theme_color":"#07111f","orientation":"portrait-primary","lang":"ar","dir":"rtl","icons":[{"src":"assets/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"assets/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}],"shortcuts":[{"name":"السحوبات","url":"./index.html#lottery"},{"name":"المحفظة","url":"./index.html#wallet"},{"name":"الوكلاء","url":"./index.html#agents"}]}
+{
+  "name": "ADNOR Royal Platform",
+  "short_name": "ADNOR",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#030914",
+  "theme_color": "#071224",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": []
+}

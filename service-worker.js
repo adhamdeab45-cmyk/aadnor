@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v198-shell-1';
+const CACHE='adnor-v198-shell-login-fix-2';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',
@@ -18,6 +18,10 @@ self.addEventListener('fetch',event=>{
   const url=new URL(req.url);
   if(url.origin!==self.location.origin) return;
   if(url.pathname.startsWith('/api')||url.pathname.includes('firebase')) return;
+  if(url.pathname==='/exchange-admin.html'||url.pathname==='/admin-command-center.html'||url.pathname==='/energy-admin.html'){
+    event.respondWith(fetch(req).catch(()=>caches.match('/offline.html')));
+    return;
+  }
   if(req.mode==='navigate'){
     event.respondWith(fetch(req).then(res=>{const copy=res.clone();caches.open(CACHE).then(c=>c.put(req,copy));return res}).catch(()=>caches.match(req).then(r=>r||caches.match('/offline.html'))));
     return;

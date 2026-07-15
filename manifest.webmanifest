@@ -2,7 +2,7 @@
   "id": "/index.html",
   "name": "ADNOR Royal Lottery",
   "short_name": "ADNOR",
-  "description": "منصة ADNOR الملكية للسحوبات والألعاب والمحفظة ونظام ADN Energy الداخلي.",
+  "description": "منصة ADNOR الملكية للسحوبات والألعاب والمحفظة وسوق ADN/USD الحقيقي بالرصيد الحقيقي فقط.",
   "start_url": "/index.html?source=pwa",
   "scope": "/",
   "display": "standalone",
@@ -62,6 +62,17 @@
       "name": "الألعاب",
       "short_name": "الألعاب",
       "url": "/app.html?section=games",
+      "icons": [
+        {
+          "src": "/assets/icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "ADN Exchange",
+      "short_name": "ADN",
+      "url": "/app.html?section=investment",
       "icons": [
         {
           "src": "/assets/icons/icon-96.png",

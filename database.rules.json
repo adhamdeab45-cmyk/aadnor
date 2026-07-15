@@ -16,6 +16,39 @@
         "profileUpdatedAt": {
           ".write": "auth != null && ($uid === auth.uid || (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')) || (root.child('agents').child(auth.uid).child('active').val() === true))",
           ".validate": "newData.isNumber()"
+        },
+        "adnBalance": {
+          ".write": false
+        },
+        "adnReserved": {
+          ".write": false
+        },
+        "adnCostBasisUsd": {
+          ".write": false
+        },
+        "adnRealizedPnlUsd": {
+          ".write": false
+        },
+        "exchangeReservedUsd": {
+          ".write": false
+        },
+        "exchangeRequests": {
+          ".write": false
+        },
+        "exchangeTermsVersion": {
+          ".write": false
+        },
+        "exchangeTermsAcceptedAt": {
+          ".write": false
+        },
+        "exchangeRiskAccepted": {
+          ".write": false
+        },
+        "exchangeDailyKey": {
+          ".write": false
+        },
+        "exchangeDailyVolumeUsd": {
+          ".write": false
         }
       }
     },
@@ -478,6 +511,14 @@
     "admin_broadcasts": {
       ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')",
       ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com')"
+    },
+    "adn_exchange": {
+      ".read": false,
+      ".write": false
+    },
+    "exchange_user_trades": {
+      ".read": false,
+      ".write": false
     }
   }
 }

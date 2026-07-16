@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06101f">
-<title>ADNOR Admin Command Center V199</title>
+<title>ADNOR Admin Command Center V200</title>
 <link rel="icon" href="favicon.svg">
 <style>
 :root{--bg:#020812;--bg2:#061426;--card:#07182c;--card2:#0b213d;--gold:#ffd86b;--gold2:#d99b22;--text:#f4f7fb;--muted:#93a5bd;--green:#31e6a1;--red:#ff667b;--blue:#4bd8ff;--violet:#b98cff;--line:rgba(255,216,107,.24);--shadow:0 18px 45px rgba(0,0,0,.34);font-family:"Segoe UI",Tahoma,Arial,sans-serif}
@@ -115,7 +115,7 @@
     <div class="section-title">
       <div><h3>مركز الاستثمار وADN Exchange</h3><p>إدارة السوق والخزينة والسيولة والأوامر من داخل الأدمن نفسه — بدون صفحة دخول منفصلة.</p></div>
       <div class="spacer"></div>
-      <button id="exRefreshBtn" class="btn blue">↻ تحديث السوق</button>
+      <button id="exRefreshBtn" type="button" class="btn blue">↻ تحديث السوق</button>
       <a class="btn" href="app.html?section=investment">فتح منصة المستخدم</a>
     </div>
 
@@ -165,13 +165,14 @@
 
     <div id="ex-panel-settings" class="ex-panel">
       <div class="card">
-        <div class="card-head"><div><h3>تشغيل وحدود السوق</h3><small>كل تعديل يُرسل للسيرفر ويُسجل باسم الأدمن</small></div></div>
+        <div class="card-head"><div><h3>تشغيل وحدود السوق</h3><small>مفاتيح فتح السوق والشراء والبيع تُحفظ فورًا في السيرفر. باقي الإعدادات تُحفظ بزر الحفظ.</small></div></div>
         <div class="ex-switches">
           <label class="ex-switch">السوق مفتوح<input id="exEnabled" type="checkbox"></label>
           <label class="ex-switch">الشراء مفتوح<input id="exBuyEnabled" type="checkbox"></label>
           <label class="ex-switch">البيع مفتوح<input id="exSellEnabled" type="checkbox"></label>
           <label class="ex-switch">قاطع الحركة<input id="exCircuitBreakerEnabled" type="checkbox"></label>
         </div>
+        <div class="ex-note" id="exToggleHint">مفاتيح التشغيل تُحفظ فورًا. لا تحتاج للضغط على زر الحفظ بعد تغييرها.</div>
         <div class="form-grid cols3">
           <div class="field"><label>السعر الافتتاحي</label><input class="input" id="exOpeningPrice" type="number" step="0.000001"></div>
           <div class="field"><label>إجمالي المعروض</label><input class="input" id="exTotalSupply" type="number" step="0.0001"></div>
@@ -186,7 +187,7 @@
           <div class="field"><label>حركة قاطع السوق %</label><input class="input" id="exCircuitBreakerMovePct" type="number"></div>
           <div class="field" style="grid-column:1/-1"><label>تحذير المخاطر</label><textarea id="exRiskNotice"></textarea></div>
         </div>
-        <button id="exSaveSettings" class="btn gold" style="margin-top:12px">حفظ إعدادات السوق</button>
+        <button id="exSaveSettings" type="button" class="btn gold" style="margin-top:12px">حفظ إعدادات السوق</button>
         <div id="exSettingsMsg" class="ex-msg"></div>
       </div>
     </div>
@@ -200,7 +201,7 @@
             <div class="field"><label>تعديل USD (+ أو -)</label><input class="input" id="exDeltaUsd" type="number" step="0.01" value="0"></div>
             <div class="field" style="grid-column:1/-1"><label>سبب التعديل الإجباري</label><textarea id="exTreasuryReason" placeholder="مثال: إضافة مخصص الإصدار الأولي وفق سجل الاحتياطي"></textarea></div>
           </div>
-          <button id="exAdjustTreasury" class="btn gold" style="margin-top:12px">تنفيذ تعديل الخزينة</button>
+          <button id="exAdjustTreasury" type="button" class="btn gold" style="margin-top:12px">تنفيذ تعديل الخزينة</button>
           <div id="exTreasuryMsg" class="ex-msg"></div>
         </div>
 
@@ -212,7 +213,7 @@
             <div class="field"><label>الكمية</label><input class="input" id="exTreasuryQty" type="number" step="0.0001"></div>
             <div class="field"><label>السعر</label><input class="input" id="exTreasuryPrice" type="number" step="0.000001" value="0.100000"></div>
           </div>
-          <button id="exPlaceTreasuryOrder" class="btn blue" style="margin-top:12px">إضافة أمر الخزينة</button>
+          <button id="exPlaceTreasuryOrder" type="button" class="btn blue" style="margin-top:12px">إضافة أمر الخزينة</button>
           <div id="exTreasuryOrderMsg" class="ex-msg"></div>
         </div>
       </div>
@@ -260,6 +261,7 @@ const exPrice=v=>'$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:
 const dt=v=>v?new Date(Number(v)).toLocaleString('ar-TR'):'—';
 let overview=null,users=[],finance={deposits:[],withdrawals:[]},currentUserDetail=null,currentPage='dashboard',confirmResolve=null;
 let lotterySettings={},wheelSettings={},supportSettings={},systemControls={},exchangeData=null;
+let exchangeSettingsDirty=false,exchangeSettingsSaving=false,exchangeSettingsLoaded=false,exchangeLoadSequence=0;
 
 function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),3300)}
 function loading(on){$('loading').classList.toggle('show',!!on)}
@@ -319,19 +321,42 @@ $('saveWheel').onclick=async()=>{try{loading(true);await update(ref(db,'wheel_se
 $('sendBroadcast').onclick=async()=>{const body={target:$('broadcastTarget').value,uid:$('broadcastUid').value.trim(),title:$('broadcastTitle').value.trim(),text:$('broadcastText').value.trim(),link:$('broadcastLink').value.trim(),image:$('broadcastImage').value.trim()};if(!body.title||!body.text)return toast('اكتب العنوان والنص');const ok=await confirmAction('إرسال إشعار',`سيتم الإرسال إلى: ${body.target}`,false);if(!ok)return;try{loading(true);const r=await api('/admin/notifications/send',{method:'POST',body:JSON.stringify(body)});toast(`تم الإرسال إلى ${r.recipientCount} مستخدم`)}catch(e){toast(e.message)}finally{loading(false)}};
 
 
-/* ADN Exchange integrated admin controls */
+/* ADN Exchange integrated admin controls — V200 */
 function exMsg(id,text,bad=false){const el=$(id);if(!el)return;el.textContent=text||'';el.classList.toggle('bad',!!bad)}
 function selectExchangeTab(tab){document.querySelectorAll('[data-ex-tab]').forEach(b=>b.classList.toggle('active',b.dataset.exTab===tab));document.querySelectorAll('.ex-panel').forEach(p=>p.classList.toggle('active',p.id==='ex-panel-'+tab))}
 document.querySelectorAll('[data-ex-tab]').forEach(b=>b.onclick=()=>selectExchangeTab(b.dataset.exTab));
 
-function fillExchange(){
+const exchangeToggleMap={
+  exEnabled:{key:'enabled',label:'السوق'},
+  exBuyEnabled:{key:'buyEnabled',label:'الشراء'},
+  exSellEnabled:{key:'sellEnabled',label:'البيع'},
+  exCircuitBreakerEnabled:{key:'circuitBreakerEnabled',label:'قاطع الحركة'}
+};
+const exchangeValueMap={exOpeningPrice:'openingPrice',exTotalSupply:'totalSupply',exMakerFeeBps:'makerFeeBps',exTakerFeeBps:'takerFeeBps',exMinOrderUsd:'minOrderUsd',exMaxOrderUsd:'maxOrderUsd',exDailyVolumeLimitUsd:'dailyVolumeLimitUsd',exMaxOpenOrdersPerUser:'maxOpenOrdersPerUser',exMaxLimitPriceDeviationPct:'maxLimitPriceDeviationPct',exMaxMarketSlippagePct:'maxMarketSlippagePct',exCircuitBreakerMovePct:'circuitBreakerMovePct',exRiskNotice:'riskNotice'};
+
+function setExchangeSettingsDisabled(disabled){
+  Object.keys(exchangeToggleMap).forEach(id=>{if($(id))$(id).disabled=!!disabled});
+  if($('exSaveSettings'))$('exSaveSettings').disabled=!!disabled;
+}
+function markExchangeSettingsDirty(){
+  if(exchangeSettingsSaving||!exchangeSettingsLoaded)return;
+  exchangeSettingsDirty=true;
+  exMsg('exSettingsMsg','لديك تغييرات غير محفوظة في الحدود أو الرسوم. اضغط حفظ إعدادات السوق.');
+}
+Object.keys(exchangeValueMap).forEach(id=>{
+  const el=$(id);if(!el)return;
+  el.addEventListener(el.tagName==='SELECT'?'change':'input',markExchangeSettingsDirty);
+});
+
+function fillExchange(forceSettings=false){
   if(!exchangeData)return;
   const m=exchangeData.market||{},s=exchangeData.settings||{},t=exchangeData.treasury||{};
   $('exLastPrice').textContent=exPrice(m.lastPrice);
   const ch=Number(m.change24||0),chEl=$('exChange24');
   chEl.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%';
   chEl.classList.toggle('neg',ch<0);
-  $('exMarketStatus').textContent=s.enabled?'السوق مفتوح — الشراء والبيع من الرصيد الحقيقي فقط':'السوق متوقف من الإدارة';
+  const marketOpen=s.enabled===true,buyOpen=s.buyEnabled===true,sellOpen=s.sellEnabled===true;
+  $('exMarketStatus').textContent=marketOpen?`السوق مفتوح — الشراء ${buyOpen?'مفتوح':'مغلق'} — البيع ${sellOpen?'مفتوح':'مغلق'} — الرصيد الحقيقي فقط`:'السوق متوقف من الإدارة';
   $('exQuoteVolume24').textContent=money(m.quoteVolume24);
   $('exInvestorCount').textContent=Number(exchangeData.investorCount||0).toLocaleString('en-US');
   $('exIssuedAdn').textContent=exQty(m.issuedAdn);
@@ -347,10 +372,11 @@ function fillExchange(){
   $('exAsks').innerHTML=book(exchangeData.orderBook?.asks);
   $('exBids').innerHTML=book(exchangeData.orderBook?.bids);
 
-  const boolMap={exEnabled:'enabled',exBuyEnabled:'buyEnabled',exSellEnabled:'sellEnabled',exCircuitBreakerEnabled:'circuitBreakerEnabled'};
-  Object.entries(boolMap).forEach(([id,key])=>$(id).checked=!!s[key]);
-  const valueMap={exOpeningPrice:'openingPrice',exTotalSupply:'totalSupply',exMakerFeeBps:'makerFeeBps',exTakerFeeBps:'takerFeeBps',exMinOrderUsd:'minOrderUsd',exMaxOrderUsd:'maxOrderUsd',exDailyVolumeLimitUsd:'dailyVolumeLimitUsd',exMaxOpenOrdersPerUser:'maxOpenOrdersPerUser',exMaxLimitPriceDeviationPct:'maxLimitPriceDeviationPct',exMaxMarketSlippagePct:'maxMarketSlippagePct',exCircuitBreakerMovePct:'circuitBreakerMovePct',exRiskNotice:'riskNotice'};
-  Object.entries(valueMap).forEach(([id,key])=>{if($(id))$(id).value=s[key]??''});
+  if(forceSettings||(!exchangeSettingsDirty&&!exchangeSettingsSaving)){
+    Object.entries(exchangeToggleMap).forEach(([id,cfg])=>{if($(id))$(id).checked=s[cfg.key]===true});
+    Object.entries(exchangeValueMap).forEach(([id,key])=>{if($(id))$(id).value=s[key]??''});
+    exchangeSettingsLoaded=true;
+  }
   renderExchangeTables();
 }
 
@@ -366,7 +392,7 @@ function renderExchangeTables(){
     <td>${exQty(o.remaining)}</td>
     <td>${esc(o.status)}</td>
     <td>${dt(o.createdAt)}</td>
-    <td><button class="btn red sm" data-ex-cancel="${esc(o.id)}">إلغاء</button></td>
+    <td><button type="button" class="btn red sm" data-ex-cancel="${esc(o.id)}">إلغاء</button></td>
   </tr>`).join('')||'<tr><td colspan="10"><div class="ex-empty">لا توجد أوامر مفتوحة</div></td></tr>';
   document.querySelectorAll('[data-ex-cancel]').forEach(b=>b.onclick=()=>cancelExchangeOrder(b.dataset.exCancel,b));
 
@@ -380,11 +406,14 @@ function renderExchangeTables(){
   </tr>`).join('')||'<tr><td colspan="5"><div class="ex-empty">لا توجد صفقات بعد</div></td></tr>';
 }
 
-async function loadExchange(showLoader=true){
+async function loadExchange(showLoader=true,forceSettings=false){
+  const sequence=++exchangeLoadSequence;
   try{
     if(showLoader)loading(true);
-    exchangeData=await api('/admin/exchange');
-    fillExchange();
+    const fresh=await api('/admin/exchange');
+    if(sequence!==exchangeLoadSequence)return;
+    exchangeData=fresh;
+    fillExchange(forceSettings);
   }catch(e){
     toast(e.message);
     exMsg('exSettingsMsg',e.message,true);
@@ -393,36 +422,80 @@ async function loadExchange(showLoader=true){
   }
 }
 
-$('exRefreshBtn').onclick=()=>loadExchange();
+$('exRefreshBtn').onclick=()=>loadExchange(true,!exchangeSettingsDirty);
+
+async function saveExchangeToggle(id){
+  const cfg=exchangeToggleMap[id],el=$(id);
+  if(!cfg||!el||!exchangeSettingsLoaded||exchangeSettingsSaving)return;
+  const desired=el.checked;
+  exchangeSettingsSaving=true;
+  el.disabled=true;
+  exMsg('exSettingsMsg',`جاري حفظ ${cfg.label}...`);
+  try{
+    const result=await api('/admin/exchange/settings',{method:'POST',body:JSON.stringify({[cfg.key]:desired})});
+    exchangeData=exchangeData||{};
+    exchangeData.settings={...(exchangeData.settings||{}),...(result.settings||{}),[cfg.key]:desired};
+    el.checked=exchangeData.settings[cfg.key]===true;
+    fillExchange(false);
+    const state=el.checked?'مفتوح':'مغلق';
+    exMsg('exSettingsMsg',`تم حفظ ${cfg.label}: ${state}.`);
+    toast(`تم ${el.checked?'فتح':'إغلاق'} ${cfg.label}`);
+  }catch(e){
+    el.checked=!desired;
+    exMsg('exSettingsMsg',e.message,true);
+    toast(e.message);
+  }finally{
+    exchangeSettingsSaving=false;
+    el.disabled=false;
+  }
+}
+Object.keys(exchangeToggleMap).forEach(id=>$(id)?.addEventListener('change',()=>saveExchangeToggle(id)));
+
+function readExchangeSettingsForm(){
+  return {
+    enabled:$('exEnabled').checked,
+    buyEnabled:$('exBuyEnabled').checked,
+    sellEnabled:$('exSellEnabled').checked,
+    circuitBreakerEnabled:$('exCircuitBreakerEnabled').checked,
+    openingPrice:Number($('exOpeningPrice').value),
+    totalSupply:Number($('exTotalSupply').value),
+    makerFeeBps:Number($('exMakerFeeBps').value),
+    takerFeeBps:Number($('exTakerFeeBps').value),
+    minOrderUsd:Number($('exMinOrderUsd').value),
+    maxOrderUsd:Number($('exMaxOrderUsd').value),
+    dailyVolumeLimitUsd:Number($('exDailyVolumeLimitUsd').value),
+    maxOpenOrdersPerUser:Number($('exMaxOpenOrdersPerUser').value),
+    maxLimitPriceDeviationPct:Number($('exMaxLimitPriceDeviationPct').value),
+    maxMarketSlippagePct:Number($('exMaxMarketSlippagePct').value),
+    circuitBreakerMovePct:Number($('exCircuitBreakerMovePct').value),
+    riskNotice:$('exRiskNotice').value.trim()
+  };
+}
+function validateExchangeSettings(body){
+  if(!(body.openingPrice>0))throw new Error('السعر الافتتاحي يجب أن يكون أكبر من صفر');
+  if(!(body.totalSupply>0))throw new Error('إجمالي المعروض يجب أن يكون أكبر من صفر');
+  if(!(body.minOrderUsd>0))throw new Error('أقل أمر يجب أن يكون أكبر من صفر');
+  if(!(body.maxOrderUsd>=body.minOrderUsd))throw new Error('أعلى أمر يجب أن يكون أكبر من أو يساوي أقل أمر');
+  if(body.makerFeeBps<0||body.makerFeeBps>500||body.takerFeeBps<0||body.takerFeeBps>500)throw new Error('رسوم التداول يجب أن تكون بين 0 و500 نقطة');
+}
 
 $('exSaveSettings').onclick=async()=>{
-  const b=$('exSaveSettings');b.disabled=true;
+  const b=$('exSaveSettings');
+  if(exchangeSettingsSaving)return;
+  exchangeSettingsSaving=true;b.disabled=true;setExchangeSettingsDisabled(true);
   try{
+    const body=readExchangeSettingsForm();
+    validateExchangeSettings(body);
     loading(true);
-    const body={
-      enabled:$('exEnabled').checked,
-      buyEnabled:$('exBuyEnabled').checked,
-      sellEnabled:$('exSellEnabled').checked,
-      circuitBreakerEnabled:$('exCircuitBreakerEnabled').checked,
-      openingPrice:Number($('exOpeningPrice').value),
-      totalSupply:Number($('exTotalSupply').value),
-      makerFeeBps:Number($('exMakerFeeBps').value),
-      takerFeeBps:Number($('exTakerFeeBps').value),
-      minOrderUsd:Number($('exMinOrderUsd').value),
-      maxOrderUsd:Number($('exMaxOrderUsd').value),
-      dailyVolumeLimitUsd:Number($('exDailyVolumeLimitUsd').value),
-      maxOpenOrdersPerUser:Number($('exMaxOpenOrdersPerUser').value),
-      maxLimitPriceDeviationPct:Number($('exMaxLimitPriceDeviationPct').value),
-      maxMarketSlippagePct:Number($('exMaxMarketSlippagePct').value),
-      circuitBreakerMovePct:Number($('exCircuitBreakerMovePct').value),
-      riskNotice:$('exRiskNotice').value.trim()
-    };
-    await api('/admin/exchange/settings',{method:'POST',body:JSON.stringify(body)});
-    exMsg('exSettingsMsg','تم حفظ إعدادات السوق بنجاح.');
+    const result=await api('/admin/exchange/settings',{method:'POST',body:JSON.stringify(body)});
+    exchangeData=exchangeData||{};
+    exchangeData.settings={...(exchangeData.settings||{}),...(result.settings||{})};
+    exchangeSettingsDirty=false;
+    fillExchange(true);
+    exMsg('exSettingsMsg','تم حفظ إعدادات السوق بنجاح في السيرفر.');
     toast('تم حفظ إعدادات ADN Exchange');
-    await loadExchange(false);
   }catch(e){exMsg('exSettingsMsg',e.message,true);toast(e.message)}
-  finally{loading(false);b.disabled=false}
+  finally{loading(false);exchangeSettingsSaving=false;setExchangeSettingsDisabled(false);b.disabled=false}
 };
 
 $('exAdjustTreasury').onclick=async()=>{
@@ -527,7 +600,8 @@ onAuthStateChanged(auth,async user=>{
   finally{loading(false)}
 });
 window.addEventListener('hashchange',()=>{const p=String(location.hash||'').replace(/^#/,'');if(document.getElementById('page-'+p))showPage(p)});
-setInterval(()=>{if(auth.currentUser&&currentPage==='exchange')loadExchange(false)},8000);
+setInterval(()=>{if(auth.currentUser&&currentPage==='exchange'&&!exchangeSettingsDirty&&!exchangeSettingsSaving)loadExchange(false,false)},12000);
+window.addEventListener('beforeunload',e=>{if(exchangeSettingsDirty){e.preventDefault();e.returnValue=''}});
 </script>
 </body>
 </html>

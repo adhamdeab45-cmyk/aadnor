@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v200-exchange-controls-fix-1';
+const CACHE='adnor-v201-durable-exchange-save-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

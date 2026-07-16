@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06101f">
-<title>ADNOR Admin Command Center</title>
+<title>ADNOR Admin Command Center V199</title>
 <link rel="icon" href="favicon.svg">
 <style>
 :root{--bg:#020812;--bg2:#061426;--card:#07182c;--card2:#0b213d;--gold:#ffd86b;--gold2:#d99b22;--text:#f4f7fb;--muted:#93a5bd;--green:#31e6a1;--red:#ff667b;--blue:#4bd8ff;--violet:#b98cff;--line:rgba(255,216,107,.24);--shadow:0 18px 45px rgba(0,0,0,.34);font-family:"Segoe UI",Tahoma,Arial,sans-serif}
@@ -12,6 +12,26 @@
 @media(max-width:1200px){.stats{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}.switch-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{position:fixed;right:0;top:0;width:285px;transform:translateX(105%);transition:.25s}.sidebar.open{transform:none}.mobile-menu{display:inline-flex}.main{padding:14px}.topbar{margin:-14px -14px 14px;padding:12px 14px}.grid2,.grid3{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.form-grid,.form-grid.cols3{grid-template-columns:1fr}.switch-grid{grid-template-columns:1fr}.kpi-line{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}.topbar h2{font-size:17px}.topbar p{display:none}.top-actions .btn span{display:none}.hero{padding:17px}.hero h3{font-size:20px}.main{padding-bottom:85px}.card{padding:12px;border-radius:19px}.kpi-line{grid-template-columns:1fr}.modal{padding:6px}.modal-box{border-radius:21px}}
+
+/* ADN Exchange integrated inside Command Center */
+.ex-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.ex-tabs button{min-height:42px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.025);color:#cbd5e4;font-weight:900;cursor:pointer}
+.ex-tabs button.active{background:linear-gradient(135deg,#fff0a8,#d89924);color:#251500;border-color:transparent}
+.ex-panel{display:none}.ex-panel.active{display:block}
+.ex-hero{border:1px solid rgba(255,216,107,.38);border-radius:26px;padding:18px;background:radial-gradient(circle at 85% 0,rgba(255,216,107,.16),transparent 30%),linear-gradient(145deg,rgba(10,34,62,.96),rgba(3,13,27,.98));box-shadow:var(--shadow);margin-bottom:14px}
+.ex-hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.ex-symbol h3{margin:0;color:var(--gold);font-size:28px;direction:ltr;text-align:right}.ex-symbol p{margin:6px 0 0;color:var(--muted);font-weight:800}
+.ex-price{text-align:left;direction:ltr}.ex-price strong{display:block;font-size:32px;color:#fff}.ex-price span{display:inline-block;margin-top:5px;color:var(--green);font-weight:1000}.ex-price span.neg{color:var(--red)}
+.ex-book{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ex-book-col{border:1px solid rgba(255,216,107,.12);border-radius:18px;padding:10px;background:rgba(2,11,24,.45)}.ex-book-col h4{margin:0 0 8px;font-size:12px}.ex-book-col.sell h4{color:#ff9daa}.ex-book-col.buy h4{color:#8bffd0}
+.ex-book-head,.ex-book-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center;padding:7px 5px;font-size:11px;direction:ltr;text-align:right}.ex-book-head{color:#6f829e;font-weight:900;border-bottom:1px solid rgba(255,216,107,.10)}.ex-book-row{border-bottom:1px dashed rgba(255,255,255,.055);color:#cfd9e8}.ex-book-row:last-child{border-bottom:0}
+.ex-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px;font-weight:800}
+.ex-switches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:12px}.ex-switch{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:15px;padding:10px 11px;background:rgba(255,255,255,.025);font-size:12px;font-weight:900}.ex-switch input{width:20px;height:20px;accent-color:#d99b22}
+.ex-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ex-note{margin-top:10px;padding:10px 12px;border:1px solid rgba(75,216,255,.22);background:rgba(75,216,255,.055);border-radius:14px;color:#9fdff1;font-size:11px;line-height:1.8;font-weight:800}
+.ex-msg{min-height:22px;margin-top:9px;color:#8bffd0;font-size:12px;font-weight:900}.ex-msg.bad{color:#ff9daa}
+.ex-refresh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+@media(max-width:1100px){.ex-switches{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.ex-hero-row{align-items:flex-start;flex-direction:column}.ex-price{text-align:right}.ex-book{grid-template-columns:1fr}.ex-switches{grid-template-columns:1fr}.ex-price strong{font-size:27px}}
+
 </style>
 </head>
 <body>
@@ -32,7 +52,7 @@
 
 <div id="appShell" class="shell hidden">
 <aside id="sidebar" class="sidebar">
-  <div class="brand"><div class="brand-logo">♛</div><div><h1>ADNOR ADMIN</h1><small>Command Center V198</small></div></div>
+  <div class="brand"><div class="brand-logo">♛</div><div><h1>ADNOR ADMIN</h1><small>Command Center V199</small></div></div>
   <nav class="nav">
     <button class="active" data-page="dashboard"><span class="icon">◈</span>لوحة القيادة</button>
     <button data-page="live"><span class="icon">⚡</span>النشاط المباشر</button>
@@ -40,7 +60,7 @@
     <button data-page="finance"><span class="icon">💳</span>الإيداع والسحب</button>
     <button data-page="lottery"><span class="icon">🎱</span>السحوبات والنتائج</button>
     <button data-page="games"><span class="icon">🎮</span>الألعاب والعجلة</button>
-    <a href="exchange-admin.html"><span class="icon">📈</span>ADN Exchange</a>
+    <button data-page="exchange"><span class="icon">📈</span>الاستثمار والبورصة</button>
     <button data-page="agents"><span class="icon">🛡️</span>الوكلاء والشحن</button>
     <button data-page="broadcast"><span class="icon">📣</span>الإشعارات والبنرات</button>
     <button data-page="support"><span class="icon">💬</span>الدعم والتواصل</button>
@@ -49,7 +69,6 @@
   <div class="sidebar-foot">
     <div class="status-pill"><span>السيرفر</span><span><i class="status-dot"></i> متصل</span></div>
     <a class="btn sm" href="app.html">فتح تطبيق المستخدم</a>
-    <a class="btn sm" href="exchange-admin.html">إدارة ADN Exchange</a>
     <a class="btn sm" href="admin-agents.html">إدارة الوكلاء القديمة</a>
     <button id="logoutBtn" class="btn red sm">تسجيل الخروج</button>
   </div>
@@ -91,6 +110,126 @@
 
   <section id="page-games" class="page"><div class="section-title"><div><h3>مركز الألعاب</h3><p>تحكم في تشغيل العجلة والحدود ومراقبة الهامش الحقيقي.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>إعدادات العجلة</h3></div><div class="form-grid"><div class="field"><label>تشغيل العجلة</label><select id="wheelEnabled"><option value="true">مفعلة</option><option value="false">متوقفة</option></select></div><div class="field"><label>السماح بالبونص</label><select id="wheelBonus"><option value="true">مسموح</option><option value="false">ممنوع</option></select></div><div class="field"><label>أقل رهان</label><input id="wheelMin" class="input" type="number" step="0.1"></div><div class="field"><label>أعلى رهان</label><input id="wheelMax" class="input" type="number" step="1"></div></div><button id="saveWheel" class="btn gold" style="margin-top:12px">حفظ إعدادات العجلة</button></div><div class="card"><div class="card-head"><h3>أداء الألعاب</h3></div><div id="gameKpis" class="kpi-line"></div><div style="margin-top:14px;color:var(--muted);font-size:12px;line-height:1.8;font-weight:700">النتيجة والخصم والإضافة تتم عبر السيرفر في العجلة الحالية. لا تعدّل نتائج جولات منتهية.</div></div></div></section>
 
+
+  <section id="page-exchange" class="page">
+    <div class="section-title">
+      <div><h3>مركز الاستثمار وADN Exchange</h3><p>إدارة السوق والخزينة والسيولة والأوامر من داخل الأدمن نفسه — بدون صفحة دخول منفصلة.</p></div>
+      <div class="spacer"></div>
+      <button id="exRefreshBtn" class="btn blue">↻ تحديث السوق</button>
+      <a class="btn" href="app.html?section=investment">فتح منصة المستخدم</a>
+    </div>
+
+    <div class="ex-tabs" id="exchangeTabs">
+      <button class="active" data-ex-tab="overview">نظرة السوق</button>
+      <button data-ex-tab="settings">إعدادات التداول</button>
+      <button data-ex-tab="treasury">خزينة السوق</button>
+      <button data-ex-tab="orders">الأوامر والصفقات</button>
+    </div>
+
+    <div id="ex-panel-overview" class="ex-panel active">
+      <div class="ex-hero">
+        <div class="ex-hero-row">
+          <div class="ex-symbol"><h3>ADN / USD</h3><p id="exMarketStatus">جاري تحميل السوق...</p></div>
+          <div class="ex-price"><strong id="exLastPrice">$0.100000</strong><span id="exChange24">0.00%</span></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="label">حجم 24 ساعة</div><strong id="exQuoteVolume24">$0.00</strong><small>من الصفقات المنفذة</small></div>
+          <div class="stat"><div class="label">عدد المستثمرين</div><strong id="exInvestorCount">0</strong><small>محافظ ADN حقيقية</small></div>
+          <div class="stat"><div class="label">ADN المصدر</div><strong id="exIssuedAdn">0</strong><small>من إجمالي المعروض</small></div>
+          <div class="stat"><div class="label">ADN المتداول</div><strong id="exCirculatingAdn">0</strong><small>خارج الخزينة</small></div>
+          <div class="stat"><div class="label">رسوم المنصة</div><strong id="exFeesUsd">$0.00</strong><small>رسوم تداول متراكمة</small></div>
+          <div class="stat"><div class="label">الصفقات</div><strong id="exTradeCount">0</strong><small>إجمالي التنفيذات</small></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head"><div><h3>دفتر الأوامر</h3><small>أفضل أوامر البيع والشراء الحقيقية</small></div></div>
+          <div class="ex-book">
+            <div class="ex-book-col sell"><h4>أوامر البيع</h4><div class="ex-book-head"><span>السعر</span><span>الكمية</span><span>الإجمالي</span></div><div id="exAsks"></div></div>
+            <div class="ex-book-col buy"><h4>أوامر الشراء</h4><div class="ex-book-head"><span>السعر</span><span>الكمية</span><span>الإجمالي</span></div><div id="exBids"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h3>خزينة السوق</h3><small>المتاح والمحجوز</small></div></div>
+          <div class="kpi-line">
+            <div class="kpi"><span>ADN متاح</span><b id="exTreasuryAdn">0</b></div>
+            <div class="kpi"><span>ADN محجوز</span><b id="exTreasuryAdnReserved">0</b></div>
+            <div class="kpi"><span>USD متاح</span><b id="exTreasuryUsd">$0.00</b></div>
+            <div class="kpi"><span>USD محجوز</span><b id="exTreasuryUsdReserved">$0.00</b></div>
+          </div>
+          <div class="ex-note">أي كمية ADN أو USD تضاف للخزينة يجب أن تمثل أصلًا أو احتياطيًا حقيقيًا ومسجلًا. البونص ممنوع من سوق ADN بالكامل.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ex-panel-settings" class="ex-panel">
+      <div class="card">
+        <div class="card-head"><div><h3>تشغيل وحدود السوق</h3><small>كل تعديل يُرسل للسيرفر ويُسجل باسم الأدمن</small></div></div>
+        <div class="ex-switches">
+          <label class="ex-switch">السوق مفتوح<input id="exEnabled" type="checkbox"></label>
+          <label class="ex-switch">الشراء مفتوح<input id="exBuyEnabled" type="checkbox"></label>
+          <label class="ex-switch">البيع مفتوح<input id="exSellEnabled" type="checkbox"></label>
+          <label class="ex-switch">قاطع الحركة<input id="exCircuitBreakerEnabled" type="checkbox"></label>
+        </div>
+        <div class="form-grid cols3">
+          <div class="field"><label>السعر الافتتاحي</label><input class="input" id="exOpeningPrice" type="number" step="0.000001"></div>
+          <div class="field"><label>إجمالي المعروض</label><input class="input" id="exTotalSupply" type="number" step="0.0001"></div>
+          <div class="field"><label>رسوم Maker بالنقاط</label><input class="input" id="exMakerFeeBps" type="number"></div>
+          <div class="field"><label>رسوم Taker بالنقاط</label><input class="input" id="exTakerFeeBps" type="number"></div>
+          <div class="field"><label>أقل أمر USD</label><input class="input" id="exMinOrderUsd" type="number" step="0.01"></div>
+          <div class="field"><label>أعلى أمر USD</label><input class="input" id="exMaxOrderUsd" type="number" step="0.01"></div>
+          <div class="field"><label>حد التداول اليومي</label><input class="input" id="exDailyVolumeLimitUsd" type="number" step="0.01"></div>
+          <div class="field"><label>أقصى أوامر مفتوحة للمستخدم</label><input class="input" id="exMaxOpenOrdersPerUser" type="number"></div>
+          <div class="field"><label>انحراف السعر المحدد %</label><input class="input" id="exMaxLimitPriceDeviationPct" type="number"></div>
+          <div class="field"><label>انزلاق أمر السوق %</label><input class="input" id="exMaxMarketSlippagePct" type="number"></div>
+          <div class="field"><label>حركة قاطع السوق %</label><input class="input" id="exCircuitBreakerMovePct" type="number"></div>
+          <div class="field" style="grid-column:1/-1"><label>تحذير المخاطر</label><textarea id="exRiskNotice"></textarea></div>
+        </div>
+        <button id="exSaveSettings" class="btn gold" style="margin-top:12px">حفظ إعدادات السوق</button>
+        <div id="exSettingsMsg" class="ex-msg"></div>
+      </div>
+    </div>
+
+    <div id="ex-panel-treasury" class="ex-panel">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head"><div><h3>تعديل خزينة السوق</h3><small>لا تنشئ رصيدًا بلا أصل حقيقي</small></div></div>
+          <div class="form-grid">
+            <div class="field"><label>تعديل ADN (+ أو -)</label><input class="input" id="exDeltaAdn" type="number" step="0.0001" value="0"></div>
+            <div class="field"><label>تعديل USD (+ أو -)</label><input class="input" id="exDeltaUsd" type="number" step="0.01" value="0"></div>
+            <div class="field" style="grid-column:1/-1"><label>سبب التعديل الإجباري</label><textarea id="exTreasuryReason" placeholder="مثال: إضافة مخصص الإصدار الأولي وفق سجل الاحتياطي"></textarea></div>
+          </div>
+          <button id="exAdjustTreasury" class="btn gold" style="margin-top:12px">تنفيذ تعديل الخزينة</button>
+          <div id="exTreasuryMsg" class="ex-msg"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div><h3>إنشاء أمر خزينة</h3><small>توفير سيولة افتتاحية حقيقية</small></div></div>
+          <div class="form-grid">
+            <div class="field"><label>النوع</label><select id="exTreasurySide"><option value="sell">بيع ADN</option><option value="buy">شراء ADN</option></select></div>
+            <div class="field"><label>نوع الأمر</label><select id="exTreasuryType"><option value="limit">سعر محدد</option><option value="market">سعر السوق</option></select></div>
+            <div class="field"><label>الكمية</label><input class="input" id="exTreasuryQty" type="number" step="0.0001"></div>
+            <div class="field"><label>السعر</label><input class="input" id="exTreasuryPrice" type="number" step="0.000001" value="0.100000"></div>
+          </div>
+          <button id="exPlaceTreasuryOrder" class="btn blue" style="margin-top:12px">إضافة أمر الخزينة</button>
+          <div id="exTreasuryOrderMsg" class="ex-msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ex-panel-orders" class="ex-panel">
+      <div class="card">
+        <div class="card-head"><div><h3>الأوامر المفتوحة</h3><small>يمكن إلغاء أمر عند الضرورة مع تسجيل السبب</small></div></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>الرقم</th><th>المالك</th><th>النوع</th><th>الطريقة</th><th>السعر</th><th>الكمية</th><th>المتبقي</th><th>الحالة</th><th>الوقت</th><th>إجراء</th></tr></thead><tbody id="exOrdersBody"></tbody></table></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-head"><div><h3>آخر الصفقات</h3><small>سجل السوق الحقيقي</small></div></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>الصفقة</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th><th>الوقت</th></tr></thead><tbody id="exTradesBody"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
   <section id="page-agents" class="page"><div class="section-title"><div><h3>الوكلاء والشحن</h3><p>الشحن الآمن شغال عبر السيرفر. افتح الإدارة المتخصصة أو صفحة الوكيل.</p></div></div><div class="grid3"><div class="card"><h3 style="color:var(--gold)">إدارة الوكلاء</h3><p style="color:var(--muted);line-height:1.7">إضافة وكيل، تحديد الرصيد، التجميد ومراجعة السجل.</p><a class="btn gold" href="admin-agents.html">فتح إدارة الوكلاء</a></div><div class="card"><h3 style="color:var(--gold)">بوابة الوكيل</h3><p style="color:var(--muted);line-height:1.7">تجربة الدخول والبحث والشحن من بوابة الوكيل.</p><a class="btn blue" href="agent.html">فتح بوابة الوكيل</a></div><div class="card"><h3 style="color:var(--gold)">مؤشرات الوكلاء</h3><div id="agentKpis" class="kpi-line"></div></div></div></section>
 
   <section id="page-broadcast" class="page"><div class="section-title"><div><h3>الإشعارات والبنرات</h3><p>إرسال لمستخدم واحد أو للجميع أو لفئة محددة.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>المستلمون</label><select id="broadcastTarget"><option value="all">كل المستخدمين</option><option value="active">النشطون آخر 7 أيام</option><option value="vip">VIP فقط</option><option value="user">مستخدم محدد</option></select></div><div class="field"><label>UID للمستخدم المحدد</label><input id="broadcastUid" class="input" placeholder="يُستخدم عند اختيار مستخدم محدد"></div><div class="field" style="grid-column:1/-1"><label>العنوان</label><input id="broadcastTitle" class="input" placeholder="عنوان الإشعار"></div><div class="field" style="grid-column:1/-1"><label>نص الإشعار</label><textarea id="broadcastText" placeholder="اكتب الرسالة بوضوح"></textarea></div><div class="field"><label>رابط عند الضغط</label><input id="broadcastLink" class="input" placeholder="app.html#lottery"></div><div class="field"><label>رابط صورة أو شعار</label><input id="broadcastImage" class="input" placeholder="https://..."></div></div><button id="sendBroadcast" class="btn gold" style="margin-top:12px">إرسال الإشعار</button></div><div class="card"><div class="card-head"><h3>نصائح الإرسال</h3></div><div class="activity"><div class="list-row"><div class="activity-icon">✓</div><div><h4>رسالة واضحة</h4><p>لا ترسل وعودًا أو معلومات غير مؤكدة.</p></div></div><div class="list-row"><div class="activity-icon">⏱</div><div><h4>التوقيت</h4><p>أرسل قبل السحب بوقت مناسب، وليس بشكل مزعج.</p></div></div><div class="list-row"><div class="activity-icon">🎯</div><div><h4>استهداف صحيح</h4><p>استخدم VIP أو النشطين بدل إرسال كل شيء للجميع.</p></div></div></div></div></div></section>
@@ -107,23 +246,25 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import { getDatabase, ref, get, set, update, onValue } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
 
 const firebaseConfig={apiKey:'AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g',authDomain:'adhamnnn-8a4d2.firebaseapp.com',databaseURL:'https://adhamnnn-8a4d2-default-rtdb.firebaseio.com',projectId:'adhamnnn-8a4d2',storageBucket:'adhamnnn-8a4d2.firebasestorage.app',messagingSenderId:'812431761704',appId:'1:812431761704:web:2b85a0532574cc4378301d',measurementId:'G-59WKJBRDG8'};
 const API='https://adnor-api.onrender.com';
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),googleProvider=new GoogleAuthProvider();
+googleProvider.setCustomParameters({prompt:'select_account'});
 await setPersistence(auth,browserLocalPersistence);
 const $=id=>document.getElementById(id), money=v=>'$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const exPrice=v=>'$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:6,maximumFractionDigits:6}),exQty=v=>Number(v||0).toLocaleString('en-US',{maximumFractionDigits:4}),exRid=p=>p+'_'+Date.now()+'_'+crypto.getRandomValues(new Uint32Array(2)).join('_');
 const dt=v=>v?new Date(Number(v)).toLocaleString('ar-TR'):'—';
 let overview=null,users=[],finance={deposits:[],withdrawals:[]},currentUserDetail=null,currentPage='dashboard',confirmResolve=null;
-let lotterySettings={},wheelSettings={},supportSettings={},systemControls={};
+let lotterySettings={},wheelSettings={},supportSettings={},systemControls={},exchangeData=null;
 
 function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),3300)}
 function loading(on){$('loading').classList.toggle('show',!!on)}
 async function api(path,options={}){const user=auth.currentUser;if(!user)throw new Error('سجل الدخول أولاً');const token=await user.getIdToken();const res=await fetch(API+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})},cache:'no-store'});let data={};try{data=await res.json()}catch{}if(!res.ok||data.ok===false)throw new Error(data.message||data.error||'تعذر تنفيذ الطلب');return data}
-function showPage(page){currentPage=page;document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===page));const map={dashboard:['لوحة القيادة','صورة حقيقية عن المنصة الآن'],live:['النشاط المباشر','متابعة كل العمليات الحديثة'],users:['المستخدمون 360°','بحث وإدارة الحسابات'],finance:['الإيداع والسحب','مركز القرارات المالية'],lottery:['السحوبات والنتائج','تحكم كامل باليانصيب'],games:['الألعاب والعجلة','مراقبة وتشغيل الألعاب'],agents:['الوكلاء والشحن','نظام الشحن الآمن'],broadcast:['الإشعارات والبنرات','تواصل احترافي مع المستخدمين'],support:['الدعم والتواصل','واتساب وتلغرام والدعم'],system:['النظام والأمان','تشغيل وصيانة وتقارير']};$('pageTitle').textContent=map[page]?.[0]||'ADNOR';$('pageSubtitle').textContent=map[page]?.[1]||'';$('sidebar').classList.remove('open');if(page==='finance')loadFinance();if(page==='users'&&!users.length)loadUsers('');}
+function showPage(page){currentPage=page;document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===page));const map={dashboard:['لوحة القيادة','صورة حقيقية عن المنصة الآن'],live:['النشاط المباشر','متابعة كل العمليات الحديثة'],users:['المستخدمون 360°','بحث وإدارة الحسابات'],finance:['الإيداع والسحب','مركز القرارات المالية'],lottery:['السحوبات والنتائج','تحكم كامل باليانصيب'],games:['الألعاب والعجلة','مراقبة وتشغيل الألعاب'],exchange:['الاستثمار والبورصة','إدارة ADN Exchange من داخل مركز الإدارة'],agents:['الوكلاء والشحن','نظام الشحن الآمن'],broadcast:['الإشعارات والبنرات','تواصل احترافي مع المستخدمين'],support:['الدعم والتواصل','واتساب وتلغرام والدعم'],system:['النظام والأمان','تشغيل وصيانة وتقارير']};$('pageTitle').textContent=map[page]?.[0]||'ADNOR';$('pageSubtitle').textContent=map[page]?.[1]||'';$('sidebar').classList.remove('open');try{history.replaceState(null,'','#'+page)}catch{}if(page==='finance')loadFinance();if(page==='users'&&!users.length)loadUsers('');if(page==='exchange')loadExchange();}
 
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll('[data-page-jump]').forEach(b=>b.onclick=()=>showPage(b.dataset.pageJump));$('menuBtn').onclick=()=>$('sidebar').classList.toggle('open');
 
@@ -146,7 +287,7 @@ window.addEventListener('resize',()=>overview&&drawChart(overview.charts?.hours|
 function renderSystemQuick(){const c=overview?.settings?.system?.controls||{};const arr=[['التسجيل',c.registrationEnabled!==false],['الإيداع',c.depositEnabled!==false],['السحب',c.withdrawEnabled!==false],['اليانصيب',c.lotteryEnabled!==false],['الألعاب',c.gamesEnabled!==false],['الصيانة',c.maintenanceMode===true]];$('systemQuick').innerHTML=arr.map(([n,on])=>`<div class="list-row"><div class="activity-icon">${on?'✓':'!'}</div><div><h4>${n}</h4><p>${on?'يعمل':'متوقف'}</p></div><span class="badge ${on?'green':'red'}">${on?'ON':'OFF'}</span></div>`).join('')}
 
 async function loadOverview(show=true){try{if(show)loading(true);overview=await api('/admin/overview?range='+encodeURIComponent($('rangeSelect').value));renderOverview();}catch(e){toast(e.message)}finally{loading(false)}}
-$('rangeSelect').onchange=()=>loadOverview();$('refreshBtn').onclick=()=>loadOverview();
+$('rangeSelect').onchange=()=>loadOverview();$('refreshBtn').onclick=()=>currentPage==='exchange'?loadExchange():loadOverview();
 
 async function loadUsers(q=''){try{loading(true);const data=await api('/admin/users/search?q='+encodeURIComponent(q)+'&limit=150');users=data.users||[];renderUsers()}catch(e){toast(e.message)}finally{loading(false)}}
 function renderUsers(){const rows=users.map(u=>`<tr><td><b>${esc(u.name)}</b><br><small style="color:var(--muted)">${esc(u.email)}</small></td><td>${esc(u.publicId||'—')}</td><td>${money(u.realBalance)}</td><td>${money(u.bonusBalance)}</td><td>${u.isVIP?'<span class="badge">VIP</span>':'—'}</td><td>${u.isFrozen?'<span class="badge red">مجمد</span>':'<span class="badge green">نشط</span>'}</td><td>${dt(u.lastActivityAt||u.lastLoginAt)}</td><td><button class="btn sm blue" data-open-user="${esc(u.uid)}">فتح 360°</button></td></tr>`).join('');$('usersTable').innerHTML=`<table class="table"><thead><tr><th>المستخدم</th><th>ID</th><th>الرصيد الحقيقي</th><th>البونص</th><th>VIP</th><th>الحالة</th><th>آخر نشاط</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="8">لا توجد نتائج</td></tr>'}</tbody></table>`;document.querySelectorAll('[data-open-user]').forEach(b=>b.onclick=()=>openUser(b.dataset.openUser))}
@@ -177,6 +318,162 @@ $('saveWheel').onclick=async()=>{try{loading(true);await update(ref(db,'wheel_se
 
 $('sendBroadcast').onclick=async()=>{const body={target:$('broadcastTarget').value,uid:$('broadcastUid').value.trim(),title:$('broadcastTitle').value.trim(),text:$('broadcastText').value.trim(),link:$('broadcastLink').value.trim(),image:$('broadcastImage').value.trim()};if(!body.title||!body.text)return toast('اكتب العنوان والنص');const ok=await confirmAction('إرسال إشعار',`سيتم الإرسال إلى: ${body.target}`,false);if(!ok)return;try{loading(true);const r=await api('/admin/notifications/send',{method:'POST',body:JSON.stringify(body)});toast(`تم الإرسال إلى ${r.recipientCount} مستخدم`)}catch(e){toast(e.message)}finally{loading(false)}};
 
+
+/* ADN Exchange integrated admin controls */
+function exMsg(id,text,bad=false){const el=$(id);if(!el)return;el.textContent=text||'';el.classList.toggle('bad',!!bad)}
+function selectExchangeTab(tab){document.querySelectorAll('[data-ex-tab]').forEach(b=>b.classList.toggle('active',b.dataset.exTab===tab));document.querySelectorAll('.ex-panel').forEach(p=>p.classList.toggle('active',p.id==='ex-panel-'+tab))}
+document.querySelectorAll('[data-ex-tab]').forEach(b=>b.onclick=()=>selectExchangeTab(b.dataset.exTab));
+
+function fillExchange(){
+  if(!exchangeData)return;
+  const m=exchangeData.market||{},s=exchangeData.settings||{},t=exchangeData.treasury||{};
+  $('exLastPrice').textContent=exPrice(m.lastPrice);
+  const ch=Number(m.change24||0),chEl=$('exChange24');
+  chEl.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%';
+  chEl.classList.toggle('neg',ch<0);
+  $('exMarketStatus').textContent=s.enabled?'السوق مفتوح — الشراء والبيع من الرصيد الحقيقي فقط':'السوق متوقف من الإدارة';
+  $('exQuoteVolume24').textContent=money(m.quoteVolume24);
+  $('exInvestorCount').textContent=Number(exchangeData.investorCount||0).toLocaleString('en-US');
+  $('exIssuedAdn').textContent=exQty(m.issuedAdn);
+  $('exCirculatingAdn').textContent=exQty(m.circulatingAdn);
+  $('exFeesUsd').textContent=money(t.feesUsd);
+  $('exTradeCount').textContent=Number(m.tradeCount||0).toLocaleString('en-US');
+  $('exTreasuryAdn').textContent=exQty(t.adnAvailable);
+  $('exTreasuryAdnReserved').textContent=exQty(t.adnReserved);
+  $('exTreasuryUsd').textContent=money(t.usdAvailable);
+  $('exTreasuryUsdReserved').textContent=money(t.usdReserved);
+
+  const book=arr=>(arr||[]).map(x=>`<div class="ex-book-row"><span>${Number(x.price||0).toFixed(6)}</span><span>${exQty(x.quantity)}</span><span>${money(x.totalUsd)}</span></div>`).join('')||'<div class="ex-empty">لا توجد أوامر</div>';
+  $('exAsks').innerHTML=book(exchangeData.orderBook?.asks);
+  $('exBids').innerHTML=book(exchangeData.orderBook?.bids);
+
+  const boolMap={exEnabled:'enabled',exBuyEnabled:'buyEnabled',exSellEnabled:'sellEnabled',exCircuitBreakerEnabled:'circuitBreakerEnabled'};
+  Object.entries(boolMap).forEach(([id,key])=>$(id).checked=!!s[key]);
+  const valueMap={exOpeningPrice:'openingPrice',exTotalSupply:'totalSupply',exMakerFeeBps:'makerFeeBps',exTakerFeeBps:'takerFeeBps',exMinOrderUsd:'minOrderUsd',exMaxOrderUsd:'maxOrderUsd',exDailyVolumeLimitUsd:'dailyVolumeLimitUsd',exMaxOpenOrdersPerUser:'maxOpenOrdersPerUser',exMaxLimitPriceDeviationPct:'maxLimitPriceDeviationPct',exMaxMarketSlippagePct:'maxMarketSlippagePct',exCircuitBreakerMovePct:'circuitBreakerMovePct',exRiskNotice:'riskNotice'};
+  Object.entries(valueMap).forEach(([id,key])=>{if($(id))$(id).value=s[key]??''});
+  renderExchangeTables();
+}
+
+function renderExchangeTables(){
+  const orders=exchangeData?.allOpenOrders||[];
+  $('exOrdersBody').innerHTML=orders.map(o=>`<tr>
+    <td>${esc(o.id)}</td>
+    <td>${esc(o.ownerType==='treasury'?'الخزينة':o.uid)}</td>
+    <td><span class="badge ${o.side==='buy'?'green':'red'}">${o.side==='buy'?'شراء':'بيع'}</span></td>
+    <td>${esc(o.type)}</td>
+    <td>${Number(o.price||0).toFixed(6)}</td>
+    <td>${exQty(o.quantity)}</td>
+    <td>${exQty(o.remaining)}</td>
+    <td>${esc(o.status)}</td>
+    <td>${dt(o.createdAt)}</td>
+    <td><button class="btn red sm" data-ex-cancel="${esc(o.id)}">إلغاء</button></td>
+  </tr>`).join('')||'<tr><td colspan="10"><div class="ex-empty">لا توجد أوامر مفتوحة</div></td></tr>';
+  document.querySelectorAll('[data-ex-cancel]').forEach(b=>b.onclick=()=>cancelExchangeOrder(b.dataset.exCancel,b));
+
+  const trades=exchangeData?.recentTrades||[];
+  $('exTradesBody').innerHTML=trades.map(t=>`<tr>
+    <td>${esc(t.id)}</td>
+    <td>${Number(t.price||0).toFixed(6)}</td>
+    <td>${exQty(t.quantity)}</td>
+    <td>${money(t.grossUsd)}</td>
+    <td>${dt(t.createdAt)}</td>
+  </tr>`).join('')||'<tr><td colspan="5"><div class="ex-empty">لا توجد صفقات بعد</div></td></tr>';
+}
+
+async function loadExchange(showLoader=true){
+  try{
+    if(showLoader)loading(true);
+    exchangeData=await api('/admin/exchange');
+    fillExchange();
+  }catch(e){
+    toast(e.message);
+    exMsg('exSettingsMsg',e.message,true);
+  }finally{
+    if(showLoader)loading(false);
+  }
+}
+
+$('exRefreshBtn').onclick=()=>loadExchange();
+
+$('exSaveSettings').onclick=async()=>{
+  const b=$('exSaveSettings');b.disabled=true;
+  try{
+    loading(true);
+    const body={
+      enabled:$('exEnabled').checked,
+      buyEnabled:$('exBuyEnabled').checked,
+      sellEnabled:$('exSellEnabled').checked,
+      circuitBreakerEnabled:$('exCircuitBreakerEnabled').checked,
+      openingPrice:Number($('exOpeningPrice').value),
+      totalSupply:Number($('exTotalSupply').value),
+      makerFeeBps:Number($('exMakerFeeBps').value),
+      takerFeeBps:Number($('exTakerFeeBps').value),
+      minOrderUsd:Number($('exMinOrderUsd').value),
+      maxOrderUsd:Number($('exMaxOrderUsd').value),
+      dailyVolumeLimitUsd:Number($('exDailyVolumeLimitUsd').value),
+      maxOpenOrdersPerUser:Number($('exMaxOpenOrdersPerUser').value),
+      maxLimitPriceDeviationPct:Number($('exMaxLimitPriceDeviationPct').value),
+      maxMarketSlippagePct:Number($('exMaxMarketSlippagePct').value),
+      circuitBreakerMovePct:Number($('exCircuitBreakerMovePct').value),
+      riskNotice:$('exRiskNotice').value.trim()
+    };
+    await api('/admin/exchange/settings',{method:'POST',body:JSON.stringify(body)});
+    exMsg('exSettingsMsg','تم حفظ إعدادات السوق بنجاح.');
+    toast('تم حفظ إعدادات ADN Exchange');
+    await loadExchange(false);
+  }catch(e){exMsg('exSettingsMsg',e.message,true);toast(e.message)}
+  finally{loading(false);b.disabled=false}
+};
+
+$('exAdjustTreasury').onclick=async()=>{
+  const b=$('exAdjustTreasury');b.disabled=true;
+  try{
+    const reason=$('exTreasuryReason').value.trim();
+    if(!reason)throw new Error('اكتب سبب تعديل الخزينة');
+    const ok=await confirmAction('تعديل خزينة ADN',`ADN: ${$('exDeltaAdn').value||0} — USD: ${$('exDeltaUsd').value||0}`,true);
+    if(!ok)return;
+    loading(true);
+    await api('/admin/exchange/treasury/adjust',{method:'POST',body:JSON.stringify({deltaAdn:Number($('exDeltaAdn').value||0),deltaUsd:Number($('exDeltaUsd').value||0),reason})});
+    $('exDeltaAdn').value='0';$('exDeltaUsd').value='0';$('exTreasuryReason').value='';
+    exMsg('exTreasuryMsg','تم تعديل الخزينة وتسجيل العملية.');
+    toast('تم تعديل خزينة السوق');
+    await loadExchange(false);
+  }catch(e){exMsg('exTreasuryMsg',e.message,true);toast(e.message)}
+  finally{loading(false);b.disabled=false}
+};
+
+$('exPlaceTreasuryOrder').onclick=async()=>{
+  const b=$('exPlaceTreasuryOrder');b.disabled=true;
+  try{
+    loading(true);
+    await api('/admin/exchange/order/place',{method:'POST',body:JSON.stringify({
+      side:$('exTreasurySide').value,
+      type:$('exTreasuryType').value,
+      quantity:Number($('exTreasuryQty').value||0),
+      price:Number($('exTreasuryPrice').value||0),
+      requestId:exRid('treasury')
+    })});
+    $('exTreasuryQty').value='';
+    exMsg('exTreasuryOrderMsg','تم إنشاء أمر الخزينة.');
+    toast('تمت إضافة أمر الخزينة');
+    await loadExchange(false);
+  }catch(e){exMsg('exTreasuryOrderMsg',e.message,true);toast(e.message)}
+  finally{loading(false);b.disabled=false}
+};
+
+async function cancelExchangeOrder(orderId,button){
+  const ok=await confirmAction('إلغاء أمر السوق',`رقم الأمر: ${orderId}`,true);
+  if(!ok)return;
+  button.disabled=true;
+  try{
+    loading(true);
+    await api('/admin/exchange/order/cancel',{method:'POST',body:JSON.stringify({orderId,reason:'إلغاء من مركز إدارة ADNOR الموحّد'})});
+    toast('تم إلغاء الأمر');
+    await loadExchange(false);
+  }catch(e){toast(e.message)}
+  finally{loading(false);button.disabled=false}
+}
+
 function fillSupport(){const s=supportSettings||{};$('supportWhatsapp').value=s.whatsapp||s.phone||'';$('supportTelegram').value=s.telegram||'';$('supportMessage').value=s.message||'مرحبًا، أحتاج مساعدة في منصة ADNOR';$('supportHours').value=s.hours||'';$('supportActive').value=String(s.active!==false);renderSupportPreview()}
 function renderSupportPreview(){const wa=$('supportWhatsapp').value||'غير محدد',tg=$('supportTelegram').value||'غير محدد';$('supportPreview').innerHTML=`<div class="list-row"><div class="activity-icon">🟢</div><div><h4>WhatsApp</h4><p>${esc(wa)}</p></div></div><div class="list-row"><div class="activity-icon">✈️</div><div><h4>Telegram</h4><p>${esc(tg)}</p></div></div><div class="list-row"><div class="activity-icon">🕒</div><div><h4>ساعات العمل</h4><p>${esc($('supportHours').value||'غير محددة')}</p></div></div>`}
 ['supportWhatsapp','supportTelegram','supportHours'].forEach(id=>$(id).oninput=renderSupportPreview);
@@ -192,12 +489,45 @@ function download(name,content,type='text/csv;charset=utf-8'){const blob=new Blo
 function exportUsers(){const rows=[['UID','Public ID','Name','Email','Real','Bonus','Reserved','VIP','Frozen','Created','Last Activity'],...users.map(u=>[u.uid,u.publicId,u.name,u.email,u.realBalance,u.bonusBalance,u.reservedWithdrawalBalance,u.isVIP,u.isFrozen,new Date(u.createdAt||0).toISOString(),new Date(u.lastActivityAt||0).toISOString()])];download('adnor-users.csv',rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n'))}
 $('exportUsersBtn').onclick=async()=>{if(!users.length)await loadUsers('');exportUsers()};$('exportBtn').onclick=()=>{const m=overview?.metrics||{};const rows=Object.entries(m).filter(([,v])=>typeof v!=='object').map(([k,v])=>[k,v]);download('adnor-overview.csv',[['Metric','Value'],...rows].map(r=>r.join(',')).join('\n'))};
 
-$('googleLogin').onclick=async()=>{try{$('loginStatus').textContent='جاري تسجيل الدخول...';await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){$('loginStatus').textContent=e.message}};
+async function startAdminGoogleLogin(){
+  const b=$('googleLogin');b.disabled=true;$('loginStatus').textContent='جاري فتح تسجيل Google...';
+  try{
+    const standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||window.navigator.standalone===true;
+    if(standalone){$('loginStatus').textContent='سيتم تحويلك إلى Google ثم إعادتك إلى مركز الإدارة...';await signInWithRedirect(auth,googleProvider);return}
+    try{await signInWithPopup(auth,googleProvider)}
+    catch(e){
+      const code=String(e?.code||'');
+      if(code.includes('popup-blocked')||code.includes('popup-closed-by-user')||code.includes('operation-not-supported-in-this-environment')||code.includes('cancelled-popup-request')){
+        $('loginStatus').textContent='تعذر فتح النافذة. جاري استخدام تسجيل الدخول الآمن...';
+        await signInWithRedirect(auth,googleProvider);return;
+      }
+      throw e;
+    }
+  }catch(e){$('loginStatus').textContent=e?.message||'تعذر تسجيل الدخول عبر Google';b.disabled=false}
+}
+$('googleLogin').onclick=startAdminGoogleLogin;
 $('emailLogin').onclick=async()=>{try{$('loginStatus').textContent='جاري تسجيل الدخول...';await signInWithEmailAndPassword(auth,$('adminEmail').value.trim(),$('adminPassword').value)}catch(e){$('loginStatus').textContent=e.message}};
 $('logoutBtn').onclick=()=>signOut(auth);
 
 function startSettingsListeners(){onValue(ref(db,'lottery_settings'),s=>{lotterySettings=s.val()||{};fillLottery()});onValue(ref(db,'wheel_settings'),s=>{wheelSettings=s.val()||{};fillWheel()});onValue(ref(db,'system_settings/public_support'),s=>{supportSettings=s.val()||{};fillSupport()})}
-onAuthStateChanged(auth,async user=>{if(!user){$('loginScreen').classList.remove('hidden');$('appShell').classList.add('hidden');return}try{loading(true);await api('/admin/overview?range=today');$('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');startSettingsListeners();await Promise.all([loadOverview(false),checkHealth()]);$('loginStatus').textContent=''}catch(e){$('loginStatus').textContent=e.message;await signOut(auth)}finally{loading(false)}});
+try{await getRedirectResult(auth)}catch(e){$('loginStatus').textContent=e?.message||'تعذر إكمال تسجيل Google'}
+onAuthStateChanged(auth,async user=>{
+  if(!user){$('loginScreen').classList.remove('hidden');$('appShell').classList.add('hidden');$('googleLogin').disabled=false;return}
+  try{
+    loading(true);
+    await api('/admin/overview?range=today');
+    $('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');
+    startSettingsListeners();
+    await Promise.all([loadOverview(false),checkHealth()]);
+    const requested=String(location.hash||'').replace(/^#/,'');
+    const allowed=['dashboard','live','users','finance','lottery','games','exchange','agents','broadcast','support','system'];
+    showPage(allowed.includes(requested)?requested:'dashboard');
+    $('loginStatus').textContent='';
+  }catch(e){$('loginStatus').textContent=e.message;await signOut(auth)}
+  finally{loading(false)}
+});
+window.addEventListener('hashchange',()=>{const p=String(location.hash||'').replace(/^#/,'');if(document.getElementById('page-'+p))showPage(p)});
+setInterval(()=>{if(auth.currentUser&&currentPage==='exchange')loadExchange(false)},8000);
 </script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 'use strict';
-const CACHE='adnor-v198-shell-login-fix-2';
+const CACHE='adnor-v199-admin-integrated-exchange-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',
   '/assets/icons/icon-96.png','/assets/icons/icon-192.png','/assets/icons/icon-512.png','/assets/icons/icon-maskable-512.png',
-  '/install-app.js', '/energy-admin.html', '/admin-command-center.html', '/exchange-admin.html'
+  '/install-app.js'
 ];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));
@@ -19,7 +19,7 @@ self.addEventListener('fetch',event=>{
   if(url.origin!==self.location.origin) return;
   if(url.pathname.startsWith('/api')||url.pathname.includes('firebase')) return;
   if(url.pathname==='/exchange-admin.html'||url.pathname==='/admin-command-center.html'||url.pathname==='/energy-admin.html'){
-    event.respondWith(fetch(req).catch(()=>caches.match('/offline.html')));
+    event.respondWith(fetch(req,{cache:'no-store'}).catch(()=>caches.match('/offline.html')));
     return;
   }
   if(req.mode==='navigate'){

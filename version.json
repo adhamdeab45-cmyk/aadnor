@@ -1,9 +1,10 @@
 {
-  "version": "2.0.9",
-  "build": "V209-GLOBAL-BADGE-REMOVED",
+  "version": "2.1.0",
+  "build": "V210-WHEEL-AUDIO-SYNC",
   "changes": [
-    "removed the floating AD​NOR GLOBAL / USD / timezone badge from the top of the member interface",
-    "kept local-time conversion and draw scheduling logic unchanged",
-    "updated PWA cache version so the visual change reaches installed apps"
+    "wheel sound now starts only when the wheel visually begins rotating",
+    "tick rhythm slows naturally with wheel deceleration",
+    "result sound waits for the real CSS transition end instead of a fixed timer",
+    "removed duplicate legacy wheel sound handler"
   ]
 }

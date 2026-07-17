@@ -1,0 +1,8 @@
+ADNOR V210 TEST REPORT
+- Removed early V97 spin sound before API response: PASS
+- Wheel sound starts in same animation frame as transform: PASS
+- Adaptive tick timing follows deceleration: PASS
+- Result waits for transitionend with safe fallback: PASS
+- Disabled duplicate V98 wheel sound handler: PASS
+- PWA cache bumped to V210: PASS
+- Server/API/Firebase files unchanged: PASS

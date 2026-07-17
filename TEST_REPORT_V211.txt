@@ -1,0 +1,21 @@
+ADNOR V211 TEST REPORT
+
+Source baseline: V210 wheel audio sync site package.
+
+Checks completed:
+- index.html parsed successfully.
+- No duplicate HTML element IDs.
+- All inline JavaScript blocks passed Node.js syntax checks.
+- manifest.webmanifest and version.json passed JSON validation.
+- Latest winner renderer now fills both the first-screen winner monument and the lower winners hall.
+- Winner ordering uses publication timestamp instead of prize amount.
+- Public prize ribbon reads daily, weekly, monthly and yearly prize values from site configuration.
+- Service worker cache name updated to V211.
+- Desktop layout rendered at 1440x1000.
+- Mobile layout rendered at 390x844, with the latest winner visible before scrolling.
+- V210 app.html and wheel audio synchronization files were preserved.
+
+Live verification still required after deployment:
+- Firebase public result data appears in the winner monument.
+- Google sign-in works on production domain.
+- Service worker refreshes on installed PWA.

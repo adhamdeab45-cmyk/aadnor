@@ -1,10 +1,11 @@
 {
-  "version": "2.1.0",
-  "build": "V210-WHEEL-AUDIO-SYNC",
+  "version": "2.1.1",
+  "build": "V211-ROYAL-PUBLIC-WINNER-LANDING",
   "changes": [
-    "wheel sound now starts only when the wheel visually begins rotating",
-    "tick rhythm slows naturally with wheel deceleration",
-    "result sound waits for the real CSS transition end instead of a fixed timer",
-    "removed duplicate legacy wheel sound handler"
+    "premium public landing hero rebuilt around the latest official winner",
+    "latest winner now appears before sign-in with masked name, ticket, prize and draw type",
+    "configured daily, weekly, monthly and yearly prizes are visible in the first screen",
+    "winner ordering fixed to use publication time instead of prize amount",
+    "responsive royal layout added for desktop and mobile"
   ]
 }

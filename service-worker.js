@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v213-squirrel-settlement-fix-1';
+const CACHE='adnor-v214-squirrel-compact-mobile-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/golden-squirrel.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

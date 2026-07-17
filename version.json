@@ -1,11 +1,11 @@
 {
-  "version": "2.1.3",
-  "build": "V213-GOLDEN-SQUIRREL-SETTLEMENT-FIX",
+  "version": "V214",
+  "build": "squirrel-compact-settlement-mobile-layout",
   "changes": [
-    "fixed golden squirrel server settlement without full database root transaction",
-    "user bet hold, treasury accounting, payout settlement and automatic rollback",
-    "removed all visible experimental wording from the production site",
-    "wallet balance now loads as zero until verified by the server",
-    "new service worker cache to force the corrected game page"
+    "compact per-game treasury settlement instead of transacting the entire game treasury tree",
+    "idempotent user hold, compact treasury accounting, payout finalize and rollback protection",
+    "mobile game screen keeps the squirrel, multipliers, bet buttons and play button together",
+    "server now returns an explicit squirrel error code instead of an unnamed internal error",
+    "new service worker cache forces the corrected game page"
   ]
 }

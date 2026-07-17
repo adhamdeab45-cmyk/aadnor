@@ -302,7 +302,22 @@ play.addEventListener("click",async()=>{
    if(o.type==="fall"){game.classList.remove("shake");void game.offsetWidth;game.classList.add("shake");crack.classList.add("show");riskLabel.textContent=`انكسر الغصن بعد x${m}`;await wait(160);loseSound();rig.className="squirrel-rig falling";shadow.style.opacity=0;await wait(1350)}
    else{riskLabel.textContent=`تم تثبيت الربح عند x${m}`;if(last>=5)chestGlow.classList.add("show");winSound(m);dust(p.x,p.y,46);await wait(620)}
    const payout=Number(data.payout||0);balance=Number(data.balances?.realBalance||0)+Number(data.balances?.bonusBalance||0);liveWin.textContent=money(payout);showResult(o,m,payout);addHistory(o.type,m,bet,payout);refresh();await wait(1750);
- }catch(error){$("#resultIcon").textContent="⚠️";$("#resultTitle").textContent="تعذر بدء الجولة";$("#resultAmount").textContent="";$("#resultText").textContent="لم يتم اعتماد الجولة. حدّث الرصيد ثم أعد المحاولة.";riskLabel.textContent="لم تبدأ الجولة";banner.classList.add("show");try{const state=await window.adnorSquirrelRefresh();applyServerState(state)}catch(_e){}
+ }catch(error){
+   const friendly={
+     INSUFFICIENT_PLAYABLE_BALANCE:["الرصيد غير كافٍ","اشحن المحفظة أو خفّض قيمة اللعب."],
+     GAME_TREASURY_LOW:["اللعبة متوقفة مؤقتًا","لم يتم خصم أي مبلغ. أعد المحاولة بعد قليل."],
+     GAMES_DISABLED:["الألعاب متوقفة مؤقتًا","لم يتم خصم أي مبلغ."],
+     GAME_NOT_AVAILABLE:["اللعبة غير متاحة الآن","لم يتم خصم أي مبلغ."],
+     ACCOUNT_FROZEN:["الحساب موقوف","راجع الدعم لمعرفة السبب."],
+     SELF_EXCLUDED:["اللعب غير متاح للحساب","انتظر انتهاء مدة الإيقاف المحددة."],
+     GAME_BET_OUT_OF_RANGE:["قيمة اللعب غير مسموحة","اختر مبلغًا ضمن الحدود الظاهرة."],
+     GAME_SETTLEMENT_FAILED:["تعذر إكمال الجولة","تمت حماية الرصيد تلقائيًا."],
+     GAME_USER_HOLD_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."],
+     GAME_TREASURY_ACCOUNTING_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."]
+   };
+   const message=friendly[error.code]||["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."];
+   $("#resultIcon").textContent="⚠️";$("#resultTitle").textContent=message[0];$("#resultAmount").textContent="";$("#resultText").textContent=message[1];riskLabel.textContent="لم تبدأ الجولة";banner.classList.add("show");
+   try{const state=await window.adnorSquirrelRefresh();applyServerState(state)}catch(_e){}
  }finally{running=false;refresh()}
 });
 function applyServerState(data){const g=data?.game||{};gameMin=Number(g.minBet||1);gameMax=Number(g.maxBet||100);bet=Math.max(gameMin,Math.min(gameMax,bet));custom.min=gameMin;custom.max=gameMax;balance=Number(data?.balances?.realBalance||0)+Number(data?.balances?.bonusBalance||0);gameReady=g.enabled!==false;refresh()}

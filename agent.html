@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADNOR | بوابة وكيل الشحن</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700;800;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#020a16;--card:#081a34;--gold:#ffd866;--gold2:#d89524;--line:rgba(255,216,102,.42);--txt:#ecf4ff;--muted:#aebbd0;--green:#4dffc6;--red:#ff6f7d;--blue:#91eaff}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -5%,rgba(255,216,102,.18),transparent 32%),radial-gradient(circle at 0 100%,rgba(0,201,255,.12),transparent 30%),linear-gradient(180deg,#061225,#020a16 72%);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--txt)}
+    .wrap{width:min(100%,460px);margin:auto;padding:18px 13px 92px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.brand{font-family:Cinzel,serif;font-size:32px;font-weight:900;background:linear-gradient(180deg,#fff3b4,#d89524,#ffe184);-webkit-background-clip:text;color:transparent}.mini{font-size:12px;color:var(--muted);font-weight:900}.card{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(8,26,52,.92),rgba(2,10,22,.96));box-shadow:0 0 28px rgba(255,188,39,.12),inset 0 0 28px rgba(255,216,102,.04);padding:16px;margin-bottom:13px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;inset:8px;border-radius:22px;border:1px solid rgba(255,239,169,.08);pointer-events:none}.hero{text-align:center;padding:24px 16px}.hero .icon{width:74px;height:74px;border-radius:24px;display:grid;place-items:center;margin:0 auto 10px;background:radial-gradient(circle at 30% 20%,#fff3ad,#d89524 58%,#6d3b08);font-size:38px;box-shadow:0 0 24px rgba(255,216,102,.28)}h1,h2,h3,p{margin:0}.hero h1{font-size:27px;color:#ffe184}.hero p{color:var(--muted);font-size:13px;font-weight:800;line-height:1.8;margin-top:7px}.field{margin:10px 0}.field label{display:block;color:#ffe184;font-size:13px;font-weight:900;margin-bottom:6px}.input{height:52px;border:1px solid rgba(255,216,102,.38);border-radius:17px;background:rgba(2,10,22,.72);display:flex;align-items:center;gap:8px;padding:0 12px}.input span{font-size:20px}.input input,.input textarea{width:100%;height:100%;border:0;outline:0;background:transparent;color:#fff;font:inherit;font-weight:800}.input textarea{height:96px;padding:13px 0;resize:none}.input.textarea{height:106px;align-items:flex-start}.btn{width:100%;min-height:52px;border:0;border-radius:18px;background:linear-gradient(180deg,#fff1a5,#d89524 62%,#8d510d);color:#151007;font:inherit;font-weight:1000;cursor:pointer;box-shadow:0 0 18px rgba(255,188,39,.18);margin-top:8px}.btn.dark{background:rgba(2,10,22,.72);color:#ffe184;border:1px solid rgba(255,216,102,.38);box-shadow:none}.btn.red{background:rgba(255,111,125,.12);color:#ffb7bf;border:1px solid rgba(255,111,125,.45);box-shadow:none}.btn:disabled{opacity:.55;cursor:not-allowed}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{border:1px solid rgba(255,216,102,.32);background:rgba(2,10,22,.55);border-radius:20px;padding:13px;text-align:center}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:900}.stat b{display:block;color:#ffe184;font-size:20px;margin-top:4px;direction:ltr}.profile{display:flex;align-items:center;justify-content:space-between;gap:10px}.profile b{color:#ffe184}.profile span{display:block;color:var(--muted);font-size:12px;font-weight:800;direction:ltr;text-align:right}.status{margin-top:10px;border-radius:16px;padding:11px;background:rgba(2,10,22,.58);border:1px dashed rgba(255,216,102,.28);color:var(--muted);font-weight:800;line-height:1.7;font-size:13px}.status.ok{border-color:rgba(77,255,198,.45);color:#b9ffe8}.status.bad{border-color:rgba(255,111,125,.45);color:#ffd1d6}.userbox{display:none}.userbox.show{display:block}.user-info{border:1px solid rgba(145,234,255,.35);background:rgba(0,201,255,.08);border-radius:18px;padding:12px;margin-top:10px}.user-info h3{color:#bdf3ff;font-size:16px}.user-info p{color:#cbd7e7;font-size:12px;font-weight:800;line-height:1.7;margin-top:4px;direction:ltr;text-align:right}.logs{display:grid;gap:9px}.log {border:1px solid rgba(255,216,102,.28);border-radius:18px;background:rgba(2,10,22,.52);padding:11px}.log b{color:#ffe184}.log p{color:#aebbd0;font-size:12px;font-weight:800;line-height:1.7;margin-top:3px}.hidden{display:none!important}.footerNav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(100% - 20px,440px);display:grid;grid-template-columns:1fr 1fr;gap:8px}.footerNav a,.footerNav button{height:50px;border-radius:17px;border:1px solid rgba(255,216,102,.36);background:rgba(2,10,22,.88);color:#ffe184;text-decoration:none;font:inherit;font-weight:900;display:grid;place-items:center;cursor:pointer}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top"><div><div class="brand">ADNOR</div><div class="mini">بوابة وكيل الشحن</div></div><button id="logoutBtn" class="btn red hidden" style="width:auto;min-height:42px;padding:0 13px">خروج</button></div>
+    <section class="card hero"><div class="icon">💳</div><h1>وكيل شحن ADNOR</h1><p>ادخل بحساب الوكيل، ثم اشحن المستخدم عبر الرقم العام أو UID. كل عملية تُنفّذ وتُسجّل حصريًا من سيرفر ADNOR الآمن.</p></section>
+    <section class="card" id="loginCard">
+      <h2 style="color:#ffe184;font-size:21px">تسجيل دخول الوكيل</h2>
+      <div class="field"><label>اسم الدخول أو الإيميل</label><div class="input"><span>📧</span><input id="loginEmail" type="text" autocomplete="username" placeholder="adhamagent أو agent@gmail.com"></div></div>
+      <div class="field"><label>كلمة السر</label><div class="input"><span>🔒</span><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div></div>
+      <button class="btn" id="loginBtn">دخول الوكيل</button>
+      <div class="status" id="loginStatus">استخدم اسم الدخول وكلمة السر التي أنشأها الأدمن. اكتب الاسم فقط مثل muhammed200400 بدون @adnor-agent.com.</div>
+    </section>
+    <section class="card hidden" id="dashboardCard">
+      <div class="profile"><div><b id="agentName">وكيل شحن</b><span id="agentEmail">—</span></div><div class="mini" id="agentState">مفعّل</div></div>
+      <div class="stats" style="margin-top:12px"><div class="stat"><span>رصيد الوكيل</span><b id="agentBalance">$0.00</b></div><div class="stat"><span>إجمالي الشحن</span><b id="agentTotal">$0.00</b></div><div class="stat"><span>شحن اليوم / الحد</span><b id="agentDailyUsage">$0.00</b></div><div class="stat"><span>شحن الشهر / الحد</span><b id="agentMonthlyUsage">$0.00</b></div></div>
+    </section>
+    <section class="card hidden" id="rechargeCard">
+      <h2 style="color:#ffe184;font-size:21px">شحن مستخدم</h2>
+      <div class="field"><label>رقم المستخدم / UID داخلي / كود الدعوة / البريد</label><div class="input"><span>🆔</span><input id="targetId" placeholder="مثال: 100001 أو كود الدعوة"></div></div>
+      <button class="btn dark" id="findUserBtn">فحص المستخدم قبل الشحن</button>
+      <div class="userbox" id="targetUserBox"><div class="user-info"><h3 id="targetUserName">—</h3><p id="targetUserInfo">—</p></div></div>
+      <div class="field"><label>المبلغ بالدولار</label><div class="input"><span>💵</span><input id="amount" type="number" min="0.01" step="0.01" placeholder="مثال: 50"></div></div>
+      <div class="field"><label>ملاحظة اختيارية</label><div class="input textarea"><span>🧾</span><textarea id="note" placeholder="مثال: شحن كاش"></textarea></div></div>
+      <button class="btn" id="rechargeBtn">تنفيذ الشحن</button>
+      <div class="status" id="rechargeStatus">الشحن محمي بالسيرفر: يُخصم المبلغ من محفظة الوكيل ويُضاف للمستخدم في عملية واحدة مسجّلة.</div>
+    </section>
+    <section class="card hidden" id="logsCard"><h2 style="color:#ffe184;font-size:21px;margin-bottom:10px">آخر عملياتي</h2><div class="logs" id="logsList"></div></section>
+  </main>
+  <div class="footerNav"><a href="index.html">الرئيسية</a><button id="refreshBtn" type="button">تحديث</button></div>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut,
+    setPersistence,
+    browserLocalPersistence
+  } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+
+  const VERSION = 'ADNOR_AGENT_SECURE_API_V192';
+  const API_BASE = 'https://adnor-api.onrender.com';
+  const firebaseConfig = {
+    apiKey: 'AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g',
+    authDomain: 'adhamnnn-8a4d2.firebaseapp.com',
+    databaseURL: 'https://adhamnnn-8a4d2-default-rtdb.firebaseio.com',
+    projectId: 'adhamnnn-8a4d2',
+    storageBucket: 'adhamnnn-8a4d2.firebasestorage.app',
+    messagingSenderId: '812431761704',
+    appId: '1:812431761704:web:2b85a0532574cc4378301d',
+    measurementId: 'G-59WKJBRDG8'
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const $ = (id) => document.getElementById(id);
+
+  setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.warn('AGENT_PERSISTENCE_WARNING', error);
+  });
+
+  function toEnglishDigits(value) {
+    return String(value ?? '')
+      .replace(/[٠-٩]/g, (digit) => '٠١٢٣٤٥٦٧٨٩'.indexOf(digit))
+      .replace(/[۰-۹]/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(digit));
+  }
+
+  function cleanNumber(value) {
+    const normalized = toEnglishDigits(value)
+      .trim()
+      .replace(/\s/g, '')
+      .replace(/,/g, '.')
+      .replace(/[^0-9.\-]/g, '');
+    const number = Number(normalized);
+    return Number.isFinite(number) ? Math.round(number * 100) / 100 : 0;
+  }
+
+  function money(value) {
+    return '$' + cleanNumber(value).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    })[char]);
+  }
+
+  function setStatus(id, text, type = '') {
+    const element = $(id);
+    if (!element) return;
+    element.textContent = text;
+    element.className = 'status' + (type ? ' ' + type : '');
+  }
+
+  function normalizeAgentLogin(value) {
+    const raw = String(value || '').trim().toLowerCase();
+    if (!raw) throw new Error('اكتب اسم الدخول أو الإيميل.');
+    if (raw.includes('@')) return raw;
+
+    const loginId = raw.replace(/\s+/g, '');
+    if (!/^[a-z0-9._-]{3,60}$/.test(loginId)) {
+      throw new Error('اسم الدخول غير صحيح. استخدم أحرفًا إنكليزية وأرقامًا فقط.');
+    }
+
+    return loginId + '@adnor-agent.com';
+  }
+
+  function readableError(error) {
+    const code = String(error?.code || '');
+    if (code.includes('invalid-credential')) return 'اسم الدخول أو كلمة السر غير صحيحة.';
+    if (code.includes('too-many-requests')) return 'محاولات كثيرة. انتظر قليلًا ثم أعد المحاولة.';
+    if (code.includes('network-request-failed')) return 'تعذر الاتصال بالإنترنت.';
+    return error?.message || 'حدث خطأ غير متوقع.';
+  }
+
+  async function apiRequest(path, options = {}) {
+    const user = auth.currentUser;
+    if (!user) throw new Error('يجب تسجيل الدخول أولًا.');
+
+    const token = await user.getIdToken(true);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
+    try {
+      const response = await fetch(API_BASE + path, {
+        method: options.method || 'GET',
+        headers: {
+          Authorization: 'Bearer ' + token,
+          ...(options.body ? { 'Content-Type': 'application/json' } : {})
+        },
+        body: options.body ? JSON.stringify(options.body) : undefined,
+        cache: 'no-store',
+        signal: controller.signal
+      });
+
+      const text = await response.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error('استجابة السيرفر غير صحيحة.');
+      }
+
+      if (!response.ok || data.ok === false) {
+        const error = new Error(data.message || 'فشلت العملية على السيرفر.');
+        error.code = data.error || 'API_ERROR';
+        throw error;
+      }
+
+      return data;
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        throw new Error('انتهت مهلة الاتصال بالسيرفر. أعد المحاولة.');
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  function createRequestId() {
+    if (globalThis.crypto?.randomUUID) {
+      return 'web_' + globalThis.crypto.randomUUID().replace(/-/g, '');
+    }
+    return 'web_' + Date.now() + '_' + Math.random().toString(36).slice(2, 18);
+  }
+
+  function showAuthenticated(isAuthenticated) {
+    ['dashboardCard', 'rechargeCard', 'logsCard', 'logoutBtn'].forEach((id) => {
+      $(id)?.classList.toggle('hidden', !isAuthenticated);
+    });
+    $('loginCard')?.classList.toggle('hidden', isAuthenticated);
+  }
+
+  function renderDashboard(result) {
+    const agent = result.agent || {};
+    $('agentName').textContent = agent.name || 'وكيل شحن';
+    $('agentEmail').textContent = agent.loginId || agent.email || '';
+    $('agentState').textContent = agent.active !== false ? 'مفعّل' : 'موقوف';
+    $('agentBalance').textContent = money(agent.agentBalance);
+    $('agentTotal').textContent = money(agent.totalCharged);
+    $('agentDailyUsage').textContent =
+      money(result.todayCharged || 0) + ' / ' +
+      (cleanNumber(agent.dailyLimit) > 0 ? money(agent.dailyLimit) : 'بدون حد');
+    $('agentMonthlyUsage').textContent =
+      money(result.monthCharged || 0) + ' / ' +
+      (cleanNumber(agent.monthlyLimit) > 0 ? money(agent.monthlyLimit) : 'بدون حد');
+
+    const logs = Array.isArray(result.logs) ? result.logs : [];
+    $('logsList').innerHTML = logs.length
+      ? logs.map((row) => `
+          <div class="log">
+            <b>${money(row.amount)} إلى ${escapeHtml(row.targetName || row.targetUserId || 'مستخدم')}</b>
+            <p>
+              ID: ${escapeHtml(row.targetPublicId || row.targetUserId || row.targetUid || '')}<br>
+              ${new Date(row.createdAt || Date.now()).toLocaleString('ar-TR')}<br>
+              ${escapeHtml(row.note || '')}
+            </p>
+          </div>
+        `).join('')
+      : '<div class="status">لا توجد عمليات بعد.</div>';
+  }
+
+  async function loadDashboard() {
+    setStatus('rechargeStatus', 'جارٍ مزامنة محفظة الوكيل مع السيرفر...');
+    const result = await apiRequest('/agent/dashboard');
+    renderDashboard(result);
+    setStatus('rechargeStatus', 'بوابة الشحن الآمنة جاهزة.', 'ok');
+    return result;
+  }
+
+  $('loginBtn').onclick = async () => {
+    try {
+      $('loginBtn').disabled = true;
+      setStatus('loginStatus', 'جارٍ تسجيل الدخول...');
+      const email = normalizeAgentLogin($('loginEmail').value);
+      await signInWithEmailAndPassword(auth, email, $('loginPass').value);
+      setStatus('loginStatus', 'تم تسجيل الدخول بنجاح.', 'ok');
+    } catch (error) {
+      setStatus('loginStatus', readableError(error), 'bad');
+    } finally {
+      $('loginBtn').disabled = false;
+    }
+  };
+
+  ['loginEmail', 'loginPass'].forEach((id) => {
+    $(id)?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') $('loginBtn').click();
+    });
+  });
+
+  $('logoutBtn').onclick = () => signOut(auth);
+
+  $('refreshBtn').onclick = () => {
+    loadDashboard().catch((error) => {
+      setStatus('rechargeStatus', readableError(error), 'bad');
+    });
+  };
+
+  $('findUserBtn').onclick = async () => {
+    const targetId = $('targetId').value.trim();
+    if (!targetId) {
+      setStatus('rechargeStatus', 'اكتب رقم المستخدم أولًا.', 'bad');
+      return;
+    }
+
+    try {
+      $('findUserBtn').disabled = true;
+      setStatus('rechargeStatus', 'جارٍ فحص المستخدم من السيرفر...');
+      const result = await apiRequest('/agent/find-user', {
+        method: 'POST',
+        body: { targetId }
+      });
+      const user = result.user || {};
+
+      $('targetUserBox').classList.add('show');
+      $('targetUserName').textContent = user.name || user.displayName || 'مستخدم ADNOR';
+      $('targetUserInfo').textContent =
+        `ID: ${user.publicId || user.userId || user.accountNumber || '—'}\n` +
+        `UID داخلي: ${user.uid || '—'}\n` +
+        `Email: ${user.email || '—'}\n` +
+        `Real: ${money(user.realBalance)} | Bonus: ${money(user.bonusBalance)}`;
+      setStatus('rechargeStatus', 'تم العثور على المستخدم. تأكد من الاسم قبل الشحن.', 'ok');
+    } catch (error) {
+      $('targetUserBox').classList.remove('show');
+      setStatus('rechargeStatus', readableError(error), 'bad');
+    } finally {
+      $('findUserBtn').disabled = false;
+    }
+  };
+
+  $('rechargeBtn').onclick = async () => {
+    const targetId = $('targetId').value.trim();
+    const amount = cleanNumber($('amount').value);
+    const note = $('note').value.trim();
+
+    if (!targetId || amount <= 0) {
+      setStatus('rechargeStatus', 'اكتب رقم المستخدم والمبلغ بشكل صحيح.', 'bad');
+      return;
+    }
+
+    if (!confirm(`تأكيد شحن ${money(amount)} للمستخدم: ${targetId}؟`)) return;
+
+    try {
+      $('rechargeBtn').disabled = true;
+      $('findUserBtn').disabled = true;
+      setStatus('rechargeStatus', 'جارٍ تنفيذ الشحن المحمي من السيرفر...');
+
+      const result = await apiRequest('/agent/recharge', {
+        method: 'POST',
+        body: {
+          targetId,
+          amount,
+          note,
+          requestId: createRequestId()
+        }
+      });
+
+      setStatus(
+        'rechargeStatus',
+        `تم الشحن بنجاح. رصيد الوكيل: ${money(result.agentAfter)} | رصيد المستخدم: ${money(result.userAfter)}.`,
+        'ok'
+      );
+
+      $('amount').value = '';
+      $('note').value = '';
+      $('targetUserBox').classList.remove('show');
+      await loadDashboard();
+    } catch (error) {
+      setStatus('rechargeStatus', readableError(error), 'bad');
+    } finally {
+      $('rechargeBtn').disabled = false;
+      $('findUserBtn').disabled = false;
+    }
+  };
+
+  onAuthStateChanged(auth, async (user) => {
+    showAuthenticated(Boolean(user));
+
+    if (!user) {
+      setStatus(
+        'loginStatus',
+        'استخدم اسم الدخول وكلمة السر التي أنشأها الأدمن. اكتب الاسم فقط بدون @adnor-agent.com.'
+      );
+      return;
+    }
+
+    try {
+      await loadDashboard();
+    } catch (error) {
+      console.error('AGENT_SERVER_AUTH_FAILED', error);
+      await signOut(auth).catch(() => null);
+      showAuthenticated(false);
+      setStatus('loginStatus', readableError(error), 'bad');
+    }
+  });
+
+  console.log(VERSION);
+</script>
+</body>
+</html>

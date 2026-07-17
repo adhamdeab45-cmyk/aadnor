@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#06101f" name="theme-color"/>
+<title>ADNOR Admin Command Center V204</title>
+<link href="favicon.svg" rel="icon"/>
+<style>
+:root{--bg:#020812;--bg2:#061426;--card:#07182c;--card2:#0b213d;--gold:#ffd86b;--gold2:#d99b22;--text:#f4f7fb;--muted:#93a5bd;--green:#31e6a1;--red:#ff667b;--blue:#4bd8ff;--violet:#b98cff;--line:rgba(255,216,107,.24);--shadow:0 18px 45px rgba(0,0,0,.34);font-family:"Segoe UI",Tahoma,Arial,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 80% 0,rgba(255,208,80,.10),transparent 28%),radial-gradient(circle at 0 100%,rgba(50,205,255,.08),transparent 30%),linear-gradient(145deg,var(--bg),#031222 55%,#020710);color:var(--text)}body{overflow-x:hidden}button,input,select,textarea{font:inherit}.hidden{display:none!important}.shell{display:grid;grid-template-columns:285px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:18px 14px;border-left:1px solid var(--line);background:linear-gradient(180deg,rgba(5,20,39,.98),rgba(2,8,18,.98));box-shadow:var(--shadow);z-index:20;overflow:auto}.brand{display:flex;align-items:center;gap:11px;padding:10px 12px 18px;border-bottom:1px solid var(--line);margin-bottom:12px}.brand-logo{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:28px;background:radial-gradient(circle at 35% 20%,#fff6bd 0 6%,transparent 7%),linear-gradient(145deg,#ffe683,#9f6410);color:#281500;box-shadow:0 0 25px rgba(255,202,55,.23)}.brand h1{font-size:17px;margin:0;color:var(--gold)}.brand small{display:block;color:var(--muted);font-weight:700;margin-top:4px}.nav{display:grid;gap:6px}.nav button,.nav a{border:1px solid transparent;background:transparent;color:#cbd5e4;min-height:47px;border-radius:15px;padding:0 12px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:right;font-weight:800;transition:.2s;text-decoration:none}.nav button:hover,.nav a:hover{background:rgba(255,255,255,.035);border-color:rgba(255,216,107,.12)}.nav button.active,.nav a.active{color:#251500;background:linear-gradient(135deg,#fff0a8,#d89924);box-shadow:0 8px 22px rgba(213,148,24,.18)}.nav .icon{width:27px;text-align:center;font-size:18px}.sidebar-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);display:grid;gap:8px}.status-pill{display:flex;align-items:center;justify-content:space-between;padding:10px 11px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);font-size:12px;color:var(--muted);font-weight:800}.status-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}.main{min-width:0;padding:18px 22px 40px}.topbar{position:sticky;top:0;z-index:15;display:flex;align-items:center;gap:12px;margin:-18px -22px 18px;padding:14px 22px;background:rgba(2,9,19,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.topbar h2{margin:0;color:var(--gold);font-size:21px}.topbar p{margin:3px 0 0;color:var(--muted);font-size:12px;font-weight:700}.top-spacer{flex:1}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:linear-gradient(180deg,rgba(16,42,73,.92),rgba(5,18,35,.95));color:var(--text);border-radius:14px;min-height:42px;padding:0 14px;font-weight:900;cursor:pointer}.btn:hover{filter:brightness(1.12)}.btn.gold{border:0;color:#261500;background:linear-gradient(180deg,#fff1a9,#d79a23);box-shadow:0 6px 18px rgba(215,154,35,.18)}.btn.green{border-color:rgba(49,230,161,.4);color:#91ffd2}.btn.red{border-color:rgba(255,102,123,.45);color:#ff9cab}.btn.blue{border-color:rgba(75,216,255,.45);color:#9beeff}.btn.sm{min-height:34px;padding:0 10px;font-size:12px;border-radius:11px}.mobile-menu{display:none}.page{display:none}.page.active{display:block}.hero{position:relative;overflow:hidden;border:1px solid rgba(255,216,107,.38);border-radius:28px;padding:22px;background:radial-gradient(circle at 10% 20%,rgba(75,216,255,.13),transparent 28%),radial-gradient(circle at 85% 10%,rgba(255,216,107,.16),transparent 30%),linear-gradient(145deg,rgba(10,34,62,.96),rgba(3,13,27,.98));box-shadow:var(--shadow);margin-bottom:14px}.hero:after{content:"";position:absolute;inset:-80px -160px auto auto;width:330px;height:180px;border:1px solid rgba(255,216,107,.18);border-radius:50%;transform:rotate(-20deg)}.hero h3{margin:0;color:var(--gold);font-size:24px}.hero p{color:#c1cede;max-width:780px;line-height:1.7;font-weight:700;margin:8px 0 0}.live-badge{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:8px 11px;border-radius:999px;border:1px solid rgba(49,230,161,.35);color:#95ffd4;background:rgba(49,230,161,.07);font-size:12px;font-weight:900}.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin:14px 0}.stat{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;padding:14px 13px;background:linear-gradient(180deg,rgba(10,31,57,.88),rgba(3,13,26,.96));box-shadow:0 10px 24px rgba(0,0,0,.18)}.stat:after{content:"";position:absolute;left:-15px;bottom:-30px;width:80px;height:80px;border-radius:50%;background:var(--glow,rgba(255,216,107,.08));filter:blur(3px)}.stat .label{color:var(--muted);font-size:11px;font-weight:900}.stat strong{display:block;margin-top:7px;font-size:24px;color:var(--tone,var(--gold));direction:ltr;text-align:right}.stat small{display:block;margin-top:5px;color:#7488a4;font-size:10px;font-weight:700}.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,rgba(8,28,52,.89),rgba(3,12,25,.96));box-shadow:0 12px 32px rgba(0,0,0,.22);padding:15px;min-width:0}.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}.card-head h3{margin:0;color:var(--gold);font-size:16px}.card-head small{color:var(--muted);font-weight:700}.card-head .spacer{flex:1}.chart-wrap{height:265px;position:relative}.chart-wrap canvas{width:100%;height:100%}.activity{display:grid;gap:8px;max-height:420px;overflow:auto;padding-left:3px}.activity-item,.list-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;border:1px solid rgba(255,216,107,.14);border-radius:16px;padding:10px;background:rgba(1,8,18,.45)}.activity-icon{width:35px;height:35px;border-radius:12px;display:grid;place-items:center;background:rgba(255,216,107,.08);border:1px solid rgba(255,216,107,.16)}.activity-item h4,.list-row h4{margin:0;font-size:13px}.activity-item p,.list-row p{margin:4px 0 0;color:var(--muted);font-size:11px;font-weight:700;line-height:1.45}.amount{font-weight:1000;direction:ltr}.amount.plus{color:var(--green)}.amount.minus{color:var(--red)}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.field{display:grid;gap:6px}.field label{color:#cbd5e4;font-size:12px;font-weight:900}.input,select,textarea{width:100%;border:1px solid rgba(255,216,107,.25);background:#031021;color:#fff;border-radius:14px;min-height:44px;padding:9px 11px;outline:0}.input:focus,select:focus,textarea:focus{border-color:rgba(255,216,107,.65);box-shadow:0 0 0 3px rgba(255,216,107,.07)}textarea{min-height:110px;resize:vertical}.search{flex:1;min-width:220px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:20px}.table{width:100%;border-collapse:collapse;min-width:850px;background:rgba(3,13,27,.65)}.table th,.table td{padding:12px 10px;border-bottom:1px solid rgba(255,216,107,.10);text-align:right;font-size:12px;white-space:nowrap}.table th{position:sticky;top:0;background:#071b32;color:var(--gold);z-index:2}.table tr:hover td{background:rgba(255,216,107,.025)}.badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid var(--line);padding:5px 8px;font-size:10px;font-weight:1000;color:var(--gold)}.badge.green{border-color:rgba(49,230,161,.35);color:#8bffd0}.badge.red{border-color:rgba(255,102,123,.4);color:#ff9daa}.badge.blue{border-color:rgba(75,216,255,.4);color:#94ebff}.badge.gray{color:#9baac0}.section-title{display:flex;align-items:center;gap:9px;margin:3px 0 12px}.section-title h3{margin:0;color:var(--gold);font-size:20px}.section-title p{margin:3px 0 0;color:var(--muted);font-size:12px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.form-grid.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.switch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(255,216,107,.17);border-radius:16px;padding:11px;background:rgba(2,11,24,.52);font-size:12px;font-weight:900;color:#d8e0ec}.switch input{width:20px;height:20px;accent-color:#d79a23}.kpi-line{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.kpi{border:1px solid rgba(255,216,107,.14);border-radius:16px;padding:11px;background:rgba(2,10,22,.50)}.kpi span{display:block;color:var(--muted);font-size:10px;font-weight:900}.kpi b{display:block;margin-top:4px;color:#fff1ae;direction:ltr}.empty{padding:22px;text-align:center;color:var(--muted);font-weight:800;border:1px dashed rgba(255,216,107,.25);border-radius:18px}.login-screen{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 50% 10%,rgba(255,216,107,.12),transparent 33%),linear-gradient(145deg,#020713,#06182c)}.login-card{width:min(470px,100%);border:1px solid rgba(255,216,107,.42);border-radius:30px;padding:28px;background:linear-gradient(180deg,rgba(8,28,52,.96),rgba(2,10,22,.98));box-shadow:0 28px 70px rgba(0,0,0,.46);text-align:center}.login-logo{width:90px;height:90px;margin:0 auto 15px;border-radius:30px;display:grid;place-items:center;font-size:45px;color:#291600;background:linear-gradient(145deg,#fff3b0,#c98116);box-shadow:0 0 30px rgba(255,211,84,.23)}.login-card h1{color:var(--gold);font-size:25px;margin:0}.login-card p{color:var(--muted);font-weight:700;line-height:1.7}.login-actions{display:grid;gap:9px;margin-top:18px}.login-actions .btn{min-height:52px}.modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}.modal.show{display:flex}.modal-box{width:min(980px,100%);max-height:92vh;overflow:auto;border:1px solid rgba(255,216,107,.42);border-radius:28px;padding:17px;background:linear-gradient(180deg,#091e37,#030c19);box-shadow:0 30px 80px rgba(0,0,0,.55)}.modal-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}.modal-head h3{margin:0;color:var(--gold)}.modal-head .spacer{flex:1}.close{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#07192d;color:#fff;cursor:pointer;font-size:20px}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.tabs button{border:1px solid var(--line);border-radius:12px;background:#061528;color:#cbd4e2;padding:8px 11px;font-weight:900;cursor:pointer;white-space:nowrap}.tabs button.active{background:linear-gradient(180deg,#fff0aa,#d59821);color:#251400}.toast{position:fixed;left:18px;bottom:18px;z-index:200;max-width:420px;padding:13px 15px;border-radius:16px;background:#0a223d;border:1px solid rgba(255,216,107,.38);box-shadow:var(--shadow);font-weight:900;transform:translateY(120px);opacity:0;transition:.25s}.toast.show{transform:none;opacity:1}.loading{position:fixed;inset:0;z-index:300;display:none;place-items:center;background:rgba(1,6,14,.72);backdrop-filter:blur(8px)}.loading.show{display:grid}.spinner{width:64px;height:64px;border:5px solid rgba(255,216,107,.17);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1200px){.stats{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}.switch-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{position:fixed;right:0;top:0;width:285px;transform:translateX(105%);transition:.25s}.sidebar.open{transform:none}.mobile-menu{display:inline-flex}.main{padding:14px}.topbar{margin:-14px -14px 14px;padding:12px 14px}.grid2,.grid3{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.form-grid,.form-grid.cols3{grid-template-columns:1fr}.switch-grid{grid-template-columns:1fr}.kpi-line{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:20px}.topbar h2{font-size:17px}.topbar p{display:none}.top-actions .btn span{display:none}.hero{padding:17px}.hero h3{font-size:20px}.main{padding-bottom:85px}.card{padding:12px;border-radius:19px}.kpi-line{grid-template-columns:1fr}.modal{padding:6px}.modal-box{border-radius:21px}}
+
+/* ADN Exchange integrated inside Command Center */
+.ex-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.ex-tabs button{min-height:42px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.025);color:#cbd5e4;font-weight:900;cursor:pointer}
+.ex-tabs button.active{background:linear-gradient(135deg,#fff0a8,#d89924);color:#251500;border-color:transparent}
+.ex-panel{display:none}.ex-panel.active{display:block}
+.ex-hero{border:1px solid rgba(255,216,107,.38);border-radius:26px;padding:18px;background:radial-gradient(circle at 85% 0,rgba(255,216,107,.16),transparent 30%),linear-gradient(145deg,rgba(10,34,62,.96),rgba(3,13,27,.98));box-shadow:var(--shadow);margin-bottom:14px}
+.ex-hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.ex-symbol h3{margin:0;color:var(--gold);font-size:28px;direction:ltr;text-align:right}.ex-symbol p{margin:6px 0 0;color:var(--muted);font-weight:800}
+.ex-price{text-align:left;direction:ltr}.ex-price strong{display:block;font-size:32px;color:#fff}.ex-price span{display:inline-block;margin-top:5px;color:var(--green);font-weight:1000}.ex-price span.neg{color:var(--red)}
+.ex-book{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ex-book-col{border:1px solid rgba(255,216,107,.12);border-radius:18px;padding:10px;background:rgba(2,11,24,.45)}.ex-book-col h4{margin:0 0 8px;font-size:12px}.ex-book-col.sell h4{color:#ff9daa}.ex-book-col.buy h4{color:#8bffd0}
+.ex-book-head,.ex-book-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center;padding:7px 5px;font-size:11px;direction:ltr;text-align:right}.ex-book-head{color:#6f829e;font-weight:900;border-bottom:1px solid rgba(255,216,107,.10)}.ex-book-row{border-bottom:1px dashed rgba(255,255,255,.055);color:#cfd9e8}.ex-book-row:last-child{border-bottom:0}
+.ex-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px;font-weight:800}
+.ex-switches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:12px}.ex-switch{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:15px;padding:10px 11px;background:rgba(255,255,255,.025);font-size:12px;font-weight:900}.ex-switch input{width:20px;height:20px;accent-color:#d99b22}
+.ex-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ex-note{margin-top:10px;padding:10px 12px;border:1px solid rgba(75,216,255,.22);background:rgba(75,216,255,.055);border-radius:14px;color:#9fdff1;font-size:11px;line-height:1.8;font-weight:800}
+.ex-msg{min-height:22px;margin-top:9px;color:#8bffd0;font-size:12px;font-weight:900}.ex-msg.bad{color:#ff9daa}
+.ex-refresh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+@media(max-width:1100px){.ex-switches{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.ex-hero-row{align-items:flex-start;flex-direction:column}.ex-price{text-align:right}.ex-book{grid-template-columns:1fr}.ex-switches{grid-template-columns:1fr}.ex-price strong{font-size:27px}}
+
+</style>
+</head>
+<body>
+<div class="login-screen" id="loginScreen">
+<div class="login-card">
+<div class="login-logo">♛</div>
+<h1>ADNOR COMMAND CENTER</h1>
+<p>مركز الإدارة الملكي — مراقبة فورية، مستخدمون، مالية، سحوبات، ألعاب، وكلاء، إشعارات وتحكم كامل.</p>
+<div class="login-actions">
+<button class="btn gold" id="googleLogin">الدخول بحساب Google الإداري</button>
+<p style="color:var(--muted);font-size:12px;line-height:1.7;margin:12px 0 0">الدخول الإداري عبر Google فقط. لا توجد لوحة قديمة أو كلمة مرور منفصلة.</p>
+</div>
+<p id="loginStatus">يسمح فقط للحسابات الإدارية المعتمدة.</p>
+</div>
+</div>
+<div class="shell hidden" id="appShell">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><div class="brand-logo">♛</div><div><h1>ADNOR ADMIN</h1><small>Master Command Center V204</small></div></div>
+<nav class="nav">
+<button class="active" data-page="dashboard"><span class="icon">◈</span>لوحة القيادة</button>
+<button data-page="live"><span class="icon">⚡</span>النشاط المباشر</button>
+<button data-page="users"><span class="icon">👥</span>المستخدمون 360°</button>
+<button data-page="finance"><span class="icon">💳</span>الإيداع والسحب</button>
+<button data-page="lottery"><span class="icon">🎱</span>السحوبات والنتائج</button>
+<button data-page="games"><span class="icon">🎮</span>الألعاب والعجلة</button>
+<button data-page="exchange"><span class="icon">📈</span>الاستثمار والبورصة</button>
+<button data-page="agents"><span class="icon">🛡️</span>الوكلاء والشحن</button>
+<button data-page="referrals"><span class="icon">🎁</span>الدعوات والأكواد</button>
+<button data-page="payments"><span class="icon">💳</span>طرق الدفع</button>
+<button data-page="helpdesk"><span class="icon">🎧</span>تذاكر الدعم</button>
+<button data-page="broadcast"><span class="icon">📣</span>الإشعارات والبنرات</button>
+<button data-page="content"><span class="icon">🖼️</span>الواجهة والمحتوى</button>
+<button data-page="support"><span class="icon">💬</span>بيانات التواصل</button>
+<button data-page="energy"><span class="icon">⚡</span>ADN Energy</button><button data-page="vip"><span class="icon">👑</span> VIP والمستويات</button><button data-page="daily"><span class="icon">🎁</span> الصندوق اليومي</button><button data-page="promos"><span class="icon">🎫</span> الأكواد والحملات</button><button data-page="assistant"><span class="icon">🤖</span> المساعد الذكي</button><button data-page="backups"><span class="icon">💾</span> النسخ الاحتياطي</button>
+<button data-page="audit"><span class="icon">📜</span>السجل والتدقيق</button>
+<button data-page="system"><span class="icon">⚙️</span>النظام والأمان</button>
+</nav>
+<div class="sidebar-foot">
+<div class="status-pill"><span>السيرفر</span><span><i class="status-dot"></i> متصل</span></div>
+<a class="btn sm" href="app.html">فتح تطبيق المستخدم</a>
+<button class="btn red sm" id="logoutBtn">تسجيل الخروج</button>
+</div>
+</aside>
+<main class="main">
+<header class="topbar">
+<button class="btn mobile-menu" id="menuBtn">☰</button>
+<div><h2 id="pageTitle">لوحة القيادة</h2><p id="pageSubtitle">صورة حقيقية عن المنصة الآن</p></div>
+<div class="top-spacer"></div>
+<div class="top-actions">
+<select class="input" id="rangeSelect" style="width:auto;min-height:42px"><option value="today">آخر 24 ساعة</option><option value="7d">7 أيام</option><option value="30d">30 يوم</option><option value="90d">90 يوم</option></select>
+<button class="btn blue" id="refreshBtn">↻ <span>تحديث</span></button>
+<button class="btn" id="exportBtn">⇩ <span>تصدير</span></button>
+</div>
+</header>
+<section class="page active" id="page-dashboard">
+<div class="hero"><h3>مرحبًا في مركز قيادة ADNOR</h3><p>هذه الأرقام تُقرأ من Firebase والسيرفر الحقيقي. لا توجد عدادات وهمية. راقب النشاط، الربح، المخاطر والطلبات من شاشة واحدة.</p><div class="live-badge"><i class="status-dot"></i> تحديث آمن ومباشر</div></div>
+<div class="stats" id="mainStats"></div>
+<div class="grid2">
+<div class="card"><div class="card-head"><div><h3>نشاط آخر 24 ساعة</h3><small>التذاكر، جولات اللعب والإيداعات</small></div></div><div class="chart-wrap"><canvas id="activityChart"></canvas></div></div>
+<div class="card"><div class="card-head"><div><h3>آخر النشاطات</h3><small>أحدث العمليات الحقيقية</small></div><div class="spacer"></div><button class="btn sm" data-page-jump="live">مشاهدة الكل</button></div><div class="activity" id="recentActivity"></div></div>
+</div>
+<div class="grid3" style="margin-top:12px">
+<div class="card"><div class="card-head"><h3>المال والاحتياطي</h3></div><div class="kpi-line" id="balanceKpis"></div></div>
+<div class="card"><div class="card-head"><h3>طلبات تحتاج قرارًا</h3></div><div class="kpi-line" id="pendingKpis"></div></div>
+<div class="card"><div class="card-head"><h3>حالة التشغيل</h3></div><div class="activity" id="systemQuick"></div></div>
+</div>
+</section>
+<section class="page" id="page-live"><div class="section-title"><div><h3>مركز النشاط المباشر</h3><p>كل تذكرة، لعبة، إيداع، سحب أو إشعار حديث.</p></div></div><div class="card"><div class="toolbar"><select class="input" id="activityFilter" style="width:auto"><option value="all">كل النشاطات</option><option value="ticket">التذاكر</option><option value="wheel">الألعاب</option><option value="deposit">الإيداعات</option><option value="withdraw">السحوبات</option></select></div><div class="activity" id="allActivity" style="max-height:none"></div></div></section>
+<section class="page" id="page-users"><div class="section-title"><div><h3>المستخدمون — ملف 360°</h3><p>بحث، أرصدة، نشاط، تذاكر، لعب، دخول وإجراءات إدارية محمية.</p></div></div><div class="card"><div class="toolbar"><input class="input search" id="userSearch" placeholder="ابحث بالاسم، البريد، رقم المستخدم أو UID"/><button class="btn gold" id="userSearchBtn">بحث</button><button class="btn" id="usersReloadBtn">آخر المستخدمين</button></div><div class="table-wrap" id="usersTable"></div></div></section>
+<section class="page" id="page-finance"><div class="section-title"><div><h3>المركز المالي</h3><p>معالجة الإيداعات والسحوبات عبر السيرفر مع سجل تدقيق.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>طلبات الإيداع</h3><div class="spacer"></div><span class="badge" id="depositCount"></span></div><div class="activity" id="depositList" style="max-height:650px"></div></div><div class="card"><div class="card-head"><h3>طلبات السحب</h3><div class="spacer"></div><span class="badge" id="withdrawCount"></span></div><div class="activity" id="withdrawList" style="max-height:650px"></div></div></div></section>
+<section class="page" id="page-lottery"><div class="section-title"><div><h3>السحوبات والنتائج الرسمية</h3><p>جوائز، أسعار، تشغيل، نتيجة فورية أو نتيجة مجدولة.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>إعدادات اليانصيب</h3></div><div class="form-grid cols3"><div class="field"><label>سعر التذكرة العام</label><input class="input" id="lotteryTicketPrice" step="0.01" type="number"/></div><div class="field"><label>السحب اليومي</label><input class="input" id="dailyPrize" type="number"/></div><div class="field"><label>السحب الأسبوعي</label><input class="input" id="weeklyPrize" type="number"/></div><div class="field"><label>السحب الشهري</label><input class="input" id="monthlyPrize" type="number"/></div><div class="field"><label>السحب السنوي</label><input class="input" id="yearlyPrize" type="number"/></div><div class="field"><label>شراء بالبونص</label><select id="allowBonusTickets"><option value="true">مسموح</option><option value="false">ممنوع</option></select></div></div><button class="btn gold" id="saveLotterySettings" style="margin-top:12px">حفظ إعدادات السحوبات</button></div><div class="card"><div class="card-head"><h3>إدخال نتيجة رسمية</h3></div><div class="form-grid"><div class="field"><label>نوع السحب</label><select id="resultDrawType"><option value="daily">يومي</option><option value="weekly">أسبوعي</option><option value="monthly">شهري</option><option value="yearly">سنوي</option></select></div><div class="field"><label>رقم التذكرة الفائزة</label><input class="input" id="resultTicket" maxlength="7" placeholder="1234567"/></div><div class="field"><label>اسم الفائز</label><input class="input" id="resultWinner" placeholder="الاسم أو الاسم المخفي"/></div><div class="field"><label>قيمة الجائزة</label><input class="input" id="resultPrize" type="number"/></div><div class="field"><label>موعد النشر</label><input class="input" id="resultPublishAt" type="datetime-local"/></div><div class="field"><label>طريقة الحفظ</label><select id="resultMode"><option value="schedule">حفظ وجدولة</option><option value="publish">نشر الآن</option></select></div></div><button class="btn green" id="saveDrawResult" style="margin-top:12px">حفظ النتيجة الرسمية</button></div></div><div class="card" style="margin-top:12px"><div class="card-head"><h3>النتائج الحالية والمجدولة</h3></div><div class="activity" id="drawResultsList" style="max-height:none"></div></div></section>
+<section class="page" id="page-games"><div class="section-title"><div><h3>مركز الألعاب</h3><p>العجلة والألعاب الإضافية وصندوق الأرباح — التنفيذ المالي من السيرفر فقط.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>إعدادات العجلة</h3></div><div class="form-grid"><div class="field"><label>تشغيل العجلة</label><select id="wheelEnabled"><option value="true">مفعلة</option><option value="false">متوقفة</option></select></div><div class="field"><label>السماح بالبونص</label><select id="wheelBonus"><option value="true">مسموح</option><option value="false">ممنوع</option></select></div><div class="field"><label>أقل رهان</label><input class="input" id="wheelMin" step="0.1" type="number"/></div><div class="field"><label>أعلى رهان</label><input class="input" id="wheelMax" step="1" type="number"/></div></div><button class="btn gold" id="saveWheel" style="margin-top:12px">حفظ إعدادات العجلة</button></div><div class="card"><div class="card-head"><h3>أداء الألعاب</h3></div><div class="kpi-line" id="gameKpis"></div><div style="margin-top:14px;color:var(--muted);font-size:12px;line-height:1.8;font-weight:700">كل نتيجة وخصم وربح في العجلة والألعاب الإضافية يُنفذ من AD​​NOR API، ولا يستطيع المتصفح تعديل الرصيد.</div></div></div><div class="grid2" style="margin-top:12px"><div class="card"><div class="card-head"><h3>إضافة أو تعديل لعبة</h3><button class="btn sm" id="clearCustomGame">تفريغ</button></div><div class="form-grid"><div class="field"><label>معرّف اللعبة بالإنكليزي</label><input id="customGameId" placeholder="number_box"/></div><div class="field"><label>اسم اللعبة</label><input id="customGameName" placeholder="صندوق الأرقام"/></div><div class="field"><label>الرمز</label><input id="customGameIcon" value="🎮"/></div><div class="field"><label>تشغيل اللعبة</label><select id="customGameEnabled"><option value="true">شغالة</option><option value="false">متوقفة</option></select></div><div class="field"><label>أقل رهان</label><input id="customGameMin" type="number" min="0.01" step="0.01" value="1"/></div><div class="field"><label>أعلى رهان</label><input id="customGameMax" type="number" min="0.01" step="0.01" value="100"/></div><div class="field"><label>احتمال الفوز %</label><input id="customGameChance" type="number" min="0" max="100" step="0.1" value="30"/></div><div class="field"><label>المضاعف</label><input id="customGameMultiplier" type="number" min="0" max="10000" step="0.1" value="2"/></div><div class="field"><label>الرصيد الحقيقي</label><select id="customGameReal"><option value="true">مسموح</option><option value="false">ممنوع</option></select></div><div class="field"><label>البونص</label><select id="customGameBonus"><option value="false">ممنوع</option><option value="true">مسموح</option></select></div></div><div class="field" style="margin-top:9px"><label>وصف اللعبة</label><textarea id="customGameDesc" placeholder="شرح واضح وقواعد مختصرة"></textarea></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn gold" id="saveCustomGame">حفظ اللعبة</button><button class="btn red" id="deleteCustomGame">حذف اللعبة</button></div></div><div class="card"><div class="card-head"><h3>الألعاب الموجودة</h3><span class="badge blue" id="customGamesCount">0</span></div><div class="activity" id="customGamesList"><div class="empty">جاري التحميل...</div></div></div></div><div class="grid2" style="margin-top:12px"><div class="card"><div class="card-head"><h3>صندوق الألعاب</h3></div><div class="kpi-line" id="customTreasuryKpis"></div><div class="form-grid" style="margin-top:12px"><div class="field"><label>نسبة المنصة من الرهان الحقيقي %</label><input id="customTreasuryCut" type="number" min="0" max="90" step="0.1" value="50"/></div><div class="field"><label>ساعة التقرير بتوقيت تركيا</label><input id="customTreasuryHour" type="number" min="0" max="23" step="1" value="20"/></div><div class="field"><label>ترحيل صندوق اللاعبين</label><select id="customTreasuryCarry"><option value="true">نعم</option><option value="false">لا</option></select></div></div><button class="btn gold" id="saveCustomTreasury" style="margin-top:12px">حفظ إعدادات الصندوق</button></div><div class="card"><div class="card-head"><h3>آخر جولات الألعاب الإضافية</h3></div><div class="activity" id="customGameLogs"><div class="empty">لا توجد جولات بعد</div></div></div></div></section>
+<section class="page" id="page-exchange">
+<div class="section-title">
+<div><h3>مركز الاستثمار وADN Exchange</h3><p>إدارة السوق والخزينة والسيولة والأوامر من داخل الأدمن نفسه — بدون صفحة دخول منفصلة.</p></div>
+<div class="spacer"></div>
+<button class="btn blue" id="exRefreshBtn" type="button">↻ تحديث السوق</button>
+<a class="btn" href="app.html?section=investment">فتح منصة المستخدم</a>
+</div>
+<div class="ex-tabs" id="exchangeTabs">
+<button class="active" data-ex-tab="overview">نظرة السوق</button>
+<button data-ex-tab="settings">إعدادات التداول</button>
+<button data-ex-tab="treasury">خزينة السوق</button>
+<button data-ex-tab="orders">الأوامر والصفقات</button>
+</div>
+<div class="ex-panel active" id="ex-panel-overview">
+<div class="ex-hero">
+<div class="ex-hero-row">
+<div class="ex-symbol"><h3>ADN / USD</h3><p id="exMarketStatus">جاري تحميل السوق...</p></div>
+<div class="ex-price"><strong id="exLastPrice">$0.100000</strong><span id="exChange24">0.00%</span></div>
+</div>
+<div class="stats">
+<div class="stat"><div class="label">حجم 24 ساعة</div><strong id="exQuoteVolume24">$0.00</strong><small>من الصفقات المنفذة</small></div>
+<div class="stat"><div class="label">عدد المستثمرين</div><strong id="exInvestorCount">0</strong><small>محافظ ADN حقيقية</small></div>
+<div class="stat"><div class="label">ADN المصدر</div><strong id="exIssuedAdn">0</strong><small>من إجمالي المعروض</small></div>
+<div class="stat"><div class="label">ADN المتداول</div><strong id="exCirculatingAdn">0</strong><small>خارج الخزينة</small></div>
+<div class="stat"><div class="label">رسوم المنصة</div><strong id="exFeesUsd">$0.00</strong><small>رسوم تداول متراكمة</small></div>
+<div class="stat"><div class="label">الصفقات</div><strong id="exTradeCount">0</strong><small>إجمالي التنفيذات</small></div>
+</div>
+</div>
+<div class="grid2">
+<div class="card">
+<div class="card-head"><div><h3>دفتر الأوامر</h3><small>أفضل أوامر البيع والشراء الحقيقية</small></div></div>
+<div class="ex-book">
+<div class="ex-book-col sell"><h4>أوامر البيع</h4><div class="ex-book-head"><span>السعر</span><span>الكمية</span><span>الإجمالي</span></div><div id="exAsks"></div></div>
+<div class="ex-book-col buy"><h4>أوامر الشراء</h4><div class="ex-book-head"><span>السعر</span><span>الكمية</span><span>الإجمالي</span></div><div id="exBids"></div></div>
+</div>
+</div>
+<div class="card">
+<div class="card-head"><div><h3>خزينة السوق</h3><small>المتاح والمحجوز</small></div></div>
+<div class="kpi-line">
+<div class="kpi"><span>ADN متاح</span><b id="exTreasuryAdn">0</b></div>
+<div class="kpi"><span>ADN محجوز</span><b id="exTreasuryAdnReserved">0</b></div>
+<div class="kpi"><span>USD متاح</span><b id="exTreasuryUsd">$0.00</b></div>
+<div class="kpi"><span>USD محجوز</span><b id="exTreasuryUsdReserved">$0.00</b></div>
+</div>
+<div class="ex-note">أي كمية ADN أو USD تضاف للخزينة يجب أن تمثل أصلًا أو احتياطيًا حقيقيًا ومسجلًا. البونص ممنوع من سوق ADN بالكامل.</div>
+</div>
+</div>
+</div>
+<div class="ex-panel" id="ex-panel-settings">
+<div class="card">
+<div class="card-head"><div><h3>تشغيل وحدود السوق</h3><small>حدّد حالة السوق والشراء والبيع، ثم اضغط حفظ إعدادات السوق. لا يتم إلغاء اختيارك أثناء التعديل.</small></div></div>
+<div class="ex-switches">
+<label class="ex-switch">السوق مفتوح<input id="exEnabled" type="checkbox"/></label>
+<label class="ex-switch">الشراء مفتوح<input id="exBuyEnabled" type="checkbox"/></label>
+<label class="ex-switch">البيع مفتوح<input id="exSellEnabled" type="checkbox"/></label>
+<label class="ex-switch">قاطع الحركة<input id="exCircuitBreakerEnabled" type="checkbox"/></label>
+</div>
+<div class="ex-note" id="exToggleHint">بعد تغيير أي مفتاح اضغط زر حفظ إعدادات السوق. سيقرأ النظام القيمة المحفوظة من السيرفر ويتأكد منها.</div>
+<div class="form-grid cols3">
+<div class="field"><label>السعر الافتتاحي</label><input class="input" id="exOpeningPrice" step="0.000001" type="number"/></div>
+<div class="field"><label>إجمالي المعروض</label><input class="input" id="exTotalSupply" step="0.0001" type="number"/></div>
+<div class="field"><label>رسوم Maker بالنقاط</label><input class="input" id="exMakerFeeBps" type="number"/></div>
+<div class="field"><label>رسوم Taker بالنقاط</label><input class="input" id="exTakerFeeBps" type="number"/></div>
+<div class="field"><label>أقل أمر USD</label><input class="input" id="exMinOrderUsd" step="0.01" type="number"/></div>
+<div class="field"><label>أعلى أمر USD</label><input class="input" id="exMaxOrderUsd" step="0.01" type="number"/></div>
+<div class="field"><label>حد التداول اليومي</label><input class="input" id="exDailyVolumeLimitUsd" step="0.01" type="number"/></div>
+<div class="field"><label>أقصى أوامر مفتوحة للمستخدم</label><input class="input" id="exMaxOpenOrdersPerUser" type="number"/></div>
+<div class="field"><label>انحراف السعر المحدد %</label><input class="input" id="exMaxLimitPriceDeviationPct" type="number"/></div>
+<div class="field"><label>انزلاق أمر السوق %</label><input class="input" id="exMaxMarketSlippagePct" type="number"/></div>
+<div class="field"><label>حركة قاطع السوق %</label><input class="input" id="exCircuitBreakerMovePct" type="number"/></div>
+<div class="field" style="grid-column:1/-1"><label>تحذير المخاطر</label><textarea id="exRiskNotice"></textarea></div>
+</div>
+<button class="btn gold" id="exSaveSettings" style="margin-top:12px" type="button">حفظ إعدادات السوق</button>
+<div class="ex-msg" id="exSettingsMsg"></div>
+</div>
+</div>
+<div class="ex-panel" id="ex-panel-treasury">
+<div class="grid2">
+<div class="card">
+<div class="card-head"><div><h3>تعديل خزينة السوق</h3><small>لا تنشئ رصيدًا بلا أصل حقيقي</small></div></div>
+<div class="form-grid">
+<div class="field"><label>تعديل ADN (+ أو -)</label><input class="input" id="exDeltaAdn" step="0.0001" type="number" value="0"/></div>
+<div class="field"><label>تعديل USD (+ أو -)</label><input class="input" id="exDeltaUsd" step="0.01" type="number" value="0"/></div>
+<div class="field" style="grid-column:1/-1"><label>سبب التعديل الإجباري</label><textarea id="exTreasuryReason" placeholder="مثال: إضافة مخصص الإصدار الأولي وفق سجل الاحتياطي"></textarea></div>
+</div>
+<button class="btn gold" id="exAdjustTreasury" style="margin-top:12px" type="button">تنفيذ تعديل الخزينة</button>
+<div class="ex-msg" id="exTreasuryMsg"></div>
+</div>
+<div class="card">
+<div class="card-head"><div><h3>إنشاء أمر خزينة</h3><small>السيولة التلقائية مفعّلة: رصيد ADN المتاح في الخزينة يستطيع تنفيذ شراء السوق مباشرة، حتى من دون أمر بيع يدوي.</small></div></div>
+<div class="form-grid">
+<div class="field"><label>النوع</label><select id="exTreasurySide"><option value="sell">بيع ADN</option><option value="buy">شراء ADN</option></select></div>
+<div class="field"><label>نوع الأمر</label><select id="exTreasuryType"><option value="limit">سعر محدد</option><option value="market">سعر السوق</option></select></div>
+<div class="field"><label>الكمية</label><input class="input" id="exTreasuryQty" step="0.0001" type="number"/></div>
+<div class="field"><label>السعر</label><input class="input" id="exTreasuryPrice" step="0.000001" type="number" value="0.100000"/></div>
+</div>
+<button class="btn blue" id="exPlaceTreasuryOrder" style="margin-top:12px" type="button">إضافة أمر الخزينة</button>
+<div class="ex-msg" id="exTreasuryOrderMsg"></div>
+</div>
+</div>
+</div>
+<div class="ex-panel" id="ex-panel-orders">
+<div class="card">
+<div class="card-head"><div><h3>الأوامر المفتوحة</h3><small>يمكن إلغاء أمر عند الضرورة مع تسجيل السبب</small></div></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>الرقم</th><th>المالك</th><th>النوع</th><th>الطريقة</th><th>السعر</th><th>الكمية</th><th>المتبقي</th><th>الحالة</th><th>الوقت</th><th>إجراء</th></tr></thead><tbody id="exOrdersBody"></tbody></table></div>
+</div>
+<div class="card" style="margin-top:12px">
+<div class="card-head"><div><h3>آخر الصفقات</h3><small>سجل السوق الحقيقي</small></div></div>
+<div class="table-wrap"><table class="table"><thead><tr><th>الصفقة</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th><th>الوقت</th></tr></thead><tbody id="exTradesBody"></tbody></table></div>
+</div>
+</div>
+</section>
+<section class="page" id="page-agents"><div class="section-title"><div><h3>الوكلاء والشحن</h3><p>إضافة الوكيل وتعديل رصيده وتجميده من داخل مركز الإدارة نفسه.</p></div><div class="spacer"></div><a class="btn blue" href="agent.html" target="_blank">فتح بوابة الوكيل للاختبار</a></div><div class="grid2"><div class="card"><div class="card-head"><h3>إضافة أو تعديل وكيل</h3></div><div class="form-grid"><div class="field"><label>UID أو رقم المستخدم</label><input class="input" id="agentTargetId" placeholder="رقم المستخدم أو UID"/></div><div class="field"><label>الحالة</label><select id="agentActive"><option value="true">نشط</option><option value="false">مجمّد</option></select></div><div class="field"><label>الرصيد الافتتاحي</label><input class="input" id="agentOpeningBalance" step="0.01" type="number" value="0"/></div><div class="field"><label>ملاحظة</label><input class="input" id="agentNote" placeholder="سبب الإضافة أو التعديل"/></div></div><button class="btn gold" id="saveAgentBtn" style="margin-top:12px">حفظ الوكيل</button><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"/><div class="form-grid"><div class="field"><label>UID الوكيل</label><input class="input" id="agentAdjustUid" placeholder="UID"/></div><div class="field"><label>إضافة أو خصم</label><input class="input" id="agentAdjustDelta" placeholder="مثال 100 أو -50" step="0.01" type="number"/></div><div class="field" style="grid-column:1/-1"><label>سبب التعديل</label><input class="input" id="agentAdjustReason" placeholder="السبب إجباري"/></div></div><button class="btn green" id="adjustAgentBtn" style="margin-top:12px">تنفيذ تعديل الرصيد</button></div><div class="card"><div class="card-head"><h3>مؤشرات الوكلاء</h3></div><div class="kpi-line" id="agentKpis"></div><div class="activity" id="agentsList" style="margin-top:12px;max-height:620px"></div></div></div><div class="card" style="margin-top:12px"><div class="card-head"><h3>آخر عمليات الشحن</h3></div><div class="activity" id="agentLogsList" style="max-height:520px"></div></div></section>
+<section class="page" id="page-referrals"><div class="section-title"><div><h3>الدعوات والأكواد</h3><p>مكافآت الطرفين تُنفذ من السيرفر مرة واحدة فقط.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>إعدادات الدعوة</h3></div><div class="form-grid"><div class="field"><label>تشغيل النظام</label><select id="refEnabled"><option value="true">مفعّل</option><option value="false">موقوف</option></select></div><div class="field"><label>الكود الرسمي</label><input class="input" id="refAdminCode" placeholder="ADNORVIP"/></div><div class="field"><label>مكافأة المستخدم الجديد</label><input class="input" id="refNewAmount" step="0.01" type="number"/></div><div class="field"><label>نوع مكافأة الجديد</label><select id="refNewType"><option value="bonus">بونص</option><option value="real">رصيد حقيقي</option><option value="wheelSpins">لفات</option><option value="lotteryTickets">تذاكر</option></select></div><div class="field"><label>مكافأة صاحب الدعوة</label><input class="input" id="refOwnerAmount" step="0.01" type="number"/></div><div class="field"><label>نوع مكافأة صاحب الدعوة</label><select id="refOwnerType"><option value="bonus">بونص</option><option value="real">رصيد حقيقي</option><option value="wheelSpins">لفات</option><option value="lotteryTickets">تذاكر</option></select></div><div class="field"><label>الحد اليومي</label><input class="input" id="refDailyLimit" min="0" type="number"/></div><div class="field"><label>بونص الإيداع %</label><input class="input" id="refDepositBonus" max="500" min="0" step="0.1" type="number"/></div><div class="field" style="grid-column:1/-1"><label>الملاحظة الظاهرة</label><textarea id="refNote"></textarea></div></div><button class="btn gold" id="saveReferralBtn" style="margin-top:12px">حفظ إعدادات الدعوة</button></div><div class="card"><div class="card-head"><h3>إحصائيات الدعوات</h3></div><div class="kpi-line" id="referralKpis"></div><div class="activity" id="referralCodesList" style="margin-top:12px;max-height:420px"></div></div></div><div class="card" style="margin-top:12px"><div class="card-head"><h3>آخر الدعوات الناجحة</h3></div><div class="activity" id="referralsList" style="max-height:620px"></div></div></section>
+<section class="page" id="page-payments"><div class="section-title"><div><h3>طرق الدفع</h3><p>إضافة وتعديل طرق الإيداع والسحب من مكان واحد.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>طريقة دفع</h3></div><div class="form-grid"><div class="field"><label>المعرّف</label><input class="input" id="payId" placeholder="usdt_trc20"/></div><div class="field"><label>الاسم</label><input class="input" id="payName" placeholder="USDT TRC20"/></div><div class="field"><label>النوع</label><select id="payType"><option value="both">إيداع وسحب</option><option value="deposit">إيداع</option><option value="withdraw">سحب</option></select></div><div class="field"><label>التصنيف</label><input class="input" id="payCategory" placeholder="crypto / bank / agent"/></div><div class="field"><label>أقل إيداع</label><input class="input" id="payMinDeposit" step="0.01" type="number"/></div><div class="field"><label>أقل سحب</label><input class="input" id="payMinWithdraw" step="0.01" type="number"/></div><div class="field" style="grid-column:1/-1"><label>العنوان أو الحساب</label><input class="input" id="payAddress"/></div><div class="field" style="grid-column:1/-1"><label>التفاصيل</label><textarea id="payDetails"></textarea></div><div class="field"><label>الحالة</label><select id="payActive"><option value="true">مفعّلة</option><option value="false">موقوفة</option></select></div></div><button class="btn gold" id="savePaymentBtn" style="margin-top:12px">حفظ الطريقة</button><button class="btn" id="clearPaymentBtn" style="margin-top:12px">تفريغ الحقول</button></div><div class="card"><div class="card-head"><h3>الطرق الحالية</h3></div><div class="activity" id="paymentMethodsList" style="max-height:680px"></div></div></div></section>
+<section class="page" id="page-helpdesk"><div class="section-title"><div><h3>تذاكر الدعم</h3><p>قراءة الطلب والرد وإغلاقه من داخل الأدمن.</p></div></div><div class="card"><div class="toolbar"><select class="input" id="helpdeskFilter" style="width:auto"><option value="all">الكل</option><option value="open">مفتوحة</option><option value="answered">تم الرد</option><option value="closed">مغلقة</option></select><button class="btn blue" id="helpdeskRefresh">تحديث</button></div><div class="activity" id="helpdeskList" style="max-height:none"></div></div></section>
+<section class="page" id="page-content"><div class="section-title"><div><h3>الواجهة والمحتوى</h3><p>تعديل الصفحة العامة والتطبيق من دون لمس الكود.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>الصفحة العامة</h3></div><div class="form-grid"><div class="field" style="grid-column:1/-1"><label>الشريط الإعلاني</label><input class="input" id="contentAnnouncement"/></div><div class="field"><label>العنوان الرئيسي</label><input class="input" id="contentHeroTitle"/></div><div class="field"><label>وقت السحب</label><input class="input" id="contentDrawTime"/></div><div class="field" style="grid-column:1/-1"><label>الوصف الرئيسي</label><textarea id="contentHeroSubtitle"></textarea></div><div class="field"><label>موعد السحب ISO</label><input class="input" id="contentNextDraw"/></div><div class="field"><label>رابط APK</label><input class="input" id="contentApkUrl"/></div><div class="field"><label>عرض الألعاب</label><select id="contentGames"><option value="true">نعم</option><option value="false">لا</option></select></div><div class="field"><label>مزامنة النتائج</label><select id="contentResults"><option value="true">نعم</option><option value="false">لا</option></select></div></div><button class="btn gold" id="saveContentBtn" style="margin-top:12px">حفظ ونشر المحتوى</button></div><div class="card"><div class="card-head"><h3>معاينة سريعة</h3></div><div class="hero" id="contentPreview"><h3 id="contentPreviewTitle">ADNOR</h3><p id="contentPreviewSubtitle">منصة ADNOR</p></div></div></div></section>
+<section class="page" id="page-energy"><div class="section-title"><div><h3>ADN Energy</h3><p>النقاط الداخلية والإعلانات؛ لا يتم توزيع نقاط قبل ربط Google والتحقق.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>تشغيل القسم</label><select id="energyEnabled"><option value="true">مفعّل</option><option value="false">موقوف</option></select></div><div class="field"><label>الوضع</label><select id="energyMode"><option value="preview">بانتظار ربط الإعلانات</option><option value="disabled">موقوف</option><option value="live">LIVE بعد الربط</option></select></div><div class="field"><label>مدة الجلسة</label><input class="input" id="energyHours" max="72" min="1" type="number"/></div><div class="field"><label>النقاط الأساسية</label><input class="input" id="energyPoints" min="0" type="number"/></div><div class="field"><label>سرعة 1</label><input class="input" id="energyM1" step="0.1" type="number"/></div><div class="field"><label>سرعة 2</label><input class="input" id="energyM2" step="0.1" type="number"/></div><div class="field"><label>سرعة 3</label><input class="input" id="energyM3" step="0.1" type="number"/></div><div class="field" style="grid-column:1/-1"><label>الإفصاح</label><textarea id="energyDisclaimer"></textarea></div></div><button class="btn gold" id="saveEnergyBtn" style="margin-top:12px">حفظ إعدادات ADN Energy</button></div><div class="card"><div class="card-head"><h3>حالة Google Ads</h3></div><div class="empty" id="energyAdsState">بانتظار الفحص</div></div></div></section>
+
+<section class="page" id="page-vip"><div class="section-title"><div><h3>VIP والمستويات</h3><p>إدارة مستويات المستخدمين والمهمات والصندوق الملكي من مركز واحد.</p></div></div><div class="grid2"><div class="card"><div class="card-head"><h3>الإعدادات</h3></div><div class="form-grid"><div class="field"><label>تشغيل VIP</label><select id="vipEnabled"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div><div class="field"><label>نقاط المهمة</label><input class="input" id="vipTaskPoints" type="number"/></div><div class="field"><label>بونص المهمة</label><input class="input" id="vipTaskBonus" step="0.01" type="number"/></div><div class="field"><label>تشغيل الصندوق</label><select id="vipBoxEnabled"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div><div class="field"><label>أقل بونص للصندوق</label><input class="input" id="vipBoxMin" step="0.01" type="number"/></div><div class="field"><label>أعلى بونص للصندوق</label><input class="input" id="vipBoxMax" step="0.01" type="number"/></div></div><button class="btn gold" id="saveVipBtn" style="margin-top:12px">حفظ VIP عبر السيرفر</button></div><div class="card"><div class="card-head"><h3>حدود المستويات</h3></div><div class="form-grid"><div class="field"><label>Silver</label><input class="input" id="vipSilver" type="number"/></div><div class="field"><label>Gold</label><input class="input" id="vipGold" type="number"/></div><div class="field"><label>Diamond</label><input class="input" id="vipDiamond" type="number"/></div><div class="field"><label>Royal Crown</label><input class="input" id="vipRoyal" type="number"/></div></div><div class="activity" id="vipPreview" style="margin-top:12px"></div></div></div></section>
+<section class="page" id="page-daily"><div class="section-title"><div><h3>الصندوق اليومي</h3><p>سبعة أيام ومكافآت واضحة تتحكم بها من دون تعديل الكود.</p></div></div><div class="card"><div class="form-grid"><div class="field"><label>تشغيل النظام</label><select id="dailyEnabled"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div><div class="field"><label>العنوان</label><input class="input" id="dailyTitle"/></div></div><div class="grid3" id="dailyDays" style="margin-top:12px"></div><button class="btn gold" id="saveDailyBtn" style="margin-top:12px">حفظ الصناديق السبعة عبر السيرفر</button></div></section>
+<section class="page" id="page-promos"><div class="section-title"><div><h3>الأكواد والحملات</h3><p>إضافة بونص أو لفات أو تذكرة مع حد استخدام وسجل واضح.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>الكود</label><input class="input" id="promoCode" placeholder="ADNOR100"/></div><div class="field"><label>الحالة</label><select id="promoActive"><option value="true">مفعّل</option><option value="false">متوقف</option></select></div><div class="field"><label>البونص</label><input class="input" id="promoBonus" step="0.01" type="number"/></div><div class="field"><label>لفات مجانية</label><input class="input" id="promoSpins" type="number"/></div><div class="field"><label>تذكرة مجانية</label><select id="promoTicket"><option value="false">لا</option><option value="true">نعم</option></select></div><div class="field"><label>أقصى استخدام</label><input class="input" id="promoMaxUses" type="number"/></div><div class="field" style="grid-column:1/-1"><label>ملاحظة</label><textarea id="promoNote"></textarea></div></div><div class="toolbar"><button class="btn gold" id="savePromoBtn">حفظ الكود</button><button class="btn" id="clearPromoBtn">تفريغ</button></div></div><div class="card"><div class="card-head"><h3>الأكواد الحالية</h3></div><div class="activity" id="promoList"></div></div></div></section>
+<section class="page" id="page-assistant"><div class="section-title"><div><h3>المساعد الذكي</h3><p>قاعدة معرفة داخلية وأسئلة غير مجابة.</p></div></div><div class="grid2"><div class="card"><div class="field"><label>السؤال</label><input class="input" id="aiQuestion"/></div><div class="field"><label>الكلمات المفتاحية</label><input class="input" id="aiKeys" placeholder="إيداع، محفظة، تحويل"/></div><div class="field"><label>الجواب</label><textarea id="aiAnswer"></textarea></div><div class="toolbar"><button class="btn gold" id="saveAiBtn">حفظ الجواب</button><button class="btn" id="clearAiBtn">تفريغ</button></div></div><div class="card"><div class="card-head"><h3>أسئلة غير مجابة</h3></div><div class="activity" id="aiUnansweredList"></div></div></div><div class="card" style="margin-top:12px"><div class="card-head"><h3>قاعدة الأجوبة</h3></div><div class="activity" id="aiKnowledgeList" style="max-height:none"></div></div></section>
+<section class="page" id="page-backups"><div class="section-title"><div><h3>النسخ الاحتياطي</h3><p>نسخة خادمية موثقة للبيانات الأساسية. الاسترجاع يبقى عملية منفصلة للمراجعة والأمان.</p></div></div><div class="card"><div class="toolbar"><button class="btn gold" id="createBackupBtnV204">إنشاء نسخة الآن</button><button class="btn blue" id="refreshBackupsBtn">تحديث القائمة</button></div><div class="ex-note" id="backupStatusV204">جاهز لإنشاء نسخة احتياطية من السيرفر.</div><div class="activity" id="backupsListV204" style="max-height:none;margin-top:12px"></div></div></section>
+<section class="page" id="page-audit"><div class="section-title"><div><h3>السجل والتدقيق</h3><p>العمليات المالية والإدارية والتنبيهات الحديثة.</p></div></div><div class="card"><div class="toolbar"><button class="btn blue" id="auditRefresh">تحديث السجل</button><button class="btn" id="auditExport">تصدير CSV</button></div><div class="activity" id="auditList" style="max-height:none"></div></div></section>
+<section class="page" id="page-broadcast"><div class="section-title"><div><h3>الإشعارات والبنرات</h3><p>إرسال لمستخدم واحد أو للجميع أو لفئة محددة.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>المستلمون</label><select id="broadcastTarget"><option value="all">كل المستخدمين</option><option value="active">النشطون آخر 7 أيام</option><option value="vip">VIP فقط</option><option value="user">مستخدم محدد</option></select></div><div class="field"><label>UID للمستخدم المحدد</label><input class="input" id="broadcastUid" placeholder="يُستخدم عند اختيار مستخدم محدد"/></div><div class="field" style="grid-column:1/-1"><label>العنوان</label><input class="input" id="broadcastTitle" placeholder="عنوان الإشعار"/></div><div class="field" style="grid-column:1/-1"><label>نص الإشعار</label><textarea id="broadcastText" placeholder="اكتب الرسالة بوضوح"></textarea></div><div class="field"><label>رابط عند الضغط</label><input class="input" id="broadcastLink" placeholder="app.html#lottery"/></div><div class="field"><label>رابط صورة أو شعار</label><input class="input" id="broadcastImage" placeholder="https://..."/></div></div><button class="btn gold" id="sendBroadcast" style="margin-top:12px">إرسال الإشعار</button></div><div class="card"><div class="card-head"><h3>نصائح الإرسال</h3></div><div class="activity"><div class="list-row"><div class="activity-icon">✓</div><div><h4>رسالة واضحة</h4><p>لا ترسل وعودًا أو معلومات غير مؤكدة.</p></div></div><div class="list-row"><div class="activity-icon">⏱</div><div><h4>التوقيت</h4><p>أرسل قبل السحب بوقت مناسب، وليس بشكل مزعج.</p></div></div><div class="list-row"><div class="activity-icon">🎯</div><div><h4>استهداف صحيح</h4><p>استخدم VIP أو النشطين بدل إرسال كل شيء للجميع.</p></div></div></div></div></div></section>
+<section class="page" id="page-support"><div class="section-title"><div><h3>الدعم والتواصل</h3><p>واتساب، تلغرام ورسائل الدعم تتغير من الإدارة.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>رقم واتساب دولي</label><input class="input" id="supportWhatsapp" placeholder="905xxxxxxxxx"/></div><div class="field"><label>اسم تلغرام</label><input class="input" id="supportTelegram" placeholder="username"/></div><div class="field" style="grid-column:1/-1"><label>رسالة واتساب الجاهزة</label><textarea id="supportMessage"></textarea></div><div class="field"><label>ساعات العمل</label><input class="input" id="supportHours" placeholder="10:00 - 22:00"/></div><div class="field"><label>إظهار أزرار الدعم</label><select id="supportActive"><option value="true">مفعلة</option><option value="false">مخفية</option></select></div></div><button class="btn gold" id="saveSupport" style="margin-top:12px">حفظ بيانات التواصل</button></div><div class="card"><div class="card-head"><h3>معاينة</h3></div><div class="activity" id="supportPreview"></div></div></div></section>
+<section class="page" id="page-system"><div class="section-title"><div><h3>النظام والأمان</h3><p>مفاتيح تشغيل عامة، وضع صيانة، فحص الخدمات وتصدير التقارير.</p></div></div><div class="card"><div class="switch-grid" id="systemSwitches"></div><div class="field" style="margin-top:10px"><label>رسالة وضع الصيانة</label><textarea id="maintenanceMessage" placeholder="المنصة تحت الصيانة وسنعود قريبًا"></textarea></div><button class="btn gold" id="saveSystem" style="margin-top:12px">حفظ إعدادات التشغيل</button></div><div class="grid3" style="margin-top:12px"><div class="card"><h3 style="color:var(--gold)">فحص السيرفر</h3><p id="healthDetails" style="color:var(--muted);line-height:1.8"></p><button class="btn blue" id="healthBtn">إعادة الفحص</button></div><div class="card"><h3 style="color:var(--gold)">تصدير تقرير</h3><p style="color:var(--muted);line-height:1.8">نزّل الأرقام الحالية وبيانات المستخدمين CSV.</p><button class="btn" id="exportUsersBtn">تصدير المستخدمين</button></div><div class="card"><h3 style="color:var(--gold)">تنبيه أمان</h3><p style="color:var(--muted);line-height:1.8">لا تشارك مفتاح Firebase أو حساب الأدمن. كل تعديل حساس يُسجل في سجل التدقيق.</p></div></div></section>
+</main>
+</div>
+<div class="modal" id="userModal"><div class="modal-box"><div class="modal-head"><h3 id="userModalTitle">ملف المستخدم</h3><div class="spacer"></div><button class="close" data-close-modal="">×</button></div><div id="userModalContent"></div></div></div>
+<div class="modal" id="confirmModal"><div class="modal-box" style="width:min(520px,100%)"><div class="modal-head"><h3 id="confirmTitle">تأكيد</h3><div class="spacer"></div><button class="close" data-close-confirm="">×</button></div><p id="confirmText" style="color:#cbd5e4;line-height:1.8;font-weight:700"></p><div class="field"><label>السبب</label><textarea id="confirmReason" placeholder="السبب إجباري لبعض العمليات"></textarea></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn gold" id="confirmOk">متابعة</button><button class="btn" data-close-confirm="">إلغاء</button></div></div></div>
+<div class="loading" id="loading"><div class="spinner"></div></div><div class="toast" id="toast"></div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+import { getDatabase, ref, get, set, update, onValue } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
+
+const firebaseConfig={apiKey:'AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g',authDomain:'adhamnnn-8a4d2.firebaseapp.com',databaseURL:'https://adhamnnn-8a4d2-default-rtdb.firebaseio.com',projectId:'adhamnnn-8a4d2',storageBucket:'adhamnnn-8a4d2.firebasestorage.app',messagingSenderId:'812431761704',appId:'1:812431761704:web:2b85a0532574cc4378301d',measurementId:'G-59WKJBRDG8'};
+const API='https://adnor-api.onrender.com';
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),googleProvider=new GoogleAuthProvider();
+googleProvider.setCustomParameters({prompt:'select_account'});
+await setPersistence(auth,browserLocalPersistence);
+const $=id=>document.getElementById(id), money=v=>'$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const exPrice=v=>'$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:6,maximumFractionDigits:6}),exQty=v=>Number(v||0).toLocaleString('en-US',{maximumFractionDigits:4}),exRid=p=>p+'_'+Date.now()+'_'+crypto.getRandomValues(new Uint32Array(2)).join('_');
+const dt=v=>v?new Date(Number(v)).toLocaleString('ar-TR'):'—';
+let overview=null,users=[],finance={deposits:[],withdrawals:[]},currentUserDetail=null,currentPage='dashboard',confirmResolve=null;
+let lotterySettings={},wheelSettings={},supportSettings={},systemControls={},exchangeData=null;
+let referralData={settings:{},referrals:[],codes:[]},paymentMethods=[],agentsData={agents:[],logs:[]},helpdeskTickets=[],publicSettings={publicSite:{},support:{},energy:{}},auditData={audit:[],notifications:[]};
+let operationsData={vip:{},dailyLogin:{},promoCodes:[],promoRedemptions:{},aiKnowledge:[],aiUnanswered:[],backups:[]};
+let customGamesData={games:[],treasurySettings:{},treasury:{},logs:[]};
+let exchangeSettingsDirty=false,exchangeSettingsSaving=false,exchangeSettingsLoaded=false,exchangeLoadSequence=0;
+
+function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),3300)}
+function loading(on){$('loading').classList.toggle('show',!!on)}
+async function api(path,options={}){const user=auth.currentUser;if(!user)throw new Error('سجل الدخول أولاً');const token=await user.getIdToken();const res=await fetch(API+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})},cache:'no-store'});let data={};try{data=await res.json()}catch{}if(!res.ok||data.ok===false)throw new Error(data.message||data.error||'تعذر تنفيذ الطلب');return data}
+function showPage(page){currentPage=page;document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===page));const map={dashboard:['لوحة القيادة','صورة حقيقية عن المنصة الآن'],live:['النشاط المباشر','متابعة كل العمليات الحديثة'],users:['المستخدمون 360°','بحث وإدارة الحسابات'],finance:['الإيداع والسحب','مركز القرارات المالية'],lottery:['السحوبات والنتائج','تحكم كامل باليانصيب'],games:['الألعاب والعجلة','مراقبة وتشغيل الألعاب'],exchange:['الاستثمار والبورصة','إدارة ADN Exchange من داخل مركز الإدارة'],agents:['الوكلاء والشحن','إدارة الوكلاء ورصيدهم'],referrals:['الدعوات والأكواد','مكافآت آمنة من السيرفر'],payments:['طرق الدفع','إدارة الإيداع والسحب'],helpdesk:['تذاكر الدعم','رد وإغلاق الطلبات'],broadcast:['الإشعارات والبنرات','تواصل احترافي مع المستخدمين'],content:['الواجهة والمحتوى','تعديل الصفحة العامة'],support:['بيانات التواصل','واتساب وتلغرام'],energy:['ADN Energy','إعدادات النقاط والإعلانات'],vip:['VIP والمستويات','المهام والصندوق الملكي'],daily:['الصندوق اليومي','سبعة أيام ومكافآت'],promos:['الأكواد والحملات','إدارة العروض الترويجية'],assistant:['المساعد الذكي','قاعدة المعرفة والأسئلة'],backups:['النسخ الاحتياطي','نسخ خادمية آمنة'],audit:['السجل والتدقيق','مراجعة كل العمليات'],system:['النظام والأمان','تشغيل وصيانة وتقارير']};$('pageTitle').textContent=map[page]?.[0]||'ADNOR';$('pageSubtitle').textContent=map[page]?.[1]||'';$('sidebar').classList.remove('open');try{history.replaceState(null,'','#'+page)}catch{}if(page==='finance')loadFinance();if(page==='users'&&!users.length)loadUsers('');if(page==='exchange')loadExchange();if(page==='games')loadCustomGames();if(page==='agents')loadAgents();if(page==='referrals')loadReferrals();if(page==='payments')loadPayments();if(page==='helpdesk')loadHelpdesk();if(page==='content'||page==='energy'||page==='support')loadPublicBundle();if(page==='audit')loadAudit();if(['vip','daily','promos','assistant','backups'].includes(page))loadOperations();}
+
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll('[data-page-jump]').forEach(b=>b.onclick=()=>showPage(b.dataset.pageJump));$('menuBtn').onclick=()=>$('sidebar').classList.toggle('open');
+
+function stat(label,value,tone='#ffd86b',note=''){return `<div class="stat" style="--tone:${tone}"><div class="label">${label}</div><strong>${value}</strong><small>${note}</small></div>`}
+function renderOverview(){if(!overview)return;const m=overview.metrics||{};$('mainStats').innerHTML=[stat('المستخدمون',Number(m.totalUsers||0).toLocaleString(),'#ffd86b',`جدد: ${m.newUsers||0}`),stat('النشطون الآن',m.activeNow||0,'#31e6a1','آخر 15 دقيقة'),stat('التذاكر',m.tickets||0,'#4bd8ff',`مبيعات ${money(m.ticketRevenue)}`),stat('جولات الألعاب',m.wheelRounds||0,'#b98cff',`رهانات ${money(m.wheelBets)}`),stat('صافي العجلة',money(m.wheelNet),Number(m.wheelNet)>=0?'#31e6a1':'#ff667b',`مدفوع ${money(m.wheelPayouts)}`),stat('طلبات معلقة',(m.pendingDeposits||0)+(m.pendingWithdrawals||0),'#ffb45e',`إيداع ${m.pendingDeposits||0} / سحب ${m.pendingWithdrawals||0}`)].join('');
+$('balanceKpis').innerHTML=`<div class="kpi"><span>أرصدة حقيقية</span><b>${money(m.balances?.real)}</b></div><div class="kpi"><span>بونص</span><b>${money(m.balances?.bonus)}</b></div><div class="kpi"><span>محجوز للسحب</span><b>${money(m.balances?.reserved)}</b></div><div class="kpi"><span>رصيد الوكلاء</span><b>${money(m.agentCredit)}</b></div>`;
+$('pendingKpis').innerHTML=`<div class="kpi"><span>إيداعات معلقة</span><b>${m.pendingDeposits||0}</b></div><div class="kpi"><span>سحوبات معلقة</span><b>${m.pendingWithdrawals||0}</b></div><div class="kpi"><span>دعم مفتوح</span><b>${m.openSupport||0}</b></div><div class="kpi"><span>حسابات مجمدة</span><b>${m.frozenUsers||0}</b></div>`;
+$('agentKpis').innerHTML=`<div class="kpi"><span>الوكلاء</span><b>${m.agents||0}</b></div><div class="kpi"><span>النشطون</span><b>${m.activeAgents||0}</b></div><div class="kpi"><span>إجمالي الرصيد</span><b>${money(m.agentCredit)}</b></div>`;
+$('gameKpis').innerHTML=`<div class="kpi"><span>الجولات</span><b>${m.wheelRounds||0}</b></div><div class="kpi"><span>الرهانات</span><b>${money(m.wheelBets)}</b></div><div class="kpi"><span>الأرباح المدفوعة</span><b>${money(m.wheelPayouts)}</b></div><div class="kpi"><span>صافي المنصة</span><b>${money(m.wheelNet)}</b></div>`;
+renderActivity();drawChart(overview.charts?.hours||[]);renderSystemQuick();hydrateSystemControls(overview.settings?.system?.controls||{});}
+
+function iconFor(type){return {ticket:'🎫',wheel:'🎡',deposit:'💰',withdraw:'💸',notification:'🔔'}[type]||'⚡'}
+function activityHtml(a){const amount=a.amount==null?'':`<span class="amount ${Number(a.amount)>=0?'plus':'minus'}">${Number(a.amount)>=0?'+':''}${money(a.amount)}</span>`;return `<div class="activity-item"><div class="activity-icon">${iconFor(a.type)}</div><div><h4>${esc(a.text||a.type)}</h4><p>${esc(a.email||a.uid||'')} — ${dt(a.createdAt)} ${a.status?`— ${esc(a.status)}`:''}</p></div>${amount}</div>`}
+function renderActivity(){const all=overview?.recentActivity||[];$('recentActivity').innerHTML=all.slice(0,12).map(activityHtml).join('')||'<div class="empty">لا يوجد نشاط حديث</div>';const filter=$('activityFilter')?.value||'all';$('allActivity').innerHTML=all.filter(a=>filter==='all'||a.type===filter).map(activityHtml).join('')||'<div class="empty">لا يوجد نشاط ضمن هذا التصنيف</div>'}
+$('activityFilter').onchange=renderActivity;
+
+function drawChart(hours){const canvas=$('activityChart'),ctx=canvas.getContext('2d'),dpr=window.devicePixelRatio||1,w=canvas.clientWidth,h=canvas.clientHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);const pad={l:35,r:12,t:14,b:28},cw=w-pad.l-pad.r,ch=h-pad.t-pad.b,max=Math.max(1,...hours.flatMap(x=>[x.tickets||0,x.games||0,Number(x.deposits||0)/10]));ctx.strokeStyle='rgba(255,216,107,.12)';ctx.lineWidth=1;for(let i=0;i<=4;i++){const y=pad.t+ch*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke()}const series=[['tickets','#ffd86b'],['games','#4bd8ff'],['deposits','#31e6a1']];series.forEach(([key,color])=>{ctx.beginPath();hours.forEach((x,i)=>{let val=key==='deposits'?Number(x[key]||0)/10:Number(x[key]||0);const px=pad.l+cw*(i/(Math.max(1,hours.length-1))),py=pad.t+ch-(val/max)*ch;i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.strokeStyle=color;ctx.lineWidth=2.2;ctx.stroke()});ctx.fillStyle='#8295ad';ctx.font='10px Segoe UI';[0,6,12,18,23].forEach(i=>ctx.fillText(String(i).padStart(2,'0'),pad.l+cw*i/23-5,h-8));ctx.fillStyle='#ffd86b';ctx.fillText('تذاكر',pad.l,11);ctx.fillStyle='#4bd8ff';ctx.fillText('ألعاب',pad.l+50,11);ctx.fillStyle='#31e6a1';ctx.fillText('إيداع ÷10',pad.l+95,11)}
+window.addEventListener('resize',()=>overview&&drawChart(overview.charts?.hours||[]));
+
+function renderSystemQuick(){const c=overview?.settings?.system?.controls||{};const arr=[['التسجيل',c.registrationEnabled!==false],['الإيداع',c.depositEnabled!==false],['السحب',c.withdrawEnabled!==false],['اليانصيب',c.lotteryEnabled!==false],['الألعاب',c.gamesEnabled!==false],['الصيانة',c.maintenanceMode===true]];$('systemQuick').innerHTML=arr.map(([n,on])=>`<div class="list-row"><div class="activity-icon">${on?'✓':'!'}</div><div><h4>${n}</h4><p>${on?'يعمل':'متوقف'}</p></div><span class="badge ${on?'green':'red'}">${on?'ON':'OFF'}</span></div>`).join('')}
+
+async function loadOverview(show=true){try{if(show)loading(true);overview=await api('/admin/overview?range='+encodeURIComponent($('rangeSelect').value));renderOverview();}catch(e){toast(e.message)}finally{loading(false)}}
+$('rangeSelect').onchange=()=>loadOverview();$('refreshBtn').onclick=()=>currentPage==='exchange'?loadExchange():loadOverview();
+
+async function loadUsers(q=''){try{loading(true);const data=await api('/admin/users/search?q='+encodeURIComponent(q)+'&limit=150');users=data.users||[];renderUsers()}catch(e){toast(e.message)}finally{loading(false)}}
+function renderUsers(){const rows=users.map(u=>`<tr><td><b>${esc(u.name)}</b><br><small style="color:var(--muted)">${esc(u.email)}</small></td><td>${esc(u.publicId||'—')}</td><td>${money(u.realBalance)}</td><td>${money(u.bonusBalance)}</td><td>${u.isVIP?'<span class="badge">VIP</span>':'—'}</td><td>${u.isFrozen?'<span class="badge red">مجمد</span>':'<span class="badge green">نشط</span>'}</td><td>${dt(u.lastActivityAt||u.lastLoginAt)}</td><td><button class="btn sm blue" data-open-user="${esc(u.uid)}">فتح 360°</button></td></tr>`).join('');$('usersTable').innerHTML=`<table class="table"><thead><tr><th>المستخدم</th><th>ID</th><th>الرصيد الحقيقي</th><th>البونص</th><th>VIP</th><th>الحالة</th><th>آخر نشاط</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="8">لا توجد نتائج</td></tr>'}</tbody></table>`;document.querySelectorAll('[data-open-user]').forEach(b=>b.onclick=()=>openUser(b.dataset.openUser))}
+$('userSearchBtn').onclick=()=>loadUsers($('userSearch').value);$('usersReloadBtn').onclick=()=>{ $('userSearch').value='';loadUsers('')};$('userSearch').addEventListener('keydown',e=>{if(e.key==='Enter')loadUsers($('userSearch').value)});
+
+async function openUser(uid){try{loading(true);currentUserDetail=await api('/admin/user?uid='+encodeURIComponent(uid));renderUserModal();$('userModal').classList.add('show')}catch(e){toast(e.message)}finally{loading(false)}}
+function renderUserModal(){const d=currentUserDetail,u=d.user;$('userModalTitle').textContent=`${u.name} — ${u.publicId||u.uid.slice(0,8)}`;const tx=(d.transactions||[]).slice(0,15).map(x=>`<div class="list-row"><div class="activity-icon">↕</div><div><h4>${esc(x.type||'عملية')}</h4><p>${esc(x.note||x.status||'')} — ${dt(x.createdAt)}</p></div><b class="amount ${Number(x.amount)>=0?'plus':'minus'}">${money(x.amount)}</b></div>`).join('')||'<div class="empty">لا عمليات</div>';$('userModalContent').innerHTML=`<div class="stats">${stat('الرصيد الحقيقي',money(u.realBalance),'#31e6a1')}${stat('البونص',money(u.bonusBalance),'#4bd8ff')}${stat('المحجوز',money(u.reservedWithdrawalBalance),'#ffb45e')}${stat('التذاكر',d.tickets?.length||0,'#ffd86b')}${stat('جولات العجلة',d.wheelRounds?.length||0,'#b98cff')}${stat('سجلات الدخول',d.logins?.length||0,'#fff')}</div><div class="grid2"><div class="card"><div class="card-head"><h3>بيانات الحساب</h3></div><div class="activity"><div class="list-row"><div><h4>UID</h4><p style="direction:ltr">${esc(u.uid)}</p></div></div><div class="list-row"><div><h4>البريد</h4><p>${esc(u.email||'—')}</p></div></div><div class="list-row"><div><h4>آخر دخول</h4><p>${dt(u.lastLoginAt)}</p></div></div><div class="list-row"><div><h4>الحالة</h4><p>${u.isFrozen?'مجمد':'نشط'} — ${u.isVIP?'VIP':'عادي'}</p></div></div></div></div><div class="card"><div class="card-head"><h3>إجراءات محمية</h3></div><div class="form-grid"><div class="field"><label>نوع الرصيد</label><select id="adjustField"><option value="realBalance">الرصيد الحقيقي</option><option value="bonusBalance">البونص</option><option value="reservedWithdrawalBalance">المحجوز</option><option value="freeSpins">لفات مجانية</option><option value="freeTickets">تذاكر مجانية</option></select></div><div class="field"><label>المقدار (+ أو -)</label><input id="adjustAmount" class="input" type="number" step="0.01"></div></div><button id="adjustBalanceBtn" class="btn gold" style="margin-top:10px">تنفيذ تعديل الرصيد</button><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px"><button id="freezeUserBtn" class="btn ${u.isFrozen?'green':'red'}">${u.isFrozen?'فك التجميد':'تجميد الحساب'}</button><button id="vipUserBtn" class="btn blue">${u.isVIP?'إلغاء VIP':'تفعيل VIP 30 يوم'}</button><button id="notifyUserBtn" class="btn">إرسال إشعار خاص</button></div></div></div><div class="card" style="margin-top:12px"><div class="card-head"><h3>آخر العمليات</h3></div><div class="activity">${tx}</div></div>`;
+$('adjustBalanceBtn').onclick=()=>adjustBalance(u.uid);$('freezeUserBtn').onclick=()=>setUserState(u.uid,'freeze',!u.isFrozen);$('vipUserBtn').onclick=()=>setUserState(u.uid,'vip',!u.isVIP);$('notifyUserBtn').onclick=()=>{showPage('broadcast');$('broadcastTarget').value='user';$('broadcastUid').value=u.uid;$('userModal').classList.remove('show')}}
+
+function confirmAction(title,text,needReason=true){return new Promise(resolve=>{confirmResolve=resolve;$('confirmTitle').textContent=title;$('confirmText').textContent=text;$('confirmReason').value='';$('confirmReason').parentElement.classList.toggle('hidden',!needReason);$('confirmModal').classList.add('show')})}
+function closeConfirm(value=null){$('confirmModal').classList.remove('show');if(confirmResolve){confirmResolve(value);confirmResolve=null}}
+document.querySelectorAll('[data-close-confirm]').forEach(b=>b.onclick=()=>closeConfirm(null));$('confirmOk').onclick=()=>closeConfirm($('confirmReason').value.trim()||true);document.querySelectorAll('[data-close-modal]').forEach(b=>b.onclick=()=>$('userModal').classList.remove('show'));
+async function adjustBalance(uid){const field=$('adjustField').value,amount=Number($('adjustAmount').value);if(!amount)return toast('اكتب مقدارًا صحيحًا');const reason=await confirmAction('تعديل رصيد','سيتم تسجيل العملية في سجل التدقيق.',true);if(!reason||reason===true)return toast('اكتب سبب العملية');try{loading(true);await api('/admin/user/adjust-balance',{method:'POST',body:JSON.stringify({uid,field,amount,reason})});toast('تم تعديل الرصيد');await openUser(uid);await loadOverview(false)}catch(e){toast(e.message)}finally{loading(false)}}
+async function setUserState(uid,action,enabled){const reason=await confirmAction(action==='freeze'?'تحديث حالة الحساب':'تحديث VIP',enabled?'تأكيد التفعيل؟':'تأكيد الإلغاء؟',action==='freeze');if(reason===null)return;try{loading(true);await api('/admin/user/state',{method:'POST',body:JSON.stringify({uid,action,enabled,reason:reason===true?'':reason,days:30})});toast('تم تحديث حالة المستخدم');await openUser(uid);await loadOverview(false)}catch(e){toast(e.message)}finally{loading(false)}}
+
+async function loadFinance(){try{loading(true);finance=await api('/admin/finance');renderFinance()}catch(e){toast(e.message)}finally{loading(false)}}
+function financeRow(item,type){const pending=String(item.status||'pending')==='pending';return `<div class="list-row"><div class="activity-icon">${type==='deposit'?'↓':'↑'}</div><div><h4>${type==='deposit'?'إيداع':'سحب'} ${money(item.amount)}</h4><p>${esc(item.email||item.uid||'')} — ${dt(item.createdAt)}<br>الطريقة: ${esc(item.methodName||item.method||'—')} — الحالة: ${esc(item.status||'pending')}</p></div><div style="display:grid;gap:5px">${pending?`<button class="btn green sm" data-finance="${type}" data-action="approve" data-id="${esc(item.id)}">قبول</button><button class="btn red sm" data-finance="${type}" data-action="reject" data-id="${esc(item.id)}">رفض</button>`:`<span class="badge ${item.status==='approved'?'green':'red'}">${esc(item.status)}</span>`}</div></div>`}
+function renderFinance(){const deps=finance.deposits||[],withs=finance.withdrawals||[];$('depositCount').textContent=deps.filter(x=>(x.status||'pending')==='pending').length+' معلّق';$('withdrawCount').textContent=withs.filter(x=>(x.status||'pending')==='pending').length+' معلّق';$('depositList').innerHTML=deps.map(x=>financeRow(x,'deposit')).join('')||'<div class="empty">لا توجد طلبات</div>';$('withdrawList').innerHTML=withs.map(x=>financeRow(x,'withdraw')).join('')||'<div class="empty">لا توجد طلبات</div>';document.querySelectorAll('[data-finance]').forEach(b=>b.onclick=()=>processFinance(b.dataset.finance,b.dataset.id,b.dataset.action))}
+async function processFinance(type,id,action){const reason=await confirmAction(action==='approve'?'تأكيد القبول':'تأكيد الرفض',action==='approve'?'تأكد من صحة الطلب قبل المتابعة.':'سيتم حفظ سبب الرفض وإبلاغ المستخدم.',action==='reject');if(reason===null)return;try{loading(true);await api(`/admin/finance/${type==='deposit'?'deposit':'withdrawal'}`,{method:'POST',body:JSON.stringify({id,action,reason:reason===true?'':reason})});toast('تمت معالجة الطلب');await loadFinance();await loadOverview(false)}catch(e){toast(e.message)}finally{loading(false)}}
+
+function fillLottery(){const s=lotterySettings||{};$('lotteryTicketPrice').value=Number(s.ticketPrice||1);$('dailyPrize').value=Number(s.daily?.prize||s.draws?.daily?.prize||4500);$('weeklyPrize').value=Number(s.weekly?.prize||s.draws?.weekly?.prize||15000);$('monthlyPrize').value=Number(s.monthly?.prize||s.draws?.monthly?.prize||45000);$('yearlyPrize').value=Number(s.yearly?.prize||s.draws?.yearly?.prize||750000);$('allowBonusTickets').value=String(s.allowBonusForTickets!==false&&s.allowBonus!==false);renderDrawResults()}
+$('saveLotterySettings').onclick=async()=>{try{loading(true);const r=await api('/admin/lottery/settings',{method:'POST',body:JSON.stringify({ticketPrice:Number($('lotteryTicketPrice').value||1),dailyPrize:Number($('dailyPrize').value||0),weeklyPrize:Number($('weeklyPrize').value||0),monthlyPrize:Number($('monthlyPrize').value||0),yearlyPrize:Number($('yearlyPrize').value||0),allowBonusForTickets:$('allowBonusTickets').value==='true'})});lotterySettings=r.settings||lotterySettings;fillLottery();toast('تم حفظ إعدادات اليانصيب عبر السيرفر')}catch(e){toast(e.message)}finally{loading(false)}};
+$('saveDrawResult').onclick=async()=>{const drawType=$('resultDrawType').value,ticketNumber=$('resultTicket').value.replace(/\D/g,''),winnerName=$('resultWinner').value.trim(),prize=Number($('resultPrize').value),mode=$('resultMode').value,publishAt=$('resultPublishAt').value?new Date($('resultPublishAt').value).getTime():Date.now();if(!/^\d{7}$/.test(ticketNumber)||!prize)return toast('أكمل رقم التذكرة والجائزة');try{loading(true);await api('/admin/lottery/result',{method:'POST',body:JSON.stringify({drawType,ticketNumber,winnerName,prize,mode,publishAt,requestId:'draw_'+Date.now()})});toast(mode==='publish'?'تم التحقق من التذكرة ونشر النتيجة وإضافة الجائزة':'تم التحقق من التذكرة وجدولة النتيجة');await loadOverview(false)}catch(e){toast(e.message)}finally{loading(false)}};
+function renderDrawResults(){const r=lotterySettings?.v91_last_results||lotterySettings?.last_results||{},items=[];Object.values(r.current||{}).forEach(x=>items.push({...x,_kind:'منشور'}));Object.values(r.scheduled||{}).forEach(x=>items.push({...x,_kind:'مجدول'}));items.sort((a,b)=>(b.publishAt||0)-(a.publishAt||0));$('drawResultsList').innerHTML=items.map(x=>`<div class="list-row"><div class="activity-icon">🎱</div><div><h4>${esc(x.drawLabel||x.drawType)} — ${esc(x.ticketNumber)}</h4><p>${esc(x.winnerName||'')} — ${money(x.prize)} — ${dt(x.publishAt)}</p></div><span class="badge ${x._kind==='منشور'?'green':'blue'}">${x._kind}</span></div>`).join('')||'<div class="empty">لا توجد نتائج محفوظة</div>'}
+
+function fillWheel(){const s=wheelSettings||{};$('wheelEnabled').value=String(s.enabled!==false);$('wheelBonus').value=String(s.allowBonusForWheel!==false&&s.allowBonus!==false);$('wheelMin').value=Number(s.minBet||1);$('wheelMax').value=Number(s.maxBet||500)}
+$('saveWheel').onclick=async()=>{try{loading(true);const r=await api('/admin/games/settings',{method:'POST',body:JSON.stringify({enabled:$('wheelEnabled').value==='true',allowBonusForWheel:$('wheelBonus').value==='true',minBet:Number($('wheelMin').value||1),maxBet:Number($('wheelMax').value||500)})});wheelSettings=r.settings||wheelSettings;fillWheel();toast('تم حفظ إعدادات العجلة عبر السيرفر')}catch(e){toast(e.message)}finally{loading(false)}};
+
+function customGameForm(game={}){$('customGameId').value=game.id||'';$('customGameName').value=game.name||'';$('customGameIcon').value=game.icon||'🎮';$('customGameEnabled').value=String(game.enabled!==false);$('customGameMin').value=Number(game.minBet||1);$('customGameMax').value=Number(game.maxBet||100);$('customGameChance').value=Number(game.winChance||0);$('customGameMultiplier').value=Number(game.multiplier||0);$('customGameReal').value=String(game.acceptReal!==false);$('customGameBonus').value=String(game.acceptBonus===true);$('customGameDesc').value=game.desc||''}
+function renderCustomGames(){const games=customGamesData.games||[],t=customGamesData.treasury||{},settings=customGamesData.treasurySettings||{};$('customGamesCount').textContent=String(games.length);$('customGamesList').innerHTML=games.map(g=>`<div class="list-row"><div class="activity-icon">${esc(g.icon||'🎮')}</div><div><h4>${esc(g.name||g.id)} <span class="badge ${g.enabled?'green':'red'}">${g.enabled?'شغالة':'متوقفة'}</span></h4><p>${esc(g.desc||'')}<br>${money(g.minBet)} – ${money(g.maxBet)} | فوز ${Number(g.winChance||0)}% | X${Number(g.multiplier||0)} | البونص ${g.acceptBonus?'مسموح':'ممنوع'}</p></div><button class="btn blue sm" data-edit-custom="${esc(g.id)}">تعديل</button></div>`).join('')||'<div class="empty">لا توجد ألعاب إضافية</div>';document.querySelectorAll('[data-edit-custom]').forEach(b=>b.onclick=()=>customGameForm(games.find(g=>g.id===b.dataset.editCustom)||{}));$('customTreasuryCut').value=Number(settings.platformCutPercent??50);$('customTreasuryHour').value=Number(settings.reportHour??20);$('customTreasuryCarry').value=String(settings.carryOverPlayerPool!==false);$('customTreasuryKpis').innerHTML=`<div class="kpi"><span>رهانات حقيقية</span><b>${money(t.totalBetsReal)}</b></div><div class="kpi"><span>رهانات بونص</span><b>${money(t.totalBetsBonus)}</b></div><div class="kpi"><span>ربح المنصة</span><b>${money(t.platformProfit)}</b></div><div class="kpi"><span>صندوق اللاعبين</span><b>${money(t.playerPool)}</b></div><div class="kpi"><span>مدفوع</span><b>${money(t.paidOut)}</b></div><div class="kpi"><span>الجولات</span><b>${Number(t.roundsCount||0)}</b></div>`;$('customGameLogs').innerHTML=(customGamesData.logs||[]).slice(0,40).map(l=>`<div class="list-row"><div class="activity-icon">🎮</div><div><h4>${esc(l.gameName||l.gameId||'لعبة')} <span class="badge ${l.won?'green':'red'}">${l.won?'ربح':'خسارة'}</span></h4><p>${esc(l.email||l.uid||'')} — رهان ${money(l.bet)} — ربح ${money(l.win||l.payout)} — ${dt(l.createdAt)}</p></div><strong>${money(Number(l.win||l.payout||0)-Number(l.bet||0))}</strong></div>`).join('')||'<div class="empty">لا توجد جولات بعد</div>'}
+async function loadCustomGames(show=true){try{if(show)loading(true);customGamesData=await api('/admin/custom-games');renderCustomGames()}catch(e){toast(e.message)}finally{if(show)loading(false)}}
+$('clearCustomGame').onclick=()=>customGameForm({});
+$('saveCustomGame').onclick=async()=>{const game={id:$('customGameId').value.trim(),name:$('customGameName').value.trim(),icon:$('customGameIcon').value.trim(),enabled:$('customGameEnabled').value==='true',minBet:Number($('customGameMin').value),maxBet:Number($('customGameMax').value),winChance:Number($('customGameChance').value),multiplier:Number($('customGameMultiplier').value),acceptReal:$('customGameReal').value==='true',acceptBonus:$('customGameBonus').value==='true',desc:$('customGameDesc').value.trim()};if(!game.id||!game.name)return toast('اكتب معرف اللعبة واسمها');try{loading(true);await api('/admin/custom-games/save',{method:'POST',body:JSON.stringify({game})});toast('تم حفظ اللعبة عبر السيرفر');customGameForm({});await loadCustomGames(false)}catch(e){toast(e.message)}finally{loading(false)}};
+$('deleteCustomGame').onclick=async()=>{const id=$('customGameId').value.trim();if(!id)return toast('اختر لعبة أولًا');const ok=await confirmAction('حذف اللعبة','سيتم إخفاؤها من التطبيق، بينما تبقى السجلات المالية محفوظة.',false);if(!ok)return;try{loading(true);await api('/admin/custom-games/save',{method:'POST',body:JSON.stringify({action:'delete',id})});toast('تم حذف اللعبة');customGameForm({});await loadCustomGames(false)}catch(e){toast(e.message)}finally{loading(false)}};
+$('saveCustomTreasury').onclick=async()=>{try{loading(true);await api('/admin/game-treasury/settings',{method:'POST',body:JSON.stringify({settings:{platformCutPercent:Number($('customTreasuryCut').value||50),reportHour:Number($('customTreasuryHour').value||20),carryOverPlayerPool:$('customTreasuryCarry').value==='true'}})});toast('تم حفظ إعدادات صندوق الألعاب');await loadCustomGames(false)}catch(e){toast(e.message)}finally{loading(false)}};
+
+
+$('sendBroadcast').onclick=async()=>{const body={target:$('broadcastTarget').value,uid:$('broadcastUid').value.trim(),title:$('broadcastTitle').value.trim(),text:$('broadcastText').value.trim(),link:$('broadcastLink').value.trim(),image:$('broadcastImage').value.trim()};if(!body.title||!body.text)return toast('اكتب العنوان والنص');const ok=await confirmAction('إرسال إشعار',`سيتم الإرسال إلى: ${body.target}`,false);if(!ok)return;try{loading(true);const r=await api('/admin/notifications/send',{method:'POST',body:JSON.stringify(body)});toast(`تم الإرسال إلى ${r.recipientCount} مستخدم`)}catch(e){toast(e.message)}finally{loading(false)}};
+
+
+/* ADN Exchange integrated admin controls — V201 durable save */
+function exMsg(id,text,bad=false){const el=$(id);if(!el)return;el.textContent=text||'';el.classList.toggle('bad',!!bad)}
+function selectExchangeTab(tab){document.querySelectorAll('[data-ex-tab]').forEach(b=>b.classList.toggle('active',b.dataset.exTab===tab));document.querySelectorAll('.ex-panel').forEach(p=>p.classList.toggle('active',p.id==='ex-panel-'+tab))}
+document.querySelectorAll('[data-ex-tab]').forEach(b=>b.onclick=()=>selectExchangeTab(b.dataset.exTab));
+
+const exchangeToggleMap={
+  exEnabled:{key:'enabled',label:'السوق'},
+  exBuyEnabled:{key:'buyEnabled',label:'الشراء'},
+  exSellEnabled:{key:'sellEnabled',label:'البيع'},
+  exCircuitBreakerEnabled:{key:'circuitBreakerEnabled',label:'قاطع الحركة'}
+};
+const exchangeValueMap={exOpeningPrice:'openingPrice',exTotalSupply:'totalSupply',exMakerFeeBps:'makerFeeBps',exTakerFeeBps:'takerFeeBps',exMinOrderUsd:'minOrderUsd',exMaxOrderUsd:'maxOrderUsd',exDailyVolumeLimitUsd:'dailyVolumeLimitUsd',exMaxOpenOrdersPerUser:'maxOpenOrdersPerUser',exMaxLimitPriceDeviationPct:'maxLimitPriceDeviationPct',exMaxMarketSlippagePct:'maxMarketSlippagePct',exCircuitBreakerMovePct:'circuitBreakerMovePct',exRiskNotice:'riskNotice'};
+
+function setExchangeSettingsDisabled(disabled){
+  Object.keys(exchangeToggleMap).forEach(id=>{if($(id))$(id).disabled=!!disabled});
+  if($('exSaveSettings'))$('exSaveSettings').disabled=!!disabled;
+}
+function markExchangeSettingsDirty(){
+  if(exchangeSettingsSaving||!exchangeSettingsLoaded)return;
+  exchangeSettingsDirty=true;
+  exMsg('exSettingsMsg','لديك تغييرات غير محفوظة. اضغط حفظ إعدادات السوق لتثبيت حالة السوق والحدود والرسوم.');
+}
+Object.keys(exchangeValueMap).forEach(id=>{
+  const el=$(id);if(!el)return;
+  el.addEventListener(el.tagName==='SELECT'?'change':'input',markExchangeSettingsDirty);
+});
+
+function fillExchange(forceSettings=false){
+  if(!exchangeData)return;
+  const m=exchangeData.market||{},s=exchangeData.settings||{},t=exchangeData.treasury||{};
+  $('exLastPrice').textContent=exPrice(m.lastPrice);
+  const ch=Number(m.change24||0),chEl=$('exChange24');
+  chEl.textContent=(ch>=0?'+':'')+ch.toFixed(2)+'%';
+  chEl.classList.toggle('neg',ch<0);
+  const marketOpen=s.enabled===true,buyOpen=s.buyEnabled===true,sellOpen=s.sellEnabled===true;
+  $('exMarketStatus').textContent=marketOpen?`السوق مفتوح — الشراء ${buyOpen?'مفتوح':'مغلق'} — البيع ${sellOpen?'مفتوح':'مغلق'} — الرصيد الحقيقي فقط`:'السوق متوقف من الإدارة';
+  $('exQuoteVolume24').textContent=money(m.quoteVolume24);
+  $('exInvestorCount').textContent=Number(exchangeData.investorCount||0).toLocaleString('en-US');
+  $('exIssuedAdn').textContent=exQty(m.issuedAdn);
+  $('exCirculatingAdn').textContent=exQty(m.circulatingAdn);
+  $('exFeesUsd').textContent=money(t.feesUsd);
+  $('exTradeCount').textContent=Number(m.tradeCount||0).toLocaleString('en-US');
+  $('exTreasuryAdn').textContent=exQty(t.adnAvailable);
+  $('exTreasuryAdnReserved').textContent=exQty(t.adnReserved);
+  $('exTreasuryUsd').textContent=money(t.usdAvailable);
+  $('exTreasuryUsdReserved').textContent=money(t.usdReserved);
+
+  const book=arr=>(arr||[]).map(x=>`<div class="ex-book-row"><span>${Number(x.price||0).toFixed(6)}</span><span>${exQty(x.quantity)}</span><span>${money(x.totalUsd)}</span></div>`).join('')||'<div class="ex-empty">لا توجد أوامر</div>';
+  $('exAsks').innerHTML=book(exchangeData.orderBook?.asks);
+  $('exBids').innerHTML=book(exchangeData.orderBook?.bids);
+
+  if(forceSettings||(!exchangeSettingsDirty&&!exchangeSettingsSaving)){
+    Object.entries(exchangeToggleMap).forEach(([id,cfg])=>{if($(id))$(id).checked=s[cfg.key]===true});
+    Object.entries(exchangeValueMap).forEach(([id,key])=>{if($(id))$(id).value=s[key]??''});
+    exchangeSettingsLoaded=true;
+  }
+  renderExchangeTables();
+}
+
+function renderExchangeTables(){
+  const orders=exchangeData?.allOpenOrders||[];
+  $('exOrdersBody').innerHTML=orders.map(o=>`<tr>
+    <td>${esc(o.id)}</td>
+    <td>${esc(o.ownerType==='treasury'?'الخزينة':o.uid)}</td>
+    <td><span class="badge ${o.side==='buy'?'green':'red'}">${o.side==='buy'?'شراء':'بيع'}</span></td>
+    <td>${esc(o.type)}</td>
+    <td>${Number(o.price||0).toFixed(6)}</td>
+    <td>${exQty(o.quantity)}</td>
+    <td>${exQty(o.remaining)}</td>
+    <td>${esc(o.status)}</td>
+    <td>${dt(o.createdAt)}</td>
+    <td><button type="button" class="btn red sm" data-ex-cancel="${esc(o.id)}">إلغاء</button></td>
+  </tr>`).join('')||'<tr><td colspan="10"><div class="ex-empty">لا توجد أوامر مفتوحة</div></td></tr>';
+  document.querySelectorAll('[data-ex-cancel]').forEach(b=>b.onclick=()=>cancelExchangeOrder(b.dataset.exCancel,b));
+
+  const trades=exchangeData?.recentTrades||[];
+  $('exTradesBody').innerHTML=trades.map(t=>`<tr>
+    <td>${esc(t.id)}</td>
+    <td>${Number(t.price||0).toFixed(6)}</td>
+    <td>${exQty(t.quantity)}</td>
+    <td>${money(t.grossUsd)}</td>
+    <td>${dt(t.createdAt)}</td>
+  </tr>`).join('')||'<tr><td colspan="5"><div class="ex-empty">لا توجد صفقات بعد</div></td></tr>';
+}
+
+async function loadExchange(showLoader=true,forceSettings=false){
+  const sequence=++exchangeLoadSequence;
+  try{
+    if(showLoader)loading(true);
+    const fresh=await api('/admin/exchange');
+    if(sequence!==exchangeLoadSequence)return;
+    exchangeData=fresh;
+    fillExchange(forceSettings);
+  }catch(e){
+    toast(e.message);
+    exMsg('exSettingsMsg',e.message,true);
+  }finally{
+    if(showLoader)loading(false);
+  }
+}
+
+$('exRefreshBtn').onclick=()=>loadExchange(true,!exchangeSettingsDirty);
+
+Object.keys(exchangeToggleMap).forEach(id=>{
+  const el=$(id);
+  if(!el)return;
+  el.addEventListener('change',()=>{
+    if(!exchangeSettingsLoaded||exchangeSettingsSaving)return;
+    markExchangeSettingsDirty();
+    const cfg=exchangeToggleMap[id];
+    const state=el.checked?'مفتوح':'مغلق';
+    exMsg('exSettingsMsg',`${cfg.label}: ${state} — لم يُحفظ بعد. اضغط حفظ إعدادات السوق.`);
+  });
+});
+
+function readExchangeSettingsForm(){
+  return {
+    enabled:$('exEnabled').checked,
+    buyEnabled:$('exBuyEnabled').checked,
+    sellEnabled:$('exSellEnabled').checked,
+    circuitBreakerEnabled:$('exCircuitBreakerEnabled').checked,
+    openingPrice:Number($('exOpeningPrice').value),
+    totalSupply:Number($('exTotalSupply').value),
+    makerFeeBps:Number($('exMakerFeeBps').value),
+    takerFeeBps:Number($('exTakerFeeBps').value),
+    minOrderUsd:Number($('exMinOrderUsd').value),
+    maxOrderUsd:Number($('exMaxOrderUsd').value),
+    dailyVolumeLimitUsd:Number($('exDailyVolumeLimitUsd').value),
+    maxOpenOrdersPerUser:Number($('exMaxOpenOrdersPerUser').value),
+    maxLimitPriceDeviationPct:Number($('exMaxLimitPriceDeviationPct').value),
+    maxMarketSlippagePct:Number($('exMaxMarketSlippagePct').value),
+    circuitBreakerMovePct:Number($('exCircuitBreakerMovePct').value),
+    riskNotice:$('exRiskNotice').value.trim()
+  };
+}
+function validateExchangeSettings(body){
+  if(!(body.openingPrice>0))throw new Error('السعر الافتتاحي يجب أن يكون أكبر من صفر');
+  if(!(body.totalSupply>0))throw new Error('إجمالي المعروض يجب أن يكون أكبر من صفر');
+  if(!(body.minOrderUsd>0))throw new Error('أقل أمر يجب أن يكون أكبر من صفر');
+  if(!(body.maxOrderUsd>=body.minOrderUsd))throw new Error('أعلى أمر يجب أن يكون أكبر من أو يساوي أقل أمر');
+  if(body.makerFeeBps<0||body.makerFeeBps>500||body.takerFeeBps<0||body.takerFeeBps>500)throw new Error('رسوم التداول يجب أن تكون بين 0 و500 نقطة');
+}
+
+$('exSaveSettings').onclick=async()=>{
+  const b=$('exSaveSettings');
+  if(exchangeSettingsSaving)return;
+  exchangeSettingsSaving=true;
+  b.disabled=true;
+  setExchangeSettingsDisabled(true);
+
+  try{
+    const body=readExchangeSettingsForm();
+    validateExchangeSettings(body);
+    loading(true);
+    exMsg('exSettingsMsg','جاري حفظ الإعدادات في السيرفر والتحقق منها...');
+
+    const result=await api('/admin/exchange/settings',{
+      method:'POST',
+      body:JSON.stringify(body)
+    });
+
+    if(result.persisted!==true){
+      throw new Error('السيرفر لم يؤكد حفظ الإعدادات');
+    }
+
+    // Read back from the server instead of trusting the checkbox locally.
+    const verified=await api('/admin/exchange');
+    const saved=verified.settings||{};
+    const booleanKeys=['enabled','buyEnabled','sellEnabled','circuitBreakerEnabled'];
+    const mismatch=booleanKeys.find(key=>(saved[key]===true)!==(body[key]===true));
+    if(mismatch){
+      throw new Error('تم إرسال الإعدادات لكن التحقق من القيمة المحفوظة لم ينجح');
+    }
+
+    exchangeData=verified;
+    exchangeSettingsDirty=false;
+    fillExchange(true);
+    exMsg('exSettingsMsg',`تم الحفظ والتأكد: السوق ${saved.enabled?'مفتوح':'مغلق'} — الشراء ${saved.buyEnabled?'مفتوح':'مغلق'} — البيع ${saved.sellEnabled?'مفتوح':'مغلق'}.`);
+    toast('تم حفظ إعدادات ADN Exchange والتأكد منها');
+  }catch(e){
+    exMsg('exSettingsMsg',e.message,true);
+    toast(e.message);
+  }finally{
+    loading(false);
+    exchangeSettingsSaving=false;
+    setExchangeSettingsDisabled(false);
+    b.disabled=false;
+  }
+};
+
+$('exAdjustTreasury').onclick=async()=>{
+  const b=$('exAdjustTreasury');b.disabled=true;
+  try{
+    const reason=$('exTreasuryReason').value.trim();
+    if(!reason)throw new Error('اكتب سبب تعديل الخزينة');
+    const ok=await confirmAction('تعديل خزينة ADN',`ADN: ${$('exDeltaAdn').value||0} — USD: ${$('exDeltaUsd').value||0}`,true);
+    if(!ok)return;
+    loading(true);
+    await api('/admin/exchange/treasury/adjust',{method:'POST',body:JSON.stringify({deltaAdn:Number($('exDeltaAdn').value||0),deltaUsd:Number($('exDeltaUsd').value||0),reason})});
+    $('exDeltaAdn').value='0';$('exDeltaUsd').value='0';$('exTreasuryReason').value='';
+    exMsg('exTreasuryMsg','تم تعديل الخزينة وتسجيل العملية.');
+    toast('تم تعديل خزينة السوق');
+    await loadExchange(false);
+  }catch(e){exMsg('exTreasuryMsg',e.message,true);toast(e.message)}
+  finally{loading(false);b.disabled=false}
+};
+
+$('exPlaceTreasuryOrder').onclick=async()=>{
+  const b=$('exPlaceTreasuryOrder');b.disabled=true;
+  try{
+    loading(true);
+    await api('/admin/exchange/order/place',{method:'POST',body:JSON.stringify({
+      side:$('exTreasurySide').value,
+      type:$('exTreasuryType').value,
+      quantity:Number($('exTreasuryQty').value||0),
+      price:Number($('exTreasuryPrice').value||0),
+      requestId:exRid('treasury')
+    })});
+    $('exTreasuryQty').value='';
+    exMsg('exTreasuryOrderMsg','تم إنشاء أمر الخزينة.');
+    toast('تمت إضافة أمر الخزينة');
+    await loadExchange(false);
+  }catch(e){exMsg('exTreasuryOrderMsg',e.message,true);toast(e.message)}
+  finally{loading(false);b.disabled=false}
+};
+
+async function cancelExchangeOrder(orderId,button){
+  const ok=await confirmAction('إلغاء أمر السوق',`رقم الأمر: ${orderId}`,true);
+  if(!ok)return;
+  button.disabled=true;
+  try{
+    loading(true);
+    await api('/admin/exchange/order/cancel',{method:'POST',body:JSON.stringify({orderId,reason:'إلغاء من مركز إدارة ADNOR الموحّد'})});
+    toast('تم إلغاء الأمر');
+    await loadExchange(false);
+  }catch(e){toast(e.message)}
+  finally{loading(false);button.disabled=false}
+}
+
+function fillSupport(){const s=supportSettings||{};$('supportWhatsapp').value=s.whatsapp||s.phone||'';$('supportTelegram').value=s.telegram||'';$('supportMessage').value=s.message||'مرحبًا، أحتاج مساعدة في منصة ADNOR';$('supportHours').value=s.hours||'';$('supportActive').value=String(s.active!==false);renderSupportPreview()}
+function renderSupportPreview(){const wa=$('supportWhatsapp').value||'غير محدد',tg=$('supportTelegram').value||'غير محدد';$('supportPreview').innerHTML=`<div class="list-row"><div class="activity-icon">🟢</div><div><h4>WhatsApp</h4><p>${esc(wa)}</p></div></div><div class="list-row"><div class="activity-icon">✈️</div><div><h4>Telegram</h4><p>${esc(tg)}</p></div></div><div class="list-row"><div class="activity-icon">🕒</div><div><h4>ساعات العمل</h4><p>${esc($('supportHours').value||'غير محددة')}</p></div></div>`}
+['supportWhatsapp','supportTelegram','supportHours'].forEach(id=>$(id).oninput=renderSupportPreview);
+$('saveSupport').onclick=async()=>{try{loading(true);const r=await api('/admin/support/settings',{method:'POST',body:JSON.stringify({whatsapp:$('supportWhatsapp').value,telegram:$('supportTelegram').value,message:$('supportMessage').value.trim(),hours:$('supportHours').value.trim(),active:$('supportActive').value==='true'})});supportSettings=r.support||supportSettings;fillSupport();toast('تم حفظ بيانات الدعم عبر السيرفر')}catch(e){toast(e.message)}finally{loading(false)}};
+
+const controlLabels={registrationEnabled:'التسجيل',loginEnabled:'تسجيل الدخول',depositEnabled:'الإيداع',withdrawEnabled:'السحب',lotteryEnabled:'اليانصيب',wheelEnabled:'العجلة',gamesEnabled:'الألعاب',supportEnabled:'الدعم',maintenanceMode:'وضع الصيانة'};
+function hydrateSystemControls(c={}){systemControls={registrationEnabled:c.registrationEnabled!==false,loginEnabled:c.loginEnabled!==false,depositEnabled:c.depositEnabled!==false,withdrawEnabled:c.withdrawEnabled!==false,lotteryEnabled:c.lotteryEnabled!==false,wheelEnabled:c.wheelEnabled!==false,gamesEnabled:c.gamesEnabled!==false,supportEnabled:c.supportEnabled!==false,maintenanceMode:c.maintenanceMode===true,maintenanceMessage:c.maintenanceMessage||''};$('systemSwitches').innerHTML=Object.entries(controlLabels).map(([key,label])=>`<label class="switch"><span>${label}</span><input type="checkbox" data-control="${key}" ${systemControls[key]?'checked':''}></label>`).join('');$('maintenanceMessage').value=systemControls.maintenanceMessage}
+$('saveSystem').onclick=async()=>{const controls={maintenanceMessage:$('maintenanceMessage').value.trim()};document.querySelectorAll('[data-control]').forEach(el=>controls[el.dataset.control]=el.checked);try{loading(true);await api('/admin/system/controls',{method:'POST',body:JSON.stringify({controls})});toast('تم حفظ مفاتيح التشغيل');await loadOverview(false)}catch(e){toast(e.message)}finally{loading(false)}};
+
+async function checkHealth(){try{const r=await fetch(API+'/health',{cache:'no-store'}),j=await r.json();$('healthDetails').innerHTML=`الحالة: <b style="color:var(--green)">${esc(j.status)}</b><br>الإصدار: ${esc(j.version)}<br>Firebase: ${esc(j.firebase)}<br>Database: ${esc(j.database)}<br>Admin Center: ${esc(j.adminCommandCenter||'ready')}`;return j}catch(e){$('healthDetails').textContent='تعذر الاتصال بالسيرفر';return null}}
+$('healthBtn').onclick=checkHealth;
+function download(name,content,type='text/csv;charset=utf-8'){const blob=new Blob(['\ufeff'+content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function exportUsers(){const rows=[['UID','Public ID','Name','Email','Real','Bonus','Reserved','VIP','Frozen','Created','Last Activity'],...users.map(u=>[u.uid,u.publicId,u.name,u.email,u.realBalance,u.bonusBalance,u.reservedWithdrawalBalance,u.isVIP,u.isFrozen,new Date(u.createdAt||0).toISOString(),new Date(u.lastActivityAt||0).toISOString()])];download('adnor-users.csv',rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n'))}
+$('exportUsersBtn').onclick=async()=>{if(!users.length)await loadUsers('');exportUsers()};$('exportBtn').onclick=()=>{const m=overview?.metrics||{};const rows=Object.entries(m).filter(([,v])=>typeof v!=='object').map(([k,v])=>[k,v]);download('adnor-overview.csv',[['Metric','Value'],...rows].map(r=>r.join(',')).join('\n'))};
+
+
+async function loadAgents(){
+  try{
+    const r=await api('/admin/agents');agentsData={agents:r.agents||[],logs:r.logs||[]};
+    const total=agentsData.agents.length,active=agentsData.agents.filter(a=>a.active!==false&&!a.frozen).length,balance=agentsData.agents.reduce((n,a)=>n+Number(a.balance||a.agentBalance||0),0);
+    $('agentKpis').innerHTML=`<div class="kpi"><span>الوكلاء</span><b>${total}</b></div><div class="kpi"><span>النشطون</span><b>${active}</b></div><div class="kpi"><span>الرصيد</span><b>${money(balance)}</b></div>`;
+    $('agentsList').innerHTML=agentsData.agents.length?agentsData.agents.map(a=>`<div class="list-row"><div class="activity-icon">🛡️</div><div><h4>${esc(a.name||a.email||a.uid)}</h4><p>UID: ${esc(a.uid)} — ${a.active!==false&&!a.frozen?'نشط':'مجمّد'}</p></div><div><b class="amount plus">${money(a.balance||a.agentBalance||0)}</b><button class="btn sm" data-agent-edit="${esc(a.uid)}">تعديل</button></div></div>`).join(''):'<div class="empty">لا يوجد وكلاء بعد</div>';
+    $('agentLogsList').innerHTML=agentsData.logs.length?agentsData.logs.slice(0,120).map(x=>`<div class="list-row"><div class="activity-icon">💵</div><div><h4>${esc(x.agentEmail||x.agentUid||'وكيل')} ← ${esc(x.targetEmail||x.targetUid||'مستخدم')}</h4><p>${dt(x.createdAt)} — ${esc(x.status||'completed')}</p></div><b class="amount plus">${money(x.amount)}</b></div>`).join(''):'<div class="empty">لا توجد عمليات شحن</div>';
+    document.querySelectorAll('[data-agent-edit]').forEach(btn=>btn.onclick=()=>{const a=agentsData.agents.find(x=>x.uid===btn.dataset.agentEdit);if(!a)return;$('agentTargetId').value=a.uid;$('agentActive').value=String(a.active!==false&&!a.frozen);$('agentOpeningBalance').value=Number(a.balance||a.agentBalance||0);$('agentAdjustUid').value=a.uid;window.scrollTo({top:0,behavior:'smooth'})});
+  }catch(e){toast(e.message)}
+}
+$('saveAgentBtn').onclick=async()=>{try{loading(true);await api('/admin/agents/save',{method:'POST',body:JSON.stringify({targetId:$('agentTargetId').value.trim(),active:$('agentActive').value==='true',balance:Number($('agentOpeningBalance').value||0),note:$('agentNote').value.trim()})});toast('تم حفظ الوكيل');await loadAgents()}catch(e){toast(e.message)}finally{loading(false)}};
+$('adjustAgentBtn').onclick=async()=>{try{const reason=$('agentAdjustReason').value.trim();if(reason.length<3)throw new Error('اكتب سبب التعديل');loading(true);await api('/admin/agents/adjust',{method:'POST',body:JSON.stringify({uid:$('agentAdjustUid').value.trim(),delta:Number($('agentAdjustDelta').value||0),reason})});toast('تم تعديل رصيد الوكيل');$('agentAdjustDelta').value='';$('agentAdjustReason').value='';await loadAgents()}catch(e){toast(e.message)}finally{loading(false)}};
+
+async function loadReferrals(){
+  try{
+    const r=await api('/admin/referrals');referralData={settings:r.settings||{},referrals:r.referrals||[],codes:r.codes||[]};const x=referralData.settings;
+    $('refEnabled').value=String(x.enabled!==false);$('refAdminCode').value=x.adminCode||'ADNORVIP';$('refNewAmount').value=Number(x.newUserRewardAmount||0);$('refNewType').value=x.newUserRewardType||'bonus';$('refOwnerAmount').value=Number(x.referrerRewardAmount||0);$('refOwnerType').value=x.referrerRewardType||'bonus';$('refDailyLimit').value=Number(x.dailyReferralLimit||0);$('refDepositBonus').value=Number(x.depositBonusPercent||0);$('refNote').value=x.note||'';
+    const total=referralData.referrals.length,today=referralData.referrals.filter(v=>Number(v.createdAt||0)>Date.now()-86400000).length,owners=new Set(referralData.referrals.map(v=>v.referrerUid).filter(Boolean)).size;
+    $('referralKpis').innerHTML=`<div class="kpi"><span>كل الدعوات</span><b>${total}</b></div><div class="kpi"><span>اليوم</span><b>${today}</b></div><div class="kpi"><span>أصحاب الدعوات</span><b>${owners}</b></div>`;
+    $('referralCodesList').innerHTML=referralData.codes.length?referralData.codes.slice(0,80).map(c=>`<div class="list-row"><div class="activity-icon">🔗</div><div><h4>${esc(c.code)}</h4><p>${esc(c.ownerName||c.ownerEmail||c.ownerUid)}</p></div><span class="badge ${c.active===false?'red':'green'}">${c.active===false?'موقوف':'نشط'}</span></div>`).join(''):'<div class="empty">لا توجد أكواد بعد</div>';
+    $('referralsList').innerHTML=referralData.referrals.length?referralData.referrals.slice(0,200).map(v=>`<div class="list-row"><div class="activity-icon">🎁</div><div><h4>${esc(v.code||'')}</h4><p>${esc(v.referrerName||v.referrerUid)} ← ${esc(v.referredName||v.referredUid)} — ${dt(v.createdAt)}</p></div><span class="badge green">${esc(v.status||'approved')}</span></div>`).join(''):'<div class="empty">لا توجد دعوات ناجحة</div>';
+  }catch(e){toast(e.message)}
+}
+$('saveReferralBtn').onclick=async()=>{try{loading(true);const settings={enabled:$('refEnabled').value==='true',adminCode:$('refAdminCode').value.trim(),newUserRewardAmount:Number($('refNewAmount').value||0),newUserRewardType:$('refNewType').value,referrerRewardAmount:Number($('refOwnerAmount').value||0),referrerRewardType:$('refOwnerType').value,dailyReferralLimit:Number($('refDailyLimit').value||0),depositBonusEnabled:Number($('refDepositBonus').value||0)>0,depositBonusPercent:Number($('refDepositBonus').value||0),note:$('refNote').value.trim()};await api('/admin/referrals/settings',{method:'POST',body:JSON.stringify({settings})});toast('تم حفظ إعدادات الدعوات عبر السيرفر');await loadReferrals()}catch(e){toast(e.message)}finally{loading(false)}};
+
+function clearPaymentForm(){['payId','payName','payCategory','payMinDeposit','payMinWithdraw','payAddress','payDetails'].forEach(id=>$(id).value='');$('payType').value='both';$('payActive').value='true'}
+function fillPayment(m){$('payId').value=m.id||'';$('payName').value=m.name||'';$('payType').value=m.type||'both';$('payCategory').value=m.category||'';$('payMinDeposit').value=Number(m.minDeposit||0);$('payMinWithdraw').value=Number(m.minWithdraw||0);$('payAddress').value=m.address||'';$('payDetails').value=m.details||'';$('payActive').value=String(m.active!==false);window.scrollTo({top:0,behavior:'smooth'})}
+async function loadPayments(){try{const r=await api('/admin/payment-methods');paymentMethods=r.methods||[];$('paymentMethodsList').innerHTML=paymentMethods.length?paymentMethods.map(m=>`<div class="list-row"><div class="activity-icon">💳</div><div><h4>${esc(m.name||m.id)}</h4><p>${esc(m.type||'both')} — أقل إيداع ${money(m.minDeposit||0)} — أقل سحب ${money(m.minWithdraw||0)}</p></div><div><span class="badge ${m.active===false?'red':'green'}">${m.active===false?'موقوف':'مفعّل'}</span><button class="btn sm" data-pay-edit="${esc(m.id)}">تعديل</button><button class="btn red sm" data-pay-delete="${esc(m.id)}">حذف</button></div></div>`).join(''):'<div class="empty">لا توجد طرق دفع</div>';document.querySelectorAll('[data-pay-edit]').forEach(b=>b.onclick=()=>fillPayment(paymentMethods.find(m=>m.id===b.dataset.payEdit)||{}));document.querySelectorAll('[data-pay-delete]').forEach(b=>b.onclick=async()=>{if(!confirm('حذف طريقة الدفع؟'))return;try{await api('/admin/payment-methods/save',{method:'POST',body:JSON.stringify({action:'delete',id:b.dataset.payDelete})});toast('تم الحذف');await loadPayments()}catch(e){toast(e.message)}})}catch(e){toast(e.message)}}
+$('clearPaymentBtn').onclick=clearPaymentForm;
+$('savePaymentBtn').onclick=async()=>{try{loading(true);const method={id:$('payId').value.trim(),name:$('payName').value.trim(),type:$('payType').value,category:$('payCategory').value.trim(),minDeposit:Number($('payMinDeposit').value||0),minWithdraw:Number($('payMinWithdraw').value||0),address:$('payAddress').value.trim(),details:$('payDetails').value.trim(),active:$('payActive').value==='true'};await api('/admin/payment-methods/save',{method:'POST',body:JSON.stringify({action:'save',id:method.id,method})});toast('تم حفظ طريقة الدفع');clearPaymentForm();await loadPayments()}catch(e){toast(e.message)}finally{loading(false)}};
+
+async function loadHelpdesk(){try{const r=await api('/admin/support/tickets');helpdeskTickets=r.tickets||[];renderHelpdesk()}catch(e){toast(e.message)}}
+function renderHelpdesk(){const filter=$('helpdeskFilter').value;const rows=helpdeskTickets.filter(t=>filter==='all'||String(t.status||'open')===filter);$('helpdeskList').innerHTML=rows.length?rows.map(t=>`<div class="card" style="padding:12px"><div class="card-head"><div><h3>${esc(t.title||t.subject||'طلب دعم')}</h3><small>${esc(t.email||t.uid||'')} — ${dt(t.createdAt)}</small></div><div class="spacer"></div><span class="badge ${t.status==='closed'?'gray':t.status==='answered'?'blue':'green'}">${esc(t.status||'open')}</span></div><p style="color:#cbd5e4;line-height:1.7">${esc(t.message||t.details||t.text||'')}</p><textarea id="reply_${esc(t.id)}" placeholder="اكتب الرد">${esc(t.adminReply||t.reply||'')}</textarea><div class="toolbar" style="margin-top:8px"><button class="btn gold" data-help-reply="${esc(t.id)}" data-help-uid="${esc(t.uid||'')}">رد</button><button class="btn red" data-help-close="${esc(t.id)}" data-help-uid="${esc(t.uid||'')}">رد وإغلاق</button></div></div>`).join(''):'<div class="empty">لا توجد تذاكر ضمن هذا الفلتر</div>';document.querySelectorAll('[data-help-reply],[data-help-close]').forEach(b=>b.onclick=()=>replyHelpdesk(b.dataset.helpReply||b.dataset.helpClose,b.dataset.helpUid,!!b.dataset.helpClose))}
+async function replyHelpdesk(id,uid,close){try{const reply=$('reply_'+id).value.trim();if(reply.length<2)throw new Error('اكتب الرد');loading(true);await api('/admin/support/reply',{method:'POST',body:JSON.stringify({id,uid,reply,status:close?'closed':'answered'})});toast(close?'تم الرد وإغلاق الطلب':'تم إرسال الرد');await loadHelpdesk()}catch(e){toast(e.message)}finally{loading(false)}}
+$('helpdeskFilter').onchange=renderHelpdesk;$('helpdeskRefresh').onclick=loadHelpdesk;
+
+function renderContentPreview(){if($('contentPreviewTitle'))$('contentPreviewTitle').textContent=$('contentHeroTitle').value||'ADNOR';if($('contentPreviewSubtitle'))$('contentPreviewSubtitle').textContent=$('contentHeroSubtitle').value||'منصة ADNOR'}
+['contentHeroTitle','contentHeroSubtitle'].forEach(id=>$(id).oninput=renderContentPreview);
+async function loadPublicBundle(){try{const r=await api('/admin/public-settings');publicSettings=r;const p=r.publicSite||{},sup=r.support||{},en=r.energy||{};$('contentAnnouncement').value=p.announcement||'';$('contentHeroTitle').value=p.heroTitle||'';$('contentHeroSubtitle').value=p.heroSubtitle||'';$('contentDrawTime').value=p.dailyDrawTime||'';$('contentNextDraw').value=p.dailyNextDraw||'';$('contentApkUrl').value=p.apkDownloadUrl||'';$('contentGames').value=String(p.publicGamesEnabled!==false);$('contentResults').value=String(p.officialResultsAuto!==false);supportSettings=sup;fillSupport();$('energyEnabled').value=String(en.enabled!==false);$('energyMode').value=en.mode||'preview';$('energyHours').value=Number(en.sessionHours||24);$('energyPoints').value=Number(en.basePoints||25);$('energyM1').value=Number(en.multiplier1||1);$('energyM2').value=Number(en.multiplier2||1.5);$('energyM3').value=Number(en.multiplier3||2);$('energyDisclaimer').value=en.disclaimer||'';renderContentPreview();const h=await checkHealth();$('energyAdsState').innerHTML=h&&h.rewardedAds!=='not-connected'?`<b style="color:var(--green)">${esc(h.rewardedAds)}</b>`:'Google Rewarded Ads غير مربوط حاليًا؛ السيرفر يمنع توزيع نقاط وهمية.'}catch(e){toast(e.message)}}
+$('saveContentBtn').onclick=async()=>{try{loading(true);await api('/admin/public-settings',{method:'POST',body:JSON.stringify({publicSite:{announcement:$('contentAnnouncement').value,heroTitle:$('contentHeroTitle').value,heroSubtitle:$('contentHeroSubtitle').value,dailyDrawTime:$('contentDrawTime').value,dailyNextDraw:$('contentNextDraw').value,apkDownloadUrl:$('contentApkUrl').value,publicGamesEnabled:$('contentGames').value==='true',officialResultsAuto:$('contentResults').value==='true',registrationEnabled:true}})});toast('تم حفظ ونشر المحتوى')}catch(e){toast(e.message)}finally{loading(false)}};
+$('saveEnergyBtn').onclick=async()=>{try{loading(true);const settings={enabled:$('energyEnabled').value==='true',mode:$('energyMode').value,sessionHours:Number($('energyHours').value||24),basePoints:Number($('energyPoints').value||0),multiplier1:Number($('energyM1').value||1),multiplier2:Number($('energyM2').value||1.5),multiplier3:Number($('energyM3').value||2),disclaimer:$('energyDisclaimer').value};const r=await api('/admin/energy/settings',{method:'POST',body:JSON.stringify({settings})});toast(r.settings?.mode==='live'?'تم الحفظ':'تم الحفظ؛ LIVE يبقى مقفولًا حتى ربط Google')}catch(e){toast(e.message)}finally{loading(false)}};
+
+async function loadAudit(){try{const r=await api('/admin/audit?limit=500');auditData={audit:r.audit||[],notifications:r.notifications||[]};const rows=[...auditData.audit.map(x=>({...x,_kind:'audit'})),...auditData.notifications.map(x=>({...x,_kind:'notice'}))].sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0));$('auditList').innerHTML=rows.length?rows.map(x=>`<div class="list-row"><div class="activity-icon">${x._kind==='audit'?'📜':'🔔'}</div><div><h4>${esc(x.action||x.type||'عملية')}</h4><p>${esc(x.reason||x.text||x.note||x.adminEmail||'')} — ${dt(x.createdAt)}</p></div><b class="amount">${x.amount!==undefined?money(x.amount):''}</b></div>`).join(''):'<div class="empty">لا يوجد سجل بعد</div>'}catch(e){toast(e.message)}}
+$('auditRefresh').onclick=loadAudit;$('auditExport').onclick=()=>{const rows=[['Type','Action','UID','Amount','Reason','Admin','Created'],...auditData.audit.map(x=>['audit',x.action||'',x.uid||'',x.amount||'',x.reason||'',x.adminEmail||'',new Date(Number(x.createdAt||0)).toISOString()])];download('adnor-audit.csv',rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n'))};
+
+async function loadOperations(){
+  try{
+    const r=await api('/admin/operations');
+    operationsData={vip:r.vip||{},dailyLogin:r.dailyLogin||{},promoCodes:r.promoCodes||[],promoRedemptions:r.promoRedemptions||{},aiKnowledge:r.aiKnowledge||[],aiUnanswered:r.aiUnanswered||[],backups:r.backups||[]};
+    renderVipV204();renderDailyV204();renderPromosV204();renderAiV204();renderBackupsV204();
+  }catch(e){toast(e.message)}
+}
+function renderVipV204(){
+  const v=operationsData.vip||{},levels=Array.isArray(v.levels)?v.levels:[];
+  $('vipEnabled').value=String(v.enabled!==false);$('vipTaskPoints').value=Number(v.taskPoints||0);$('vipTaskBonus').value=Number(v.taskBonus||0);$('vipBoxEnabled').value=String(v.boxEnabled!==false);$('vipBoxMin').value=Number(v.boxMin||0);$('vipBoxMax').value=Number(v.boxMax||0);$('vipSilver').value=Number(levels[1]?.points||100);$('vipGold').value=Number(levels[2]?.points||300);$('vipDiamond').value=Number(levels[3]?.points||800);$('vipRoyal').value=Number(levels[4]?.points||1500);
+  $('vipPreview').innerHTML=(levels.length?levels:[{name:'Bronze',points:0},{name:'Silver',points:100},{name:'Gold',points:300},{name:'Diamond',points:800},{name:'Royal Crown',points:1500}]).map(x=>`<div class="list-row"><div class="activity-icon">${esc(x.emoji||'👑')}</div><div><h4>${esc(x.name)}</h4><p>${esc(x.perk||'')}</p></div><b>${Number(x.points||0)} نقطة</b></div>`).join('');
+}
+$('saveVipBtn').onclick=async()=>{try{loading(true);const levels=[{name:'Bronze',emoji:'🥉',points:0,perk:'بداية المسار الملكي'},{name:'Silver',emoji:'🥈',points:Number($('vipSilver').value||100),perk:'مزايا للمستخدم النشط'},{name:'Gold',emoji:'🥇',points:Number($('vipGold').value||300),perk:'مستوى ذهبي'},{name:'Diamond',emoji:'💎',points:Number($('vipDiamond').value||800),perk:'عضوية النخبة'},{name:'Royal Crown',emoji:'👑',points:Number($('vipRoyal').value||1500),perk:'أعلى مستوى ملكي'}];const r=await api('/admin/vip/settings',{method:'POST',body:JSON.stringify({settings:{enabled:$('vipEnabled').value==='true',taskPoints:Number($('vipTaskPoints').value||0),taskBonus:Number($('vipTaskBonus').value||0),boxEnabled:$('vipBoxEnabled').value==='true',boxMin:Number($('vipBoxMin').value||0),boxMax:Number($('vipBoxMax').value||0),boxPointsMin:5,boxPointsMax:25,levels}})});operationsData.vip=r.settings||{};renderVipV204();toast('تم حفظ VIP عبر السيرفر')}catch(e){toast(e.message)}finally{loading(false)}};
+
+function renderDailyV204(){
+  const d=operationsData.dailyLogin||{},days=Array.isArray(d.days)?d.days:[];
+  $('dailyEnabled').value=String(d.enabled!==false);$('dailyTitle').value=d.title||'الصندوق الملكي اليومي';
+  const types=[['bonus','بونص'],['real','رصيد حقيقي'],['vip','نقاط VIP'],['freeSpin','لفة مجانية'],['coupon','قسيمة'],['none','بدون مكافأة']];
+  $('dailyDays').innerHTML=Array.from({length:7},(_,i)=>{const x=days[i]||{};return `<div class="card" style="padding:11px"><h4 style="margin:0 0 8px;color:var(--gold)">اليوم ${i+1}</h4><div class="field"><label>تشغيل</label><select id="dailyEn_${i}"><option value="true" ${x.enabled!==false?'selected':''}>مفعّل</option><option value="false" ${x.enabled===false?'selected':''}>متوقف</option></select></div><div class="field"><label>الاسم</label><input id="dailyName_${i}" class="input" value="${esc(x.title||('اليوم '+(i+1)))}"></div><div class="field"><label>النوع</label><select id="dailyType_${i}">${types.map(([v,l])=>`<option value="${v}" ${x.type===v?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label>القيمة</label><input id="dailyValue_${i}" class="input" type="number" step="0.01" value="${Number(x.value||0)}"></div><div class="field"><label>الرسالة</label><textarea id="dailyMsg_${i}">${esc(x.message||'')}</textarea></div></div>`}).join('');
+}
+$('saveDailyBtn').onclick=async()=>{try{loading(true);const days=Array.from({length:7},(_,i)=>({enabled:$('dailyEn_'+i).value==='true',title:$('dailyName_'+i).value,type:$('dailyType_'+i).value,value:Number($('dailyValue_'+i).value||0),message:$('dailyMsg_'+i).value}));const r=await api('/admin/daily-login/settings',{method:'POST',body:JSON.stringify({settings:{enabled:$('dailyEnabled').value==='true',title:$('dailyTitle').value,days}})});operationsData.dailyLogin=r.settings||{};renderDailyV204();toast('تم حفظ الصندوق اليومي عبر السيرفر')}catch(e){toast(e.message)}finally{loading(false)}};
+
+function clearPromoV204(){['promoCode','promoBonus','promoSpins','promoMaxUses','promoNote'].forEach(id=>$(id).value='');$('promoActive').value='true';$('promoTicket').value='false'}
+function fillPromoV204(p){$('promoCode').value=p.code||'';$('promoActive').value=String(p.active!==false);$('promoBonus').value=Number(p.bonus||0);$('promoSpins').value=Number(p.freeSpins||0);$('promoTicket').value=String(!!p.freeTicket);$('promoMaxUses').value=Number(p.maxUses||0);$('promoNote').value=p.note||''}
+function renderPromosV204(){
+  $('promoList').innerHTML=(operationsData.promoCodes||[]).length?operationsData.promoCodes.map(p=>`<div class="list-row"><div class="activity-icon">🎫</div><div><h4>${esc(p.code)}</h4><p>بونص ${money(p.bonus||0)} — لفات ${Number(p.freeSpins||0)} — استخدام ${Number(p.usedCount||0)}/${Number(p.maxUses||0)||'∞'}</p></div><div><button class="btn sm" data-promo-edit="${esc(p.code)}">تعديل</button><button class="btn red sm" data-promo-delete="${esc(p.code)}">حذف</button></div></div>`).join(''):'<div class="empty">لا توجد أكواد</div>';
+  document.querySelectorAll('[data-promo-edit]').forEach(b=>b.onclick=()=>fillPromoV204((operationsData.promoCodes||[]).find(p=>p.code===b.dataset.promoEdit)||{}));
+  document.querySelectorAll('[data-promo-delete]').forEach(b=>b.onclick=async()=>{if(!confirm('حذف الكود؟'))return;try{await api('/admin/promo-code/save',{method:'POST',body:JSON.stringify({action:'delete',code:b.dataset.promoDelete})});toast('تم حذف الكود');await loadOperations()}catch(e){toast(e.message)}});
+}
+$('clearPromoBtn').onclick=clearPromoV204;
+$('savePromoBtn').onclick=async()=>{try{loading(true);const promo={code:$('promoCode').value.trim(),active:$('promoActive').value==='true',bonus:Number($('promoBonus').value||0),freeSpins:Number($('promoSpins').value||0),freeTicket:$('promoTicket').value==='true',maxUses:Number($('promoMaxUses').value||0),note:$('promoNote').value};await api('/admin/promo-code/save',{method:'POST',body:JSON.stringify({promo})});clearPromoV204();toast('تم حفظ الكود عبر السيرفر');await loadOperations()}catch(e){toast(e.message)}finally{loading(false)}};
+
+function clearAiV204(){$('aiQuestion').value='';$('aiKeys').value='';$('aiAnswer').value='';delete $('aiQuestion').dataset.id;delete $('aiQuestion').dataset.unanswered}
+function renderAiV204(){
+  $('aiKnowledgeList').innerHTML=(operationsData.aiKnowledge||[]).length?operationsData.aiKnowledge.map(x=>`<div class="list-row"><div class="activity-icon">🤖</div><div><h4>${esc(x.question)}</h4><p>${esc(x.answer)}</p></div><div><button class="btn sm" data-ai-edit="${esc(x.id)}">تعديل</button><button class="btn red sm" data-ai-delete="${esc(x.id)}">حذف</button></div></div>`).join(''):'<div class="empty">لا توجد أجوبة</div>';
+  $('aiUnansweredList').innerHTML=(operationsData.aiUnanswered||[]).filter(x=>x.status!=='answered').map(x=>`<div class="list-row"><div class="activity-icon">?</div><div><h4>${esc(x.question||x.text||'سؤال')}</h4><p>${dt(x.createdAt)}</p></div><button class="btn sm" data-ai-answer="${esc(x.id)}">إجابة</button></div>`).join('')||'<div class="empty">لا توجد أسئلة جديدة</div>';
+  document.querySelectorAll('[data-ai-edit]').forEach(b=>b.onclick=()=>{const x=(operationsData.aiKnowledge||[]).find(v=>v.id===b.dataset.aiEdit)||{};$('aiQuestion').dataset.id=x.id||'';$('aiQuestion').value=x.question||'';$('aiKeys').value=(x.keys||[]).join(', ');$('aiAnswer').value=x.answer||''});
+  document.querySelectorAll('[data-ai-delete]').forEach(b=>b.onclick=async()=>{if(!confirm('حذف الجواب؟'))return;try{await api('/admin/ai/knowledge',{method:'POST',body:JSON.stringify({action:'delete',id:b.dataset.aiDelete})});await loadOperations()}catch(e){toast(e.message)}});
+  document.querySelectorAll('[data-ai-answer]').forEach(b=>b.onclick=()=>{const x=(operationsData.aiUnanswered||[]).find(v=>v.id===b.dataset.aiAnswer)||{};$('aiQuestion').dataset.unanswered=x.id||'';$('aiQuestion').value=x.question||x.text||'';$('aiAnswer').focus()});
+}
+$('clearAiBtn').onclick=clearAiV204;
+$('saveAiBtn').onclick=async()=>{try{loading(true);await api('/admin/ai/knowledge',{method:'POST',body:JSON.stringify({id:$('aiQuestion').dataset.id||'',fromUnanswered:$('aiQuestion').dataset.unanswered||'',question:$('aiQuestion').value,keys:$('aiKeys').value,answer:$('aiAnswer').value})});clearAiV204();toast('تم حفظ الجواب');await loadOperations()}catch(e){toast(e.message)}finally{loading(false)}};
+
+function renderBackupsV204(){$('backupsListV204').innerHTML=(operationsData.backups||[]).length?operationsData.backups.map(x=>`<div class="list-row"><div class="activity-icon">💾</div><div><h4>${esc(x.id)}</h4><p>${dt(x.createdAt)} — ${Number(x.sizeKB||0).toLocaleString()} KB — ${Number(x.paths||0)} مسار</p></div><span class="badge green">محفوظ</span></div>`).join(''):'<div class="empty">لا توجد نسخ بعد</div>'}
+$('refreshBackupsBtn').onclick=loadOperations;
+$('createBackupBtnV204').onclick=async()=>{try{loading(true);$('backupStatusV204').textContent='جاري إنشاء النسخة داخل السيرفر...';const r=await api('/admin/backups/create',{method:'POST',body:'{}'});$('backupStatusV204').textContent=`تم إنشاء ${r.backup?.id||'النسخة'} بنجاح.`;toast('تم إنشاء النسخة الاحتياطية');await loadOperations()}catch(e){$('backupStatusV204').textContent=e.message;toast(e.message)}finally{loading(false)}};
+
+async function startAdminGoogleLogin(){
+  const b=$('googleLogin');b.disabled=true;$('loginStatus').textContent='جاري فتح تسجيل Google...';
+  try{
+    const standalone=window.matchMedia?.('(display-mode: standalone)')?.matches||window.navigator.standalone===true;
+    if(standalone){$('loginStatus').textContent='سيتم تحويلك إلى Google ثم إعادتك إلى مركز الإدارة...';await signInWithRedirect(auth,googleProvider);return}
+    try{await signInWithPopup(auth,googleProvider)}
+    catch(e){
+      const code=String(e?.code||'');
+      if(code.includes('popup-blocked')||code.includes('popup-closed-by-user')||code.includes('operation-not-supported-in-this-environment')||code.includes('cancelled-popup-request')){
+        $('loginStatus').textContent='تعذر فتح النافذة. جاري استخدام تسجيل الدخول الآمن...';
+        await signInWithRedirect(auth,googleProvider);return;
+      }
+      throw e;
+    }
+  }catch(e){$('loginStatus').textContent=e?.message||'تعذر تسجيل الدخول عبر Google';b.disabled=false}
+}
+$('googleLogin').onclick=startAdminGoogleLogin;
+$('logoutBtn').onclick=()=>signOut(auth);
+
+function startSettingsListeners(){onValue(ref(db,'lottery_settings'),s=>{lotterySettings=s.val()||{};fillLottery()});onValue(ref(db,'wheel_settings'),s=>{wheelSettings=s.val()||{};fillWheel()});onValue(ref(db,'system_settings/public_support'),s=>{supportSettings=s.val()||{};fillSupport()})}
+try{await getRedirectResult(auth)}catch(e){$('loginStatus').textContent=e?.message||'تعذر إكمال تسجيل Google'}
+onAuthStateChanged(auth,async user=>{
+  if(!user){$('loginScreen').classList.remove('hidden');$('appShell').classList.add('hidden');$('googleLogin').disabled=false;return}
+  try{
+    loading(true);
+    await api('/admin/overview?range=today');
+    $('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');
+    startSettingsListeners();
+    await Promise.all([loadOverview(false),checkHealth()]);
+    const requested=String(location.hash||'').replace(/^#/,'');
+    const allowed=['dashboard','live','users','finance','lottery','games','exchange','agents','referrals','payments','helpdesk','broadcast','content','support','energy','vip','daily','promos','assistant','backups','audit','system'];
+    showPage(allowed.includes(requested)?requested:'dashboard');
+    $('loginStatus').textContent='';
+  }catch(e){$('loginStatus').textContent=e.message;await signOut(auth)}
+  finally{loading(false)}
+});
+window.addEventListener('hashchange',()=>{const p=String(location.hash||'').replace(/^#/,'');if(document.getElementById('page-'+p))showPage(p)});
+setInterval(()=>{if(auth.currentUser&&currentPage==='exchange'&&!exchangeSettingsDirty&&!exchangeSettingsSaving)loadExchange(false,false)},12000);
+window.addEventListener('beforeunload',e=>{if(exchangeSettingsDirty){e.preventDefault();e.returnValue=''}});
+</script>
+</body>
+</html>

@@ -1,1 +1,10 @@
-{"version":"1.4.0","build":"V204-MASTER-AUDIT-UNIFIED-ADMIN"}
+{
+  "version": "2.0.5",
+  "build": "V205-BOTTOM-NAV-FIX",
+  "changes": [
+    "five mobile bottom tabs in one row",
+    "wallet replaced by investment",
+    "deposit added as direct tab",
+    "floating WhatsApp button hidden"
+  ]
+}

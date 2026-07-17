@@ -445,7 +445,7 @@
   #appWrap:not(.admin-layout) .v62-balance-card{
     grid-area:balance!important;
     width:100%!important;
-    height:64px!important;
+    height:62px!important;
     border-radius:20px!important;
     display:grid!important;
     grid-template-columns:minmax(0,1fr) 34px 34px!important;
@@ -6000,9 +6000,22 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     qa('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
     const wrap=q('#appWrap'); if(wrap){wrap.dataset.activePage=page;wrap.classList.toggle('admin-layout',page==='admin')}
   }
-  function go(page){
+  function go(page, walletTab){
     closeDrawer();
-    if(window.showPage) window.showPage(page); else fallbackShow(page);
+    if(page==='investment' && window.ADNOR_OPEN_EXCHANGE){
+      window.ADNOR_OPEN_EXCHANGE();
+    }else if(window.showPage){
+      window.showPage(page);
+    }else{
+      fallbackShow(page);
+    }
+    if(page==='wallet' && walletTab){
+      setTimeout(()=>{
+        const tab=q('.wallet-tab[data-wallet="'+walletTab+'"]');
+        if(tab) tab.click();
+        q('#wallet-'+walletTab)?.scrollIntoView({behavior:'smooth',block:'start'});
+      },140);
+    }
     setTimeout(()=>sync(page),60);
   }
   function sync(page){
@@ -6014,12 +6027,12 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     const nav=q('.bottom-nav'); if(!nav) return;
     nav.className='bottom-nav v139-bottom-nav';
     nav.innerHTML=`
-      <button class="nav-btn" data-page="home" type="button"><i>⌂</i><span>الرئيسية</span></button>
       <button class="nav-btn" data-page="lottery" type="button"><i>🎟️</i><span>اليانصيب</span></button>
       <button class="nav-btn" data-page="games" type="button"><i>🎮</i><span>الألعاب</span></button>
-      <button class="nav-btn" data-page="wallet" type="button"><i>💳</i><span>المحفظة</span></button>
+      <button class="nav-btn" data-page="investment" type="button"><i>📈</i><span>الاستثمار</span></button>
+      <button class="nav-btn" data-page="wallet" data-wallet-tab="deposit" type="button"><i>➕</i><span>الإيداع</span></button>
       <button class="nav-btn" data-page="account" type="button"><i>👤</i><span>حسابي</span></button>`;
-    qa('.nav-btn',nav).forEach(btn=>btn.onclick=()=>go(btn.dataset.page));
+    qa('.nav-btn',nav).forEach(btn=>btn.onclick=()=>go(btn.dataset.page,btn.dataset.walletTab||''));
     sync();
   }
   function installDrawer(){
@@ -6168,11 +6181,14 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 <style id="adnor-final-luxury-bottom-nav-css">
   .bottom-nav,
   .bottom-nav.v139-bottom-nav{
-    grid-template-columns:repeat(4,minmax(0,1fr))!important;
-    gap:8px!important;
-    width:min(94%,430px)!important;
-    min-height:78px!important;
-    padding:8px!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    grid-template-rows:1fr!important;
+    grid-auto-flow:column!important;
+    gap:5px!important;
+    width:min(calc(100% - 18px),430px)!important;
+    min-height:76px!important;
+    padding:7px!important;
     bottom:12px!important;
     border-radius:28px!important;
     background:
@@ -6207,7 +6223,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   }
   .bottom-nav .nav-btn.active:after{opacity:1;background:linear-gradient(90deg,transparent,rgba(21,10,0,.42),transparent)}
   .bottom-nav .nav-btn i{font-style:normal!important;font-size:0!important;width:36px!important;height:32px!important;position:relative!important;display:block!important;line-height:1!important;filter:drop-shadow(0 0 8px rgba(255,213,88,.32))}
-  .bottom-nav .nav-btn .nav-label{font-size:10.5px!important;font-weight:900!important;line-height:1!important;white-space:nowrap!important;color:inherit!important;letter-spacing:0!important}
+  .bottom-nav .nav-btn .nav-label{font-size:9.6px!important;font-weight:900!important;line-height:1!important;white-space:nowrap!important;color:inherit!important;letter-spacing:0!important}
   .bottom-nav .nav-btn.active .nav-label{color:#130d04!important}
 
   .nav-lottery b{position:absolute;display:grid;place-items:center;width:16px;height:16px;border-radius:50%;font-size:9px;font-weight:1000;color:#140d04;background:radial-gradient(circle at 32% 22%,#fff6c7,#ffd760 48%,#a7680b 100%);box-shadow:0 0 9px rgba(255,213,88,.42);animation:adnorNavBall 2.4s ease-in-out infinite}
@@ -6223,6 +6239,15 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   .nav-wallet b:after{content:"";position:absolute;top:-9px;bottom:-9px;width:9px;background:rgba(255,255,255,.55);transform:rotate(22deg);animation:adnorNavShine 2.7s linear infinite}
   .nav-wallet em{position:absolute;right:4px;bottom:2px;width:11px;height:11px;border-radius:50%;background:#18e7a7;box-shadow:0 0 10px rgba(24,231,167,.55)}
 
+
+  .nav-investment:before{content:"";position:absolute;left:3px;right:3px;bottom:5px;height:22px;border-left:2px solid #e8bd48;border-bottom:2px solid #e8bd48;border-radius:3px}
+  .nav-investment:after{content:"";position:absolute;left:7px;top:5px;width:25px;height:18px;background:linear-gradient(135deg,transparent 0 18%,#36e2a7 19% 25%,transparent 26% 43%,#ffd96e 44% 51%,transparent 52% 68%,#36e2a7 69% 76%,transparent 77%);filter:drop-shadow(0 0 6px rgba(54,226,167,.55));animation:adnorNavChart 2.5s ease-in-out infinite}
+  .nav-investment b{position:absolute;right:2px;top:0;width:9px;height:9px;border-radius:50%;background:#36e2a7;box-shadow:0 0 9px rgba(54,226,167,.72)}
+
+  .nav-deposit:before{content:"";position:absolute;left:4px;right:4px;top:7px;height:20px;border-radius:7px;background:linear-gradient(135deg,#fff2a9,#d89524 55%,#704008);box-shadow:0 0 11px rgba(255,205,80,.34)}
+  .nav-deposit:after{content:"+";position:absolute;right:0;bottom:0;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;color:#061426;background:#34e1a7;font-size:15px;font-weight:1000;box-shadow:0 0 10px rgba(52,225,167,.58)}
+  .nav-deposit b{position:absolute;left:10px;right:10px;top:13px;height:3px;border-radius:999px;background:#071225;box-shadow:0 6px 0 rgba(7,18,37,.56)}
+
   .nav-account b{position:absolute;left:50%;top:2px;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;background:linear-gradient(180deg,#fff2a9,#d89524);box-shadow:0 0 11px rgba(255,205,80,.38);animation:adnorNavPulse 2.3s ease-in-out infinite}
   .nav-account em{position:absolute;left:6px;right:6px;bottom:4px;height:15px;border-radius:14px 14px 8px 8px;background:linear-gradient(180deg,#ffe184,#b87516);box-shadow:0 0 10px rgba(255,205,80,.28)}
   .nav-account s{position:absolute;left:14px;top:7px;width:8px;height:8px;border-radius:50%;background:rgba(4,16,34,.9);z-index:2;box-shadow:0 0 0 1px rgba(255,238,166,.28)}
@@ -6232,7 +6257,8 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   @keyframes adnorNavWallet{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
   @keyframes adnorNavShine{0%{left:-16px}55%,100%{left:45px}}
   @keyframes adnorNavPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.12)}}
-  @media(max-width:390px){.bottom-nav,.bottom-nav.v139-bottom-nav{gap:6px!important;padding:7px!important}.bottom-nav .nav-btn{height:61px!important;border-radius:18px!important}.bottom-nav .nav-btn i{width:32px!important;height:29px!important}.bottom-nav .nav-btn .nav-label{font-size:9.7px!important}}
+  @keyframes adnorNavChart{0%,100%{transform:translateY(1px)}50%{transform:translateY(-3px)}}
+  @media(max-width:390px){.bottom-nav,.bottom-nav.v139-bottom-nav{gap:3px!important;padding:6px!important}.bottom-nav .nav-btn{height:59px!important;border-radius:16px!important}.bottom-nav .nav-btn i{width:29px!important;height:27px!important}.bottom-nav .nav-btn .nav-label{font-size:8.7px!important}}
 </style>
 <script id="adnor-final-luxury-bottom-nav-js">
 (function(){
@@ -6240,9 +6266,9 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   function qa(s,r){return Array.from((r||document).querySelectorAll(s))}
   function labels(){
     var lang=(document.body&&document.body.dataset&&document.body.dataset.adnorLang)||document.documentElement.lang||'ar';
-    if(lang==='en') return {lottery:'Lottery',games:'Games',wallet:'Wallet',account:'Account'};
-    if(lang==='tr') return {lottery:'Çekiliş',games:'Oyunlar',wallet:'Cüzdan',account:'Hesabım'};
-    return {lottery:'اليانصيب',games:'الألعاب',wallet:'المحفظة',account:'حسابي'};
+    if(lang==='en') return {lottery:'Lottery',games:'Games',investment:'Invest',deposit:'Deposit',account:'Account'};
+    if(lang==='tr') return {lottery:'Çekiliş',games:'Oyunlar',investment:'Yatırım',deposit:'Yatır',account:'Hesabım'};
+    return {lottery:'اليانصيب',games:'الألعاب',investment:'الاستثمار',deposit:'الإيداع',account:'حسابي'};
   }
   function fallback(page){
     var el=q('#page-'+page); if(!el) return;
@@ -6251,8 +6277,22 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     qa('.bottom-nav .nav-btn').forEach(function(b){b.classList.toggle('active',b.dataset.page===page)});
     var wrap=q('#appWrap'); if(wrap){wrap.dataset.activePage=page;wrap.classList.toggle('admin-layout',page==='admin')}
   }
-  function go(page){
-    if(window.showPage) window.showPage(page); else fallback(page);
+  function go(page,walletTab){
+    if(page==='investment' && window.ADNOR_OPEN_EXCHANGE){
+      window.ADNOR_OPEN_EXCHANGE();
+    }else if(window.showPage){
+      window.showPage(page);
+    }else{
+      fallback(page);
+    }
+    if(page==='wallet' && walletTab){
+      setTimeout(function(){
+        var tab=q('.wallet-tab[data-wallet="'+walletTab+'"]');
+        if(tab) tab.click();
+        var panel=q('#wallet-'+walletTab);
+        if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
+      },140);
+    }
     setTimeout(sync,40);
     try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}
   }
@@ -6265,9 +6305,10 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     nav.innerHTML=''
       +'<button class="nav-btn" data-page="lottery" type="button"><i class="nav-lottery" aria-hidden="true"><b>7</b><b>8</b><b>9</b><em></em></i><span class="nav-label">'+t.lottery+'</span></button>'
       +'<button class="nav-btn" data-page="games" type="button"><i class="nav-games" aria-hidden="true"><b></b><b></b><em></em><s></s></i><span class="nav-label">'+t.games+'</span></button>'
-      +'<button class="nav-btn" data-page="wallet" type="button"><i class="nav-wallet" aria-hidden="true"><b></b><em></em></i><span class="nav-label">'+t.wallet+'</span></button>'
+      +'<button class="nav-btn" data-page="investment" type="button"><i class="nav-investment" aria-hidden="true"><b></b></i><span class="nav-label">'+t.investment+'</span></button>'
+      +'<button class="nav-btn" data-page="wallet" data-wallet-tab="deposit" type="button"><i class="nav-deposit" aria-hidden="true"><b></b></i><span class="nav-label">'+t.deposit+'</span></button>'
       +'<button class="nav-btn" data-page="account" type="button"><i class="nav-account" aria-hidden="true"><b></b><em></em><s></s></i><span class="nav-label">'+t.account+'</span></button>';
-    qa('.nav-btn',nav).forEach(function(btn){btn.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation()}go(btn.dataset.page);return false}});
+    qa('.nav-btn',nav).forEach(function(btn){btn.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation()}go(btn.dataset.page,btn.dataset.walletTab||'');return false}});
     sync();
   }
   function install(){build();sync()}
@@ -6421,7 +6462,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   .v195-mission-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.v195-mission-grid button{min-height:118px;border-radius:20px;border:1px solid rgba(255,216,104,.24);background:linear-gradient(180deg,rgba(8,27,52,.88),rgba(2,10,22,.96));color:#fff;padding:11px;cursor:pointer;text-align:center}.v195-mission-grid i{display:block;font-style:normal;font-size:25px}.v195-mission-grid b{display:block;color:#ffe49a;margin:6px 0 3px}.v195-mission-grid span{display:block;color:#8fa1ba;font-size:10px;line-height:1.55}
   .v195-game-spotlight{text-align:center;background:radial-gradient(circle at 50% 0,rgba(255,211,82,.16),transparent 38%),linear-gradient(180deg,rgba(8,27,53,.95),rgba(1,7,18,.98))!important}.v195-wheel-mini{width:156px;height:156px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#e5b53a 0 45deg,#173664 45deg 90deg,#4bd8ff 90deg 135deg,#92551a 135deg 180deg,#f6d76c 180deg 225deg,#14305b 225deg 270deg,#35d6a0 270deg 315deg,#9b73ff 315deg);border:9px solid #d9a52a;box-shadow:0 0 30px rgba(228,178,48,.25);animation:v195Wheel 18s linear infinite}.v195-wheel-mini:before{content:"";width:74px;height:74px;border-radius:50%;background:#061426;border:4px solid #ffe59b;position:absolute}.v195-wheel-mini span{position:relative;z-index:2;color:#ffe59b;font:900 10px Cinzel,serif}.v195-game-spotlight h3{color:#ffe49a}.v195-game-spotlight p,.v195-support-card p{color:#9baac0;line-height:1.7;font-size:12px}.v195-trust-card{text-align:center;border-color:rgba(72,233,172,.34)!important}.v195-trust-card b{display:block;color:#7effce}.v195-trust-card span{display:block;color:#9cafc3;line-height:1.7;font-size:11px;margin-top:6px}
   .v195-desktop-nav{display:none}.v195-install-toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);z-index:9999;width:min(92%,420px);padding:14px 16px;border-radius:18px;background:rgba(2,9,20,.98);border:1px solid rgba(255,216,104,.48);color:#fff;text-align:center;font-weight:900;box-shadow:0 20px 50px rgba(0,0,0,.6)}
-  .v195-support-orb{position:fixed;left:16px;bottom:102px;z-index:50;width:52px;height:52px;border-radius:18px;display:grid;place-items:center;text-decoration:none;background:linear-gradient(145deg,#8effd5,#25bd88);color:#072217;font-size:24px;border:1px solid rgba(255,255,255,.42);box-shadow:0 14px 35px rgba(0,0,0,.45),0 0 20px rgba(59,224,165,.2)}
+  .v195-support-orb{display:none!important;position:fixed;left:16px;bottom:102px;z-index:50;width:52px;height:52px;border-radius:18px;place-items:center;text-decoration:none;background:linear-gradient(145deg,#8effd5,#25bd88);color:#072217;font-size:24px;border:1px solid rgba(255,255,255,.42);box-shadow:0 14px 35px rgba(0,0,0,.45),0 0 20px rgba(59,224,165,.2)}
   @keyframes v195Aura{to{transform:rotate(360deg)}}@keyframes v195Ball{0%{transform:translate3d(-5px,-8px,0) rotate(-12deg)}100%{transform:translate3d(18px,25px,0) rotate(22deg)}}@keyframes v195Wheel{to{transform:rotate(360deg)}}
   @media(min-width:980px){
     body{background-attachment:fixed}#appWrap:not(.admin-layout){max-width:1080px!important;width:calc(100% - 310px)!important;margin-right:278px!important;margin-left:auto!important;padding-bottom:35px!important}.bottom-nav{display:none!important}.v195-desktop-nav{display:flex;position:fixed;right:22px;top:22px;bottom:22px;width:230px;z-index:32;flex-direction:column;padding:16px;border-radius:30px;border:1px solid rgba(255,216,104,.48);background:radial-gradient(circle at 50% 0,rgba(255,214,91,.13),transparent 32%),linear-gradient(180deg,rgba(7,24,48,.98),rgba(1,7,17,.99));box-shadow:0 22px 70px rgba(0,0,0,.55)}.v195-desktop-logo{text-align:center;padding:12px 8px 20px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:13px}.v195-desktop-logo b{display:block;color:#ffe59b;font:900 29px Cinzel,serif;letter-spacing:.12em}.v195-desktop-logo span{color:#8799b1;font-size:9px}.v195-desktop-links{display:grid;gap:7px}.v195-desktop-links button{min-height:52px;border-radius:17px;border:1px solid transparent;background:transparent;color:#b9c5d7;font:inherit;font-weight:1000;display:flex;align-items:center;gap:10px;padding:0 13px;cursor:pointer;text-align:right}.v195-desktop-links button i{font-style:normal;font-size:20px}.v195-desktop-links button.active{color:#171004;background:linear-gradient(180deg,#fff1ad,#d6a229 62%,#915b0d);box-shadow:0 0 20px rgba(225,174,43,.2)}.v195-desktop-bottom{margin-top:auto;display:grid;gap:8px}.v195-desktop-bottom button,.v195-desktop-bottom a{min-height:45px;border-radius:15px;border:1px solid rgba(255,216,104,.25);background:rgba(3,13,28,.75);color:#ffe49a;text-decoration:none;font:inherit;font-weight:900;display:grid;place-items:center;cursor:pointer}.v195-home-hero{min-height:390px}.v62-royal-head{position:sticky;top:10px;z-index:25;backdrop-filter:blur(14px)}#page-wallet .wallet-stats{grid-template-columns:repeat(3,1fr)!important}#page-games .games-grid{grid-template-columns:repeat(3,1fr)!important}.royal-card{padding:18px!important}}
@@ -6442,7 +6483,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   function bindHome(){qa('[data-home-go]').forEach(b=>{if(b.dataset.v195Bound)return;b.dataset.v195Bound='1';b.addEventListener('click',()=>{const raw=b.dataset.homeGo||'home',parts=raw.split(':');go(parts[0]);if(parts[0]==='wallet'&&parts[1])setTimeout(()=>q('.wallet-tab[data-wallet="'+parts[1]+'"]')?.click(),140)})});q('#v195InstallAppBtn')?.addEventListener('click',install);q('#v195DrawerInstall')?.addEventListener('click',install)}
   function desktopNav(){if(q('#v195DesktopNav'))return;const nav=document.createElement('aside');nav.id='v195DesktopNav';nav.className='v195-desktop-nav';nav.innerHTML='<div class="v195-desktop-logo"><b>ADNOR</b><span>ROYAL LOTTERY PLATFORM</span></div><div class="v195-desktop-links"><button data-v195-page="home"><i>⌂</i>الرئيسية</button><button data-v195-page="lottery"><i>🎟️</i>اليانصيب</button><button data-v195-page="games"><i>🎮</i>الألعاب</button><button data-v195-page="wallet"><i>💳</i>المحفظة</button><button data-v195-page="results"><i>🏆</i>النتائج</button><button data-v195-page="account"><i>👤</i>حسابي</button></div><div class="v195-desktop-bottom"><button data-v195-page="support">💬 الدعم الفني</button><button id="v195DesktopInstall">📲 تثبيت التطبيق</button><a href="index.html">الواجهة العامة</a></div>';document.body.appendChild(nav);qa('[data-v195-page]',nav).forEach(b=>b.addEventListener('click',()=>go(b.dataset.v195Page)));q('#v195DesktopInstall')?.addEventListener('click',install);syncNav()}
   function syncNav(){const page=(q('.page.active')?.id||'page-home').replace('page-','');qa('[data-v195-page]').forEach(b=>b.classList.toggle('active',b.dataset.v195Page===page));qa('.bottom-nav .nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page))}
-  function supportOrb(){if(q('#v195SupportOrb'))return;const a=document.createElement('a');a.id='v195SupportOrb';a.className='v195-support-orb';a.textContent='💬';a.href='#';a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','WhatsApp support');a.addEventListener('click',e=>{if(!a.href||a.href.endsWith('#')){e.preventDefault();go('support')}});document.body.appendChild(a);let tries=0;const t=setInterval(()=>{tries++;const link=q('#depositAgentWhatsappLink')||q('[href*="wa.me"]');if(link&&link.href&&link.href!=='#'){a.href=link.href;clearInterval(t)}if(tries>30)clearInterval(t)},500)}
+  function supportOrb(){const old=q('#v195SupportOrb');if(old)old.remove();return}
   async function serverCheck(){const dot=q('#v195ServerDot'),label=q('#v195ServerState');try{const r=await fetch('https://adnor-api.onrender.com/health',{cache:'no-store'});const j=await r.json();if(!r.ok||!j.ok)throw 0;dot?.classList.add('online');if(label)label.textContent='متصل وآمن'}catch(_){dot?.classList.add('offline');if(label)label.textContent='تعذر الفحص'}}
   function forceHomeOnce(){const params=new URLSearchParams(location.search);const requested=params.get('section')||sessionStorage.getItem('adnorRequestedSection')||'';if(requested)return;const app=q('#appScreen');if(app&&getComputedStyle(app).display!=='none'&&!sessionStorage.getItem('adnorV195HomeShown')){sessionStorage.setItem('adnorV195HomeShown','1');go('home')}}
   function installAll(){createBalls();bindHome();desktopNav();supportOrb();syncNav();forceHomeOnce()}
@@ -6489,7 +6530,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   window.ADNOR_OPEN_EXCHANGE=openPage;
   function navButton(cls,attr,label,icon){const b=document.createElement('button');b.className=cls;b.type='button';b.setAttribute(attr.name,attr.value);b.innerHTML='<i>'+icon+'</i><span>'+label+'</span>';b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openPage()});return b}
   function injectNav(){const page=$('page-investment');if(page){page.classList.remove('hidden');page.setAttribute('aria-hidden','false')}
-    const bottom=document.querySelector('.bottom-nav');if(bottom&&!bottom.querySelector('[data-page="investment"]')){const b=navButton('nav-btn',{name:'data-page',value:'investment'},'الاستثمار','📈');const wallet=bottom.querySelector('[data-page="wallet"]');bottom.insertBefore(b,wallet||null);bottom.style.gridTemplateColumns='repeat(6,minmax(0,1fr))'}
+    const bottom=document.querySelector('.bottom-nav');if(bottom&&!bottom.querySelector('[data-page="investment"]')){if(window.ADNOR_FINAL_LUXURY_BOTTOM_NAV)window.ADNOR_FINAL_LUXURY_BOTTOM_NAV()}
     const desktop=document.querySelector('.v195-desktop-links');if(desktop&&!desktop.querySelector('[data-v195-page="investment"]')){const b=navButton('',{name:'data-v195-page',value:'investment'},'ADN Exchange','📈');const wallet=desktop.querySelector('[data-v195-page="wallet"]');desktop.insertBefore(b,wallet||null)}
     const drawer=document.querySelector('.v139-drawer-menu,.v71-drawer-menu');if(drawer&&!drawer.querySelector('[data-drawer-page="investment"]')){const b=document.createElement('button');b.className='drawer-link v52-secondary';b.type='button';b.dataset.drawerPage='investment';b.innerHTML='<span>📈 ADN Exchange</span><span>›</span>';b.addEventListener('click',()=>{document.getElementById('sideDrawer')?.classList.remove('open');document.getElementById('drawerOverlay')?.classList.remove('open');openPage()});const energy=drawer.querySelector('[data-drawer-page="energy"]');drawer.insertBefore(b,energy||drawer.firstChild)}
     const actions=document.querySelector('.v195-home-actions,.home-actions');if(actions&&!actions.querySelector('[data-home-go="investment"]')){const b=document.createElement('button');b.type='button';b.dataset.homeGo='investment';b.innerHTML='<i>📈</i><span>ADN Exchange</span>';b.addEventListener('click',openPage);actions.appendChild(b);actions.style.gridTemplateColumns='repeat(5,minmax(0,1fr))'}
@@ -6524,5 +6565,31 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   setInterval(injectNav,1200);pollTimer=setInterval(()=>active()&&loadAll(),4500);
   const params=new URLSearchParams(location.search);if(params.get('section')==='investment'||params.get('section')==='exchange'){let tries=0;const t=setInterval(()=>{tries++;const app=$('appScreen');if(app&&getComputedStyle(app).display!=='none'){{openPage();clearInterval(t)}}else if(tries>50)clearInterval(t)},300)}
 </script>
+
+<style id="adnor-v205-bottom-nav-safety">
+  #v195SupportOrb,.v195-support-orb{display:none!important}
+  @media(max-width:979px){
+    .bottom-nav,.bottom-nav.v139-bottom-nav,.bottom-nav.adnor-final-luxury-nav{
+      display:grid!important;
+      grid-template-columns:repeat(5,minmax(0,1fr))!important;
+      grid-template-rows:1fr!important;
+      grid-auto-flow:column!important;
+      flex-wrap:nowrap!important;
+      overflow:hidden!important;
+    }
+    .bottom-nav .nav-btn{min-width:0!important;width:auto!important}
+  }
+</style>
+<script id="adnor-v205-bottom-nav-safety-js">
+(function(){
+  function clean(){
+    document.getElementById('v195SupportOrb')?.remove();
+    if(window.ADNOR_FINAL_LUXURY_BOTTOM_NAV) window.ADNOR_FINAL_LUXURY_BOTTOM_NAV();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
+  [250,700,1400,2800,5200,8200].forEach(function(t){setTimeout(clean,t)});
+})();
+</script>
+
 </body>
 </html>

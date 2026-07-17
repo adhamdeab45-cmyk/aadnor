@@ -1,0 +1,42 @@
+{
+  "api_node_syntax": true,
+  "api_node_error": "",
+  "app.html_scripts": true,
+  "app.html_script_count": 20,
+  "app.html_duplicate_ids": [
+    "drawerAdminBtn",
+    "drawerLogoutBtn",
+    "v158SettingsLogoutBtn",
+    "v91ResultDigits",
+    "v91ResultDrawLabel",
+    "v91ResultNote",
+    "v91ResultPrize",
+    "v91ResultWinner"
+  ],
+  "admin-command-center.html_scripts": true,
+  "admin-command-center.html_script_count": 1,
+  "admin-command-center.html_duplicate_ids": [
+    "${esc(item.id)}"
+  ],
+  "golden-squirrel.html_scripts": true,
+  "golden-squirrel.html_script_count": 2,
+  "golden-squirrel.html_duplicate_ids": [],
+  "index.html_scripts": true,
+  "index.html_script_count": 4,
+  "index.html_duplicate_ids": [],
+  "api_version_1_5_1": true,
+  "narrow_user_transaction": true,
+  "narrow_treasury_transaction": true,
+  "squirrel_no_root_transaction": true,
+  "automatic_refund": true,
+  "automatic_treasury_rollback": true,
+  "retry_canonical_receipt": true,
+  "no_visible_experimental_word": true,
+  "wallet_label_production": true,
+  "initial_wallet_zero": true,
+  "new_service_worker_cache": true,
+  "health_flags": true,
+  "base_expected_multiplier": 0.955,
+  "rtp_edge_5": 0.95,
+  "all_boolean_checks_pass": true
+}

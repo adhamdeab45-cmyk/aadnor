@@ -22,7 +22,7 @@ button,input,select{font:inherit}button{cursor:pointer}
 .logo{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:28px;color:#16130b;
 background:linear-gradient(145deg,#ffefab,#ba7510);box-shadow:0 10px 35px rgba(243,198,91,.24)}
 .brand h1{margin:0;color:var(--cream);font-size:21px}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
-.demo{border:1px solid var(--line);background:#09141d;padding:9px 12px;border-radius:999px;color:var(--gold);font-size:11px}
+.server-status{border:1px solid var(--line);background:#09141d;padding:9px 12px;border-radius:999px;color:var(--gold);font-size:11px}
 .layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(305px,.62fr);gap:15px}
 .game,.controls{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(10,23,33,.97),rgba(4,12,18,.98));box-shadow:0 28px 90px rgba(0,0,0,.47)}
 .game{position:relative;overflow:hidden;min-height:720px}
@@ -108,7 +108,7 @@ background-size:cover;background-position:center}
 .history{margin-top:14px}.history h3{margin:0 0 8px;font-size:13px}.history-list{display:grid;gap:6px;max-height:145px;overflow:auto}.row{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:11px;background:#07141f;color:#adbdc9;font-size:11px}.row strong{color:#fff}.pos{color:var(--green)!important}.neg{color:var(--red)!important}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.controls{position:static}.game{min-height:690px}}
 @media(max-width:560px){
-.app{padding:9px 7px 24px}.logo{width:44px;height:44px}.brand h1{font-size:17px}.demo{font-size:9px;padding:7px}.game{min-height:610px;border-radius:22px}.hud{padding:8px;gap:4px}.hud-card{padding:7px 3px;border-radius:12px}.hud-card strong{font-size:14px}.hud-card.mult strong{font-size:18px}.hud-card span{font-size:8px}.scene{background-position:52% center}.hide-static{left:13%;top:22%;width:43%;height:34%}.platform{width:54px;height:40px;font-size:14px;border-radius:9px}.squirrel-rig{width:128px;height:116px}.shadow{width:74px}.controls{border-radius:22px;padding:15px}.path-grid{grid-template-columns:repeat(4,1fr)}
+.app{padding:9px 7px 24px}.logo{width:44px;height:44px}.brand h1{font-size:17px}.server-status{font-size:9px;padding:7px}.game{min-height:610px;border-radius:22px}.hud{padding:8px;gap:4px}.hud-card{padding:7px 3px;border-radius:12px}.hud-card strong{font-size:14px}.hud-card.mult strong{font-size:18px}.hud-card span{font-size:8px}.scene{background-position:52% center}.hide-static{left:13%;top:22%;width:43%;height:34%}.platform{width:54px;height:40px;font-size:14px;border-radius:9px}.squirrel-rig{width:128px;height:116px}.shadow{width:74px}.controls{border-radius:22px;padding:15px}.path-grid{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 </head>
@@ -116,12 +116,12 @@ background-size:cover;background-position:center}
 <div class="app">
 <header class="top">
   <div class="brand"><div class="logo">🐿️</div><div><h1>السنجاب الذهبي المتحرك</h1><p>لعبة آمنة: النتيجة والرصيد من AD​​NOR API</p></div></div>
-  <div class="demo" id="serverBadge">جاري الاتصال بالسيرفر...</div>
+  <div class="server-status" id="serverBadge">جاري الاتصال بالسيرفر...</div>
 </header>
 <main class="layout">
 <section class="game" id="game">
   <div class="hud">
-    <div class="hud-card"><span>الرصيد التجريبي</span><strong id="balance">$100.00</strong></div>
+    <div class="hud-card"><span>رصيد المحفظة</span><strong id="balance">$0.00</strong></div>
     <div class="hud-card"><span>الرهان</span><strong id="betView">$1.00</strong></div>
     <div class="hud-card mult"><span>المضاعف الحالي</span><strong id="currentMult">x0</strong></div>
     <div class="hud-card win"><span>الربح الحالي</span><strong id="liveWin">$0.00</strong></div>
@@ -188,7 +188,7 @@ async function api(path,options={}){
   const token=await user.getIdToken();
   const headers={Accept:'application/json',...(options.headers||{}),Authorization:'Bearer '+token};
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),25000);
-  try{const response=await fetch(API+path,{...options,headers,signal:controller.signal});const data=await response.json().catch(()=>({}));if(!response.ok||data.ok===false)throw new Error(data.message||data.error||'تعذر الاتصال بالسيرفر');return data;}finally{clearTimeout(timer)}
+  try{const response=await fetch(API+path,{...options,headers,signal:controller.signal});const data=await response.json().catch(()=>({}));if(!response.ok||data.ok===false)throw new Error(data.message||({INTERNAL_ERROR:'حدث خلل في تسوية الجولة. لم يتم اعتماد أي خصم غير مكتمل.'}[data.error])||data.error||'تعذر الاتصال بالسيرفر');return data;}finally{clearTimeout(timer)}
 }
 window.adnorSquirrelSecurePlay=async bet=>{const requestId='squirrel_'+Date.now()+'_'+crypto.getRandomValues(new Uint32Array(1))[0].toString(36);return await api('/game/golden-squirrel/play',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({bet,requestId})})};
 window.adnorSquirrelRefresh=async()=>await api('/game/golden-squirrel/config');

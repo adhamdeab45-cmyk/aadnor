@@ -1,0 +1,21 @@
+ADNOR V207 TEST REPORT
+=======================
+
+PASS: Node.js server syntax.
+PASS: package.json, version.json, manifest.webmanifest and Firebase JSON validity.
+PASS: Automatic deposit routes require Firebase authentication.
+PASS: Deposit environment configuration is reported by /health.
+PASS: Each request reserves a unique exact six-decimal USDT amount for 30 minutes.
+PASS: TronGrid query accepts confirmed incoming TRC20 records only.
+PASS: Token contract, receiver address, decimals, amount and timestamp are verified.
+PASS: Global transaction hash claim prevents double credit.
+PASS: User balance credit has a per-user transaction receipt for retry safety.
+PASS: Automatic deposits appear in finance/deposits and the user transaction history.
+PASS: Manual receipt upload interface is hidden and the manual deposit API is disabled by default.
+PASS: Site cache version updated to V207.
+
+LIVE CHECK REQUIRED AFTER UPLOAD
+- /health returns 1.4.2 and automaticUsdtTrc20Deposits=ready.
+- Create a 5 USD intent and send the exact displayed USDT TRC20 amount.
+- Confirm the balance changes once and the same blockchain transaction cannot credit twice.
+- Confirm the deposit appears approved automatically in the unified admin finance list.

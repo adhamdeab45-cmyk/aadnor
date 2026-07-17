@@ -1,11 +1,11 @@
 {
-  "version": "2.0.6",
-  "build": "V206-GLOBAL-IDENTITY",
+  "version": "2.0.7",
+  "build": "V207-AUTO-USDT-TRC20",
   "changes": [
-    "neutral global identity",
-    "UTC reference plus local device time",
-    "all-country profile selector",
-    "global identity and operator settings inside admin",
-    "international legal/footer wording"
+    "automatic confirmed USDT TRC20 deposits",
+    "no admin approval for TRC20 deposits",
+    "unique exact amount verification per deposit request",
+    "server-side TronGrid confirmation and duplicate transaction protection",
+    "single automatic USD deposit interface"
   ]
 }

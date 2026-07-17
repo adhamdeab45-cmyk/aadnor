@@ -1,8 +1,8 @@
 {
   "id": "/index.html",
-  "name": "ADNOR Royal Lottery",
+  "name": "ADNOR GLOBAL",
   "short_name": "ADNOR",
-  "description": "منصة ADNOR الملكية للسحوبات والألعاب والمحفظة وسوق ADN/USD الحقيقي بالرصيد الحقيقي فقط.",
+  "description": "منصة رقمية دولية للسحوبات والألعاب والمحفظة وسوق ADN/USD، متاحة عبر الإنترنت على الجوال والكمبيوتر.",
   "start_url": "/index.html?source=pwa",
   "scope": "/",
   "display": "standalone",
@@ -109,14 +109,14 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "ADNOR member app on mobile"
+      "label": "ADNOR GLOBAL member app on mobile"
     },
     {
       "src": "/assets/screenshots/app-desktop.png",
       "sizes": "1440x1000",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "ADNOR member app on desktop"
+      "label": "ADNOR GLOBAL member app on desktop"
     }
   ]
 }

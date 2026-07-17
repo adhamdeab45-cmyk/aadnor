@@ -1,10 +1,11 @@
 {
-  "version": "2.0.5",
-  "build": "V205-BOTTOM-NAV-FIX",
+  "version": "2.0.6",
+  "build": "V206-GLOBAL-IDENTITY",
   "changes": [
-    "five mobile bottom tabs in one row",
-    "wallet replaced by investment",
-    "deposit added as direct tab",
-    "floating WhatsApp button hidden"
+    "neutral global identity",
+    "UTC reference plus local device time",
+    "all-country profile selector",
+    "global identity and operator settings inside admin",
+    "international legal/footer wording"
   ]
 }

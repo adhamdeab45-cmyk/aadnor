@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v205-bottom-nav-fix';
+const CACHE='adnor-v206-global-identity-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

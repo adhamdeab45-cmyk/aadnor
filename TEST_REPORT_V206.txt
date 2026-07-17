@@ -1,0 +1,17 @@
+ADNOR V206 TEST REPORT
+=======================
+
+PASS: Node.js server syntax.
+PASS: Inline JavaScript syntax in index.html, app.html, admin-command-center.html.
+PASS: JSON validity for manifest, version, Firebase rules, assetlinks, package.json.
+PASS: Global admin fields save through API and publish to public_site/config plus compatibility root fields.
+PASS: Country selector generated for all ISO countries using Arabic territory names.
+PASS: Turkey-specific timezone strings removed from active V206 pages and UTC used as reference.
+PASS: PWA cache version updated to V206.
+
+Live checks required after upload:
+- /health returns 1.4.1.
+- Admin content settings save and immediately re-load.
+- Public home shows ADNOR GLOBAL and local device timezone.
+- Member app shows five bottom buttons from V205 unchanged.
+- Login, exchange, deposit, referral, agent recharge and admin functions retain V204/V205 logic.

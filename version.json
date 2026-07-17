@@ -1,11 +1,11 @@
 {
-  "version": "2.1.1",
-  "build": "V211-ROYAL-PUBLIC-WINNER-LANDING",
+  "version": "2.1.2",
+  "build": "V212-GOLDEN-SQUIRREL-SHARED-TREASURY",
   "changes": [
-    "premium public landing hero rebuilt around the latest official winner",
-    "latest winner now appears before sign-in with masked name, ticket, prize and draw type",
-    "configured daily, weekly, monthly and yearly prizes are visible in the first screen",
-    "winner ordering fixed to use publication time instead of prize amount",
-    "responsive royal layout added for desktop and mobile"
+    "golden squirrel added as a server-secured game",
+    "shared game treasury with configurable platform margin",
+    "per-game pool, funding controls, RTP and payout analytics in admin",
+    "wheel and custom games connected to treasury accounting",
+    "full payout coverage check before accepting a round"
   ]
 }

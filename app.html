@@ -1815,6 +1815,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 <section class="jackpot games-hero-clean"><div class="label">صالة الألعاب الملكية</div><div class="amount">10,000x</div><div class="drawname">اختر لعبتك فقط — بدون زحمة وبدون خيارات زيادة</div></section>
 <div class="game-grid games-two-only">
 <section class="game-card games-choice-card"><div class="game-icon">🎡</div><div><h3>عجلة الحظ الملكية</h3><p>افتح العجلة لحالها، اختر الرهان، وشاهد النتيجة مباشرة. الرصيد يظهر داخل اللعبة.</p><button class="dark-btn" id="openWheelBtn">افتح العجلة</button></div></section>
+<section class="game-card games-choice-card squirrel-game-card"><div class="game-icon">🐿️</div><div><h3>السنجاب الذهبي</h3><p>اجمع المضاعفات بين جذوع الغابة. النتيجة والخصم والربح من السيرفر فقط.</p><button class="dark-btn" id="openSquirrelBtn">افتح اللعبة</button></div></section>
 <section class="game-card games-choice-card v76-hidden-game-box"><div class="game-icon">🎁</div><div><h3>صندوق الحظ اليومي</h3><p>تم نقله إلى زر التسجيل اليومي فوق الموقع.</p><button class="dark-btn" id="dailyBoxBtn">افتح الصندوق</button><div class="wheel-result games-box-status" id="dailyBoxText">صندوق الحظ صار ضمن التسجيل اليومي.</div></div></section>
 </div>
 <section class="v94-game-center-card" id="v94GameCenterSection">
@@ -3193,6 +3194,7 @@ function setCurrentPrize(type){
     function showWheelOnly(){if($('gamesHomePanel'))$('gamesHomePanel').classList.add('hidden');if($('wheelPlayCard')){$('wheelPlayCard').classList.remove('hidden');$('wheelPlayCard').scrollIntoView({behavior:'smooth',block:'start'});}updateWheelMoneyText()}
     function showGamesHome(){if($('wheelPlayCard'))$('wheelPlayCard').classList.add('hidden');if($('gamesHomePanel'))$('gamesHomePanel').classList.remove('hidden')}
     $('openWheelBtn').onclick=showWheelOnly;
+    if($('openSquirrelBtn'))$('openSquirrelBtn').onclick=()=>{location.href='golden-squirrel.html'};
     if($('backToGamesBtn'))$('backToGamesBtn').onclick=showGamesHome;
     async function spinWheel(){
       if(isSpinning)return;

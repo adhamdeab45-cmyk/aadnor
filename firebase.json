@@ -1,9 +1,0 @@
-{
-  "database": { "rules": "database.rules.json" },
-  "storage": { "rules": "storage.rules" },
-  "hosting": {
-    "public": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "database.rules.json", "database.seed.json", "README_AR.md", "QA_REPORT.md", "SECURITY_AR.md", "DEPLOY_CHECKLIST_AR.md"],
-    "rewrites": [{ "source": "**", "destination": "/index.html" }]
-  }
-}

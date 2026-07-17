@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: aadnor
-    runtime: static
-    buildCommand: bash render-build.sh
-    staticPublishPath: ./dist
-    autoDeployTrigger: commit

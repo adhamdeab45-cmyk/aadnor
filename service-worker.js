@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v208-auto-usdt-trc20-1';
+const CACHE='adnor-v209-global-badge-removed-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

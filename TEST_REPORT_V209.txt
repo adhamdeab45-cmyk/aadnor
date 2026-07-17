@@ -1,0 +1,5 @@
+ADNOR V209 TEST REPORT
+- Removed adnorGlobalBadge creation/update block: PASS
+- Added stale badge removal on load: PASS
+- PWA cache version bumped to V209: PASS
+- Server/API/Firebase files unchanged: PASS

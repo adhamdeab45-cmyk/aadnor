@@ -1,11 +1,9 @@
 {
-  "version": "2.0.7",
-  "build": "V208-AUTO-USDT-TRC20",
+  "version": "2.0.9",
+  "build": "V209-GLOBAL-BADGE-REMOVED",
   "changes": [
-    "automatic confirmed USDT TRC20 deposits",
-    "no admin approval for TRC20 deposits",
-    "unique exact amount verification per deposit request",
-    "server-side TronGrid confirmation and duplicate transaction protection",
-    "single automatic USD deposit interface"
+    "removed the floating AD​NOR GLOBAL / USD / timezone badge from the top of the member interface",
+    "kept local-time conversion and draw scheduling logic unchanged",
+    "updated PWA cache version so the visual change reaches installed apps"
   ]
 }

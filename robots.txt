@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /public-admin.html
-Disallow: /admin-agents.html

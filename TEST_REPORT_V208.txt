@@ -1,0 +1,9 @@
+ADNOR V208 TEST REPORT
+- Node syntax check: passed
+- API version: 1.4.3
+- Deposit verify endpoint: /finance/usdt/deposit/verify
+- Credits actual confirmed USDT amount
+- TXID duplicate protection retained
+- Minimum deposit enforcement retained
+- No unique fractional amount required
+- Live financial test still required after deployment

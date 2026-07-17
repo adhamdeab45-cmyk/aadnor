@@ -1,6 +1,6 @@
 {
   "version": "2.0.7",
-  "build": "V207-AUTO-USDT-TRC20",
+  "build": "V208-AUTO-USDT-TRC20",
   "changes": [
     "automatic confirmed USDT TRC20 deposits",
     "no admin approval for TRC20 deposits",

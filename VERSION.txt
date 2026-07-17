@@ -1,4 +1,0 @@
-ADNOR V302 FIREBASE ONLY
-Mode: Firebase Authentication + Realtime Database + Storage
-Cloud Functions: NOT REQUIRED
-Render: Static Site

@@ -1,8 +1,0 @@
-ADNOR LEGENDARY V301 — RENDER FIXED FULL
-
-الإصلاح الأساسي:
-- تم حذف مكتبات التطوير من package.json الموجود في جذر المشروع.
-- أصبح npm install في Render سريعاً ولا يثبت Firebase Admin أو ESLint أو JSDOM.
-- تم تثبيت Node.js على 20.18.0 لتجنب خطأ npm في Node 24.
-- يوجد الموقع في الجذر وداخل public أيضاً لتحمل إعدادات Render المختلفة.
-- تم تغيير Service Worker cache إلى V301 لإجبار المتصفح على أخذ النسخة الجديدة.

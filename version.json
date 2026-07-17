@@ -1,5 +1,5 @@
 {
-  "version": "V214",
+  "version": "V215",
   "build": "squirrel-compact-settlement-mobile-layout",
   "changes": [
     "compact per-game treasury settlement instead of transacting the entire game treasury tree",

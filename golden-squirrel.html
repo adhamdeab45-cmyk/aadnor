@@ -163,8 +163,8 @@ background-size:cover;background-position:center}
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><div class="logo">🐿️</div><div><h1>السنجاب الذهبي المتحرك</h1><p>لعبة آمنة: النتيجة والرصيد من AD​​NOR API</p></div></div>
-  <div class="server-status" id="serverBadge">جاري الاتصال بالسيرفر...</div>
+  <div class="brand"><div class="logo">🐿️</div><div><h1>السنجاب الذهبي المتحرك</h1><p>اقفز واجمع المضاعفات حتى نهاية الجولة</p></div></div>
+  <div class="server-status" id="serverBadge">متصل</div>
 </header>
 <main class="layout">
 <section class="game" id="game">
@@ -224,14 +224,12 @@ background-size:cover;background-position:center}
     <button type="button" class="chip" data-bet="5">$5</button><button type="button" class="chip" data-bet="10">$10</button>
   </div>
   <label class="label" for="customBet">مبلغ مخصص</label><input class="field" id="customBet" type="number" min="1" max="100" step="1" placeholder="من 1 إلى 100 دولار">
-  <div class="info"><span>نظام اللعبة</span><strong id="rtpText">النتيجة من السيرفر</strong></div>
   <div class="info"><span>أعلى ربح</span><strong id="maxWin">$20.00</strong></div>
   <button type="button" class="play" id="play">🐿️ ابدأ الحركة الحقيقية</button>
   <button type="button" class="secondary" id="reset">تحديث الرصيد</button><button type="button" class="secondary" id="backToAdnor">العودة إلى صالة الألعاب</button>
   <div class="path"><div class="path-title"><span>مسار القفز</span><span>الخطر يرتفع</span></div>
     <div class="path-grid"><div class="lv" data-m="1">x1</div><div class="lv" data-m="2">x2</div><div class="lv" data-m="3">x3</div><div class="lv" data-m="4">x4</div><div class="lv" data-m="5">x5</div><div class="lv" data-m="10">x10</div><div class="lv" data-m="20">x20</div></div>
   </div>
-  <div class="note">كل جولة تُخصم وتُحسب في السيرفر. أرباح اللعبة تُضاف إلى الرصيد الحقيقي، ولا يستطيع المتصفح اختيار النتيجة أو تعديل الرصيد.</div>
   <section class="history"><h3>آخر الجولات</h3><div class="history-list" id="history"><div class="row"><span>لم تبدأ أي جولة</span><strong>—</strong></div></div></section>
 </aside>
 </main>
@@ -257,8 +255,8 @@ window.adnorSquirrelRefresh=async()=>await api('/game/golden-squirrel/config');
 try{
   const data=await window.adnorSquirrelRefresh();
   window.dispatchEvent(new CustomEvent('adnor-squirrel-ready',{detail:data}));
-  const badge=document.getElementById('serverBadge');if(badge)badge.textContent='ADNOR API • SECURE V214';
-}catch(error){const badge=document.getElementById('serverBadge');if(badge)badge.textContent='تعذر الاتصال بالسيرفر';window.dispatchEvent(new CustomEvent('adnor-squirrel-error',{detail:{message:error.message}}));}
+  const badge=document.getElementById('serverBadge');if(badge)badge.textContent='متصل';
+}catch(error){const badge=document.getElementById('serverBadge');if(badge)badge.textContent='غير متصل';window.dispatchEvent(new CustomEvent('adnor-squirrel-error',{detail:{message:error.message}}));}
 </script>
 <script>
 (()=>{
@@ -304,10 +302,10 @@ play.addEventListener("click",async()=>{
    if(o.type==="fall"){game.classList.remove("shake");void game.offsetWidth;game.classList.add("shake");crack.classList.add("show");riskLabel.textContent=`انكسر الغصن بعد x${m}`;await wait(160);loseSound();rig.className="squirrel-rig falling";shadow.style.opacity=0;await wait(1350)}
    else{riskLabel.textContent=`تم تثبيت الربح عند x${m}`;if(last>=5)chestGlow.classList.add("show");winSound(m);dust(p.x,p.y,46);await wait(620)}
    const payout=Number(data.payout||0);balance=Number(data.balances?.realBalance||0)+Number(data.balances?.bonusBalance||0);liveWin.textContent=money(payout);showResult(o,m,payout);addHistory(o.type,m,bet,payout);refresh();await wait(1750);
- }catch(error){$("#resultIcon").textContent="⚠️";$("#resultTitle").textContent="تعذر تنفيذ الجولة";$("#resultAmount").textContent="";$("#resultText").textContent=(error.message||"أعد المحاولة")+(error.code?` • ${error.code}`:"");riskLabel.textContent=error.code?`رمز الخطأ: ${error.code}`:"تعذر تنفيذ الجولة";banner.classList.add("show");try{const state=await window.adnorSquirrelRefresh();applyServerState(state)}catch(_e){}
+ }catch(error){$("#resultIcon").textContent="⚠️";$("#resultTitle").textContent="تعذر بدء الجولة";$("#resultAmount").textContent="";$("#resultText").textContent="لم يتم اعتماد الجولة. حدّث الرصيد ثم أعد المحاولة.";riskLabel.textContent="لم تبدأ الجولة";banner.classList.add("show");try{const state=await window.adnorSquirrelRefresh();applyServerState(state)}catch(_e){}
  }finally{running=false;refresh()}
 });
-function applyServerState(data){const g=data?.game||{};gameMin=Number(g.minBet||1);gameMax=Number(g.maxBet||100);bet=Math.max(gameMin,Math.min(gameMax,bet));custom.min=gameMin;custom.max=gameMax;balance=Number(data?.balances?.realBalance||0)+Number(data?.balances?.bonusBalance||0);gameReady=g.enabled!==false;const rtp=document.getElementById('rtpText');if(rtp)rtp.textContent='عائد مستهدف '+Number(data?.targetRtpPercent||0).toFixed(1)+'%';refresh()}
+function applyServerState(data){const g=data?.game||{};gameMin=Number(g.minBet||1);gameMax=Number(g.maxBet||100);bet=Math.max(gameMin,Math.min(gameMax,bet));custom.min=gameMin;custom.max=gameMax;balance=Number(data?.balances?.realBalance||0)+Number(data?.balances?.bonusBalance||0);gameReady=g.enabled!==false;refresh()}
 window.addEventListener('adnor-squirrel-ready',event=>applyServerState(event.detail));
 window.addEventListener('adnor-squirrel-error',event=>{gameReady=false;riskLabel.textContent=event.detail?.message||'تعذر الاتصال بالسيرفر';refresh()});
 reset.addEventListener("click",async()=>{if(running)return;try{const data=await window.adnorSquirrelRefresh();applyServerState(data);riskLabel.textContent='تم تحديث الرصيد من السيرفر'}catch(e){riskLabel.textContent=e.message||'تعذر تحديث الرصيد'}});

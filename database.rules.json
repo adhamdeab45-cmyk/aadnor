@@ -734,6 +734,26 @@
           "createdAt"
         ]
       }
+    },
+    "admin_draw_schedule": {
+      ".read": false,
+      ".write": false
+    },
+    "admin_draw_history": {
+      ".read": false,
+      ".write": false
+    },
+    "draw_results_private": {
+      ".read": false,
+      ".write": false
+    },
+    "draw_results_private_latest": {
+      ".read": false,
+      ".write": false
+    },
+    "draw_settlements": {
+      ".read": false,
+      ".write": false
     }
   }
 }

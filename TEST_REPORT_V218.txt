@@ -1,0 +1,53 @@
+ADNOR V218 TEST REPORT
+======================
+
+PASS — Node.js syntax check for API server
+PASS — All inline JavaScript blocks passed syntax checks (22 blocks)
+PASS — JSON parse: package.json
+PASS — JSON parse: database.rules.json
+PASS — JSON parse: version.json
+PASS — JSON parse: manifest.webmanifest
+PASS — No duplicate static HTML IDs: admin-agents.html
+PASS — No duplicate static HTML IDs: admin-command-center.html
+PASS — No duplicate static HTML IDs: agent.html
+PASS — No duplicate static HTML IDs: app.html
+PASS — No duplicate static HTML IDs: energy-admin.html
+PASS — No duplicate static HTML IDs: exchange-admin.html
+PASS — No duplicate static HTML IDs: index.html
+PASS — No duplicate static HTML IDs: offline.html
+PASS — No duplicate static HTML IDs: privacy.html
+PASS — No duplicate static HTML IDs: public-admin.html
+PASS — No duplicate static HTML IDs: responsible-play.html
+PASS — No duplicate static HTML IDs: terms.html
+PASS — No broken local static links
+PASS — API version 1.5.5
+PASS — Site version 2.1.8
+PASS — Private schedule path exists
+PASS — Scheduled results are private in Firebase rules
+PASS — Public results endpoint exists
+PASS — Admin results state endpoint exists
+PASS — Result save endpoint exists
+PASS — Exact draw timer exists
+PASS — 15-second scheduler fallback exists
+PASS — Prize idempotency receipt exists
+PASS — Ticket settlement idempotency exists
+PASS — Scheduled save writes only the private schedule path
+PASS — Scheduled save erases legacy public copies
+PASS — Publication clears private schedule
+PASS — Publication writes public result only after settlement
+PASS — Admin Turkey time parser exists
+PASS — Admin next 8 PM button exists
+PASS — Admin can cancel scheduled result
+PASS — Admin displays scheduled result as hidden
+PASS — Site polls public results every 15 seconds
+PASS — Legacy result actions routed to server
+PASS — No active squirrel game file
+PASS — V218 health flags exist
+PASS — Turkey 20:00 converts to 17:00 UTC
+
+Total checks: 43
+Failed checks: 0
+API version: 1.5.5
+Site version: 2.1.8
+
+Live Firebase/Render execution was not performed locally; final verification requires deployment and a scheduled test draw.

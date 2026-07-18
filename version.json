@@ -1,12 +1,12 @@
 {
-  "version": "2.1.7",
-  "build": "V217-WHEEL-ONLY-TREASURY-AWARE",
+  "version": "2.1.8",
+  "build": "V218-AUTHORITATIVE-DRAW-SCHEDULER",
   "changes": [
-    "restores admin enable/disable controls for every wheel multiplier including 1000x, 5000x and 10000x",
-    "adds editable relative weights with an approximate probability preview",
-    "adds linked platform percentage and player RTP percentage controls",
-    "shows the wheel treasury, bets, platform reserve, payouts, actual RTP and maximum liability",
-    "keeps full treasury coverage protection configurable and enforced on the server",
-    "saves wheel segments only through authenticated server validation"
+    "routes every admin draw result action through the authenticated Node server",
+    "stores scheduled winner data only in private server-only Firebase nodes",
+    "publishes daily, weekly, monthly and yearly results automatically at the saved Turkey-time timestamp",
+    "credits the prize exactly once and settles winning, losing and moved tickets only when publication time arrives",
+    "keeps the previously published result and top gold ticker visible while a future result is waiting",
+    "adds exact next-result timer, 15-second fallback scheduler and public self-healing result poll"
   ]
 }

@@ -5214,8 +5214,9 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       function v144SafeResult(r,extra={}){if(!r||typeof r!=='object')return null;return {...r,...extra,drawType:r.drawType||extra.drawType||'daily',ticketNumber:v144Ticket(r.ticketNumber||r.winningNumber||r.number)}}
       function v144Status(r){return String(r?.status||'').toLowerCase()}
       function v144ScheduledArray(type){
-        const raw=(v108Results.scheduled&&v108Results.scheduled[type])||{};
-        return Object.entries(raw).map(([id,r])=>v144SafeResult(r,{id:r?.id||id,drawType:type,_v144Path:V144_PATH+'/scheduled/'+type+'/'+id})).filter(Boolean).filter(r=>v144Status(r)!=='hidden');
+        const privateResult=window.__ADNOR_V218_DRAW_ADMIN_STATE?.scheduled?.[type];
+        if(privateResult&&typeof privateResult==='object')return [v144SafeResult(privateResult,{drawType:type,_v144Private:true})].filter(Boolean);
+        return [];
       }
       function v144PublishedRaw(type){
         const p=v108Results.published&&v108Results.published[type];
@@ -5226,7 +5227,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       }
       function v144DueScheduled(type){return v144ScheduledArray(type).filter(r=>Number(r.publishAt||0)<=Date.now()).sort((a,b)=>Number(b.publishAt||0)-Number(a.publishAt||0))[0]||null}
       function v144Upcoming(type){return v144ScheduledArray(type).filter(r=>Number(r.publishAt||0)>Date.now()).sort((a,b)=>Number(a.publishAt||0)-Number(b.publishAt||0))[0]||null}
-      function v144Visible(type){return v144DueScheduled(type)||v144PublishedRaw(type)}
+      function v144Visible(type){return v144PublishedRaw(type)}
       function v144VisibleList(){return V144_TYPES.map(t=>v144Visible(t)).filter(Boolean).sort((a,b)=>Number(b.publishAt||b.publishedAt||b.updatedAt||0)-Number(a.publishAt||a.publishedAt||a.updatedAt||0))}
       function v144LatestVisible(){return v144VisibleList()[0]||null}
       function v144ReadForm(type,forceNow=false){
@@ -5248,46 +5249,33 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       async function v144SaveScheduled(type,forceNow=false){
         if(!isAdminUser())return toast('للأدمن فقط');
         let data;try{data=v144ReadForm(type,forceNow)}catch(e){return toast(e.message||String(e))}
-        if(typeof callServer==='function'){
-          try{
-            await callServer('adminScheduleOfficialDrawResult',{drawType:type,winnerName:data.winnerName,ticketNumber:data.ticketNumber,prize:data.prize,publishAt:data.publishAt,publishNow:forceNow});
-            toast(forceNow?'تم نشر نتيجة '+v144Label(type)+' من السيرفر':'تم حفظ نتيجة '+v144Label(type)+' من السيرفر بدون إخفاء الشريط — ستظهر عند '+v144Format(data.publishAt));
-            return;
-          }catch(serverError){
-            console.warn('V144 cloud function not available, falling back to direct database update',serverError);
-          }
-        }
-        const r=v144BuildResult(type,data,forceNow);
-        const updates={};
-        if(forceNow || Number(r.publishAt||0)<=Date.now()){
-          r.status='published';r.publishedAt=Date.now();r.publishAt=r.publishAt||Date.now();
-          updates[V144_PATH+'/published/'+type]=r;
-          updates[V144_PATH+'/current/'+type]=r; // توافق مع النسخ القديمة فقط
-          updates[V144_PATH+'/latestPublished']=r;
-          updates[V144_PATH+'/latest']=r;
-        }else{
-          updates[V144_PATH+'/scheduled/'+type+'/'+r.id]=r;
-          updates[V144_PATH+'/upcoming/'+type]=r;
-        }
-        updates[V144_PATH+'/history/'+type+'/'+r.id]=r;
-        updates[V144_PATH+'/tickerUpdatedAt']=Date.now();
+        const mode=forceNow?'publish':'schedule';
+        if(!forceNow&&Number(data.publishAt)<=Date.now())return toast('وقت النشر لازم يكون بالمستقبل، أو استخدم زر نشر الآن');
+        const confirmation=(forceNow?'نشر النتيجة الآن':'حفظ النتيجة مخفية حتى '+v144Format(data.publishAt))+'؟\n'+v144Label(type)+' — التذكرة #'+data.ticketNumber+' — الجائزة '+v144Money(data.prize);
+        if(!(await uiConfirm(confirmation)))return;
         try{
-          await update(ref(db),updates);
-          toast(forceNow?'تم نشر نتيجة '+v144Label(type)+' الآن':'تم حفظ نتيجة '+v144Label(type)+' للمستقبل بدون إخفاء الشريط — ستظهر عند '+v144Format(r.publishAt));
-          if(!v108Results.scheduled)v108Results.scheduled={}; if(!v108Results.scheduled[type])v108Results.scheduled[type]={}; if(!v108Results.published)v108Results.published={}; if(!v108Results.history)v108Results.history={}; if(!v108Results.history[type])v108Results.history[type]={};
-          if(forceNow||Number(r.publishAt)<=Date.now()){v108Results.published[type]=r;v108Results.current=v108Results.current||{};v108Results.current[type]=r;v108Results.latestPublished=r;v108Results.latest=r}else{v108Results.scheduled[type][r.id]=r;v108Results.upcoming=v108Results.upcoming||{};v108Results.upcoming[type]=r}
+          toast(forceNow?'جاري نشر النتيجة من السيرفر...':'جاري حفظ النتيجة داخل الجدول الآمن...');
+          const response=await adnorApiFetch('/admin/lottery/result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({drawType:type,winnerName:data.winnerName,ticketNumber:data.ticketNumber,prize:data.prize,publishAt:data.publishAt,mode,requestId:adnorSecureRequestId('draw_'+type)})});
+          const payload=await adnorReadApiJson(response);
+          if(forceNow){toast('تم نشر نتيجة '+v144Label(type)+' رسميًا وإضافة الجائزة مرة واحدة');}
+          else{toast('تم حفظ نتيجة '+v144Label(type)+' مخفية — ستُنشر تلقائيًا عند '+v144Format(data.publishAt));}
+          await v218RefreshAdminDrawState(true);
+          await v218PollPublicDrawResults(true);
           v144RenderAdmin();v144RenderPublic();v144RenderTicker();
-        }catch(e){console.error('V144 save failed',e);toast('فشل حفظ النتيجة: '+(e.code||e.message||e));}
+          return payload;
+        }catch(e){console.error('V218 draw save failed',e);toast('فشل حفظ النتيجة من السيرفر: '+(e.message||e.code||e));}
       }
       async function v144Hide(type){
         if(!isAdminUser())return toast('للأدمن فقط');
-        const r=v144Visible(type)||v144PublishedRaw(type)||v144Upcoming(type);
-        if(!r)return toast('لا توجد نتيجة لإخفائها في '+v144Label(type));
-        const now=Date.now();const next={...r,status:'hidden',hiddenAt:now,updatedAt:now,adminEmail:currentUser?.email||''};
-        const path=r._v144Path || (V144_PATH+'/published/'+type);
-        const updates={}; updates[path]=next; updates[V144_PATH+'/history/'+type+'/'+(next.id||('hidden_'+now))]=next; updates[V144_PATH+'/tickerUpdatedAt']=now;
-        if(path.includes('/published/')||path.includes('/current/')){updates[V144_PATH+'/current/'+type]=next;updates[V144_PATH+'/published/'+type]=next}
-        try{await update(ref(db),updates);toast('تم إخفاء نتيجة '+v144Label(type));v144RenderAdmin();v144RenderPublic();v144RenderTicker();}catch(e){toast('فشل الإخفاء: '+(e.code||e.message||e))}
+        const upcoming=v144Upcoming(type);
+        if(!upcoming)return toast('لا توجد نتيجة مجدولة لإلغائها في '+v144Label(type));
+        if(!(await uiConfirm('إلغاء النتيجة المجدولة لـ '+v144Label(type)+'؟\nلن تتأثر النتيجة المنشورة الحالية.')))return;
+        try{
+          const response=await adnorApiFetch('/admin/lottery/result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({drawType:type,mode:'cancel'})});
+          await adnorReadApiJson(response);
+          toast('تم إلغاء النتيجة المجدولة مع بقاء النتيجة الحالية ظاهرة');
+          await v218RefreshAdminDrawState(true);v144RenderAdmin();v144RenderPublic();v144RenderTicker();
+        }catch(e){toast('فشل إلغاء النتيجة: '+(e.message||e.code||e))}
       }
       function v144SetDefault(type){
         const el=$('v108Publish_'+type);if(!el)return;
@@ -5364,14 +5352,80 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         return '<div class="v104-ticker-track v144-gold-track">'+items.join('<span class="v144-sep">◆</span>')+'</div>';
       }
       function v144RenderTicker(){const alert=$('siteControlAlert'),sub=$('siteControlAlertSub');if(!alert)return;if(siteControl&&siteControl.maintenance){try{v93RenderTopWinnerTicker();return}catch(e){}}const html=v144TickerHtml();alert.classList.add('show');if(alert.dataset.v144TickerHtml!==html){alert.innerHTML=html;alert.dataset.v144TickerHtml=html;alert.dataset.v105TickerHtml=html;}if(sub)sub.textContent='';}
-      function v144Attach(){document.querySelectorAll('[data-v108-set8]').forEach(b=>{b.onclick=()=>v144SetDefault(b.dataset.v108Set8)});document.querySelectorAll('[data-v108-save]').forEach(b=>{b.onclick=()=>v144SaveScheduled(b.dataset.v108Save,false)});document.querySelectorAll('[data-v108-now]').forEach(b=>{b.onclick=()=>v144SaveScheduled(b.dataset.v108Now,true)});document.querySelectorAll('[data-v108-hide]').forEach(b=>{b.onclick=()=>v144Hide(b.dataset.v108Hide)});}
+      function v144Attach(){document.querySelectorAll('[data-v108-set8]').forEach(b=>{b.onclick=()=>v144SetDefault(b.dataset.v108Set8)});document.querySelectorAll('[data-v108-save]').forEach(b=>{b.onclick=()=>v144SaveScheduled(b.dataset.v108Save,false)});document.querySelectorAll('[data-v108-now]').forEach(b=>{b.onclick=()=>v144SaveScheduled(b.dataset.v108Now,true)});document.querySelectorAll('[data-v108-hide]').forEach(b=>{b.textContent='إلغاء المجدول';b.onclick=()=>v144Hide(b.dataset.v108Hide)});}
+      async function v218RefreshAdminDrawState(silent=false){
+        if(!isAdminUser()||!currentUser)return null;
+        try{
+          const response=await adnorApiFetch('/admin/lottery/results',{method:'GET'});
+          const data=await adnorReadApiJson(response);
+          window.__ADNOR_V218_DRAW_ADMIN_STATE=data||{scheduled:{},published:{}};
+          v144RenderAdmin();
+          return data;
+        }catch(e){if(!silent){console.error('V218 admin draw state failed',e);toast('تعذر تحديث جدول النتائج من السيرفر')}}
+        return null;
+      }
+      async function v218PollPublicDrawResults(silent=false){
+        try{
+          const response=await adnorFetchWithTimeout(ADNOR_API_BASE+'/lottery/results',{headers:{Accept:'application/json'}},15000);
+          const data=await response.json().catch(()=>({}));
+          if(!response.ok||data.ok!==true)throw new Error(data.message||'تعذر تحديث النتائج');
+          const results=data.results||{};
+          v108Results.published={...(v108Results.published||{}),...results};
+          v108Results.current={...(v108Results.current||{}),...results};
+          const latest=Object.values(results).sort((a,b)=>Number(b.publishAt||b.publishedAt||0)-Number(a.publishAt||a.publishedAt||0))[0];
+          if(latest){v108Results.latestPublished=latest;v108Results.latest=latest;}
+          v144RenderPublic();v144RenderTicker();
+          return data;
+        }catch(e){if(!silent)console.warn('V218 public draw poll skipped',e)}
+        return null;
+      }
+      window.v218RefreshAdminDrawState=v218RefreshAdminDrawState;
+      window.v218PollPublicDrawResults=v218PollPublicDrawResults;
       try{v108SaveScheduled=v144SaveScheduled;v108Hide=v144Hide;v108Set8=v144SetDefault;v108RenderPublicResult=v144RenderPublic;v108RenderAdmin=v144RenderAdmin;v108Visible=v144Visible;v108VisibleList=v144VisibleList;v108LatestVisibleResult=v144LatestVisible;v108RenderAllResultsPublic=v144RenderAllResults;}catch(e){}
       try{renderLatestDrawPublic=v144RenderPublic;renderAllDrawResultsPublic=v144RenderAllResults;renderV91LastResult=v144RenderPublic;}catch(e){}
       try{v93GetVisibleTickerResult=function(){return {v144Ticker:true}};v93ResultTickerMessage=function(){return v144TickerHtml()};v93RenderTopWinnerTicker=v144RenderTicker;}catch(e){}
-      const __v144ShowPage=showPage;showPage=function(p){__v144ShowPage(p);if(p==='lottery'||p==='results')setTimeout(v144RenderPublic,50);if(p==='admin')setTimeout(()=>{v144Attach();v144RenderAdmin();},90)};
-      v144Attach();setTimeout(()=>{v144RenderAdmin();v144RenderPublic();v144RenderTicker()},900);setInterval(()=>{try{v144RenderPublic();v144RenderTicker();if(document.querySelector('#adminPage.active,.admin-page.active,[data-page=admin].active'))v144RenderAdmin()}catch(e){}},7000);
+      const __v144ShowPage=showPage;showPage=function(p){__v144ShowPage(p);if(p==='lottery'||p==='results')setTimeout(()=>{v218PollPublicDrawResults(true);v144RenderPublic();},50);if(p==='admin')setTimeout(()=>{v144Attach();v218RefreshAdminDrawState(true);v144RenderAdmin();},90)};
+      v144Attach();setTimeout(()=>{v218PollPublicDrawResults(true);if(isAdminUser())v218RefreshAdminDrawState(true);v144RenderAdmin();v144RenderPublic();v144RenderTicker()},900);setInterval(()=>{try{v218PollPublicDrawResults(true);v144RenderPublic();v144RenderTicker();if(isAdminUser())v218RefreshAdminDrawState(true)}catch(e){}},15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){v218PollPublicDrawResults(true);if(isAdminUser())v218RefreshAdminDrawState(true)}});
       Object.assign(window,{v144SaveScheduled,v144Hide,v144SetDefault,v144RenderPublic,v144RenderAdmin,v144Visible,v144Upcoming,v144TickerHtml});
     })();
+
+    /* ADNOR V218 — every old admin result button is routed to the authoritative server scheduler. */
+    async function v218SubmitLegacyResult({drawType,ticketNumber,winnerName,prize,publishAt,mode}){
+      if(!isAdminUser())return toast('للأدمن فقط');
+      const clean=String(ticketNumber||'').replace(/\D/g,'').padStart(7,'0').slice(-7);
+      if(!ticketNumber||clean==='0000000')return toast('اكتب رقم تذكرة صحيح');
+      if(!(Number(prize)>0))return toast('قيمة الجائزة غير صحيحة');
+      const serverMode=mode==='schedule'?'schedule':'publish';
+      if(serverMode==='schedule'&&!(Number(publishAt)>Date.now()))return toast('حدد وقت نشر بالمستقبل');
+      try{
+        const response=await adnorApiFetch('/admin/lottery/result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({drawType,ticketNumber:clean,winnerName:String(winnerName||'').trim(),prize:Number(prize),publishAt:Number(publishAt||Date.now()),mode:serverMode,requestId:adnorSecureRequestId('legacy_draw_'+drawType)})});
+        await adnorReadApiJson(response);
+        toast(serverMode==='schedule'?'تم حفظ النتيجة مخفية وستظهر تلقائيًا في الموعد':'تم نشر النتيجة رسميًا من السيرفر');
+        if(window.v218RefreshAdminDrawState)await window.v218RefreshAdminDrawState(true);
+        if(window.v218PollPublicDrawResults)await window.v218PollPublicDrawResults(true);
+      }catch(e){console.error('V218 legacy result submit failed',e);toast('فشل تنفيذ النتيجة من السيرفر: '+(e.message||e.code||e))}
+    }
+    adminManualDraw=async function(drawType,mode){
+      const input=$('manualWinner_'+drawType),publishInput=$('manualPublish_'+drawType);
+      const ticketNumber=(input?.value||'').trim();
+      const publishAt=mode==='schedule'?new Date(publishInput?.value||'').getTime():Date.now();
+      return v218SubmitLegacyResult({drawType,ticketNumber,winnerName:'',prize:prizeFor(drawType),publishAt,mode});
+    };
+    adminPublishResultBox=async function(mode='direct'){
+      const drawType=$('resultBoxDrawType')?.value||'daily';
+      const publishAt=mode==='schedule'?new Date($('resultBoxPublishAt')?.value||'').getTime():Date.now();
+      return v218SubmitLegacyResult({drawType,ticketNumber:$('resultBoxTicketNumber')?.value,winnerName:$('resultBoxWinnerName')?.value,prize:Number($('resultBoxPrize')?.value||prizeFor(drawType)),publishAt,mode:mode==='schedule'?'schedule':'publish'});
+    };
+    adminForceLastResultBoxNow=async function(){return adminPublishResultBox('direct')};
+    adminV91PublishResult=async function(){
+      const drawType=$('v91DrawType')?.value||'daily';
+      return v218SubmitLegacyResult({drawType,ticketNumber:$('v91TicketNumber')?.value,winnerName:$('v91WinnerName')?.value,prize:Number($('v91PrizeValue')?.value||prizeFor(drawType)),publishAt:Date.now(),mode:'publish'});
+    };
+    adminV92ScheduleResult=async function(){
+      const drawType=$('v91DrawType')?.value||'daily';
+      return v218SubmitLegacyResult({drawType,ticketNumber:$('v91TicketNumber')?.value,winnerName:$('v91WinnerName')?.value,prize:Number($('v91PrizeValue')?.value||prizeFor(drawType)),publishAt:new Date($('v92PublishAt')?.value||'').getTime(),mode:'schedule'});
+    };
+    Object.assign(window,{adminManualDraw,adminPublishResultBox,adminForceLastResultBoxNow,adminV91PublishResult,adminV92ScheduleResult,v218SubmitLegacyResult});
 
 
     /* ADN V198: تم حذف محرك السوق القديم بالكامل.

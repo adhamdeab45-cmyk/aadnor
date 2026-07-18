@@ -1,0 +1,13 @@
+الملفات المعدلة في V214:
+- database.rules.json
+- app.html
+- admin-command-center.html
+- service-worker.js
+- version.json
+
+ملفات التوثيق والاختبار:
+- TEST_REPORT_V214.txt
+- اقرأني_أولاً_V214.txt
+- CHANGED_FILES_V214.txt
+
+السيرفر لم يتم تغييره لأن النسخة الحية الظاهرة في Render هي GAME_ACCOUNT_V221، وهي أحدث من API V213 الموجود داخل الملف الأصلي.

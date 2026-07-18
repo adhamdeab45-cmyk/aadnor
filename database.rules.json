@@ -203,7 +203,17 @@
         "serverWheelReceipts": {
           ".write": false
         }
-      }
+      },
+      ".indexOn": [
+        "authUid",
+        "firebaseAuthUid",
+        "firebaseUid",
+        "emailLower",
+        "publicId",
+        "userId",
+        "accountNumber",
+        "createdAt"
+      ]
     },
     "admins": {
       ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || (auth.token.email === 'adhamdeab2@gmail.com' || auth.token.email === 'adhamdeab45@gmail.com'))",
@@ -697,11 +707,33 @@
     },
     "adn_exchange": {
       ".read": false,
-      ".write": false
+      ".write": false,
+      "trades": {
+        ".indexOn": [
+          "createdAt"
+        ]
+      },
+      "candles": {
+        "$interval": {
+          ".indexOn": [
+            "time"
+          ]
+        }
+      },
+      "orders": {
+        ".indexOn": [
+          "uid"
+        ]
+      }
     },
     "exchange_user_trades": {
       ".read": false,
-      ".write": false
+      ".write": false,
+      "$uid": {
+        ".indexOn": [
+          "createdAt"
+        ]
+      }
     }
   }
 }

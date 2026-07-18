@@ -1,18 +1,11 @@
 {
-  "version": "V221",
-  "build": "auth-user-link-and-single-core-game-cards",
+  "version": "2.1.4",
+  "build": "V214-FIREBASE-INDEXES-DOM-CLEANUP",
   "changes": [
-    "resolve the authenticated Firebase UID to the existing financial user record by direct key, saved link, email or phone",
-    "preserve the existing real and bonus balances when the Authentication UID changed",
-    "wheel, golden squirrel and custom games use the resolved financial account key",
-    "hide golden squirrel and wheel from the additional-games grid to prevent duplicate cards",
-    "service-worker cache bumped to V220"
-  ],
-  "apiVersion": "1.5.9",
-  "updatedAt": "2026-07-18T00:00:00Z",
-  "features": [
-    "canonicalFinancialAccountV221",
-    "placeholderAccountBypassV221",
-    "singleCoreGameCardsV221"
+    "added Firebase Realtime Database indexes for user identity lookups",
+    "added exchange indexes for trades, candles, orders and user trade history",
+    "removed source-level duplicate ID collisions without changing runtime behavior",
+    "kept Firebase access rules closed for exchange server-only data",
+    "new service worker cache to force the corrected site files"
   ]
 }

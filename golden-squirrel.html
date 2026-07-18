@@ -110,61 +110,13 @@ background-size:cover;background-position:center}
 @media(max-width:560px){
 .app{padding:9px 7px 24px}.logo{width:44px;height:44px}.brand h1{font-size:17px}.server-status{font-size:9px;padding:7px}.game{min-height:610px;border-radius:22px}.hud{padding:8px;gap:4px}.hud-card{padding:7px 3px;border-radius:12px}.hud-card strong{font-size:14px}.hud-card.mult strong{font-size:18px}.hud-card span{font-size:8px}.scene{background-position:52% center}.hide-static{left:13%;top:22%;width:43%;height:34%}.platform{width:54px;height:40px;font-size:14px;border-radius:9px}.squirrel-rig{width:128px;height:116px}.shadow{width:74px}.controls{border-radius:22px;padding:15px}.path-grid{grid-template-columns:repeat(4,1fr)}
 }
-
-.mobile-dock{display:none}
-.mobile-bet-label{font-size:10px;color:#c9d5de;white-space:nowrap}
-.mobile-bets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.mobile-bets .chip{padding:8px 3px;border-radius:11px;font-size:12px}
-.mobile-action{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:center}
-.mobile-bet-now{height:48px;border:1px solid rgba(243,198,91,.22);border-radius:14px;background:rgba(3,12,18,.92);display:grid;place-items:center;text-align:center}
-.mobile-bet-now span{display:block;color:var(--muted);font-size:9px}.mobile-bet-now strong{display:block;color:var(--cream);font-size:15px;margin-top:2px}
-.mobile-play{height:48px;border:0;border-radius:15px;background:linear-gradient(180deg,#ffe78f,#bd7810);color:#111820;font-weight:900;font-size:15px;box-shadow:0 10px 25px rgba(211,143,17,.3)}
-.mobile-play:disabled{opacity:.48;cursor:not-allowed}
-@media(max-width:700px){
-  html,body{background:#03090d;overscroll-behavior:none}
-  body{min-height:100svh}
-  .app{width:100%;padding:0;margin:0}
-  .top{display:none}
-  .layout{display:block}
-  .controls{display:none}
-  .game{min-height:100vh;height:100vh;min-height:100svh;height:100svh;border:0;border-radius:0;box-shadow:none}
-  .hud{padding:7px 7px 0;gap:4px;grid-template-columns:repeat(4,minmax(0,1fr))}
-  .hud-card{padding:6px 2px;border-radius:11px;min-width:0}
-  .hud-card span{font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px}
-  .hud-card strong{font-size:12px}.hud-card.mult strong{font-size:16px}
-  .risk{margin:5px 7px 0;height:17px}
-  .risk-label{font-size:8px}
-  .scene{background-position:56% center}
-  .hide-static{left:8%;top:20%;width:50%;height:34%}
-  .platform{width:48px;height:36px;font-size:13px;border-radius:9px}
-  .platform[data-step="0"]{left:12%!important;top:69%!important}
-  .platform[data-step="1"]{left:27%!important;top:58%!important}
-  .platform[data-step="2"]{left:43%!important;top:48%!important}
-  .platform[data-step="3"]{left:58%!important;top:39%!important}
-  .platform[data-step="4"]{left:72%!important;top:31%!important}
-  .platform[data-step="5"]{left:84%!important;top:23%!important}
-  .platform[data-step="6"]{left:92%!important;top:16%!important}
-  .squirrel-rig{width:112px;height:102px}
-  .shadow{width:66px;height:16px}
-  .banner{top:47%;width:88%;padding:18px 14px}
-  .banner .icon{font-size:38px}.banner h2{font-size:21px}.banner .amount{font-size:31px}
-  .mobile-dock{display:grid;position:absolute;z-index:70;left:7px;right:7px;bottom:7px;bottom:max(7px,env(safe-area-inset-bottom));gap:7px;padding:9px;border:1px solid rgba(243,198,91,.28);border-radius:18px;background:linear-gradient(180deg,rgba(4,15,22,.94),rgba(2,8,12,.98));box-shadow:0 16px 40px #000c;backdrop-filter:blur(15px)}
-  .chest-glow{top:11%}
-}
-@media(max-width:380px){
-  .hud-card span{font-size:6.5px}.hud-card strong{font-size:11px}.hud-card.mult strong{font-size:14px}
-  .platform{width:43px;height:33px;font-size:12px}
-  .squirrel-rig{width:100px;height:91px}
-  .mobile-dock{padding:7px;gap:6px}.mobile-action{grid-template-columns:76px 1fr}.mobile-play{font-size:14px}
-}
-
 </style>
 </head>
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand"><div class="logo">🐿️</div><div><h1>السنجاب الذهبي المتحرك</h1><p>اقفز واجمع المضاعفات حتى نهاية الجولة</p></div></div>
-  <div class="server-status" id="serverBadge">متصل</div>
+  <div class="brand"><div class="logo">🐿️</div><div><h1>السنجاب الذهبي المتحرك</h1><p>لعبة آمنة: النتيجة والرصيد من AD​​NOR API</p></div></div>
+  <div class="server-status" id="serverBadge">جاري الاتصال بالسيرفر...</div>
 </header>
 <main class="layout">
 <section class="game" id="game">
@@ -200,20 +152,6 @@ background-size:cover;background-position:center}
       <div class="amount" id="resultAmount">$10.00</div><p id="resultText">وصل السنجاب إلى x10</p>
     </div>
   </div>
-
-  <div class="mobile-dock" id="mobileDock">
-    <div class="mobile-bet-label">اختر قيمة اللعب</div>
-    <div class="mobile-bets">
-      <button type="button" class="chip active" data-bet="1">$1</button>
-      <button type="button" class="chip" data-bet="2">$2</button>
-      <button type="button" class="chip" data-bet="5">$5</button>
-      <button type="button" class="chip" data-bet="10">$10</button>
-    </div>
-    <div class="mobile-action">
-      <div class="mobile-bet-now"><span>قيمة الجولة</span><strong id="mobileBetView">$1.00</strong></div>
-      <button type="button" class="mobile-play" id="mobilePlay">🐿️ ابدأ اللعب</button>
-    </div>
-  </div>
 </section>
 <aside class="controls">
   <h2>ابدأ المغامرة</h2>
@@ -224,12 +162,14 @@ background-size:cover;background-position:center}
     <button type="button" class="chip" data-bet="5">$5</button><button type="button" class="chip" data-bet="10">$10</button>
   </div>
   <label class="label" for="customBet">مبلغ مخصص</label><input class="field" id="customBet" type="number" min="1" max="100" step="1" placeholder="من 1 إلى 100 دولار">
+  <div class="info"><span>نظام اللعبة</span><strong id="rtpText">النتيجة من السيرفر</strong></div>
   <div class="info"><span>أعلى ربح</span><strong id="maxWin">$20.00</strong></div>
   <button type="button" class="play" id="play">🐿️ ابدأ الحركة الحقيقية</button>
   <button type="button" class="secondary" id="reset">تحديث الرصيد</button><button type="button" class="secondary" id="backToAdnor">العودة إلى صالة الألعاب</button>
   <div class="path"><div class="path-title"><span>مسار القفز</span><span>الخطر يرتفع</span></div>
     <div class="path-grid"><div class="lv" data-m="1">x1</div><div class="lv" data-m="2">x2</div><div class="lv" data-m="3">x3</div><div class="lv" data-m="4">x4</div><div class="lv" data-m="5">x5</div><div class="lv" data-m="10">x10</div><div class="lv" data-m="20">x20</div></div>
   </div>
+  <div class="note">كل جولة تُخصم وتُحسب في السيرفر. أرباح اللعبة تُضاف إلى الرصيد الحقيقي، ولا يستطيع المتصفح اختيار النتيجة أو تعديل الرصيد.</div>
   <section class="history"><h3>آخر الجولات</h3><div class="history-list" id="history"><div class="row"><span>لم تبدأ أي جولة</span><strong>—</strong></div></div></section>
 </aside>
 </main>
@@ -248,29 +188,27 @@ async function api(path,options={}){
   const token=await user.getIdToken();
   const headers={Accept:'application/json',...(options.headers||{}),Authorization:'Bearer '+token};
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),25000);
-  try{const response=await fetch(API+path,{...options,headers,signal:controller.signal});const data=await response.json().catch(()=>({}));if(!response.ok||data.ok===false){const error=new Error(data.message||data.error||'تعذر الاتصال بالسيرفر');error.code=data.error||'API_ERROR';error.status=response.status;throw error;}return data;}finally{clearTimeout(timer)}
+  try{const response=await fetch(API+path,{...options,headers,signal:controller.signal});const data=await response.json().catch(()=>({}));if(!response.ok||data.ok===false)throw new Error(data.message||({INTERNAL_ERROR:'حدث خلل في تسوية الجولة. لم يتم اعتماد أي خصم غير مكتمل.'}[data.error])||data.error||'تعذر الاتصال بالسيرفر');return data;}finally{clearTimeout(timer)}
 }
 window.adnorSquirrelSecurePlay=async bet=>{const requestId='squirrel_'+Date.now()+'_'+crypto.getRandomValues(new Uint32Array(1))[0].toString(36);return await api('/game/golden-squirrel/play',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({bet,requestId})})};
 window.adnorSquirrelRefresh=async()=>await api('/game/golden-squirrel/config');
 try{
   const data=await window.adnorSquirrelRefresh();
   window.dispatchEvent(new CustomEvent('adnor-squirrel-ready',{detail:data}));
-  const badge=document.getElementById('serverBadge');if(badge)badge.textContent='متصل';
-}catch(error){const badge=document.getElementById('serverBadge');if(badge)badge.textContent='غير متصل';window.dispatchEvent(new CustomEvent('adnor-squirrel-error',{detail:{message:error.message}}));}
+  const badge=document.getElementById('serverBadge');if(badge)badge.textContent='ADNOR API • SERVER SECURE';
+}catch(error){const badge=document.getElementById('serverBadge');if(badge)badge.textContent='تعذر الاتصال بالسيرفر';window.dispatchEvent(new CustomEvent('adnor-squirrel-error',{detail:{message:error.message}}));}
 </script>
 <script>
 (()=>{
 "use strict";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const balanceEl=$("#balance"),betView=$("#betView"),currentMult=$("#currentMult"),liveWin=$("#liveWin"),maxWin=$("#maxWin");
-const play=$("#play"),mobilePlay=$("#mobilePlay"),mobileBetView=$("#mobileBetView"),reset=$("#reset"),custom=$("#customBet"),rig=$("#squirrel"),shadow=$("#shadow"),scene=$("#scene"),banner=$("#banner"),riskFill=$("#riskFill"),riskLabel=$("#riskLabel"),motionLine=$("#motionLine"),chestGlow=$("#chestGlow"),crack=$("#crack"),historyEl=$("#history"),game=$("#game");
+const play=$("#play"),reset=$("#reset"),custom=$("#customBet"),rig=$("#squirrel"),shadow=$("#shadow"),scene=$("#scene"),banner=$("#banner"),riskFill=$("#riskFill"),riskLabel=$("#riskLabel"),motionLine=$("#motionLine"),chestGlow=$("#chestGlow"),crack=$("#crack"),historyEl=$("#history"),game=$("#game");
 let balance=0,bet=1,running=false,history=[],audioCtx=null,currentPos={x:5,y:82},gameReady=false,gameMin=1,gameMax=100;
 const multipliers=[1,2,3,4,5,10,20];
-const desktopPoints=[{x:13,y:66},{x:28,y:53},{x:44,y:42},{x:59,y:31},{x:74,y:21},{x:85,y:12},{x:92,y:8}];
-const mobilePoints=[{x:12,y:63},{x:27,y:52},{x:43,y:42},{x:58,y:33},{x:72,y:25},{x:84,y:17},{x:92,y:10}];
-const getPoints=()=>matchMedia("(max-width:700px)").matches?mobilePoints:desktopPoints;
+const points=[{x:13,y:66},{x:28,y:53},{x:44,y:42},{x:59,y:31},{x:74,y:21},{x:85,y:12},{x:92,y:8}];
 function money(n){return "$"+Number(n).toFixed(2)}
-function refresh(){balanceEl.textContent=money(balance);betView.textContent=money(bet);if(mobileBetView)mobileBetView.textContent=money(bet);maxWin.textContent=money(bet*20);const disabled=!gameReady||running||bet<gameMin||bet>gameMax||bet>balance;play.disabled=disabled;if(mobilePlay)mobilePlay.disabled=disabled}
+function refresh(){balanceEl.textContent=money(balance);betView.textContent=money(bet);maxWin.textContent=money(bet*20);play.disabled=!gameReady||running||bet<gameMin||bet>gameMax||bet>balance}
 function setBet(v){if(running)return;bet=Math.max(gameMin,Math.min(gameMax,Number(v)||gameMin));custom.value="";$$(".chip").forEach(b=>b.classList.toggle("active",Number(b.dataset.bet)===bet));refresh()}
 $$(".chip").forEach(b=>b.addEventListener("click",()=>setBet(b.dataset.bet)));
 custom.addEventListener("input",()=>{if(running)return;const n=Number(custom.value);if(n>0){bet=Math.max(gameMin,Math.min(gameMax,n));$$(".chip").forEach(b=>b.classList.remove("active"));refresh()}});
@@ -284,13 +222,13 @@ function clearScene(){banner.classList.remove("show");chestGlow.classList.remove
 function dust(x,y,count=20){const rect=scene.getBoundingClientRect();for(let i=0;i<count;i++){const d=document.createElement("i");d.className="dust";d.style.left=rect.width*x/100+"px";d.style.top=rect.height*y/100+"px";const a=rnd()*Math.PI*2,dist=24+rnd()*85;d.style.setProperty("--dx",Math.cos(a)*dist+"px");d.style.setProperty("--dy",Math.sin(a)*dist+"px");d.style.background=i%3===0?"#53e0aa":i%2===0?"#fff0ad":"#edbd54";scene.appendChild(d);setTimeout(()=>d.remove(),1050)}}
 function update(step){const m=multipliers[step];currentMult.textContent="x"+m;liveWin.textContent=money(bet*m);riskFill.style.width=((step+1)/multipliers.length*100)+"%";riskLabel.textContent=`تم جمع x${m} — القفزة التالية أخطر`;$$(".lv").forEach(v=>v.classList.toggle("on",Number(v.dataset.m)<=m))}
 function animateArc(from,to,duration,step){return new Promise(resolve=>{const start=performance.now(),dx=to.x-from.x,dy=to.y-from.y,arc=12+Math.min(10,Math.abs(dx)*.35);rig.className="squirrel-rig air";motionLine.style.left=from.x+"%";motionLine.style.top=from.y+"%";motionLine.classList.remove("show");void motionLine.offsetWidth;motionLine.classList.add("show");jumpSound(step);function frame(now){let t=Math.min(1,(now-start)/duration);const eased=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;const x=from.x+dx*eased;const baseY=from.y+dy*eased;const lift=Math.sin(Math.PI*t)*arc;const y=baseY-lift;const slope=Math.atan2(dy,dx)*180/Math.PI;const tilt=slope*.28+(t<.5?-7:6);rig.style.left=x+"%";rig.style.top=y+"%";rig.style.setProperty("--tilt",tilt+"deg");shadow.style.left=x+"%";shadow.style.top=(baseY+7)+"%";shadow.style.width=(100-lift*2.1)+"px";shadow.style.opacity=Math.max(.16,.62-lift*.025);if(t<1)requestAnimationFrame(frame);else{currentPos={x:to.x,y:to.y};rig.className="squirrel-rig land";rig.style.setProperty("--tilt","0deg");shadow.style.left=to.x+"%";shadow.style.top=(to.y+7)+"%";shadow.style.width="92px";shadow.style.opacity=.58;setTimeout(resolve,290)}}requestAnimationFrame(frame)})}
-async function jumpTo(step){const p=getPoints()[step],platform=document.querySelector(`.platform[data-step="${step}"]`);$$(".platform").forEach(x=>x.classList.remove("active"));platform.classList.add("active");rig.className="squirrel-rig prep";await wait(220);await animateArc(currentPos,p,760-Math.min(step*35,180),step);platform.classList.remove("active");platform.classList.add("collected");collectSound(step);dust(p.x,p.y+5,17+step*2);update(step);await wait(Math.max(120,250-step*16))}
+async function jumpTo(step){const p=points[step],platform=document.querySelector(`.platform[data-step="${step}"]`);$$(".platform").forEach(x=>x.classList.remove("active"));platform.classList.add("active");rig.className="squirrel-rig prep";await wait(220);await animateArc(currentPos,p,760-Math.min(step*35,180),step);platform.classList.remove("active");platform.classList.add("collected");collectSound(step);dust(p.x,p.y+5,17+step*2);update(step);await wait(Math.max(120,250-step*16))}
 function showResult(o,m,payout){const won=o.type==="win";$("#resultIcon").textContent=won?(m>=10?"👑":"🏆"):"💥";$("#resultTitle").textContent=won?(m>=10?"وصل إلى الصندوق الذهبي!":"تم تثبيت الربح!"):"سقط السنجاب";$("#resultAmount").textContent=won?money(payout):money(0);$("#resultAmount").style.color=won?"var(--green)":"var(--red)";$("#resultText").textContent=won?`انتهت الجولة عند مضاعف x${m}`:`جمع x${m} ثم خسر الجولة`;banner.classList.add("show")}
 function addHistory(o,m,stake,payout){history.unshift({o,m,stake,payout});history=history.slice(0,7);historyEl.innerHTML=history.map(h=>`<div class="row"><span>رهان ${money(h.stake)} • ${h.o==="win"?"فوز x"+h.m:"سقوط بعد x"+h.m}</span><strong class="${h.payout?"pos":"neg"}">${h.payout?"+"+money(h.payout):"-"+money(h.stake)}</strong></div>`).join("")}
 play.addEventListener("click",async()=>{
  if(running||!gameReady)return;
  if(bet>balance){$("#resultIcon").textContent="⚠️";$("#resultTitle").textContent="الرصيد غير كافٍ";$("#resultAmount").textContent=money(balance);$("#resultText").textContent="خفّض قيمة اللعب أو اشحن المحفظة";banner.classList.add("show");return}
- running=true;clearScene();riskLabel.textContent="جاري تجهيز الجولة...";refresh();
+ running=true;clearScene();riskLabel.textContent="السيرفر يحدد النتيجة ويخصم الجولة بأمان...";refresh();
  try{
    const response=await window.adnorSquirrelSecurePlay(bet),data=response.result||{};
    const won=!!data.won;
@@ -298,40 +236,18 @@ play.addEventListener("click",async()=>{
    const o={type:won?"win":"fall",index:Math.max(0,multipliers.indexOf(shownMultiplier))};
    const last=Math.max(0,o.index);await wait(220);
    for(let i=0;i<=last;i++)await jumpTo(i);
-   const p=getPoints()[last],m=multipliers[last];
+   const p=points[last],m=multipliers[last];
    if(o.type==="fall"){game.classList.remove("shake");void game.offsetWidth;game.classList.add("shake");crack.classList.add("show");riskLabel.textContent=`انكسر الغصن بعد x${m}`;await wait(160);loseSound();rig.className="squirrel-rig falling";shadow.style.opacity=0;await wait(1350)}
    else{riskLabel.textContent=`تم تثبيت الربح عند x${m}`;if(last>=5)chestGlow.classList.add("show");winSound(m);dust(p.x,p.y,46);await wait(620)}
    const payout=Number(data.payout||0);balance=Number(data.balances?.realBalance||0)+Number(data.balances?.bonusBalance||0);liveWin.textContent=money(payout);showResult(o,m,payout);addHistory(o.type,m,bet,payout);refresh();await wait(1750);
- }catch(error){
-   const friendly={
-     INSUFFICIENT_PLAYABLE_BALANCE:["الرصيد غير كافٍ","اشحن المحفظة أو خفّض قيمة اللعب."],
-     GAME_TREASURY_LOW:["الجولة غير متاحة الآن","لم يتم خصم أي مبلغ. أعد المحاولة بعد قليل."],
-     GAMES_DISABLED:["الألعاب متوقفة مؤقتًا","لم يتم خصم أي مبلغ."],
-     GAME_NOT_AVAILABLE:["اللعبة غير متاحة الآن","لم يتم خصم أي مبلغ."],
-     ACCOUNT_FROZEN:["الحساب موقوف","راجع الدعم لمعرفة السبب."],
-     SELF_EXCLUDED:["اللعب غير متاح للحساب","انتظر انتهاء مدة الإيقاف المحددة."],
-     GAME_BET_OUT_OF_RANGE:["قيمة اللعب غير مسموحة","اختر مبلغًا ضمن الحدود الظاهرة."],
-     GAME_SETTLEMENT_FAILED:["تعذر إكمال الجولة","تمت حماية الرصيد تلقائيًا."],
-     GAME_USER_HOLD_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."],
-     GAME_TREASURY_ACCOUNTING_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."],
-     GAME_ENGINE_UNAVAILABLE:["اللعبة غير متاحة الآن","لم يتم خصم أي مبلغ. أعد المحاولة بعد قليل."],
-     REQUEST_ID_REUSED:["تعذر تكرار الطلب","حدّث الصفحة ثم أعد المحاولة."],
-     ACCOUNT_LINK_CONFLICT:["الحساب يحتاج ربطًا","راجع الإدارة لربط حساب الرصيد الصحيح. لم يتم خصم أي مبلغ."]
-   };
-   const message=friendly[error.code]||["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."];
-   $("#resultIcon").textContent="⚠️";$("#resultTitle").textContent=message[0];$("#resultAmount").textContent="";$("#resultText").textContent=message[1];riskLabel.textContent="لم تبدأ الجولة";banner.classList.add("show");
-   try{const state=await window.adnorSquirrelRefresh();applyServerState(state)}catch(_e){}
+ }catch(error){$("#resultIcon").textContent="⚠️";$("#resultTitle").textContent="تعذر تنفيذ الجولة";$("#resultAmount").textContent="";$("#resultText").textContent=error.message||"أعد المحاولة";banner.classList.add("show");try{const state=await window.adnorSquirrelRefresh();applyServerState(state)}catch(_e){}
  }finally{running=false;refresh()}
 });
-function applyServerState(data){const g=data?.game||{};gameMin=Number(g.minBet||1);gameMax=Number(g.maxBet||100);bet=Math.max(gameMin,Math.min(gameMax,bet));custom.min=gameMin;custom.max=gameMax;balance=Number(data?.balances?.realBalance||0)+Number(data?.balances?.bonusBalance||0);gameReady=g.enabled!==false;refresh()}
+function applyServerState(data){const g=data?.game||{};gameMin=Number(g.minBet||1);gameMax=Number(g.maxBet||100);bet=Math.max(gameMin,Math.min(gameMax,bet));custom.min=gameMin;custom.max=gameMax;balance=Number(data?.balances?.realBalance||0)+Number(data?.balances?.bonusBalance||0);gameReady=g.enabled!==false;const rtp=document.getElementById('rtpText');if(rtp)rtp.textContent='عائد مستهدف '+Number(data?.targetRtpPercent||0).toFixed(1)+'%';refresh()}
 window.addEventListener('adnor-squirrel-ready',event=>applyServerState(event.detail));
 window.addEventListener('adnor-squirrel-error',event=>{gameReady=false;riskLabel.textContent=event.detail?.message||'تعذر الاتصال بالسيرفر';refresh()});
 reset.addEventListener("click",async()=>{if(running)return;try{const data=await window.adnorSquirrelRefresh();applyServerState(data);riskLabel.textContent='تم تحديث الرصيد من السيرفر'}catch(e){riskLabel.textContent=e.message||'تعذر تحديث الرصيد'}});
 const back=document.getElementById('backToAdnor');if(back)back.addEventListener('click',()=>location.href='app.html#games');
-
-if(mobilePlay)mobilePlay.addEventListener('click',()=>play.click());
-window.addEventListener('resize',()=>{if(!running){clearScene();refresh();}});
-
 clearScene();refresh();
 })();
 </script>

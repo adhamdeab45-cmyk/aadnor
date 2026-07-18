@@ -1,0 +1,24 @@
+ADNOR V215 — الملفات المعدلة
+============================
+
+API:
+- src/server.js
+  * إضافة resolveGameAccount
+  * إضافة auth_user_links
+  * إصلاح عجلة الحظ والتذاكر والسنجاب الذهبي والألعاب المخصصة
+  * إضافة GET /auth/game-account
+  * تحديث API إلى 1.5.2
+- package.json
+  * تحديث الإصدار والوصف
+
+SITE:
+- app.html
+  * تحضير وربط الحساب المالي قبل الجولة
+  * إعادة محاولة آمنة بنفس requestId عند USER_NOT_FOUND
+  * إصلاح بقاء حالة العجلة عالقة بعد الخطأ
+- service-worker.js
+  * كاش V215 جديد
+- version.json
+  * إصدار الموقع 2.1.5
+- database.rules.json
+  * الإبقاء على فهارس الهوية والبورصة من V214

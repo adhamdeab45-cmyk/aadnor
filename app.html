@@ -3196,6 +3196,36 @@ function setCurrentPrize(type){
     $('openWheelBtn').onclick=showWheelOnly;
     if($('openSquirrelBtn'))$('openSquirrelBtn').onclick=()=>{location.href='golden-squirrel.html'};
     if($('backToGamesBtn'))$('backToGamesBtn').onclick=showGamesHome;
+    let adnorPreparedGameAccountUid='';
+    async function adnorPrepareGameAccount(force=false){
+      const user=auth.currentUser;
+      if(!user)throw new Error('يجب تسجيل الدخول أولًا');
+      if(!force&&adnorPreparedGameAccountUid===user.uid)return null;
+      const response=await adnorApiFetch('/auth/game-account',{method:'GET'});
+      const data=await adnorReadApiJson(response);
+      adnorPreparedGameAccountUid=user.uid;
+      if(currentProfile&&data?.account){
+        currentProfile.realBalance=Number(data.account.realBalance||0);
+        currentProfile.bonusBalance=Number(data.account.bonusBalance||0);
+        renderProfile();
+      }
+      return data;
+    }
+    async function adnorSecureWheelSpinRequest(bet,requestId){
+      const run=async()=>{
+        const response=await adnorApiFetch('/game/wheel/spin',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({bet,requestId})});
+        return await adnorReadApiJson(response);
+      };
+      try{return await run()}catch(error){
+        if(!['USER_NOT_FOUND','USER_ACCOUNT_NOT_FOUND'].includes(String(error?.code||'')))throw error;
+        adnorPreparedGameAccountUid='';
+        adnorServerVerifiedUid='';
+        adnorServerAuthUser=null;
+        if(auth.currentUser)await auth.currentUser.getIdToken(true);
+        await adnorPrepareGameAccount(true);
+        return await run();
+      }
+    }
     async function spinWheel(){
       if(isSpinning)return;
       if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');
@@ -3208,9 +3238,9 @@ function setCurrentPrize(type){
       if(bet>maxBet)return toast('أعلى رهان هو '+money(maxBet));
       isSpinning=true;$('spinWheelBtn').disabled=true;$('wheelResultText').className='wheel-result';$('wheelResultText').textContent='السيرفر يجهّز النتيجة الآمنة...';
       try{
+        try{await adnorPrepareGameAccount(false)}catch(accountError){console.warn('GAME_ACCOUNT_PREPARE_SKIPPED',accountError)}
         const requestId=adnorSecureRequestId('wheel');
-        const response=await adnorApiFetch('/game/wheel/spin',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({bet,requestId})});
-        const data=await adnorReadApiJson(response);const result=data.result||{};
+        const data=await adnorSecureWheelSpinRequest(bet,requestId);const result=data.result||{};
         const idx=Math.max(0,Number(result.segmentIndex||0));const angle=360/Math.max(1,wheelSegments.length);const segmentCenter=idx*angle+angle/2;const targetMod=(360-segmentCenter)%360;const currentMod=((wheelRotation%360)+360)%360;const delta=((targetMod-currentMod+360)%360);wheelRotation+=1440+delta;
         const wheel=$('wheelDisc');
         const wheelDone=adnorV210WaitForWheelStop(wheel,4700);
@@ -3224,7 +3254,7 @@ function setCurrentPrize(type){
         adnorV97StopSpinSound(true,win>0);$('wheelResultText').className='wheel-result '+(win>bet?'win':'lose');$('wheelResultText').textContent=win>0?'النتيجة '+(result.label||'')+' — الربح '+money(win)+' — الرصيد الجديد '+money(result.balanceAfter||0)+' — محفوظ عبر السيرفر':'النتيجة '+(result.label||'')+' — لم تربح هذه الجولة.';
         if(win>0)adnorV97ShowEventModal({icon:'🏆',title:'نتيجة عجلة آمنة',message:'تم تحديد النتيجة وتحديث الرصيد من السيرفر.',confetti:true,rows:[{label:'النتيجة',value:result.label||''},{label:'قيمة اللعب',value:money(result.bet||bet)},{label:'الربح',value:money(win)},{label:'الرصيد الجديد',value:money(result.balanceAfter||0)},{label:'الحماية',value:'ADNOR API — SERVER'}],okText:'استلام'});
         isSpinning=false;$('spinWheelBtn').disabled=false;
-      }catch(e){console.error('SECURE_WHEEL_ERROR',e);adnorV97StopSpinSound(false);toast(e.message||'تعذر تنفيذ العجلة عبر السيرفر');isSpinning=false;$('spinWheelBtn').disabled=false;}
+      }catch(e){console.error('SECURE_WHEEL_ERROR',e);adnorV97StopSpinSound(false);const msg=e.message||'تعذر تنفيذ العجلة عبر السيرفر';$('wheelResultText').className='wheel-result lose';$('wheelResultText').textContent='تعذر تنفيذ الجولة — '+msg;toast(msg);isSpinning=false;$('spinWheelBtn').disabled=false;}
     }
     $('spinWheelBtn').onclick=spinWheel;
     $('dailyBoxBtn').onclick=async()=>{if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');const btn=$('dailyBoxBtn');if(btn)btn.disabled=true;try{const requestId=adnorSecureRequestId('lucky_box');const response=await adnorApiFetch('/rewards/lucky-box/open',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({requestId})});const data=await adnorReadApiJson(response);if(currentProfile){currentProfile.lastLuckyBoxAt=Date.now();if(data.amount>0)currentProfile.bonusBalance=Number(data.balanceAfter||currentProfile.bonusBalance||0);renderProfile()}$('dailyBoxText').textContent=data.won?'مبروك! ربحت '+money(data.amount)+' بونص 🎁':'حظ أوفر غدًا. الصندوق لم يعطِ جائزة اليوم.';toast(data.won?'مبروك ربحت بونص':'حظ أوفر غدًا')}catch(e){console.error(e);toast(e.message||'فشل فتح الصندوق')}finally{if(btn)btn.disabled=false}};

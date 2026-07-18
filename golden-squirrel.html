@@ -315,7 +315,8 @@ play.addEventListener("click",async()=>{
      GAME_USER_HOLD_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."],
      GAME_TREASURY_ACCOUNTING_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."],
      GAME_ENGINE_UNAVAILABLE:["اللعبة غير متاحة الآن","لم يتم خصم أي مبلغ. أعد المحاولة بعد قليل."],
-     REQUEST_ID_REUSED:["تعذر تكرار الطلب","حدّث الصفحة ثم أعد المحاولة."]
+     REQUEST_ID_REUSED:["تعذر تكرار الطلب","حدّث الصفحة ثم أعد المحاولة."],
+     ACCOUNT_LINK_CONFLICT:["الحساب يحتاج ربطًا","راجع الإدارة لربط حساب الرصيد الصحيح. لم يتم خصم أي مبلغ."]
    };
    const message=friendly[error.code]||["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."];
    $("#resultIcon").textContent="⚠️";$("#resultTitle").textContent=message[0];$("#resultAmount").textContent="";$("#resultText").textContent=message[1];riskLabel.textContent="لم تبدأ الجولة";banner.classList.add("show");

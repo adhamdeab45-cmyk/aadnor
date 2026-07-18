@@ -1,5 +1,5 @@
 {
-  "version": "V220",
+  "version": "V221",
   "build": "auth-user-link-and-single-core-game-cards",
   "changes": [
     "resolve the authenticated Firebase UID to the existing financial user record by direct key, saved link, email or phone",
@@ -7,5 +7,12 @@
     "wheel, golden squirrel and custom games use the resolved financial account key",
     "hide golden squirrel and wheel from the additional-games grid to prevent duplicate cards",
     "service-worker cache bumped to V220"
+  ],
+  "apiVersion": "1.5.9",
+  "updatedAt": "2026-07-18T00:00:00Z",
+  "features": [
+    "canonicalFinancialAccountV221",
+    "placeholderAccountBypassV221",
+    "singleCoreGameCardsV221"
   ]
 }

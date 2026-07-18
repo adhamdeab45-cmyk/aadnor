@@ -2321,6 +2321,8 @@ function setCurrentPrize(type){
     const ADNOR_AUTH_ME_URL=ADNOR_API_BASE+'/auth/me';
     let adnorServerVerifiedUid='';
     let adnorServerAuthUser=null;
+    let adnorFinancialUid='';
+    let adnorServerFinancialProfile=null;
     let adnorAuthHandlePromise=null;
     let adnorAuthHandleUid='';
 
@@ -2371,12 +2373,12 @@ function setCurrentPrize(type){
         throw err;
       }
 
-      if(!data.user?.uid || data.user.uid!==user.uid){
+      const authUid=String(data.user?.authUid||data.user?.uid||'');
+      if(!authUid || authUid!==user.uid){
         const err=new Error('هوية المستخدم في السيرفر غير مطابقة');
         err.code='SERVER_UID_MISMATCH';
         throw err;
       }
-
       return data;
     }
 
@@ -2390,6 +2392,9 @@ function setCurrentPrize(type){
         const data=await adnorRequestServerAuth(user,false);
         adnorServerVerifiedUid=user.uid;
         adnorServerAuthUser=data.user;
+        adnorFinancialUid=String(data.user?.financialUid||data.user?.databaseUid||user.uid);
+        adnorServerFinancialProfile=data.user?.profile&&typeof data.user.profile==='object'?{...data.user.profile}:null;
+        window.ADNOR_FINANCIAL_UID=adnorFinancialUid;
         window.ADNOR_SERVER_AUTH={verified:true,verifiedAt:Date.now(),user:data.user};
         return data;
       }catch(firstError){
@@ -2397,6 +2402,9 @@ function setCurrentPrize(type){
           const data=await adnorRequestServerAuth(user,true);
           adnorServerVerifiedUid=user.uid;
           adnorServerAuthUser=data.user;
+          adnorFinancialUid=String(data.user?.financialUid||data.user?.databaseUid||user.uid);
+          adnorServerFinancialProfile=data.user?.profile&&typeof data.user.profile==='object'?{...data.user.profile}:null;
+          window.ADNOR_FINANCIAL_UID=adnorFinancialUid;
           window.ADNOR_SERVER_AUTH={verified:true,verifiedAt:Date.now(),user:data.user};
           return data;
         }
@@ -2439,6 +2447,9 @@ function setCurrentPrize(type){
         logClientError('server_auth_failed',e,{code:e?.code||'',status:e?.status||0});
         adnorServerVerifiedUid='';
         adnorServerAuthUser=null;
+        adnorFinancialUid='';
+        adnorServerFinancialProfile=null;
+        window.ADNOR_FINANCIAL_UID='';
         window.ADNOR_SERVER_AUTH={verified:false,error:e?.code||e?.message||'unknown'};
         adnorSetServerAuthStatus('فشل التحقق الآمن من السيرفر. جرّب تسجيل الدخول من جديد.','error');
         toast('تعذر التحقق من الحساب عبر السيرفر');
@@ -2809,7 +2820,7 @@ function setCurrentPrize(type){
     async function v101SaveAvatarFile(file){if(!currentUser)return toast('سجل الدخول أولًا');if(!file)return;try{if(file.size>5*1024*1024)return toast('الصورة كبيرة جدًا، اختر صورة أقل من 5MB');const dataUrl=await v101ResizeImage(file);await update(ref(db,'users/'+currentUser.uid),{photoURL:dataUrl,updatedAt:Date.now()});if($('v101AvatarPreview')){$('v101AvatarPreview').style.backgroundImage='url("'+dataUrl+'")';$('v101AvatarPreview').textContent=''}toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoSaved)}catch(e){console.error(e);toast((V101_LANG[v101Prefs().language]||V101_LANG.ar).photoFail)}}
 
     function renderProfile(){if(!currentProfile)return;const real=Number(currentProfile.realBalance||0),bonus=Number(currentProfile.bonusBalance||0),res=Number(currentProfile.reservedWithdrawalBalance||0);const publicId=adnorPublicIdLabel(currentProfile,currentUser?.uid);setText('balanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBalanceText',balanceHidden?'••••••':money(real+bonus));setText('compactBonusText',balanceHidden?'':'حقيقي '+money(real)+' — بونص '+money(bonus));setText('homeBalanceText',balanceHidden?'••••••':money(real+bonus));setText('homeReserveText','بونص '+money(bonus)+' — محجوز '+money(res));setText('topUserName',currentProfile.name||currentProfile.displayName||'مستخدم ADNOR');setText('topUserId','ID: '+publicId);setText('homeWelcomeText','أهلًا '+(currentProfile.name||'مستخدم ADNOR')+' — رقم حسابك '+publicId);setText('homeStatusText',currentProfile.isFrozen?'مجمّد':(currentProfile.isVIP?'VIP':'نشط'));setText('walletTotalText',money(real+bonus+res));setText('realBalanceText',money(real));setText('bonusBalanceText',money(bonus));setText('reservedBalanceText',money(res));setText('roleText',isAdminUser()?'أدمن رئيسي':'نظام آمن');setText('accountInfo',(currentProfile.name||'مستخدم')+' — ID: '+publicId+' — الحالة: '+(currentProfile.isVIP?'VIP':'نشط'));setupAdminVisibility();renderGameStatus();renderAccountExtras();v101RenderSettings()}
-    function listenProfile(uid){onValue(ref(db,'users/'+uid),snap=>{currentProfile=snap.val()||currentProfile;renderProfile()},err=>console.warn('user profile listen skipped',err));if(ticketUnsub)ticketUnsub();ticketUnsub=onValue(ref(db,'user_tickets/'+uid),snap=>{const val=snap.val()||{};renderUserTicketHistory(val)},err=>console.warn('tickets listen skipped',err));if(transUnsub)transUnsub();transUnsub=onValue(ref(db,'transactions/'+uid),snap=>renderHistory(snap.val()||{}),err=>console.warn('transactions listen skipped',err));if(supportUnsub)supportUnsub();supportUnsub=onValue(ref(db,'support_tickets/'+uid),snap=>renderSupportTickets(snap.val()||{}),err=>console.warn('support tickets listen skipped',err));if(userNotifUnsub)userNotifUnsub();userNotifUnsub=onValue(ref(db,'user_notifications/'+uid),snap=>{currentNotifications=snap.val()||{};renderUserNotifications()},err=>console.warn('notifications listen skipped',err))}
+    function listenProfile(uid){onValue(ref(db,'users/'+uid),snap=>{currentProfile=adnorMergeFinancialProfile(snap.val()||currentProfile||{});renderProfile()},err=>console.warn('user profile listen skipped',err));if(ticketUnsub)ticketUnsub();ticketUnsub=onValue(ref(db,'user_tickets/'+uid),snap=>{const val=snap.val()||{};renderUserTicketHistory(val)},err=>console.warn('tickets listen skipped',err));if(transUnsub)transUnsub();transUnsub=onValue(ref(db,'transactions/'+uid),snap=>renderHistory(snap.val()||{}),err=>console.warn('transactions listen skipped',err));if(supportUnsub)supportUnsub();supportUnsub=onValue(ref(db,'support_tickets/'+uid),snap=>renderSupportTickets(snap.val()||{}),err=>console.warn('support tickets listen skipped',err));if(userNotifUnsub)userNotifUnsub();userNotifUnsub=onValue(ref(db,'user_notifications/'+uid),snap=>{currentNotifications=snap.val()||{};renderUserNotifications()},err=>console.warn('notifications listen skipped',err))}
     function mergeSiteControl(v){const base=JSON.parse(JSON.stringify(defaultSiteControl));v=v||{};base.maintenance=!!v.maintenance;base.maintenanceMessage=String(v.maintenanceMessage||base.maintenanceMessage);base.announcement=String(v.announcement||'');base.modules=Object.assign({},base.modules,v.modules||{});return base}
     function moduleEnabled(p){if(['admin','account','settings','notifications'].includes(p))return true;if(p==='results')return siteControl.modules.results!==false;return siteControl.modules[p]!==false}
     function renderSiteControl(){
@@ -2832,10 +2843,42 @@ function setCurrentPrize(type){
     function listenAiKnowledge(){if(!isAdminUser())return;if(aiKnowledgeUnsub)return;aiKnowledgeUnsub=onValue(ref(db,'ai_knowledge'),snap=>{aiKnowledgeCache=snap.val()||{};renderAdminAi()},err=>console.warn('ai_knowledge read skipped',err))}
     async function adminSaveSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl({maintenance:$('siteMaintenanceInput')?.value==='true',maintenanceMessage:$('siteMaintenanceMessageInput')?.value||'',announcement:$('siteAnnouncementInput')?.value||'',modules:{lottery:!!$('moduleLotteryInput')?.checked,results:!!$('moduleLotteryInput')?.checked,games:!!$('moduleGamesInput')?.checked,wallet:!!$('moduleWalletInput')?.checked,support:!!$('moduleSupportInput')?.checked}});data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);await set(ref(db,'finance_audit/'+Date.now()),{action:'site_control_saved',adminEmail:currentUser?.email||'',createdAt:Date.now(),note:'حفظ إعدادات تشغيل الموقع والأقسام'});toast('تم حفظ إعدادات تشغيل الموقع')}
     async function seedSiteControl(){if(!isAdminUser())return toast('للأدمن فقط');const data=mergeSiteControl(defaultSiteControl);data.updatedAt=Date.now();data.updatedBy=currentUser?.email||'';await set(ref(db,'system_settings/site_control'),data);toast('تم استرجاع التشغيل الطبيعي')}
+    const ADNOR_FINANCIAL_FIELDS=['realBalance','bonusBalance','reservedWithdrawalBalance','freeSpins','freeTickets','freeLotteryTickets','adnBalance','referralBonusEarned','isFrozen','frozen','isVIP','vipUntil','selfExcludedUntil'];
+    function adnorRememberFinancialProfile(profile){
+      if(!profile||typeof profile!=='object')return;
+      adnorServerFinancialProfile={...(adnorServerFinancialProfile||{}),...profile};
+      if(profile.uid)adnorFinancialUid=String(profile.uid);
+      window.ADNOR_FINANCIAL_UID=adnorFinancialUid||currentUser?.uid||'';
+    }
+    function adnorMergeFinancialProfile(base={}){
+      const merged={...(base||{})};
+      const financial=adnorServerFinancialProfile||{};
+      ADNOR_FINANCIAL_FIELDS.forEach(key=>{if(financial[key]!==undefined)merged[key]=financial[key]});
+      ['publicId','userId','accountNumber'].forEach(key=>{if(financial[key])merged[key]=financial[key]});
+      if(financial.name&&!merged.name)merged.name=financial.name;
+      if(financial.displayName&&!merged.displayName)merged.displayName=financial.displayName;
+      merged.authUid=currentUser?.uid||merged.authUid||'';
+      merged.financialUid=adnorFinancialUid||currentUser?.uid||'';
+      return merged;
+    }
+    function adnorApplyGameBalances(balances={}){
+      if(!balances||typeof balances!=='object')return;
+      adnorRememberFinancialProfile({
+        uid:adnorFinancialUid||currentUser?.uid||'',
+        realBalance:Number(balances.realBalance||0),
+        bonusBalance:Number(balances.bonusBalance||0),
+        reservedWithdrawalBalance:Number(balances.reservedWithdrawalBalance||adnorServerFinancialProfile?.reservedWithdrawalBalance||0),
+        freeSpins:balances.freeSpins!==undefined?Number(balances.freeSpins||0):Number(adnorServerFinancialProfile?.freeSpins||0)
+      });
+      currentProfile=adnorMergeFinancialProfile(currentProfile||{});
+      renderProfile();
+    }
+
     function adnorEnterAppFast(user){
       currentUser=user;
-      const previous=(currentProfile&&currentProfile.uid===user.uid)?currentProfile:{};
-      currentProfile=localFallbackProfile(user,previous);
+      if(adnorServerAuthUser?.profile)adnorRememberFinancialProfile(adnorServerAuthUser.profile);
+      const previous=currentProfile||{};
+      currentProfile=adnorMergeFinancialProfile(localFallbackProfile(user,{...previous,...(adnorServerFinancialProfile||{})}));
       if($('loginScreen'))$('loginScreen').style.display='none';
       if($('appScreen'))$('appScreen').style.display='flex';
       renderProfile();
@@ -2844,9 +2887,14 @@ function setCurrentPrize(type){
     }
     async function adnorHydrateProfileInBackground(user){
       try{
+        if(adnorFinancialUid&&adnorFinancialUid!==user.uid){
+          currentProfile=adnorMergeFinancialProfile(currentProfile||{});
+          renderProfile();
+          return;
+        }
         const profile=await adnorTimeout(ensureUser(user),8500,'user profile sync');
         if(currentUser&&currentUser.uid===user.uid){
-          currentProfile={...(currentProfile||{}),...(profile||{})};
+          currentProfile=adnorMergeFinancialProfile({...(currentProfile||{}),...(profile||{})});
           renderProfile();
         }
       }catch(e){
@@ -2876,6 +2924,9 @@ function setCurrentPrize(type){
       window.__adnorRuntimeUid='';
       adnorServerVerifiedUid='';
       adnorServerAuthUser=null;
+      adnorFinancialUid='';
+      adnorServerFinancialProfile=null;
+      window.ADNOR_FINANCIAL_UID='';
       if($('loginScreen'))$('loginScreen').style.display='flex';
       if($('appScreen'))$('appScreen').style.display='none';
       currentProfile=null;
@@ -2927,6 +2978,9 @@ function setCurrentPrize(type){
       }else{
         adnorServerVerifiedUid='';
         adnorServerAuthUser=null;
+        adnorFinancialUid='';
+        adnorServerFinancialProfile=null;
+        window.ADNOR_FINANCIAL_UID='';
         window.ADNOR_SERVER_AUTH={verified:false};
         logClientError('auth_state_null_seen',new Error('Firebase Auth returned null'),{redirectChecked:adnorRedirectChecked,recentLogin:adnorRecentLoginAttempt(25000),manualLogout:adnorManualLogout});
         if(adnorDelayNullAuth('onAuthStateChanged null'))return;
@@ -3180,7 +3234,7 @@ function setCurrentPrize(type){
           adnorV97StartSpinSound(4200);
         });
         await wheelDone;
-        const win=Number(result.win||0);if(currentProfile){currentProfile.realBalance=Number(result.realBalance||0);currentProfile.bonusBalance=Number(result.bonusBalance||0);if(result.freeSpin)currentProfile.freeSpins=Math.max(0,Number(currentProfile.freeSpins||0)-1);renderProfile();}
+        const win=Number(result.win||0);adnorApplyGameBalances({realBalance:result.realBalance,bonusBalance:result.bonusBalance,freeSpins:result.freeSpin?Math.max(0,Number(currentProfile?.freeSpins||0)-1):Number(currentProfile?.freeSpins||0)});
         adnorV97StopSpinSound(true,win>0);$('wheelResultText').className='wheel-result '+(win>bet?'win':'lose');$('wheelResultText').textContent=win>0?'النتيجة '+(result.label||'')+' — الربح '+money(win)+' — الرصيد الجديد '+money(result.balanceAfter||0):'النتيجة '+(result.label||'')+' — لم تربح هذه الجولة.';
         if(win>0)adnorV97ShowEventModal({icon:'🏆',title:'نتيجة عجلة الحظ',message:'تم تحديث النتيجة والرصيد.',confetti:true,rows:[{label:'النتيجة',value:result.label||''},{label:'قيمة اللعب',value:money(result.bet||bet)},{label:'الربح',value:money(win)},{label:'الرصيد الجديد',value:money(result.balanceAfter||0)}],okText:'استلام'});
         isSpinning=false;$('spinWheelBtn').disabled=false;
@@ -3198,10 +3252,11 @@ function setCurrentPrize(type){
           GAME_ENGINE_UNAVAILABLE:'العجلة غير متاحة الآن. أعد المحاولة بعد قليل.',
           GAME_USER_HOLD_FAILED:'تعذر بدء اللفة ولم يتم خصم أي مبلغ.',
           GAME_TREASURY_ACCOUNTING_FAILED:'تعذر بدء اللفة ولم يتم خصم أي مبلغ.',
-          GAME_SETTLEMENT_FAILED:'تعذر إكمال اللفة وتمت حماية الرصيد تلقائيًا.'
+          GAME_SETTLEMENT_FAILED:'تعذر إكمال اللفة وتمت حماية الرصيد تلقائيًا.',
+          ACCOUNT_LINK_CONFLICT:'الحساب يحتاج ربطًا من الإدارة. لم يتم خصم أي مبلغ.'
         };
         toast(friendly[e.code]||'تعذر بدء اللفة. لم يتم خصم أي مبلغ.');
-        try{if(currentUser){const snap=await get(ref(db,'users/'+currentUser.uid));if(snap.exists()){currentProfile=snap.val();renderProfile();}}}catch(_e){}
+        try{const verified=await adnorRequestServerAuth(currentUser,true);adnorServerAuthUser=verified.user;adnorFinancialUid=String(verified.user?.financialUid||verified.user?.databaseUid||currentUser.uid);adnorRememberFinancialProfile(verified.user?.profile||{});currentProfile=adnorMergeFinancialProfile(currentProfile||{});renderProfile();}catch(_e){}
         isSpinning=false;$('spinWheelBtn').disabled=false;
       }
     }
@@ -4876,7 +4931,7 @@ async function adminToggleVip(uid){const snap=await get(ref(db,'users/'+uid));co
         const requestId=adnorSecureRequestId('custom_game');
         const response=await adnorApiFetch('/game/custom/play',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({gameId:g.id,bet,requestId})});
         const data=await adnorReadApiJson(response),won=!!data.won,win=Number(data.payout||0),after=Number(data.balances?.realBalance||0)+Number(data.balances?.bonusBalance||0);
-        if(currentProfile&&data.balances){currentProfile.realBalance=Number(data.balances.realBalance||0);currentProfile.bonusBalance=Number(data.balances.bonusBalance||0);renderProfile()}
+        if(data.balances)adnorApplyGameBalances(data.balances);
         adnorV97Sound(won?'win':'lose');const res=$('v94GameResultText');res.className='v94-game-result '+(won?'':'lose');res.textContent=won?'مبروك! النتيجة X'+Number(data.multiplier||0)+' وربحت '+money(win)+' — الرصيد الجديد '+money(after):'حظ أوفر — خسرت هذه الجولة، الرصيد الجديد '+money(after);
         if(won)adnorV97ShowEventModal({icon:g.icon||'🎮',title:'مبروك! فزت في اللعبة',message:'السيرفر أضاف الربح إلى رصيدك الحقيقي.',confetti:true,rows:[{label:'اللعبة',value:g.name},{label:'قيمة اللعب',value:money(bet)},{label:'المضاعف',value:'X'+Number(data.multiplier||0)},{label:'الربح',value:money(win)},{label:'الرصيد الجديد',value:money(after)}],okText:'استلام'});
       }catch(e){console.error(e);toast(e.message||'تعذر تنفيذ اللعبة عبر السيرفر')}finally{if(btn)btn.disabled=false}

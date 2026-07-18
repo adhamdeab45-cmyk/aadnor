@@ -1,0 +1,21 @@
+ADNOR V217 TEST REPORT
+======================
+
+PASS — Node.js syntax check for API server.
+PASS — 30 inline JavaScript blocks passed syntax checks.
+PASS — All JSON files parsed successfully.
+PASS — No duplicate HTML IDs in site pages.
+PASS — No broken local static links.
+PASS — golden-squirrel.html is absent.
+PASS — No live page, button, admin control, or dedicated API route remains for the removed game.
+PASS — Startup cleanup removes the retired game's active Firebase config and treasury node.
+PASS — Wheel spin API route exists.
+PASS — Admin wheel-control API route exists.
+PASS — 1000x / 5000x / 10000x controls exist.
+PASS — Platform/player percentage controls exist.
+PASS — Wheel treasury KPIs exist in admin.
+PASS — Treasury-aware wheel simulation: uncovered multipliers are excluded and no selected payout exceeds the pool.
+PASS — Free spin outcomes remain capped at 2x.
+
+API version: 1.5.4
+Site version: 2.1.7

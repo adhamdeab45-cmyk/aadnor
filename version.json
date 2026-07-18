@@ -1,6 +1,6 @@
 {
-  "version": "2.1.6",
-  "build": "V216-WHEEL-CONTROL-TREASURY-RTP",
+  "version": "2.1.7",
+  "build": "V217-WHEEL-ONLY-TREASURY-AWARE",
   "changes": [
     "restores admin enable/disable controls for every wheel multiplier including 1000x, 5000x and 10000x",
     "adds editable relative weights with an approximate probability preview",

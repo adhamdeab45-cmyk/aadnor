@@ -290,7 +290,7 @@ function addHistory(o,m,stake,payout){history.unshift({o,m,stake,payout});histor
 play.addEventListener("click",async()=>{
  if(running||!gameReady)return;
  if(bet>balance){$("#resultIcon").textContent="⚠️";$("#resultTitle").textContent="الرصيد غير كافٍ";$("#resultAmount").textContent=money(balance);$("#resultText").textContent="خفّض قيمة اللعب أو اشحن المحفظة";banner.classList.add("show");return}
- running=true;clearScene();riskLabel.textContent="السيرفر يحدد النتيجة ويخصم الجولة بأمان...";refresh();
+ running=true;clearScene();riskLabel.textContent="جاري تجهيز الجولة...";refresh();
  try{
    const response=await window.adnorSquirrelSecurePlay(bet),data=response.result||{};
    const won=!!data.won;
@@ -305,7 +305,7 @@ play.addEventListener("click",async()=>{
  }catch(error){
    const friendly={
      INSUFFICIENT_PLAYABLE_BALANCE:["الرصيد غير كافٍ","اشحن المحفظة أو خفّض قيمة اللعب."],
-     GAME_TREASURY_LOW:["اللعبة متوقفة مؤقتًا","لم يتم خصم أي مبلغ. أعد المحاولة بعد قليل."],
+     GAME_TREASURY_LOW:["الجولة غير متاحة الآن","لم يتم خصم أي مبلغ. أعد المحاولة بعد قليل."],
      GAMES_DISABLED:["الألعاب متوقفة مؤقتًا","لم يتم خصم أي مبلغ."],
      GAME_NOT_AVAILABLE:["اللعبة غير متاحة الآن","لم يتم خصم أي مبلغ."],
      ACCOUNT_FROZEN:["الحساب موقوف","راجع الدعم لمعرفة السبب."],
@@ -313,7 +313,9 @@ play.addEventListener("click",async()=>{
      GAME_BET_OUT_OF_RANGE:["قيمة اللعب غير مسموحة","اختر مبلغًا ضمن الحدود الظاهرة."],
      GAME_SETTLEMENT_FAILED:["تعذر إكمال الجولة","تمت حماية الرصيد تلقائيًا."],
      GAME_USER_HOLD_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."],
-     GAME_TREASURY_ACCOUNTING_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."]
+     GAME_TREASURY_ACCOUNTING_FAILED:["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."],
+     GAME_ENGINE_UNAVAILABLE:["اللعبة غير متاحة الآن","لم يتم خصم أي مبلغ. أعد المحاولة بعد قليل."],
+     REQUEST_ID_REUSED:["تعذر تكرار الطلب","حدّث الصفحة ثم أعد المحاولة."]
    };
    const message=friendly[error.code]||["تعذر بدء الجولة","لم يتم خصم أي مبلغ. أعد المحاولة."];
    $("#resultIcon").textContent="⚠️";$("#resultTitle").textContent=message[0];$("#resultAmount").textContent="";$("#resultText").textContent=message[1];riskLabel.textContent="لم تبدأ الجولة";banner.classList.add("show");

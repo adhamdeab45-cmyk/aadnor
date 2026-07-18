@@ -2175,7 +2175,7 @@ function setCurrentPrize(type){
       }).sort((a,b)=>drawPublishMillis(b)-drawPublishMillis(a));
     }
     function renderLatestDrawPublic(){
-      setText('homeJackpotText',money(getCurrentPrize()));
+      setText('homeJackpotText',money(prizeFor(currentDraw||'daily')));
       let list=publicDrawsList(currentDraw);
       if(!list.length) list=publicDrawsList('all');
       const last=list[0];
@@ -3098,7 +3098,7 @@ function setCurrentPrize(type){
         if(currentProfile&&data.balances){currentProfile.realBalance=Number(data.balances.realBalance||0);currentProfile.bonusBalance=Number(data.balances.bonusBalance||0);renderProfile();}
         const ticket=data.ticket||{};
         adnorV97Sound('ticket');toast('تم شراء البطاقة بأمان عبر السيرفر 👑');
-        adnorV97ShowEventModal({icon:'🎟️',title:'تم شراء البطاقة بأمان',message:'السيرفر خصم الرصيد وحفظ البطاقة في عملية واحدة.',confetti:true,rows:[{label:'رقم البطاقة',value:ticket.number||num},{label:'نوع السحب',value:ticket.drawLabel||drawLabel(currentDraw)},{label:'قيمة البطاقة',value:money(ticket.price||TICKET_PRICE)},{label:'الحماية',value:'ADNOR API — SERVER'},{label:'الحالة',value:'نشطة ومحفوظة'}],okText:'تمام'});
+        adnorV97ShowEventModal({icon:'🎟️',title:'تم شراء البطاقة بأمان',message:'السيرفر خصم الرصيد وحفظ البطاقة في عملية واحدة.',confetti:true,rows:[{label:'رقم البطاقة',value:ticket.number||num},{label:'نوع السحب',value:ticket.drawLabel||drawLabel(currentDraw)},{label:'قيمة البطاقة',value:money(ticket.price||TICKET_PRICE)},{label:'الحالة',value:'نشطة ومحفوظة'}],okText:'تمام'});
         $('ticketNumber').value=randomTicket();
       }catch(e){console.error('SECURE_TICKET_ERROR',e);toast(e.message||'تعذر شراء البطاقة عبر السيرفر');}
       finally{btn.disabled=false;btn.textContent=oldText;}
@@ -3146,48 +3146,8 @@ function setCurrentPrize(type){
     function pickWheel(){const total=wheelSegments.reduce((a,s)=>a+s.w,0);let r=Math.random()*total;for(let i=0;i<wheelSegments.length;i++){r-=wheelSegments[i].w;if(r<=0)return {seg:wheelSegments[i],idx:i}}return {seg:wheelSegments[0],idx:0}}
     function setBet(delta){const el=$('betAmount');let v=Math.max(1,Number(el.value||1)+delta);el.value=v;updateWheelMoneyText()}
 
-    function adnorV113CreatePromoWheelRound(opts={}){
-      const bet=Number(opts.bet||1);
-      const segs=(opts.segments||wheelSegments||[]).map((s,i)=>({
-        segmentIndex:i,
-        label:String(s.label||((Number(s.m||0))+'x')),
-        multiplier:Number(s.m||0),
-        weight:Math.max(0,Number(s.w||0)),
-        payout:Number((bet*Number(s.m||0)).toFixed(2))
-      }));
-      // اللفة الدعائية المجانية آمنة: لا تدخل صندوق الألعاب ولا تسمح بالمضاعفات الضخمة بدون خزنة.
-      const maxPromoPayout=Number((bet*2).toFixed(2));
-      let allowed=segs.filter(x=>x.weight>0 && x.multiplier>=0 && x.payout<=maxPromoPayout);
-      if(!allowed.length){
-        allowed=segs.filter(x=>x.multiplier===0);
-      }
-      if(!allowed.length){
-        allowed=[{segmentIndex:0,label:'0x',multiplier:0,weight:1,payout:0}];
-      }
-      const total=allowed.reduce((a,x)=>a+x.weight,0)||1;
-      let r=Math.random()*total;
-      let pick=allowed[allowed.length-1];
-      for(const x of allowed){r-=x.weight;if(r<=0){pick=x;break}}
-      return {
-        id:'promo-local-'+Date.now(),
-        uid:opts.uid||'',
-        email:opts.email||'',
-        playerName:opts.playerName||'',
-        gameId:'wheel',
-        gameName:'عجلة الحظ',
-        bet,
-        paidFromReal:0,
-        paidFromBonus:0,
-        platformCut:0,
-        playerPoolAdd:0,
-        multiplier:pick.multiplier,
-        label:pick.label,
-        payout:pick.payout,
-        segmentIndex:pick.segmentIndex,
-        promoSpin:true,
-        localPromo:true,
-        createdAt:Date.now()
-      };
+    function adnorV113CreatePromoWheelRound(){
+      throw new Error('PROMO_SPIN_SERVER_ONLY');
     }
     document.querySelectorAll('[data-bet-change]').forEach(b=>b.onclick=()=>setBet(Number(b.dataset.betChange||0)));
     if($('betAmount'))$('betAmount').addEventListener('input',updateWheelMoneyText);
@@ -3206,7 +3166,7 @@ function setCurrentPrize(type){
       let bet=Math.max(minBet,Number($('betAmount').value||minBet));$('betAmount').value=bet;
       if(bet<minBet)return toast('أقل رهان هو '+money(minBet));
       if(bet>maxBet)return toast('أعلى رهان هو '+money(maxBet));
-      isSpinning=true;$('spinWheelBtn').disabled=true;$('wheelResultText').className='wheel-result';$('wheelResultText').textContent='السيرفر يجهّز النتيجة الآمنة...';
+      isSpinning=true;$('spinWheelBtn').disabled=true;$('wheelResultText').className='wheel-result';$('wheelResultText').textContent='جاري تجهيز اللفة...';
       try{
         const requestId=adnorSecureRequestId('wheel');
         const response=await adnorApiFetch('/game/wheel/spin',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({bet,requestId})});
@@ -3214,17 +3174,36 @@ function setCurrentPrize(type){
         const idx=Math.max(0,Number(result.segmentIndex||0));const angle=360/Math.max(1,wheelSegments.length);const segmentCenter=idx*angle+angle/2;const targetMod=(360-segmentCenter)%360;const currentMod=((wheelRotation%360)+360)%360;const delta=((targetMod-currentMod+360)%360);wheelRotation+=1440+delta;
         const wheel=$('wheelDisc');
         const wheelDone=adnorV210WaitForWheelStop(wheel,4700);
-        $('wheelResultText').textContent='العجلة تدور... النتيجة محفوظة بأمان في السيرفر';
+        $('wheelResultText').textContent='العجلة تدور...';
         requestAnimationFrame(()=>{
           if(wheel)wheel.style.transform='rotate('+wheelRotation+'deg)';
           adnorV97StartSpinSound(4200);
         });
         await wheelDone;
         const win=Number(result.win||0);if(currentProfile){currentProfile.realBalance=Number(result.realBalance||0);currentProfile.bonusBalance=Number(result.bonusBalance||0);if(result.freeSpin)currentProfile.freeSpins=Math.max(0,Number(currentProfile.freeSpins||0)-1);renderProfile();}
-        adnorV97StopSpinSound(true,win>0);$('wheelResultText').className='wheel-result '+(win>bet?'win':'lose');$('wheelResultText').textContent=win>0?'النتيجة '+(result.label||'')+' — الربح '+money(win)+' — الرصيد الجديد '+money(result.balanceAfter||0)+' — محفوظ عبر السيرفر':'النتيجة '+(result.label||'')+' — لم تربح هذه الجولة.';
-        if(win>0)adnorV97ShowEventModal({icon:'🏆',title:'نتيجة عجلة آمنة',message:'تم تحديد النتيجة وتحديث الرصيد من السيرفر.',confetti:true,rows:[{label:'النتيجة',value:result.label||''},{label:'قيمة اللعب',value:money(result.bet||bet)},{label:'الربح',value:money(win)},{label:'الرصيد الجديد',value:money(result.balanceAfter||0)},{label:'الحماية',value:'ADNOR API — SERVER'}],okText:'استلام'});
+        adnorV97StopSpinSound(true,win>0);$('wheelResultText').className='wheel-result '+(win>bet?'win':'lose');$('wheelResultText').textContent=win>0?'النتيجة '+(result.label||'')+' — الربح '+money(win)+' — الرصيد الجديد '+money(result.balanceAfter||0):'النتيجة '+(result.label||'')+' — لم تربح هذه الجولة.';
+        if(win>0)adnorV97ShowEventModal({icon:'🏆',title:'نتيجة عجلة الحظ',message:'تم تحديث النتيجة والرصيد.',confetti:true,rows:[{label:'النتيجة',value:result.label||''},{label:'قيمة اللعب',value:money(result.bet||bet)},{label:'الربح',value:money(win)},{label:'الرصيد الجديد',value:money(result.balanceAfter||0)}],okText:'استلام'});
         isSpinning=false;$('spinWheelBtn').disabled=false;
-      }catch(e){console.error('SECURE_WHEEL_ERROR',e);adnorV97StopSpinSound(false);toast(e.message||'تعذر تنفيذ العجلة عبر السيرفر');isSpinning=false;$('spinWheelBtn').disabled=false;}
+      }catch(e){
+        console.error('SECURE_WHEEL_ERROR',e);
+        adnorV97StopSpinSound(false);
+        const friendly={
+          INSUFFICIENT_PLAYABLE_BALANCE:'الرصيد غير كافٍ لهذه اللفة.',
+          WHEEL_DISABLED:'العجلة متوقفة مؤقتًا.',
+          GAMES_DISABLED:'الألعاب متوقفة مؤقتًا.',
+          BET_BELOW_MINIMUM:'قيمة الرهان أقل من الحد المسموح.',
+          BET_ABOVE_MAXIMUM:'قيمة الرهان أعلى من الحد المسموح.',
+          ACCOUNT_FROZEN:'الحساب موقوف مؤقتًا.',
+          SELF_EXCLUDED:'اللعب غير متاح للحساب حاليًا.',
+          GAME_ENGINE_UNAVAILABLE:'العجلة غير متاحة الآن. أعد المحاولة بعد قليل.',
+          GAME_USER_HOLD_FAILED:'تعذر بدء اللفة ولم يتم خصم أي مبلغ.',
+          GAME_TREASURY_ACCOUNTING_FAILED:'تعذر بدء اللفة ولم يتم خصم أي مبلغ.',
+          GAME_SETTLEMENT_FAILED:'تعذر إكمال اللفة وتمت حماية الرصيد تلقائيًا.'
+        };
+        toast(friendly[e.code]||'تعذر بدء اللفة. لم يتم خصم أي مبلغ.');
+        try{if(currentUser){const snap=await get(ref(db,'users/'+currentUser.uid));if(snap.exists()){currentProfile=snap.val();renderProfile();}}}catch(_e){}
+        isSpinning=false;$('spinWheelBtn').disabled=false;
+      }
     }
     $('spinWheelBtn').onclick=spinWheel;
     $('dailyBoxBtn').onclick=async()=>{if(!currentUser||!currentProfile)return toast('سجل الدخول أولًا');const btn=$('dailyBoxBtn');if(btn)btn.disabled=true;try{const requestId=adnorSecureRequestId('lucky_box');const response=await adnorApiFetch('/rewards/lucky-box/open',{method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},body:JSON.stringify({requestId})});const data=await adnorReadApiJson(response);if(currentProfile){currentProfile.lastLuckyBoxAt=Date.now();if(data.amount>0)currentProfile.bonusBalance=Number(data.balanceAfter||currentProfile.bonusBalance||0);renderProfile()}$('dailyBoxText').textContent=data.won?'مبروك! ربحت '+money(data.amount)+' بونص 🎁':'حظ أوفر غدًا. الصندوق لم يعطِ جائزة اليوم.';toast(data.won?'مبروك ربحت بونص':'حظ أوفر غدًا')}catch(e){console.error(e);toast(e.message||'فشل فتح الصندوق')}finally{if(btn)btn.disabled=false}};
@@ -3370,7 +3349,7 @@ function setCurrentPrize(type){
         const arr=getSupportContactArray();
         grid.innerHTML=arr.length?arr.map(c=>{const url=normalizeContactUrl(c.id,c.url,c.subtitle);return '<a class="contact-card" href="'+escapeHtml(url)+'" target="_blank" rel="noopener"><i>'+escapeHtml(c.icon||'💬')+'</i><b>'+escapeHtml(c.name||c.id||'تواصل')+'</b><span>'+escapeHtml(c.subtitle||c.url||'اضغط للتواصل')+'</span></a>'}).join(''):'<div class="contact-card"><i>💬</i><b>لا توجد قنوات مفعّلة</b><span>سيضيفها الأدمن قريبًا</span></div>';
       }
-      renderDepositSupportContacts();
+      renderAgentSupportContacts();
       renderAdminSupportContacts();
     }
     function listenSupportContacts(){
@@ -4913,12 +4892,12 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
        ADNOR V96 — Game Treasury + Multiplier Control
        ========================================================= */
     const V96_MULTIPLIER_KEYS=['1','2','5','10','100','10000'];
-    const v96DefaultSettings={platformCutPercent:50,reportHour:20,carryOverPlayerPool:true,multipliers:{'1':{enabled:true,weight:520},'2':{enabled:true,weight:280},'5':{enabled:true,weight:120},'10':{enabled:true,weight:55},'100':{enabled:false,weight:20},'10000':{enabled:false,weight:1}},updatedAt:0};
+    const v96DefaultSettings={platformCutPercent:5,reportHour:20,carryOverPlayerPool:true,multipliers:{'1':{enabled:true,weight:520},'2':{enabled:true,weight:280},'5':{enabled:true,weight:120},'10':{enabled:true,weight:55},'100':{enabled:false,weight:20},'10000':{enabled:false,weight:1}},updatedAt:0};
     const v96DefaultTreasury={totalBetsReal:0,totalBetsBonus:0,platformProfit:0,playerPool:0,paidOut:0,roundsCount:0,lastReportDate:'',updatedAt:0};
     let v96Settings=JSON.parse(JSON.stringify(v96DefaultSettings)),v96Treasury=JSON.parse(JSON.stringify(v96DefaultTreasury)),v96Rounds={},v96Reports={},v96Unsubs=[],v96AdminAttached=false;
     function v96Money(n){return Math.round((Number(n||0)+Number.EPSILON)*100)/100}
     function v96Random(){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]/4294967295}
-    function v96MergeSettings(v){const b=JSON.parse(JSON.stringify(v96DefaultSettings));v=v||{};b.platformCutPercent=Math.min(90,Math.max(0,Number(v.platformCutPercent??b.platformCutPercent)));b.reportHour=Math.min(23,Math.max(0,Number(v.reportHour??b.reportHour)));b.carryOverPlayerPool=v.carryOverPlayerPool!==false;V96_MULTIPLIER_KEYS.forEach(k=>{b.multipliers[k]=Object.assign({},b.multipliers[k],(v.multipliers||{})[k]||{});b.multipliers[k].enabled=!!b.multipliers[k].enabled;b.multipliers[k].weight=Math.max(0,Number(b.multipliers[k].weight||0))});b.updatedAt=Number(v.updatedAt||0);return b}
+    function v96MergeSettings(v){const b=JSON.parse(JSON.stringify(v96DefaultSettings));v=v||{};b.platformCutPercent=Math.min(30,Math.max(0,Number(v.platformCutPercent??b.platformCutPercent)>30?5:Number(v.platformCutPercent??b.platformCutPercent)));b.reportHour=Math.min(23,Math.max(0,Number(v.reportHour??b.reportHour)));b.carryOverPlayerPool=v.carryOverPlayerPool!==false;V96_MULTIPLIER_KEYS.forEach(k=>{b.multipliers[k]=Object.assign({},b.multipliers[k],(v.multipliers||{})[k]||{});b.multipliers[k].enabled=!!b.multipliers[k].enabled;b.multipliers[k].weight=Math.max(0,Number(b.multipliers[k].weight||0))});b.updatedAt=Number(v.updatedAt||0);return b}
     function v96MergeTreasury(v){return Object.assign({},v96DefaultTreasury,v||{})}
     function v96TodayKey(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'UTC',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,p)=>(a[p.type]=p.value,a),{});return parts.year+'-'+parts.month+'-'+parts.day}
     function v96TurkeyHour(){return Number(new Intl.DateTimeFormat('en-US',{timeZone:'UTC',hour:'2-digit',hour12:false}).format(new Date()))}
@@ -4930,52 +4909,33 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     function v96AllowedBySegments(bet,pool,segments){const out=[];(segments||[]).forEach((s,i)=>{const m=Number(s.m||0);const payout=v96Money(bet*m);if(m<=0){out.push({multiplier:0,label:String(s.label||'0x'),payout:0,weight:Math.max(.001,Number(s.w||1)),segmentIndex:i});return}if(v96MultiplierAllowed(m)&&payout<=pool){out.push({multiplier:m,label:String(s.label||('X'+m)),payout,weight:Math.max(0,Number(s.w||0))*v96MultiplierWeight(m),segmentIndex:i})}});return out.filter(x=>Number(x.weight||0)>0)}
     function v96PickWeighted(list){if(!list||!list.length)return {multiplier:0,label:'0x',payout:0,weight:1,segmentIndex:0};const total=list.reduce((a,x)=>a+Number(x.weight||0),0);if(total<=0)return {multiplier:0,label:'0x',payout:0,weight:1,segmentIndex:0};let r=v96Random()*total;for(const x of list){r-=Number(x.weight||0);if(r<=0)return x}return list[list.length-1]}
     async function v96CreateGameRound(opts={}){
-      const uid=opts.uid||currentUser?.uid||'unknown';
+      if(!currentUser)throw new Error('سجل الدخول أولًا');
+      const gameId=String(opts.gameId||'').trim();
       const bet=v96Money(opts.bet||0);
-      if(!bet||bet<=0)throw new Error('قيمة اللعب غير صحيحة');
-      const paidFromReal=v96Money(opts.paidFromReal||0),paidFromBonus=v96Money(opts.paidFromBonus||0);
-      const settings=v96MergeSettings(v96Settings);
-      let finalRound=null;
-      let platformCut=0,playerPoolAdd=0;
-      const now=Date.now();
-      /* */
-      const poolTx=await runTransaction(ref(db,'game_treasury/current/playerPool'),cur=>{
-        const poolBefore=v96Money(cur||0);
-        platformCut=v96Money(paidFromReal*Number(settings.platformCutPercent||50)/100);
-        playerPoolAdd=v96Money(paidFromReal-platformCut);
-        const poolAfterIncome=v96Money(poolBefore+playerPoolAdd);
-        let pick;
-        if(opts.forceLose){
-          pick={multiplier:0,label:'0x',payout:0,weight:1,segmentIndex:0};
-        }else if(Array.isArray(opts.segments)){
-          pick=v96PickWeighted(v96AllowedBySegments(bet,poolAfterIncome,opts.segments));
-        }else{
-          pick=v96PickWeighted(v96AllowedByMultipliers(bet,poolAfterIncome,Number(opts.maxMultiplier||0)));
-        }
-        const payout=v96Money(pick.payout||0);
-        finalRound={id:'',uid,email:opts.email||'',playerName:opts.playerName||'',gameId:opts.gameId||'game',gameName:opts.gameName||'لعبة',bet,paidFromReal,paidFromBonus,platformCut,playerPoolAdd,poolBefore,poolAfterIncome,multiplier:Number(pick.multiplier||0),label:pick.label||((Number(pick.multiplier||0))+'x'),payout,playerPoolAfter:v96Money(Math.max(0,poolAfterIncome-payout)),segmentIndex:Number(pick.segmentIndex||0),promoSpin:!!opts.promoSpin,forcedLoss:!!opts.forceLose,createdAt:now,createdAtText:v96NowText(),source:'v180_strict_treasury_pool'};
-        return finalRound.playerPoolAfter;
+      if(!gameId||!bet||bet<=0)throw new Error('قيمة اللعب غير صحيحة');
+      const requestId=adnorSecureRequestId(gameId==='wheel'?'wheel':'custom_game');
+      const endpoint=gameId==='wheel'?'/game/wheel/spin':'/game/custom/play';
+      const payload=gameId==='wheel'?{bet,requestId}:{gameId,bet,requestId};
+      const response=await adnorApiFetch(endpoint,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-Request-ID':requestId},
+        body:JSON.stringify(payload)
       });
-      if(!poolTx.committed || !finalRound)throw new Error('تعذر تجهيز صندوق اللعبة');
-      await Promise.allSettled([
-        runTransaction(ref(db,'game_treasury/current/totalBetsReal'),cur=>v96Money(Number(cur||0)+paidFromReal)),
-        runTransaction(ref(db,'game_treasury/current/totalBetsBonus'),cur=>v96Money(Number(cur||0)+paidFromBonus)),
-        runTransaction(ref(db,'game_treasury/current/platformProfit'),cur=>v96Money(Number(cur||0)+platformCut)),
-        runTransaction(ref(db,'game_treasury/current/paidOut'),cur=>v96Money(Number(cur||0)+Number(finalRound.payout||0))),
-        runTransaction(ref(db,'game_treasury/current/roundsCount'),cur=>Number(cur||0)+1),
-        set(ref(db,'game_treasury/current/updatedAt'),Date.now())
-      ]);
-      const roundRef=push(ref(db,'game_treasury/rounds'));
-      finalRound.id=roundRef.key;
-      await Promise.allSettled([
-        set(ref(db,'game_treasury/rounds/'+finalRound.id),finalRound),
-        set(ref(db,'game_treasury/user_rounds/'+uid+'/'+finalRound.id),finalRound)
-      ]);
-      return finalRound;
+      const data=await adnorReadApiJson(response);
+      const round=gameId==='wheel'?(data.result||{}):data;
+      if(currentProfile){
+        const balances=round.balances||{};
+        if(round.realBalance!==undefined)currentProfile.realBalance=Number(round.realBalance||0);
+        else if(balances.realBalance!==undefined)currentProfile.realBalance=Number(balances.realBalance||0);
+        if(round.bonusBalance!==undefined)currentProfile.bonusBalance=Number(round.bonusBalance||0);
+        else if(balances.bonusBalance!==undefined)currentProfile.bonusBalance=Number(balances.bonusBalance||0);
+        renderProfile();
+      }
+      return round;
     }
     function v96RenderMultiplierControls(){const box=$('v96MultipliersBox');if(!box)return;box.innerHTML=V96_MULTIPLIER_KEYS.map(k=>{const d=v96Settings.multipliers[k]||{};return '<label class="v96-mult-card"><input class="v96MultEnabled" data-m="'+k+'" type="checkbox" '+(d.enabled?'checked':'')+'><div><b>X'+k+'</b><small>تفعيل ووزن ظهور المضاعف</small></div><input class="v96MultWeight" data-m="'+k+'" type="number" min="0" step="1" value="'+Number(d.weight||0)+'"></label>'}).join('')}
-    function v96RenderAdminTreasury(){if(!$('v96TreasuryAdminCard'))return;if($('v96TotalRealBets'))$('v96TotalRealBets').textContent=money(v96Treasury.totalBetsReal||0);if($('v96TotalBonusBets'))$('v96TotalBonusBets').textContent=money(v96Treasury.totalBetsBonus||0);if($('v96PlatformProfit'))$('v96PlatformProfit').textContent=money(v96Treasury.platformProfit||0);if($('v96PlayerPool'))$('v96PlayerPool').textContent=money(v96Treasury.playerPool||0);if($('v96PaidOut'))$('v96PaidOut').textContent=money(v96Treasury.paidOut||0);if($('v96RoundsCount'))$('v96RoundsCount').textContent=String(Number(v96Treasury.roundsCount||0));if($('v96CutPercent')&&document.activeElement!==$('v96CutPercent'))$('v96CutPercent').value=Number(v96Settings.platformCutPercent||50);if($('v96ReportHour')&&document.activeElement!==$('v96ReportHour'))$('v96ReportHour').value=Number(v96Settings.reportHour||20);if($('v96CarryOver'))$('v96CarryOver').value=String(v96Settings.carryOverPlayerPool!==false);v96RenderMultiplierControls();const logBox=$('v96RoundsLog');if(logBox){const rows=Object.values(v96Rounds||{}).sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0)).slice(0,45);if(!rows.length){logBox.innerHTML='<div class="admin-empty">لا يوجد سجل V96 بعد.</div>'}else{logBox.innerHTML=rows.map(r=>'<div class="admin-row v96-round-row"><div><h4>'+escapeHtml(r.gameName||'لعبة')+' <span class="admin-badge '+(Number(r.payout||0)>0?'approved':'rejected')+'">'+escapeHtml(r.label||'0x')+'</span></h4><p>'+escapeHtml(r.email||r.playerName||r.uid||'مستخدم')+'<br><span class="v96-muted-line">الرهان: '+money(r.bet)+' — حقيقي: <span class="v96-source-real">'+money(r.paidFromReal)+'</span> — بونص: <span class="v96-source-bonus">'+money(r.paidFromBonus)+'</span> — ربح المنصة: '+money(r.platformCut)+'<br>الربح المدفوع: '+money(r.payout)+' — الصندوق بعد الجولة: '+money(r.playerPoolAfter)+' — '+escapeHtml(r.createdAtText||new Date(r.createdAt||Date.now()).toLocaleString(undefined))+'</span></p></div><strong>'+money(Number(r.payout||0)-Number(r.bet||0))+'</strong></div>').join('')}}}
-    async function v96SaveSettings(){if(!isAdminUser())return toast('للأدمن فقط');const multipliers={};V96_MULTIPLIER_KEYS.forEach(k=>{multipliers[k]={enabled:!!document.querySelector('.v96MultEnabled[data-m="'+k+'"]')?.checked,weight:Math.max(0,Number(document.querySelector('.v96MultWeight[data-m="'+k+'"]')?.value||0))}});const cfg={platformCutPercent:Math.min(90,Math.max(0,Number($('v96CutPercent')?.value||50))),reportHour:Math.min(23,Math.max(0,Number($('v96ReportHour')?.value||20))),carryOverPlayerPool:$('v96CarryOver')?.value!=='false',multipliers,updatedAt:Date.now(),updatedBy:currentUser?.email||''};await set(ref(db,'game_treasury/settings'),cfg);toast('تم حفظ إعدادات صندوق الألعاب V96')}
+    function v96RenderAdminTreasury(){if(!$('v96TreasuryAdminCard'))return;if($('v96TotalRealBets'))$('v96TotalRealBets').textContent=money(v96Treasury.totalBetsReal||0);if($('v96TotalBonusBets'))$('v96TotalBonusBets').textContent=money(v96Treasury.totalBetsBonus||0);if($('v96PlatformProfit'))$('v96PlatformProfit').textContent=money(v96Treasury.platformProfit||0);if($('v96PlayerPool'))$('v96PlayerPool').textContent=money(v96Treasury.playerPool||0);if($('v96PaidOut'))$('v96PaidOut').textContent=money(v96Treasury.paidOut||0);if($('v96RoundsCount'))$('v96RoundsCount').textContent=String(Number(v96Treasury.roundsCount||0));if($('v96CutPercent')&&document.activeElement!==$('v96CutPercent'))$('v96CutPercent').value=Number(v96Settings.platformCutPercent??5);if($('v96ReportHour')&&document.activeElement!==$('v96ReportHour'))$('v96ReportHour').value=Number(v96Settings.reportHour||20);if($('v96CarryOver'))$('v96CarryOver').value=String(v96Settings.carryOverPlayerPool!==false);v96RenderMultiplierControls();const logBox=$('v96RoundsLog');if(logBox){const rows=Object.values(v96Rounds||{}).sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0)).slice(0,45);if(!rows.length){logBox.innerHTML='<div class="admin-empty">لا يوجد سجل V96 بعد.</div>'}else{logBox.innerHTML=rows.map(r=>'<div class="admin-row v96-round-row"><div><h4>'+escapeHtml(r.gameName||'لعبة')+' <span class="admin-badge '+(Number(r.payout||0)>0?'approved':'rejected')+'">'+escapeHtml(r.label||'0x')+'</span></h4><p>'+escapeHtml(r.email||r.playerName||r.uid||'مستخدم')+'<br><span class="v96-muted-line">الرهان: '+money(r.bet)+' — حقيقي: <span class="v96-source-real">'+money(r.paidFromReal)+'</span> — بونص: <span class="v96-source-bonus">'+money(r.paidFromBonus)+'</span> — ربح المنصة: '+money(r.platformCut)+'<br>الربح المدفوع: '+money(r.payout)+' — الصندوق بعد الجولة: '+money(r.playerPoolAfter)+' — '+escapeHtml(r.createdAtText||new Date(r.createdAt||Date.now()).toLocaleString(undefined))+'</span></p></div><strong>'+money(Number(r.payout||0)-Number(r.bet||0))+'</strong></div>').join('')}}}
+    async function v96SaveSettings(){if(!isAdminUser())return toast('للأدمن فقط');const multipliers={};V96_MULTIPLIER_KEYS.forEach(k=>{multipliers[k]={enabled:!!document.querySelector('.v96MultEnabled[data-m="'+k+'"]')?.checked,weight:Math.max(0,Number(document.querySelector('.v96MultWeight[data-m="'+k+'"]')?.value||0))}});const cfg={platformCutPercent:Math.min(30,Math.max(0,Number($('v96CutPercent')?.value||5))),reportHour:Math.min(23,Math.max(0,Number($('v96ReportHour')?.value||20))),carryOverPlayerPool:$('v96CarryOver')?.value!=='false',multipliers,updatedAt:Date.now(),updatedBy:currentUser?.email||''};await set(ref(db,'game_treasury/settings'),cfg);toast('تم حفظ إعدادات صندوق الألعاب V96')}
     async function v96SeedTreasury(){
       if(!isAdminUser())return toast('للأدمن فقط');
       const now=Date.now();

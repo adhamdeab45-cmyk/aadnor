@@ -1,11 +1,12 @@
 {
-  "version": "V216",
-  "build": "squirrel-compact-settlement-mobile-layout",
+  "version": "V219",
+  "build": "unified-fast-game-settlement",
   "changes": [
-    "compact per-game treasury settlement instead of transacting the entire game treasury tree",
-    "idempotent user hold, compact treasury accounting, payout finalize and rollback protection",
-    "mobile game screen keeps the squirrel, multipliers, bet buttons and play button together",
-    "server now returns an explicit squirrel error code instead of an unnamed internal error",
-    "new service worker cache forces the corrected game page"
+    "one isolated settlement engine for wheel, golden squirrel and custom games",
+    "small per-user and per-game Firebase transactions instead of whole-database game transactions",
+    "automatic safe outcome filtering based on the actual game pool",
+    "idempotent hold, treasury accounting, payout finalization, refund and rollback protection",
+    "mobile squirrel layout and player-facing messages remain clean without treasury percentages or technical codes",
+    "new service-worker cache forces the corrected site files"
   ]
 }

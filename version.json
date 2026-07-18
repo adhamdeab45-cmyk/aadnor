@@ -1,11 +1,12 @@
 {
-  "version": "2.1.5",
-  "build": "V215-GAME-ACCOUNT-LINK-WHEEL-FIX",
+  "version": "2.1.6",
+  "build": "V216-WHEEL-CONTROL-TREASURY-RTP",
   "changes": [
-    "repairs the secure wheel USER_NOT_FOUND failure by resolving the authenticated UID to the financial user record",
-    "adds an authenticated game-account preparation endpoint and one safe retry with the same request id",
-    "keeps idempotency so a retry cannot charge the wheel twice",
-    "updates the wheel status text after server errors instead of leaving it stuck on preparing",
-    "keeps Firebase indexes and DOM cleanup from V214"
+    "restores admin enable/disable controls for every wheel multiplier including 1000x, 5000x and 10000x",
+    "adds editable relative weights with an approximate probability preview",
+    "adds linked platform percentage and player RTP percentage controls",
+    "shows the wheel treasury, bets, platform reserve, payouts, actual RTP and maximum liability",
+    "keeps full treasury coverage protection configurable and enforced on the server",
+    "saves wheel segments only through authenticated server validation"
   ]
 }

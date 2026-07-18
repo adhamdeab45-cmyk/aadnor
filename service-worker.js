@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v215-game-account-wheel-fix-1';
+const CACHE='adnor-v216-wheel-control-treasury-rtp-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/golden-squirrel.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

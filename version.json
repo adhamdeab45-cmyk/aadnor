@@ -1,13 +1,12 @@
 {
-  "version": "2.1.9",
-  "build": "V219-FAST-WHEEL-EXCHANGE",
+  "version": "2.2.0",
+  "build": "V220-ACCOUNT-LINK-REPAIR",
   "changes": [
-    "starts the lucky wheel animation immediately while the secure result is processed in the background",
-    "moves wheel accounting from a full-database transaction to small user and game-treasury transactions",
-    "caches wheel configuration briefly without caching financial balances",
-    "warms the exchange transaction state and removes repeated full preflight reads on consecutive orders",
-    "caches public market snapshots briefly and reduces heavy trade-history queries",
-    "refreshes exchange panels in the background instead of blocking the order button",
-    "keeps V218 authoritative draw scheduling unchanged"
+    "repairs and links legacy financial accounts before wheel or exchange operations",
+    "uses the visible numeric public user ID as a safe account-resolution hint",
+    "automatically creates a canonical server profile only when no legacy financial profile exists",
+    "keeps the wheel animation immediate while account repair and secure settlement run on the server",
+    "routes exchange balances, terms, buy, sell, and cancellation through the resolved financial UID",
+    "keeps V218 draw scheduling and V219 speed optimizations unchanged"
   ]
 }

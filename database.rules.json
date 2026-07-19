@@ -212,7 +212,11 @@
         "publicId",
         "userId",
         "accountNumber",
-        "createdAt"
+        "createdAt",
+        "email",
+        "phoneNumber",
+        "phone",
+        "mobile"
       ]
     },
     "admins": {

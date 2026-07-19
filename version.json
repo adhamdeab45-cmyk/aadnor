@@ -1,12 +1,11 @@
 {
-  "version": "2.2.0",
-  "build": "V220-ACCOUNT-LINK-REPAIR",
+  "version": "2.2.1",
+  "build": "V221-WHEEL-ACCOUNT-TRANSACTION-REPAIR",
   "changes": [
-    "repairs and links legacy financial accounts before wheel or exchange operations",
-    "uses the visible numeric public user ID as a safe account-resolution hint",
-    "automatically creates a canonical server profile only when no legacy financial profile exists",
-    "keeps the wheel animation immediate while account repair and secure settlement run on the server",
-    "routes exchange balances, terms, buy, sell, and cancellation through the resolved financial UID",
-    "keeps V218 draw scheduling and V219 speed optimizations unchanged"
+    "fixes the repeated USER_ACCOUNT_NOT_FOUND error caused by Firebase transactions temporarily starting with null",
+    "reuses the server-verified financial profile instead of replacing it with a missing-account probe",
+    "adds an authoritative root fallback that searches by auth UID, financial UID, email, phone, and public user ID",
+    "keeps the wheel animation immediate and preserves idempotent debit and payout protection",
+    "keeps V218 draw scheduling, V219 speed improvements, and V220 exchange account linking unchanged"
   ]
 }

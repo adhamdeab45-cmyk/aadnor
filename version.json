@@ -1,11 +1,11 @@
 {
-  "version": "2.2.2",
-  "build": "V222-DRAW-PUBLISH-FIRST-SETTLEMENT-RETRY",
+  "version": "2.2.3",
+  "build": "V223-WITHDRAW-FINANCIAL-ACCOUNT-NULL-TX-REPAIR",
   "changes": [
-    "publishes scheduled lottery results to users at the due time before prize settlement can block the display",
-    "repairs old winner account links by resolving the financial UID from ticket UID, auth links, email, and account fields",
-    "retries prize credit and ticket settlement automatically without duplicating the prize",
-    "shows settlement status and retry errors inside the admin draw results panel",
-    "keeps V221 wheel account repair, V220 exchange identity linking, and V219 speed improvements"
+    "withdrawals now resolve the same financial UID used by the wheel and exchange before checking the real balance",
+    "server-owned auth_user_links is preferred over a duplicate zero-balance Firebase Auth profile",
+    "withdrawal reservation handles Firebase transaction callbacks that temporarily start with null",
+    "the client repairs the financial account link once and retries safely with the same request ID",
+    "keeps V222 draw scheduling, V221 wheel account repair, and V219 speed improvements"
   ]
 }

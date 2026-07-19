@@ -883,7 +883,7 @@
 
 .v144-safe-note{display:inline-block;margin-top:5px;color:#8fe7ff;font-weight:1000}.v144-gold-track{gap:16px}.v144-sep{color:#ffd45d;opacity:.7}.v108-status b{color:#ffe184}.v108-status{min-height:82px}.v104-ticker-track.v144-gold-track{animation-duration:38s!important}
 </style>
-<meta content="V222_DRAW_PUBLISH_FIRST_SETTLEMENT_RETRY" name="adnor-version"/>
+<meta content="V223_WITHDRAW_FINANCIAL_ACCOUNT_FIX" name="adnor-version"/>
 <style id="adnor-v120-lottery-result-layout-fix">
 /* */
 #page-lottery{
@@ -3399,17 +3399,36 @@ function setCurrentPrize(type){
       if(!wm)return setWithdrawStatus('اختر طريقة السحب أولًا.','err');
       if(wm.minWithdraw&&amount<Number(wm.minWithdraw))return setWithdrawStatus('أقل سحب عبر '+wm.name+' هو '+wm.minWithdraw+' USD.','err');
       if(!details||details.length<8)return setWithdrawStatus('اكتب بيانات الاستلام كاملة.','err');
-      if(!(await uiConfirm('سيحجز السيرفر '+money(amount)+' حتى قرار الإدارة. هل تريد المتابعة؟')))return;
-      try{
-        btn.disabled=true;setWithdrawStatus('جاري حجز المبلغ وإرسال الطلب عبر السيرفر...','work');
+      if(!(await uiConfirm('سيحجز السيرفر '+money(amount)+' من الرصيد الحقيقي حتى قرار الإدارة. هل تريد المتابعة؟')))return;
+      const requestId=adnorSecureRequestId('withdraw');
+      const sendRequest=async()=>{
+        const publicId=adnorPublicIdOf(currentProfile||{});
         const response=await adnorApiFetch('/finance/withdrawal/request',{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({requestId:adnorSecureRequestId('withdraw'),amount,methodId:withdrawMethod,details})
+          method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},
+          body:JSON.stringify({requestId,amount,methodId:withdrawMethod,details,publicId})
         });
-        const data=await adnorReadApiJson(response);
+        return await adnorReadApiJson(response);
+      };
+      try{
+        btn.disabled=true;setWithdrawStatus('جاري التحقق من المحفظة المالية وحجز المبلغ...','work');
+        await adnorPrepareGameAccount(false).catch(()=>null);
+        let data;
+        try{data=await sendRequest()}catch(firstError){
+          const retryCodes=['INSUFFICIENT_REAL_BALANCE','USER_NOT_FOUND','USER_ACCOUNT_NOT_FOUND','DATABASE_TRANSACTION_FAILED'];
+          if(!retryCodes.includes(String(firstError?.code||'')))throw firstError;
+          adnorPreparedGameAccountUid='';
+          await adnorPrepareGameAccount(true);
+          data=await sendRequest();
+        }
         $('withdrawAmount').value='';$('withdrawDetails').value='';
+        if(currentProfile){
+          currentProfile.financialUid=String(data.financialUid||currentProfile.financialUid||currentUser.uid);
+          if(Number.isFinite(Number(data.realBalance)))currentProfile.realBalance=Number(data.realBalance);
+          if(Number.isFinite(Number(data.reservedWithdrawalBalance)))currentProfile.reservedWithdrawalBalance=Number(data.reservedWithdrawalBalance);
+          renderProfile();
+        }
         setWithdrawStatus('تم إرسال طلب السحب وحجز المبلغ بأمان. رقم الطلب: '+(data.request?.id||''),'ok');
-        toast('تم إرسال طلب السحب عبر السيرفر');
+        toast('تم إرسال طلب السحب عبر المحفظة المالية الصحيحة');
       }catch(e){
         console.error('secure withdraw request failed',e);
         setWithdrawStatus(e.message||'فشل إرسال طلب السحب','err');

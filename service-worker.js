@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v218-authoritative-draw-scheduler-1';
+const CACHE='adnor-v219-fast-wheel-exchange-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v221-wheel-account-repair-1';
+const CACHE='adnor-v222-draw-publish-first-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

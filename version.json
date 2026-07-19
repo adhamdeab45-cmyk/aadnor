@@ -1,11 +1,11 @@
 {
-  "version": "2.2.1",
-  "build": "V221-WHEEL-ACCOUNT-TRANSACTION-REPAIR",
+  "version": "2.2.2",
+  "build": "V222-DRAW-PUBLISH-FIRST-SETTLEMENT-RETRY",
   "changes": [
-    "fixes the repeated USER_ACCOUNT_NOT_FOUND error caused by Firebase transactions temporarily starting with null",
-    "reuses the server-verified financial profile instead of replacing it with a missing-account probe",
-    "adds an authoritative root fallback that searches by auth UID, financial UID, email, phone, and public user ID",
-    "keeps the wheel animation immediate and preserves idempotent debit and payout protection",
-    "keeps V218 draw scheduling, V219 speed improvements, and V220 exchange account linking unchanged"
+    "publishes scheduled lottery results to users at the due time before prize settlement can block the display",
+    "repairs old winner account links by resolving the financial UID from ticket UID, auth links, email, and account fields",
+    "retries prize credit and ticket settlement automatically without duplicating the prize",
+    "shows settlement status and retry errors inside the admin draw results panel",
+    "keeps V221 wheel account repair, V220 exchange identity linking, and V219 speed improvements"
   ]
 }

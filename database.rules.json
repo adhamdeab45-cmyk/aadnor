@@ -758,6 +758,14 @@
     "draw_settlements": {
       ".read": false,
       ".write": false
+    },
+    "draw_settlement_queue": {
+      ".read": false,
+      ".write": false
+    },
+    "draw_publish_errors": {
+      ".read": false,
+      ".write": false
     }
   }
 }

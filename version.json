@@ -1,11 +1,12 @@
 {
-  "version": "2.2.4",
-  "build": "V224-WITHDRAW-ADMIN-FULL-DETAILS",
+  "version": "2.2.5",
+  "build": "V225-WITHDRAW-ADMIN-STATE-SYNC",
   "changes": [
-    "withdrawal requests now store structured receiver name, currency, network, destination address, full destination details, and optional note",
-    "admin finance cards show all withdrawal information before approve or reject",
-    "USDT TRC20 addresses are validated on the client before the request is sent",
-    "legacy withdrawal records are normalized for display without losing their original details",
-    "keeps V223 financial-account balance resolution and all V222/V221/V219 fixes"
+    "withdraw approve/reject is idempotent: repeating the same completed action returns success and refreshes the admin card",
+    "stale processing locks recover automatically after 90 seconds without double settlement",
+    "admin finance list reloads after success or error so pending status cannot remain visually stale",
+    "processing, approved, rejected, and pending statuses are displayed clearly in Arabic",
+    "withdrawal cards use a single-column responsive layout and readable wallet addresses on narrow screens",
+    "keeps V224 complete withdrawal destination details and all prior fixes"
   ]
 }

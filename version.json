@@ -1,12 +1,11 @@
 {
-  "version": "2.2.5",
-  "build": "V225-WITHDRAW-ADMIN-STATE-SYNC",
+  "version": "2.2.6",
+  "build": "V226-REFERRAL-FINANCIAL-REWARD-FIX",
   "changes": [
-    "withdraw approve/reject is idempotent: repeating the same completed action returns success and refreshes the admin card",
-    "stale processing locks recover automatically after 90 seconds without double settlement",
-    "admin finance list reloads after success or error so pending status cannot remain visually stale",
-    "processing, approved, rejected, and pending statuses are displayed clearly in Arabic",
-    "withdrawal cards use a single-column responsive layout and readable wallet addresses on narrow screens",
-    "keeps V224 complete withdrawal destination details and all prior fixes"
+    "referral settings and the official admin invite code are saved through the protected server endpoint",
+    "new-user and referrer rewards use the linked financial account instead of a zero-balance authentication mirror",
+    "referral apply returns the updated real/bonus balance immediately to the user interface",
+    "ticket reward type mismatch is repaired and free tickets update the field used by the app",
+    "the default restored new-user referral bonus is 1 USD bonus and remains fully admin-configurable"
   ]
 }

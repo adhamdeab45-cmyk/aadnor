@@ -1,11 +1,12 @@
 {
-  "version": "2.2.6",
-  "build": "V226-REFERRAL-FINANCIAL-REWARD-FIX",
+  "version": "2.2.7",
+  "build": "V227-REFERRAL-BOTH-PARTY-FINAL-FIX",
   "changes": [
-    "referral settings and the official admin invite code are saved through the protected server endpoint",
-    "new-user and referrer rewards use the linked financial account instead of a zero-balance authentication mirror",
-    "referral apply returns the updated real/bonus balance immediately to the user interface",
-    "ticket reward type mismatch is repaired and free tickets update the field used by the app",
-    "the default restored new-user referral bonus is 1 USD bonus and remains fully admin-configurable"
+    "the new user and the referral owner each receive the configured reward on the linked financial account",
+    "Firebase provisional-null referral transactions use a verified root fallback instead of failing silently",
+    "a partial legacy referredBy state with no reward record is repaired safely once",
+    "the same user and code retry is idempotent and cannot pay either party twice",
+    "both signed-in accounts refresh their displayed balance immediately through an auth-UID marker",
+    "default unsaved referral rewards are 1 USD bonus for each party while explicit admin values remain respected"
   ]
 }

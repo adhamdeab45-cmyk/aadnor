@@ -883,7 +883,7 @@
 
 .v144-safe-note{display:inline-block;margin-top:5px;color:#8fe7ff;font-weight:1000}.v144-gold-track{gap:16px}.v144-sep{color:#ffd45d;opacity:.7}.v108-status b{color:#ffe184}.v108-status{min-height:82px}.v104-ticker-track.v144-gold-track{animation-duration:38s!important}
 </style>
-<meta content="V226_REFERRAL_FINANCIAL_REWARD_FIX" name="adnor-version"/>
+<meta content="V227_REFERRAL_BOTH_PARTY_FINAL_FIX" name="adnor-version"/>
 <style id="adnor-v120-lottery-result-layout-fix">
 /* */
 #page-lottery{
@@ -2314,7 +2314,7 @@ function setCurrentPrize(type){
       if(code.includes('auth/cancelled-popup-request'))return 'تم إلغاء محاولة دخول سابقة. جرّب مرة ثانية.';
       return code || 'خطأ غير معروف في تسجيل الدخول';
     }
-    const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',depositCategory='',withdrawCategory='',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{},promoCodes:{},promoRedemptions:{},backups:{},aiKnowledge:{},aiUnanswered:{},gameCenter:{},customGameLogs:{}};let currentUserTickets={};let currentTicketFilter='all';let lotteryTicketsHidden=false;let currentAuditFilter="all";let currentUserFilter="all";let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:1,referrerBonus:0.25,newUserRewardType:'bonus',newUserRewardAmount:1,referrerRewardType:'bonus',referrerRewardAmount:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'}; let promoCodesCache={};let referralUnsub=null,referralsUnsub=null,pendingReferralUnsub=null,userNotifUnsub=null,currentNotifications={}; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;
+    const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,currentDraw='daily',balanceHidden=false,ticketUnsub=null,transUnsub=null,supportUnsub=null,adminUnsubs=[],depositMethod='usdt',withdrawMethod='usdt',depositCategory='',withdrawCategory='',isSpinning=false,wheelRotation=0;let adminState={users:{},deposits:{},withdrawals:{},support:{},notifications:{},drawHistory:{},paymentMethods:{},referrals:{},tickets:{},supportContacts:{},wheelLogs:{},wheelSettings:{},financeAudit:{},promoCodes:{},promoRedemptions:{},backups:{},aiKnowledge:{},aiUnanswered:{},gameCenter:{},customGameLogs:{}};let currentUserTickets={};let currentTicketFilter='all';let lotteryTicketsHidden=false;let currentAuditFilter="all";let currentUserFilter="all";let referralSettings={enabled:true,adminCode:'ADNORVIP',newUserBonus:1,referrerBonus:1,newUserRewardType:'bonus',newUserRewardAmount:1,referrerRewardType:'bonus',referrerRewardAmount:1,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'}; let promoCodesCache={};let referralUnsub=null,referralsUnsub=null,pendingReferralUnsub=null,referralRefreshUnsub=null,userNotifUnsub=null,currentNotifications={};let lastReferralRefreshOperation=''; let aiKnowledgeCache={}; let aiKnowledgeUnsub=null;
     function money(n){return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
     async function copyText(t){try{await navigator.clipboard.writeText(String(t||''));toast('تم النسخ')}catch(e){await uiPrompt('انسخ النص يدويًا',String(t||''))}}
     function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3600)}
@@ -2730,7 +2730,15 @@ function setCurrentPrize(type){
     
       try{
         const referralResponse=await adnorApiFetch('/referral/status?publicId='+encodeURIComponent(publicId||''),{method:'GET'});
-        if(referralResponse?.code){profileSave.refCode=referralResponse.code;safeUserProfile.refCode=referralResponse.code;refCode=referralResponse.code}
+        const referralData=await adnorReadApiJson(referralResponse);
+        if(referralData?.code){profileSave.refCode=referralData.code;safeUserProfile.refCode=referralData.code;refCode=referralData.code}
+        if(referralData?.financialUid)profileSave.financialUid=String(referralData.financialUid);
+        if(referralData?.account){
+          if(Number.isFinite(Number(referralData.account.realBalance)))profileSave.realBalance=Number(referralData.account.realBalance);
+          if(Number.isFinite(Number(referralData.account.bonusBalance)))profileSave.bonusBalance=Number(referralData.account.bonusBalance);
+          if(Number.isFinite(Number(referralData.account.freeSpins)))profileSave.freeSpins=Number(referralData.account.freeSpins);
+          if(Number.isFinite(Number(referralData.account.freeTickets)))profileSave.freeTickets=Number(referralData.account.freeTickets);
+        }
       }catch(e){console.warn('server referral identity skipped',e)}
     
       const loginData={action:'login',email:user.email||'',provider:'google',at:now,createdAt:now,host:location.host,path:location.pathname,userAgent:navigator.userAgent||'',language:navigator.language||'',platform:navigator.platform||'',screen:(screen?.width||0)+'x'+(screen?.height||0)};
@@ -2741,7 +2749,7 @@ function setCurrentPrize(type){
         for(const em of ADMIN_EMAILS){try{await set(ref(db,'admin_emails/'+em.replaceAll('.','_')),true)}catch(e){console.warn('admin email mark skipped',e)}}
       }
     
-      return {...old,...profileSave,publicId,realBalance:Number(old.realBalance||0),bonusBalance:Number(old.bonusBalance||0),reservedWithdrawalBalance:Number(old.reservedWithdrawalBalance||0),freeSpins:Number(old.freeSpins||0),freeTickets:Number(old.freeTickets||0),adnBalance:Number(old.adnBalance||0),referralBonusEarned:Number(old.referralBonusEarned||0)}
+      return {...old,...profileSave,publicId,realBalance:Number(profileSave.realBalance??old.realBalance??0),bonusBalance:Number(profileSave.bonusBalance??old.bonusBalance??0),reservedWithdrawalBalance:Number(profileSave.reservedWithdrawalBalance??old.reservedWithdrawalBalance??0),freeSpins:Number(profileSave.freeSpins??old.freeSpins??0),freeTickets:Number(profileSave.freeTickets??old.freeTickets??0),adnBalance:Number(profileSave.adnBalance??old.adnBalance??0),referralBonusEarned:Number(profileSave.referralBonusEarned??old.referralBonusEarned??0)}
     }
 
     async function doGoogle(){
@@ -2872,6 +2880,7 @@ function setCurrentPrize(type){
       adnorSafeStart('listenSiteControl',()=>listenSiteControl());
       adnorSafeStart('listenUserReferrals',()=>listenUserReferrals(user.uid));
       adnorSafeStart('listenPendingReferralRewards',()=>listenPendingReferralRewards(user.uid));
+      adnorSafeStart('listenReferralAccountRefresh',()=>listenReferralAccountRefresh(user.uid));
       adnorSafeStart('startAdminListeners',()=>startAdminListeners());
       if(isAdminUser())adnorSafeStart('listenAiKnowledge',()=>listenAiKnowledge());
       adnorSafeStart('capturePendingReferralCode',()=>capturePendingReferralCode());
@@ -2894,6 +2903,8 @@ function setCurrentPrize(type){
       if(referralUnsub){try{referralUnsub()}catch(e){} referralUnsub=null}
       if(referralsUnsub){try{referralsUnsub()}catch(e){} referralsUnsub=null}
       if(pendingReferralUnsub){try{pendingReferralUnsub()}catch(e){} pendingReferralUnsub=null}
+      if(referralRefreshUnsub){try{referralRefreshUnsub()}catch(e){} referralRefreshUnsub=null}
+      lastReferralRefreshOperation='';
       if(supportContactsUnsub){try{supportContactsUnsub()}catch(e){} supportContactsUnsub=null}
       if(userNotifUnsub){try{userNotifUnsub()}catch(e){} userNotifUnsub=null; currentNotifications={}; renderUserNotifications()}
       if(aiKnowledgeUnsub){try{aiKnowledgeUnsub()}catch(e){} aiKnowledgeUnsub=null; aiKnowledgeCache={}}
@@ -3629,8 +3640,8 @@ function setCurrentPrize(type){
       referralsUnsub=onValue(ref(db,'user_referrals/'+uid),snap=>{
         const entries=Object.entries(snap.val()||{});
         const arr=entries.map(([id,r])=>({...r,id:r.id||id}));
-        arr.filter(r=>r&&r.referrerUid===uid&&r.referrerRewardStatus!=='claimed'&&Number(r.referrerBonus||r.amount||0)>0).forEach(r=>claimPendingReferralReward(r.id,safeReferralRecordForReferrer(r))); // V146: claim with masked referrer copy
-        const claimedOrPending=arr.filter(x=>x&&x.referrerUid===uid);
+        arr.filter(r=>r&&(r.referrerUid===uid||r.referrerAuthUid===uid)&&r.referrerRewardStatus!=='claimed'&&Number(r.referrerBonus||r.amount||0)>0).forEach(r=>claimPendingReferralReward(r.id,safeReferralRecordForReferrer(r))); // V146: claim with masked referrer copy
+        const claimedOrPending=arr.filter(x=>x&&(x.referrerUid===uid||x.referrerAuthUid===uid));
         const bonus=claimedOrPending.reduce((a,x)=>{const rw=referralRewardFromRecord(x,'referrer');return a+Number((x.referrerRewardStatus==='claimed'||x.status==='claimed')?referralRewardMoneyAmount(rw):0)},0);
         if($('refCountText'))$('refCountText').textContent=String(claimedOrPending.length);
         if($('refBonusText'))$('refBonusText').textContent=money(bonus);
@@ -3687,7 +3698,7 @@ function setCurrentPrize(type){
     function clearPendingReferralCode(){try{localStorage.removeItem(V109_REF_STORAGE_KEY)}catch(e){}}
     async function getFreshReferralSettings(){
       try{const snap=await get(ref(db,'system_settings/referral'));const val=snap.val();if(val)referralSettings=Object.assign({},referralSettings,val)}catch(e){console.warn('referral settings read failed',e)}
-      return Object.assign({enabled:true,adminCode:'ADNORVIP',newUserBonus:1,referrerBonus:0.25,newUserRewardType:'bonus',newUserRewardAmount:1,referrerRewardType:'bonus',referrerRewardAmount:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'},referralSettings||{});
+      return Object.assign({enabled:true,adminCode:'ADNORVIP',newUserBonus:1,referrerBonus:1,newUserRewardType:'bonus',newUserRewardAmount:1,referrerRewardType:'bonus',referrerRewardAmount:1,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص'},referralSettings||{});
     }
     function referralStatus(msg,opts={}){const status=$('refApplyStatus');if(status&&!opts.silent)status.textContent=msg;if(opts.toast)toast(msg)}
     function referralDayKey(ts=Date.now()){
@@ -3801,6 +3812,28 @@ function setCurrentPrize(type){
         if($('refCountText'))$('refCountText').textContent=String(Math.max(Number($('refCountText').textContent||0),pending.length+claimed.length));
       });
     }
+    function listenReferralAccountRefresh(authUid){
+      if(referralRefreshUnsub){try{referralRefreshUnsub()}catch(e){} referralRefreshUnsub=null}
+      if(!authUid)return;
+      const seenKey='adnor_referral_refresh_seen_'+authUid;
+      referralRefreshUnsub=onValue(ref(db,'referral_account_refresh/'+authUid),snap=>{
+        const marker=snap.val()||{};
+        const operationId=String(marker.operationId||'');
+        let saved='';try{saved=String(localStorage.getItem(seenKey)||'')}catch(e){}
+        if(!operationId||operationId===lastReferralRefreshOperation||operationId===saved)return;
+        lastReferralRefreshOperation=operationId;
+        try{localStorage.setItem(seenKey,operationId)}catch(e){}
+        adnorPreparedGameAccountUid='';
+        adnorPrepareGameAccount(true).then(()=>{
+          renderProfile();renderAccountExtras();
+          const recent=Date.now()-Number(marker.updatedAt||0)<120000;
+          if(marker.role==='referrer'&&recent){
+            const text=String(marker.rewardText||'مكافأة الدعوة');
+            toast('تمت إضافة '+text+' إلى حسابك');
+          }
+        }).catch(error=>console.warn('referral account refresh skipped',error));
+      },error=>console.warn('referral refresh listener skipped',error));
+    }
     function renderReferralAdminForm(){
       if($('referralEnabledInput'))$('referralEnabledInput').checked=!!referralSettings.enabled;
       if($('depositBonusEnabledInput'))$('depositBonusEnabledInput').checked=!!referralSettings.depositBonusEnabled;
@@ -3816,7 +3849,7 @@ function setCurrentPrize(type){
     }
     async function seedReferralSettings(force=true){
       if(!isAdminUser())return;
-      const data={enabled:true,adminCode:'ADNORVIP',newUserBonus:1,referrerBonus:0.25,newUserRewardType:'bonus',newUserRewardAmount:1,referrerRewardType:'bonus',referrerRewardAmount:0.25,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص',updatedAt:Date.now(),updatedBy:currentUser.email||''};
+      const data={enabled:true,adminCode:'ADNORVIP',newUserBonus:1,referrerBonus:1,newUserRewardType:'bonus',newUserRewardAmount:1,referrerRewardType:'bonus',referrerRewardAmount:1,depositBonusEnabled:false,depositBonusPercent:0,dailyReferralLimit:25,note:'شارك رابط الدعوة واربح بونص',updatedAt:Date.now(),updatedBy:currentUser.email||''};
       if(!force){
         try{const snap=await get(ref(db,'system_settings/referral'));if(snap.exists())return}catch(e){}
       }

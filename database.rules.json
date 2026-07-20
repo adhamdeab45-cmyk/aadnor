@@ -766,6 +766,13 @@
     "draw_publish_errors": {
       ".read": false,
       ".write": false
+    },
+    "referral_account_refresh": {
+      "$uid": {
+        ".read": "auth != null && $uid === auth.uid",
+        ".write": false
+      },
+      ".write": false
     }
   }
 }

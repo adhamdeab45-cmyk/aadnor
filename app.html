@@ -883,7 +883,7 @@
 
 .v144-safe-note{display:inline-block;margin-top:5px;color:#8fe7ff;font-weight:1000}.v144-gold-track{gap:16px}.v144-sep{color:#ffd45d;opacity:.7}.v108-status b{color:#ffe184}.v108-status{min-height:82px}.v104-ticker-track.v144-gold-track{animation-duration:38s!important}
 </style>
-<meta content="V223_WITHDRAW_FINANCIAL_ACCOUNT_FIX" name="adnor-version"/>
+<meta content="V224_WITHDRAW_ADMIN_FULL_DETAILS" name="adnor-version"/>
 <style id="adnor-v120-lottery-result-layout-fix">
 /* */
 #page-lottery{
@@ -1718,7 +1718,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 <div class="v70-withdraw-guide" id="withdrawReceiverHint"><b>اختر طريقة السحب أولًا</b>بعد اختيار طريقة السحب تظهر التعليمات الدقيقة للبيانات المطلوبة.</div>
 <div class="fields v68-wallet-fields v69-wallet-fields v70-wallet-fields">
 <div class="field-wrap"><label>المبلغ المراد سحبه</label><div class="field"><span class="ico">💸</span><input id="withdrawAmount" min="1" placeholder="مثال: 5" type="number"/></div></div>
-<div class="field-wrap"><label id="withdrawDetailsLabel">عنوان/بيانات الاستلام</label><div class="field" style="height:116px"><span class="ico">🧾</span><textarea id="withdrawDetails" placeholder="اكتب بيانات الاستلام هنا"></textarea></div></div>
+<div class="field-wrap" id="withdrawReceiverNameWrap"><label id="withdrawReceiverNameLabel">اسم صاحب الاستلام</label><div class="field"><span class="ico">👤</span><input id="withdrawReceiverName" maxlength="180" placeholder="اسم صاحب الحساب أو المحفظة"/></div></div>
+<div class="field-wrap"><label id="withdrawDetailsLabel">عنوان/بيانات الاستلام</label><div class="field" style="height:116px"><span class="ico">🧾</span><textarea id="withdrawDetails" maxlength="1000" placeholder="اكتب بيانات الاستلام هنا"></textarea></div></div>
+<div class="field-wrap"><label>ملاحظة إضافية (اختياري)</label><div class="field" style="height:92px"><span class="ico">📝</span><textarea id="withdrawNote" maxlength="500" placeholder="أي معلومة تساعد الإدارة على تنفيذ التحويل"></textarea></div></div>
 </div>
 <button class="gold-btn v68-submit-btn v69-submit-btn" id="sendWithdrawBtn">إرسال طلب السحب للأدمن</button><div class="deposit-status" id="withdrawStatus"></div>
 </div>
@@ -2950,25 +2952,34 @@ function setCurrentPrize(type){
     function renderCategoryGrid(mode,list){const box=$(mode+'CategoryGrid');if(!box)return;const current=mode==='deposit'?depositCategory:withdrawCategory;box.innerHTML=catsFor(list).map(c=>{const info=catInfo(c.cat);const disabled=!c.items.length;return '<button class="v69-category '+(current===c.cat?'active':'')+'" data-mode="'+mode+'" data-cat="'+c.cat+'" '+(disabled?'disabled':'')+'><i>'+info.icon+'</i><b>'+info.title+'</b><span>'+(disabled?'غير مفعّل':info.sub)+'</span></button>'}).join('');box.querySelectorAll('.v69-category').forEach(btn=>btn.onclick=()=>{if(btn.disabled)return;const cat=btn.dataset.cat;const one=list.filter(m=>methodCategory(m)===cat);if(mode==='deposit'){depositCategory=cat;depositMethod=(one.length===1?one[0].id:'')}else{withdrawCategory=cat;withdrawMethod=(one.length===1?one[0].id:'')}renderMethods()})}
     function updateWithdrawReceiverFields(m){
       const label=$('withdrawDetailsLabel'), area=$('withdrawDetails'), hint=$('withdrawReceiverHint');
+      const nameLabel=$('withdrawReceiverNameLabel'), nameInput=$('withdrawReceiverName');
       if(!m)return;
       const cat=methodCategory(m);
-      let title='عنوان/بيانات الاستلام', ph='اكتب بيانات الاستلام كاملة هنا', msg='اكتب بيانات الاستلام بوضوح حتى يقدر الأدمن يراجع طلب السحب ويرسل لك المبلغ.';
+      let title='عنوان/بيانات الاستلام', ph='اكتب بيانات الاستلام كاملة هنا', msg='اكتب بيانات الاستلام بوضوح حتى يقدر الأدمن يراجع طلب السحب ويرسل لك المبلغ.', receiverTitle='اسم صاحب الاستلام', receiverPh='اسم صاحب الحساب أو المحفظة';
       if(cat==='usd'){
         title='عنوان محفظتك USDT TRC20';
         ph='مثال: TQxxxxxxxxxxxxxxxxxxxxxxxxxxxx  — شبكة TRC20 فقط';
-        msg='اكتب عنوان محفظتك USDT TRC20 الخاص بك. انتبه: العنوان لازم يكون TRC20 فقط، وأي شبكة ثانية قد تسبب ضياع التحويل.';
+        receiverTitle='اسم صاحب المحفظة (اختياري)';
+        receiverPh='اختياري للعملات الرقمية';
+        msg='اكتب عنوان محفظتك USDT TRC20 الخاص بك. سيصل للأدمن مع العملة والشبكة وبيانات حسابك كاملة.';
       }else if(cat==='sham'){
-        title='رقم ShamCash واسم صاحب الحساب';
-        ph='مثال: رقم شام كاش + اسم صاحب الحساب + أي ملاحظة مهمة';
-        msg='اكتب رقم ShamCash واسم صاحب الحساب بوضوح حتى يتم إرسال السحب عليه.';
+        title='رقم حساب ShamCash';
+        ph='اكتب رقم شام كاش الذي تريد استلام المبلغ عليه';
+        receiverTitle='اسم صاحب حساب ShamCash';
+        receiverPh='اكتب الاسم كما هو مسجل في شام كاش';
+        msg='اكتب رقم ShamCash واسم صاحب الحساب في الحقلين المخصصين حتى تصل المعلومات كاملة للأدمن.';
       }else if(cat==='bank'){
-        title='بيانات الحساب البنكي / IBAN';
-        ph='اكتب IBAN + اسم صاحب الحساب + اسم البنك + الدولة';
-        msg='اكتب بيانات الحساب البنكي كاملة: IBAN، اسم صاحب الحساب، اسم البنك، والدولة.';
+        title='IBAN / بيانات الحساب البنكي';
+        ph='اكتب IBAN + اسم البنك + الدولة';
+        receiverTitle='اسم صاحب الحساب البنكي';
+        receiverPh='اكتب الاسم المطابق للحساب البنكي';
+        msg='اكتب اسم صاحب الحساب وIBAN واسم البنك والدولة. ستظهر جميعها للأدمن قبل القبول.';
       }
       if(label)label.textContent=title;
       if(area)area.placeholder=ph;
-      if(hint)hint.innerHTML='<b>'+escapeHtml(m.name)+' جاهز للسحب</b>'+escapeHtml(msg)+'<br><strong>بعد كتابة المبلغ والبيانات اضغط إرسال طلب السحب للأدمن.</strong>';
+      if(nameLabel)nameLabel.textContent=receiverTitle;
+      if(nameInput)nameInput.placeholder=receiverPh;
+      if(hint)hint.innerHTML='<b>'+escapeHtml(m.name)+' جاهز للسحب</b>'+escapeHtml(msg)+'<br><strong>راجع البيانات جيدًا ثم اضغط إرسال طلب السحب للأدمن.</strong>';
     }
     function renderMethodDetails(mode){
       const id=mode==='deposit'?depositMethod:withdrawMethod;
@@ -3393,19 +3404,23 @@ function setCurrentPrize(type){
       if(!currentUser||!currentProfile)return setWithdrawStatus('سجل الدخول أولًا.','err');
       if(currentProfile.isFrozen)return setWithdrawStatus('حسابك موقوف مؤقتًا.','err');
       if(isSelfExcluded())return setWithdrawStatus('الحساب موقوف ذاتيًا مؤقتًا.','err');
-      const amount=Number($('withdrawAmount').value||0),details=$('withdrawDetails').value.trim();
+      const amount=Number($('withdrawAmount').value||0),details=$('withdrawDetails').value.trim(),receiverName=($('withdrawReceiverName')?.value||'').trim(),receiverNote=($('withdrawNote')?.value||'').trim();
       const wm=getMethod(withdrawMethod);
       if(amount<=0)return setWithdrawStatus('اكتب مبلغ السحب بشكل صحيح.','err');
       if(!wm)return setWithdrawStatus('اختر طريقة السحب أولًا.','err');
       if(wm.minWithdraw&&amount<Number(wm.minWithdraw))return setWithdrawStatus('أقل سحب عبر '+wm.name+' هو '+wm.minWithdraw+' USD.','err');
-      if(!details||details.length<8)return setWithdrawStatus('اكتب بيانات الاستلام كاملة.','err');
+      if(!details||details.length<8)return setWithdrawStatus('اكتب عنوان أو بيانات الاستلام كاملة.','err');
+      const withdrawCat=methodCategory(wm);
+      if(withdrawCat!=='usd'&&receiverName.length<2)return setWithdrawStatus('اكتب اسم صاحب حساب الاستلام.','err');
+      const methodText=((wm.id||'')+' '+(wm.name||'')+' '+(wm.details||'')).toLowerCase();
+      if(withdrawCat==='usd'&&methodText.includes('trc20')&&!/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(details.replace(/\s+/g,'')))return setWithdrawStatus('عنوان USDT غير صحيح. اكتب عنوان TRC20 يبدأ بحرف T ويتكون من 34 خانة.','err');
       if(!(await uiConfirm('سيحجز السيرفر '+money(amount)+' من الرصيد الحقيقي حتى قرار الإدارة. هل تريد المتابعة؟')))return;
       const requestId=adnorSecureRequestId('withdraw');
       const sendRequest=async()=>{
         const publicId=adnorPublicIdOf(currentProfile||{});
         const response=await adnorApiFetch('/finance/withdrawal/request',{
           method:'POST',headers:{'Content-Type':'application/json','X-Request-ID':requestId},
-          body:JSON.stringify({requestId,amount,methodId:withdrawMethod,details,publicId})
+          body:JSON.stringify({requestId,amount,methodId:withdrawMethod,details,receiverAddress:details,receiverName,note:receiverNote,methodCategory:withdrawCat,publicId})
         });
         return await adnorReadApiJson(response);
       };
@@ -3420,7 +3435,7 @@ function setCurrentPrize(type){
           await adnorPrepareGameAccount(true);
           data=await sendRequest();
         }
-        $('withdrawAmount').value='';$('withdrawDetails').value='';
+        $('withdrawAmount').value='';$('withdrawDetails').value='';if($('withdrawReceiverName'))$('withdrawReceiverName').value='';if($('withdrawNote'))$('withdrawNote').value='';
         if(currentProfile){
           currentProfile.financialUid=String(data.financialUid||currentProfile.financialUid||currentUser.uid);
           if(Number.isFinite(Number(data.realBalance)))currentProfile.realBalance=Number(data.realBalance);

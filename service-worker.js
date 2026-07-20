@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v223-withdraw-financial-fix-1';
+const CACHE='adnor-v224-withdraw-admin-details-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

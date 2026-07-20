@@ -1,11 +1,11 @@
 {
-  "version": "2.2.3",
-  "build": "V223-WITHDRAW-FINANCIAL-ACCOUNT-NULL-TX-REPAIR",
+  "version": "2.2.4",
+  "build": "V224-WITHDRAW-ADMIN-FULL-DETAILS",
   "changes": [
-    "withdrawals now resolve the same financial UID used by the wheel and exchange before checking the real balance",
-    "server-owned auth_user_links is preferred over a duplicate zero-balance Firebase Auth profile",
-    "withdrawal reservation handles Firebase transaction callbacks that temporarily start with null",
-    "the client repairs the financial account link once and retries safely with the same request ID",
-    "keeps V222 draw scheduling, V221 wheel account repair, and V219 speed improvements"
+    "withdrawal requests now store structured receiver name, currency, network, destination address, full destination details, and optional note",
+    "admin finance cards show all withdrawal information before approve or reject",
+    "USDT TRC20 addresses are validated on the client before the request is sent",
+    "legacy withdrawal records are normalized for display without losing their original details",
+    "keeps V223 financial-account balance resolution and all V222/V221/V219 fixes"
   ]
 }

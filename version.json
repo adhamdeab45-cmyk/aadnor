@@ -1,9 +1,11 @@
 {
-  "version": "2.2.8",
-  "build": "V228-MANUAL-DEPOSIT-ACTUAL-AMOUNT-WINNER-SYNC",
+  "version": "2.2.9",
+  "build": "V228R2-MANUAL-DEPOSIT-REQUEST-READY",
   "changes": [
-    "manual deposit request waits for admin approval and no longer needs automatic QR or TXID flow",
-    "admin credits only the actual amount received, with retry-safe approval",
-    "winner ribbon uses latest published results without stale history duplicates"
+    "user deposit screen clearly submits a manual request for administrator approval",
+    "USD deposit details no longer present automatic credit or show a QR code",
+    "service worker cache updated to replace the stale automatic-deposit screen",
+    "admin credits only the amount actually received; retry-safe approval retained",
+    "winner ribbon keeps the latest official result without stale history duplicates"
   ]
 }

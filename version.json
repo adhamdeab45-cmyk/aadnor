@@ -1,11 +1,11 @@
 {
-  "version": "2.2.11",
-  "build": "V228R3-TELEGRAM-ONLY",
+  "version": "2.2.12",
+  "build": "V233-FINANCE-DRAW-AUDIT",
   "changes": [
-    "support and agent contact channels use Telegram only",
-    "WhatsApp contact buttons, support settings, and referral share action removed",
-    "legacy WhatsApp contacts and payment methods are hidden from the interface",
-    "manual deposit request and actual-amount admin approval retained",
-    "winner ribbon keeps the latest official result without stale history duplicates"
+    "Deposit approval and rejection synchronize the request, transaction history, user mirror, and admin notification.",
+    "Deposit receipts are omitted from finance list responses and fetched only when an admin opens one.",
+    "Finance admin lists load the newest 100 entries plus pending and processing requests using Firebase indexes.",
+    "Legacy draw migration no longer scans result histories on every scheduler tick.",
+    "Telegram-only contact behavior and manual deposit approval are retained."
   ]
 }

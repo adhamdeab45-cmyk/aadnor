@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v228r3-telegram-only-1';
+const CACHE='adnor-v233-finance-draw-audit-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

@@ -1,11 +1,9 @@
 {
-  "version": "2.2.12",
-  "build": "V233-FINANCE-DRAW-AUDIT",
+  "version": "2.2.13",
+  "build": "V234-RENDER-NPM-FIX",
   "changes": [
-    "Deposit approval and rejection synchronize the request, transaction history, user mirror, and admin notification.",
-    "Deposit receipts are omitted from finance list responses and fetched only when an admin opens one.",
-    "Finance admin lists load the newest 100 entries plus pending and processing requests using Firebase indexes.",
-    "Legacy draw migration no longer scans result histories on every scheduler tick.",
-    "Telegram-only contact behavior and manual deposit approval are retained."
+    "Replaced all non-public package-lock tarball URLs with registry.npmjs.org and added a public npm registry config.",
+    "Clarified that the static website and Node API must be deployed as separate Render services.",
+    "Deposit processing, receipt loading, and draw scheduler fixes from V233 are retained."
   ]
 }

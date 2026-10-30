@@ -1,0 +1,13 @@
+ADNOR V229 CHECK REPORT
+=======================
+
+PASS — Firebase payment_methods rules allow writes only for configured admins; signed-in users retain read access
+PASS — Automatic deposit UI, client functions, and API calls removed from app.html
+PASS — Deposit category/method controls are not forcibly hidden
+PASS — V229 app marker, version 2.2.9, and service worker cache agree
+PASS — 13 HTML files have no duplicate literal IDs
+PASS — 32 inline JavaScript blocks pass Node.js syntax checks
+PASS — 2 JSON files parse
+PASS — service-worker.js and install-app.js pass Node.js syntax checks
+
+No live Firebase or deployed API run was performed. The supplied archive contains no backend source; existing server-side automatic deposit behavior and already-created intents cannot be changed or verified from these files.

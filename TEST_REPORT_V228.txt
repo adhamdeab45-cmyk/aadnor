@@ -1,0 +1,12 @@
+ADNOR V228 CHECK REPORT
+=======================
+
+PASS — version.json parses and reports version 2.2.8
+PASS — Deposit category, method, details, and form IDs are no longer forced hidden
+PASS — Service worker cache name updated to V228
+PASS — 13 HTML files have no duplicate literal IDs
+PASS — 32 inline JavaScript blocks pass Node.js syntax checks
+PASS — 2 JSON files parse
+PASS — service-worker.js and install-app.js pass Node.js syntax checks
+
+The archive does not include the backend source referenced by older V218 notes. No live Firebase or deployed-site transaction was run, so this report covers the supplied static project files only.

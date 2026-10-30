@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {buildAuthenticatedUserView}=require('../src/auth-account-view-v221');
+const view=buildAuthenticatedUserView({uid:'auth123',email:'x@test.com',email_verified:true,firebase:{sign_in_provider:'google.com'}},{uid:'legacy999',source:'query:email',profile:{realBalance:299886.11,bonusBalance:2.5,publicId:'100999',name:'Adham',isVIP:true}});
+assert.equal(view.uid,'auth123');
+assert.equal(view.authUid,'auth123');
+assert.equal(view.financialUid,'legacy999');
+assert.equal(view.profile.realBalance,299886.11);
+assert.equal(view.profile.bonusBalance,2.5);
+assert.equal(view.profile.publicId,'100999');
+assert.equal(view.profile.isVIP,true);
+console.log('AUTH_ACCOUNT_VIEW_V221_OK');

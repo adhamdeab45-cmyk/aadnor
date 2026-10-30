@@ -1,0 +1,19 @@
+{
+  "name": "adnor-api",
+  "version": "1.6.8",
+  "private": true,
+  "description": "ADNOR API V233 with synchronized manual deposits and lower-load draw scheduling",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test:referral": "node tests/referral-v227.test.cjs",
+    "test:deposit": "node tests/deposit-finance-v233.test.cjs",
+    "test:draw-migration": "node tests/draw-migration-v233.test.cjs"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "firebase-admin": "14.1.0"
+  }
+}

@@ -141,9 +141,35 @@
     function cleanPhone(v){return String(v||'').replace(/\D/g,'')}
     function whatsappUrl(c){const direct=String(c.supportWhatsapp||'').trim();if(/^https?:\/\//i.test(direct)&&direct!=='#')return direct;const phone=cleanPhone(c.supportWhatsappNumber||direct);if(!phone)return '#';const msg=encodeURIComponent(c.supportWhatsappMessage||'مرحبًا، أحتاج مساعدة في منصة ADNOR');return 'https://wa.me/'+phone+'?text='+msg}
     function telegramUrl(c){const direct=String(c.supportTelegram||'').trim();if(/^https?:\/\//i.test(direct)&&direct!=='#')return direct;const user=String(c.supportTelegramUsername||direct).replace(/^@/,'').trim();return user?'https://t.me/'+user:'#'}
-    function normalizeResults(raw){const now=Date.now(),rows=[];function walk(x){if(!x||typeof x!=='object')return;if(x.ticketNumber||x.winningNumber){const status=String(x.status||'published');const publish=Number(x.publishAt||x.publishedAt||x.updatedAt||0);if(status==='published'||(status==='scheduled'&&publish>0&&publish<=now))rows.push({name:x.winnerName||x.winnerEmail||'مستخدم ADNOR',type:x.drawLabel||x.drawType||'سحب رسمي',ticket:String(x.ticketNumber||x.winningNumber||'').replace(/\D/g,'').padStart(7,'0').slice(-7),prize:Number(x.prize||0),date:publish?new Date(publish).toLocaleDateString('ar-TR'):'',ts:publish||0});}Object.values(x).forEach(v=>{if(v&&typeof v==='object')walk(v)})}walk(raw);return rows.sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12)}
-    let publicUnsub=null,resultUnsub=null,gamesUnsub=null;
-    async function loadPublic(){if(publicUnsub)return;publicUnsub=onValue(ref(db,'public_site'),snap=>{publicData=deepMerge(defaults,snap.val()||{});applyPublic()});resultUnsub=onValue(ref(db,'system_settings/v108_official_draw_results'),snap=>{const official=normalizeResults(snap.val()||{});if(official.length){publicData.winners=official;renderWinners(official)}});gamesUnsub=onValue(ref(db,'game_center/games'),snap=>applyPublicGames(snap.val()||{}));}
+    function normalizeResults(raw){
+      const now=Date.now(),rows=[];
+      if(!raw||typeof raw!=='object')return rows;
+      const current=raw.current&&typeof raw.current==='object'?raw.current:{};
+      const published=raw.published&&typeof raw.published==='object'?raw.published:{};
+      const types=new Set([...Object.keys(current),...Object.keys(published)]);
+      function visible(record){
+        if(!record||typeof record!=='object')return false;
+        const status=String(record.status||'published').toLowerCase();
+        if(status==='hidden')return false;
+        if(status==='published')return true;
+        return status==='scheduled'&&Number(record.publishAt||0)>0&&Number(record.publishAt||0)<=now;
+      }
+      for(const type of types){
+        const active=current[type]||null,old=published[type]||null;
+        const activeStatus=String(active&&active.status||'published').toLowerCase();
+        if(active&&activeStatus==='hidden')continue;
+        const record=visible(active)?active:(visible(old)?old:null);
+        if(!record||!(record.ticketNumber||record.winningNumber))continue;
+        const publish=Number(record.publishAt||record.publishedAt||record.updatedAt||0);
+        rows.push({name:record.winnerName||record.winnerEmail||'مستخدم ADNOR',type:record.drawLabel||record.drawType||type||'سحب رسمي',ticket:String(record.ticketNumber||record.winningNumber||'').replace(/\D/g,'').padStart(7,'0').slice(-7),prize:Number(record.prize||0),date:publish?new Date(publish).toLocaleDateString('ar-TR'):'',ts:publish||0});
+      }
+      if(!types.size&&raw.latestPublished&&visible(raw.latestPublished)){
+        const record=raw.latestPublished,publish=Number(raw.latestPublished.publishAt||raw.latestPublished.publishedAt||raw.latestPublished.updatedAt||0);
+        if(record.ticketNumber||record.winningNumber)rows.push({name:record.winnerName||record.winnerEmail||'مستخدم ADNOR',type:record.drawLabel||record.drawType||'سحب رسمي',ticket:String(record.ticketNumber||record.winningNumber||'').replace(/\D/g,'').padStart(7,'0').slice(-7),prize:Number(record.prize||0),date:publish?new Date(publish).toLocaleDateString('ar-TR'):'',ts:publish||0});
+      }
+      return rows.sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12);
+    }    let publicUnsub=null,resultUnsub=null,gamesUnsub=null;
+    async function loadPublic(){if(publicUnsub)return;publicUnsub=onValue(ref(db,'public_site'),snap=>{const officialWinners=publicData.winners||[];publicData=deepMerge(defaults,snap.val()||{});publicData.winners=officialWinners;applyPublic()});resultUnsub=onValue(ref(db,'system_settings/v108_official_draw_results'),snap=>{const official=normalizeResults(snap.val()||{});publicData.winners=official;renderWinners(official)});gamesUnsub=onValue(ref(db,'game_center/games'),snap=>applyPublicGames(snap.val()||{}));}
     function applyPublicGames(raw){const games=Object.values(raw||{}).filter(g=>g&&g.enabled!==false).slice(0,3);if(!games.length)return;document.querySelectorAll('.game-card .game-content').forEach((card,i)=>{const g=games[i];if(!g)return;const h=card.querySelector('h3'),p=card.querySelector('p');if(h)h.textContent=g.name||g.title||h.textContent;if(p)p.textContent=g.desc||g.description||p.textContent;});}
 
     function money(v){return '$'+Number(v||0).toLocaleString('en-US')}

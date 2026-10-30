@@ -1,12 +1,9 @@
 {
-  "version": "2.2.7",
-  "build": "V227-REFERRAL-BOTH-PARTY-FINAL-FIX",
+  "version": "2.2.8",
+  "build": "V228-MANUAL-DEPOSIT-ACTUAL-AMOUNT-WINNER-SYNC",
   "changes": [
-    "the new user and the referral owner each receive the configured reward on the linked financial account",
-    "Firebase provisional-null referral transactions use a verified root fallback instead of failing silently",
-    "a partial legacy referredBy state with no reward record is repaired safely once",
-    "the same user and code retry is idempotent and cannot pay either party twice",
-    "both signed-in accounts refresh their displayed balance immediately through an auth-UID marker",
-    "default unsaved referral rewards are 1 USD bonus for each party while explicit admin values remain respected"
+    "manual deposit request waits for admin approval and no longer needs automatic QR or TXID flow",
+    "admin credits only the actual amount received, with retry-safe approval",
+    "winner ribbon uses latest published results without stale history duplicates"
   ]
 }

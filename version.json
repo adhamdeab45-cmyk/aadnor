@@ -1,11 +1,11 @@
 {
-  "version": "2.2.9",
-  "build": "V228R2-MANUAL-DEPOSIT-REQUEST-READY",
+  "version": "2.2.11",
+  "build": "V228R3-TELEGRAM-ONLY",
   "changes": [
-    "user deposit screen clearly submits a manual request for administrator approval",
-    "USD deposit details no longer present automatic credit or show a QR code",
-    "service worker cache updated to replace the stale automatic-deposit screen",
-    "admin credits only the amount actually received; retry-safe approval retained",
+    "support and agent contact channels use Telegram only",
+    "WhatsApp contact buttons, support settings, and referral share action removed",
+    "legacy WhatsApp contacts and payment methods are hidden from the interface",
+    "manual deposit request and actual-amount admin approval retained",
     "winner ribbon keeps the latest official result without stale history duplicates"
   ]
 }

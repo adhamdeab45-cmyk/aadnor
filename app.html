@@ -873,7 +873,7 @@
 
 .v144-safe-note{display:inline-block;margin-top:5px;color:#8fe7ff;font-weight:1000}.v144-gold-track{gap:16px}.v144-sep{color:#ffd45d;opacity:.7}.v108-status b{color:#ffe184}.v108-status{min-height:82px}.v104-ticker-track.v144-gold-track{animation-duration:38s!important}
 </style>
-<meta content="V230_MANUAL_USDT_ADMIN_APPROVAL" name="adnor-version"/>
+<meta content="V232_MANUAL_USDT_FINANCIAL_APPROVAL" name="adnor-version"/>
 <style id="adnor-v120-lottery-result-layout-fix">
 /* */
 #page-lottery{
@@ -3305,9 +3305,10 @@ $('sendDepositBtn').onclick=async()=>{
         setDepositStatus('جاري إرسال طلبك للمراجعة...','work');
         const response=await adnorApiFetch('/finance/deposit/request',{
           method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({requestId:adnorSecureRequestId('deposit'),amount,methodId:depositMethod,reference:$('depositRef').value.trim()})
+          body:JSON.stringify({requestId:adnorSecureRequestId('deposit'),amount,methodId:depositMethod,reference:$('depositRef').value.trim(),publicId:adnorPublicIdOf(currentProfile||{})})
         });
         const data=await adnorReadApiJson(response);
+        if(currentProfile&&data.financialUid)currentProfile.financialUid=String(data.financialUid);
         $('depositAmount').value='';$('depositRef').value='';
         setDepositStatus('تم تسجيل طلبك بانتظار موافقة الأدمن. لن يضاف الرصيد قبل الموافقة. رقم الطلب: '+(data.request?.id||''),'ok');
         toast('وصل طلب الإيداع للأدمن');

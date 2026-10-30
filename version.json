@@ -1,10 +1,11 @@
 {
-  "version": "2.3.1",
-  "build": "V231-PUBLIC-WINNERS-TICKER",
+  "version": "2.3.2",
+  "build": "V232-DEPOSIT-FINANCIAL-APPROVAL-RECOVERY",
   "changes": [
-    "public official results remain visible when the public site configuration refreshes",
-    "public winner names load from the public server endpoint, avoiding private Firebase read rules",
-    "top winner ticker uses a stable full-width scrolling track",
+    "deposit requests resolve the correct financial account before approval",
+    "admin approval credits the resolved wallet and refreshes the signed-in user",
+    "stalled approvals can be retried safely without double-crediting",
+    "API and service-worker versions identify the new deployed build",
     "deposit page now offers a text-only USDT method with amount and manual approval request",
     "deposit QR, TXID verification, and automatic credit flow removed from the user experience",
     "admin approval and rejection use the secure API endpoint",

@@ -6828,5 +6828,30 @@ const cfg={apiKey:'AIzaSyC3QDYwjgPWHkd8hM9l1RNpUIzdywOwv1g',authDomain:'adhamnnn
 function apply(c={}){const brand=c.brandName||'ADNOR GLOBAL',short=c.brandShort||'ADNOR',tag=c.brandTagline||'GLOBAL DIGITAL PLATFORM';document.title=brand+' | تطبيق الأعضاء';document.querySelectorAll('.v195-desktop-logo b').forEach(e=>e.textContent=short);document.querySelectorAll('.v195-desktop-logo span').forEach(e=>e.textContent=tag);const zone=Intl.DateTimeFormat().resolvedOptions().timeZone||'Local';const row=document.querySelector('#v195NextDrawName')?.parentElement?.querySelector('small');if(row){const d=c.dailyNextDraw?new Date(c.dailyNextDraw):null;if(d&&!Number.isNaN(d.getTime()))row.textContent='UTC '+d.toLocaleString('en-GB',{timeZone:'UTC',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false})+' • محلي '+d.toLocaleString(undefined,{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});else row.textContent=(c.dailyDrawTime||'20:00 UTC')+' • '+zone}document.getElementById('adnorGlobalBadge')?.remove()}
 onValue(ref(db,'public_site/config'),s=>apply(s.val()||{}));
 </script>
+<style id="adnor-v231-winner-ticker-fix-css">
+  /* V231: keep the public winner ticker as a full-width scrolling track. */
+  #appWrap:not(.admin-layout) .v61-top-ticker.site-alert{
+    display:block!important;
+    text-align:left!important;
+    direction:ltr!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+  }
+  #appWrap:not(.admin-layout) .v61-top-ticker.site-alert>.v104-ticker-track{
+    display:flex!important;
+    flex:0 0 max-content!important;
+    width:max-content!important;
+    min-width:max-content!important;
+    max-width:none!important;
+    padding:0 30px!important;
+    animation:adnorV231Ticker 36s linear infinite!important;
+    animation-play-state:running!important;
+    will-change:transform;
+  }
+  @keyframes adnorV231Ticker{
+    from{transform:translateX(100vw)}
+    to{transform:translateX(calc(-100% - 100vw))}
+  }
+</style>
 </body>
 </html>

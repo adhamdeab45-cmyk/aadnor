@@ -59,6 +59,13 @@
 @media(max-width:980px){.finance-withdraw-card{grid-template-columns:1fr}.finance-withdraw-card>.activity-icon{display:none}.finance-actions{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;min-width:0}.finance-detail-grid{grid-template-columns:1fr}.finance-withdraw-main{width:100%}}
 @media(max-width:520px){.finance-actions{grid-template-columns:1fr}.finance-withdraw-card{padding:10px}.finance-detail{padding:8px}.finance-detail-grid{gap:6px}}
 
+/* V228 — إشعارات الأدمن الحيّة */
+.notif-bell{position:relative;min-width:44px;justify-content:center}
+.notif-badge{position:absolute;top:-6px;inset-inline-end:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:linear-gradient(180deg,#ff8a8a,#d92f2f);color:#fff;font-size:11px;font-weight:1000;display:grid;place-items:center;box-shadow:0 0 0 2px rgba(6,12,24,.9),0 0 12px rgba(255,80,80,.6);animation:v228Pulse 1.8s ease-in-out infinite}
+.notif-badge.hidden{display:none!important}
+@keyframes v228Pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.finance-receipt-thumb{width:100%;max-width:230px;border-radius:12px;border:1px solid rgba(255,214,92,.35);display:block;margin-top:6px}
+.finance-deposit-main{display:grid;gap:2px;min-width:0}
 </style>
 </head>
 <body>
@@ -108,6 +115,7 @@
 <div><h2 id="pageTitle">لوحة القيادة</h2><p id="pageSubtitle">صورة حقيقية عن المنصة الآن</p></div>
 <div class="top-spacer"></div>
 <div class="top-actions">
+<button class="btn notif-bell" id="adminNotifBtn" title="إشعارات الإدارة" type="button">🔔<span class="notif-badge hidden" id="adminNotifBadge">0</span></button>
 <select class="input" id="rangeSelect" style="width:auto;min-height:42px"><option value="today">آخر 24 ساعة</option><option value="7d">7 أيام</option><option value="30d">30 يوم</option><option value="90d">90 يوم</option></select>
 <button class="btn blue" id="refreshBtn">↻ <span>تحديث</span></button>
 <button class="btn" id="exportBtn">⇩ <span>تصدير</span></button>
@@ -257,12 +265,12 @@
 <section class="page" id="page-backups"><div class="section-title"><div><h3>النسخ الاحتياطي</h3><p>نسخة خادمية موثقة للبيانات الأساسية. الاسترجاع يبقى عملية منفصلة للمراجعة والأمان.</p></div></div><div class="card"><div class="toolbar"><button class="btn gold" id="createBackupBtnV204">إنشاء نسخة الآن</button><button class="btn blue" id="refreshBackupsBtn">تحديث القائمة</button></div><div class="ex-note" id="backupStatusV204">جاهز لإنشاء نسخة احتياطية من السيرفر.</div><div class="activity" id="backupsListV204" style="max-height:none;margin-top:12px"></div></div></section>
 <section class="page" id="page-audit"><div class="section-title"><div><h3>السجل والتدقيق</h3><p>العمليات المالية والإدارية والتنبيهات الحديثة.</p></div></div><div class="card"><div class="toolbar"><button class="btn blue" id="auditRefresh">تحديث السجل</button><button class="btn" id="auditExport">تصدير CSV</button></div><div class="activity" id="auditList" style="max-height:none"></div></div></section>
 <section class="page" id="page-broadcast"><div class="section-title"><div><h3>الإشعارات والبنرات</h3><p>إرسال لمستخدم واحد أو للجميع أو لفئة محددة.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>المستلمون</label><select id="broadcastTarget"><option value="all">كل المستخدمين</option><option value="active">النشطون آخر 7 أيام</option><option value="vip">VIP فقط</option><option value="user">مستخدم محدد</option></select></div><div class="field"><label>UID للمستخدم المحدد</label><input class="input" id="broadcastUid" placeholder="يُستخدم عند اختيار مستخدم محدد"/></div><div class="field" style="grid-column:1/-1"><label>العنوان</label><input class="input" id="broadcastTitle" placeholder="عنوان الإشعار"/></div><div class="field" style="grid-column:1/-1"><label>نص الإشعار</label><textarea id="broadcastText" placeholder="اكتب الرسالة بوضوح"></textarea></div><div class="field"><label>رابط عند الضغط</label><input class="input" id="broadcastLink" placeholder="app.html#lottery"/></div><div class="field"><label>رابط صورة أو شعار</label><input class="input" id="broadcastImage" placeholder="https://..."/></div></div><button class="btn gold" id="sendBroadcast" style="margin-top:12px">إرسال الإشعار</button></div><div class="card"><div class="card-head"><h3>نصائح الإرسال</h3></div><div class="activity"><div class="list-row"><div class="activity-icon">✓</div><div><h4>رسالة واضحة</h4><p>لا ترسل وعودًا أو معلومات غير مؤكدة.</p></div></div><div class="list-row"><div class="activity-icon">⏱</div><div><h4>التوقيت</h4><p>أرسل قبل السحب بوقت مناسب، وليس بشكل مزعج.</p></div></div><div class="list-row"><div class="activity-icon">🎯</div><div><h4>استهداف صحيح</h4><p>استخدم VIP أو النشطين بدل إرسال كل شيء للجميع.</p></div></div></div></div></div></section>
-<section class="page" id="page-support"><div class="section-title"><div><h3>الدعم والتواصل</h3><p>قناة تيليجرام وساعات الدعم تتغير من الإدارة.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>رابط أو اسم مستخدم تيليجرام</label><input class="input" id="supportTelegram" placeholder="@username أو https://t.me/username"/></div><div class="field"><label>ساعات العمل</label><input class="input" id="supportHours" placeholder="10:00 - 22:00"/></div><div class="field"><label>إظهار قناة الدعم</label><select id="supportActive"><option value="true">مفعلة</option><option value="false">مخفية</option></select></div></div><button class="btn gold" id="saveSupport" style="margin-top:12px">حفظ بيانات التواصل</button></div><div class="card"><div class="card-head"><h3>معاينة</h3></div><div class="activity" id="supportPreview"></div></div></div></section>
+<section class="page" id="page-support"><div class="section-title"><div><h3>الدعم والتواصل</h3><p>واتساب، تلغرام ورسائل الدعم تتغير من الإدارة.</p></div></div><div class="grid2"><div class="card"><div class="form-grid"><div class="field"><label>رقم واتساب دولي</label><input class="input" id="supportWhatsapp" placeholder="905xxxxxxxxx"/></div><div class="field"><label>اسم تلغرام</label><input class="input" id="supportTelegram" placeholder="username"/></div><div class="field" style="grid-column:1/-1"><label>رسالة واتساب الجاهزة</label><textarea id="supportMessage"></textarea></div><div class="field"><label>ساعات العمل</label><input class="input" id="supportHours" placeholder="10:00 - 22:00"/></div><div class="field"><label>إظهار أزرار الدعم</label><select id="supportActive"><option value="true">مفعلة</option><option value="false">مخفية</option></select></div></div><button class="btn gold" id="saveSupport" style="margin-top:12px">حفظ بيانات التواصل</button></div><div class="card"><div class="card-head"><h3>معاينة</h3></div><div class="activity" id="supportPreview"></div></div></div></section>
 <section class="page" id="page-system"><div class="section-title"><div><h3>النظام والأمان</h3><p>مفاتيح تشغيل عامة، وضع صيانة، فحص الخدمات وتصدير التقارير.</p></div></div><div class="card"><div class="switch-grid" id="systemSwitches"></div><div class="field" style="margin-top:10px"><label>رسالة وضع الصيانة</label><textarea id="maintenanceMessage" placeholder="المنصة تحت الصيانة وسنعود قريبًا"></textarea></div><button class="btn gold" id="saveSystem" style="margin-top:12px">حفظ إعدادات التشغيل</button></div><div class="grid3" style="margin-top:12px"><div class="card"><h3 style="color:var(--gold)">فحص السيرفر</h3><p id="healthDetails" style="color:var(--muted);line-height:1.8"></p><button class="btn blue" id="healthBtn">إعادة الفحص</button></div><div class="card"><h3 style="color:var(--gold)">تصدير تقرير</h3><p style="color:var(--muted);line-height:1.8">نزّل الأرقام الحالية وبيانات المستخدمين CSV.</p><button class="btn" id="exportUsersBtn">تصدير المستخدمين</button></div><div class="card"><h3 style="color:var(--gold)">تنبيه أمان</h3><p style="color:var(--muted);line-height:1.8">لا تشارك مفتاح Firebase أو حساب الأدمن. كل تعديل حساس يُسجل في سجل التدقيق.</p></div></div></section>
 </main>
 </div>
 <div class="modal" id="userModal"><div class="modal-box"><div class="modal-head"><h3 id="userModalTitle">ملف المستخدم</h3><div class="spacer"></div><button class="close" data-close-modal="">×</button></div><div id="userModalContent"></div></div></div>
-<div class="modal" id="confirmModal"><div class="modal-box" style="width:min(520px,100%)"><div class="modal-head"><h3 id="confirmTitle">تأكيد</h3><div class="spacer"></div><button class="close" data-close-confirm="">×</button></div><p id="confirmText" style="color:#cbd5e4;line-height:1.8;font-weight:700"></p><div class="field hidden" id="confirmAmountGroup"><label id="confirmAmountLabel">المبلغ الذي وصل فعليًا</label><input class="input" id="confirmAmount" min="0.01" step="0.01" type="number"/></div><div class="field"><label>السبب</label><textarea id="confirmReason" placeholder="السبب إجباري لبعض العمليات"></textarea></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn gold" id="confirmOk">متابعة</button><button class="btn" data-close-confirm="">إلغاء</button></div></div></div>
+<div class="modal" id="confirmModal"><div class="modal-box" style="width:min(520px,100%)"><div class="modal-head"><h3 id="confirmTitle">تأكيد</h3><div class="spacer"></div><button class="close" data-close-confirm="">×</button></div><p id="confirmText" style="color:#cbd5e4;line-height:1.8;font-weight:700;white-space:pre-line"></p><div class="field hidden" id="confirmAmountField"><label id="confirmAmountLabel">المبلغ الواصل بالدولار</label><input class="input" id="confirmAmount" min="0" step="0.01" type="number"/><small id="confirmAmountHint" style="color:var(--muted);font-weight:800;line-height:1.7;display:block;margin-top:6px"></small></div><div class="field"><label>السبب</label><textarea id="confirmReason" placeholder="السبب إجباري لبعض العمليات"></textarea></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn gold" id="confirmOk">متابعة</button><button class="btn" data-close-confirm="">إلغاء</button></div></div></div>
 <div class="loading" id="loading"><div class="spinner"></div></div><div class="toast" id="toast"></div>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
@@ -288,7 +296,7 @@ let exchangeSettingsDirty=false,exchangeSettingsSaving=false,exchangeSettingsLoa
 function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),3300)}
 function loading(on){$('loading').classList.toggle('show',!!on)}
 async function api(path,options={}){const user=auth.currentUser;if(!user)throw new Error('سجل الدخول أولاً');const token=await user.getIdToken();const res=await fetch(API+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})},cache:'no-store'});let data={};try{data=await res.json()}catch{}if(!res.ok||data.ok===false)throw new Error(data.message||data.error||'تعذر تنفيذ الطلب');return data}
-function showPage(page){currentPage=page;document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===page));const map={dashboard:['لوحة القيادة','صورة حقيقية عن المنصة الآن'],live:['النشاط المباشر','متابعة كل العمليات الحديثة'],users:['المستخدمون 360°','بحث وإدارة الحسابات'],finance:['الإيداع والسحب','مركز القرارات المالية'],lottery:['السحوبات والنتائج','تحكم كامل باليانصيب'],games:['الألعاب والعجلة','مراقبة وتشغيل الألعاب'],exchange:['الاستثمار والبورصة','إدارة ADN Exchange من داخل مركز الإدارة'],agents:['الوكلاء والشحن','إدارة الوكلاء ورصيدهم'],referrals:['الدعوات والأكواد','مكافآت آمنة من السيرفر'],payments:['طرق الدفع','إدارة الإيداع والسحب'],helpdesk:['تذاكر الدعم','رد وإغلاق الطلبات'],broadcast:['الإشعارات والبنرات','تواصل احترافي مع المستخدمين'],content:['الواجهة والمحتوى','تعديل الصفحة العامة'],support:['بيانات التواصل','تيليجرام فقط'],energy:['ADN Energy','إعدادات النقاط والإعلانات'],vip:['VIP والمستويات','المهام والصندوق الملكي'],daily:['الصندوق اليومي','سبعة أيام ومكافآت'],promos:['الأكواد والحملات','إدارة العروض الترويجية'],assistant:['المساعد الذكي','قاعدة المعرفة والأسئلة'],backups:['النسخ الاحتياطي','نسخ خادمية آمنة'],audit:['السجل والتدقيق','مراجعة كل العمليات'],system:['النظام والأمان','تشغيل وصيانة وتقارير']};$('pageTitle').textContent=map[page]?.[0]||'ADNOR';$('pageSubtitle').textContent=map[page]?.[1]||'';$('sidebar').classList.remove('open');try{history.replaceState(null,'','#'+page)}catch{}if(page==='finance')loadFinance();if(page==='lottery')loadDrawResults(false);if(page==='users'&&!users.length)loadUsers('');if(page==='exchange')loadExchange();if(page==='games')loadCustomGames();if(page==='agents')loadAgents();if(page==='referrals')loadReferrals();if(page==='payments')loadPayments();if(page==='helpdesk')loadHelpdesk();if(page==='content'||page==='energy'||page==='support')loadPublicBundle();if(page==='audit')loadAudit();if(['vip','daily','promos','assistant','backups'].includes(page))loadOperations();}
+function showPage(page){currentPage=page;document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===page));const map={dashboard:['لوحة القيادة','صورة حقيقية عن المنصة الآن'],live:['النشاط المباشر','متابعة كل العمليات الحديثة'],users:['المستخدمون 360°','بحث وإدارة الحسابات'],finance:['الإيداع والسحب','مركز القرارات المالية'],lottery:['السحوبات والنتائج','تحكم كامل باليانصيب'],games:['الألعاب والعجلة','مراقبة وتشغيل الألعاب'],exchange:['الاستثمار والبورصة','إدارة ADN Exchange من داخل مركز الإدارة'],agents:['الوكلاء والشحن','إدارة الوكلاء ورصيدهم'],referrals:['الدعوات والأكواد','مكافآت آمنة من السيرفر'],payments:['طرق الدفع','إدارة الإيداع والسحب'],helpdesk:['تذاكر الدعم','رد وإغلاق الطلبات'],broadcast:['الإشعارات والبنرات','تواصل احترافي مع المستخدمين'],content:['الواجهة والمحتوى','تعديل الصفحة العامة'],support:['بيانات التواصل','واتساب وتلغرام'],energy:['ADN Energy','إعدادات النقاط والإعلانات'],vip:['VIP والمستويات','المهام والصندوق الملكي'],daily:['الصندوق اليومي','سبعة أيام ومكافآت'],promos:['الأكواد والحملات','إدارة العروض الترويجية'],assistant:['المساعد الذكي','قاعدة المعرفة والأسئلة'],backups:['النسخ الاحتياطي','نسخ خادمية آمنة'],audit:['السجل والتدقيق','مراجعة كل العمليات'],system:['النظام والأمان','تشغيل وصيانة وتقارير']};$('pageTitle').textContent=map[page]?.[0]||'ADNOR';$('pageSubtitle').textContent=map[page]?.[1]||'';$('sidebar').classList.remove('open');try{history.replaceState(null,'','#'+page)}catch{}if(page==='finance')loadFinance();if(page==='lottery')loadDrawResults(false);if(page==='users'&&!users.length)loadUsers('');if(page==='exchange')loadExchange();if(page==='games')loadCustomGames();if(page==='agents')loadAgents();if(page==='referrals')loadReferrals();if(page==='payments')loadPayments();if(page==='helpdesk')loadHelpdesk();if(page==='content'||page==='energy'||page==='support')loadPublicBundle();if(page==='audit')loadAudit();if(['vip','daily','promos','assistant','backups'].includes(page))loadOperations();}
 
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll('[data-page-jump]').forEach(b=>b.onclick=()=>showPage(b.dataset.pageJump));$('menuBtn').onclick=()=>$('sidebar').classList.toggle('open');
 
@@ -321,14 +329,48 @@ async function openUser(uid){try{loading(true);currentUserDetail=await api('/adm
 function renderUserModal(){const d=currentUserDetail,u=d.user;$('userModalTitle').textContent=`${u.name} — ${u.publicId||u.uid.slice(0,8)}`;const tx=(d.transactions||[]).slice(0,15).map(x=>`<div class="list-row"><div class="activity-icon">↕</div><div><h4>${esc(x.type||'عملية')}</h4><p>${esc(x.note||x.status||'')} — ${dt(x.createdAt)}</p></div><b class="amount ${Number(x.amount)>=0?'plus':'minus'}">${money(x.amount)}</b></div>`).join('')||'<div class="empty">لا عمليات</div>';$('userModalContent').innerHTML=`<div class="stats">${stat('الرصيد الحقيقي',money(u.realBalance),'#31e6a1')}${stat('البونص',money(u.bonusBalance),'#4bd8ff')}${stat('المحجوز',money(u.reservedWithdrawalBalance),'#ffb45e')}${stat('التذاكر',d.tickets?.length||0,'#ffd86b')}${stat('جولات العجلة',d.wheelRounds?.length||0,'#b98cff')}${stat('سجلات الدخول',d.logins?.length||0,'#fff')}</div><div class="grid2"><div class="card"><div class="card-head"><h3>بيانات الحساب</h3></div><div class="activity"><div class="list-row"><div><h4>UID</h4><p style="direction:ltr">${esc(u.uid)}</p></div></div><div class="list-row"><div><h4>البريد</h4><p>${esc(u.email||'—')}</p></div></div><div class="list-row"><div><h4>آخر دخول</h4><p>${dt(u.lastLoginAt)}</p></div></div><div class="list-row"><div><h4>الحالة</h4><p>${u.isFrozen?'مجمد':'نشط'} — ${u.isVIP?'VIP':'عادي'}</p></div></div></div></div><div class="card"><div class="card-head"><h3>إجراءات محمية</h3></div><div class="form-grid"><div class="field"><label>نوع الرصيد</label><select id="adjustField"><option value="realBalance">الرصيد الحقيقي</option><option value="bonusBalance">البونص</option><option value="reservedWithdrawalBalance">المحجوز</option><option value="freeSpins">لفات مجانية</option><option value="freeTickets">تذاكر مجانية</option></select></div><div class="field"><label>المقدار (+ أو -)</label><input id="adjustAmount" class="input" type="number" step="0.01"></div></div><button id="adjustBalanceBtn" class="btn gold" style="margin-top:10px">تنفيذ تعديل الرصيد</button><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px"><button id="freezeUserBtn" class="btn ${u.isFrozen?'green':'red'}">${u.isFrozen?'فك التجميد':'تجميد الحساب'}</button><button id="vipUserBtn" class="btn blue">${u.isVIP?'إلغاء VIP':'تفعيل VIP 30 يوم'}</button><button id="notifyUserBtn" class="btn">إرسال إشعار خاص</button></div></div></div><div class="card" style="margin-top:12px"><div class="card-head"><h3>آخر العمليات</h3></div><div class="activity">${tx}</div></div>`;
 $('adjustBalanceBtn').onclick=()=>adjustBalance(u.uid);$('freezeUserBtn').onclick=()=>setUserState(u.uid,'freeze',!u.isFrozen);$('vipUserBtn').onclick=()=>setUserState(u.uid,'vip',!u.isVIP);$('notifyUserBtn').onclick=()=>{showPage('broadcast');$('broadcastTarget').value='user';$('broadcastUid').value=u.uid;$('userModal').classList.remove('show')}}
 
-function confirmAction(title,text,needReason=true,amountOptions=null){return new Promise(resolve=>{confirmResolve=resolve;$('confirmTitle').textContent=title;$('confirmText').textContent=text;$('confirmReason').value='';$('confirmReason').parentElement.classList.toggle('hidden',!needReason);const group=$('confirmAmountGroup'),field=$('confirmAmount');group.classList.toggle('hidden',!amountOptions);if(amountOptions){$('confirmAmountLabel').textContent=amountOptions.label||'المبلغ الذي وصل فعليًا';field.value=Number(amountOptions.value||0).toFixed(2);field.readOnly=!!amountOptions.locked}else{field.value='';field.readOnly=false}$('confirmModal').classList.add('show')})}
-function closeConfirm(value=null){$('confirmModal').classList.remove('show');$('confirmAmountGroup').classList.add('hidden');$('confirmAmount').readOnly=false;if(confirmResolve){confirmResolve(value);confirmResolve=null}}
-document.querySelectorAll('[data-close-confirm]').forEach(b=>b.onclick=()=>closeConfirm(null));$('confirmOk').onclick=()=>{const group=$('confirmAmountGroup');if(!group.classList.contains('hidden')){const amount=Number($('confirmAmount').value);if(!Number.isFinite(amount)||amount<=0||amount>1000000){toast('اكتب المبلغ الفعلي الذي وصلك، ويجب أن يكون أكبر من صفر');return}closeConfirm({amount});return}closeConfirm($('confirmReason').value.trim()||true)};document.querySelectorAll('[data-close-modal]').forEach(b=>b.onclick=()=>$('userModal').classList.remove('show'));
+let confirmAmountEnabled=false,confirmReasonRequired=false;
+function confirmAction(title,text,needReason=true,opts={}){
+  return new Promise(resolve=>{
+    confirmResolve=resolve;
+    confirmReasonRequired=needReason!==false;
+    $('confirmTitle').textContent=title;
+    $('confirmText').textContent=text;
+    $('confirmReason').value=String(opts.reason||'');
+    $('confirmReason').parentElement.classList.toggle('hidden',!confirmReasonRequired);
+    confirmAmountEnabled=opts.amount!==undefined&&opts.amount!==null;
+    const box=$('confirmAmountField');
+    if(box){
+      box.classList.toggle('hidden',!confirmAmountEnabled);
+      if(confirmAmountEnabled){
+        $('confirmAmountLabel').textContent=opts.amountLabel||'المبلغ الواصل بالدولار';
+        $('confirmAmountHint').textContent=opts.amountHint||'';
+        $('confirmAmount').value=String(Number(opts.amount||0).toFixed(2));
+        setTimeout(()=>{try{$('confirmAmount').focus();$('confirmAmount').select()}catch(e){}},60);
+      }
+    }
+    $('confirmModal').classList.add('show');
+  });
+}
+function closeConfirm(value=null){$('confirmModal').classList.remove('show');if(confirmResolve){confirmResolve(value);confirmResolve=null}}
+document.querySelectorAll('[data-close-confirm]').forEach(b=>b.onclick=()=>closeConfirm(null));
+$('confirmOk').onclick=()=>{
+  const reason=$('confirmReason').value.trim();
+  if(confirmAmountEnabled){
+    const amount=Number($('confirmAmount').value);
+    if(!(amount>0))return toast('اكتب المبلغ الواصل بشكل صحيح');
+    if(confirmReasonRequired&&!reason)return toast('اكتب سبب العملية');
+    confirmAmountEnabled=false;
+    return closeConfirm({reason,amount});
+  }
+  if(confirmReasonRequired&&!reason&&reason!==true)return toast('اكتب سبب العملية');
+  closeConfirm(reason||true);
+};
+document.querySelectorAll('[data-close-modal]').forEach(b=>b.onclick=()=>$('userModal').classList.remove('show'));
 async function adjustBalance(uid){const field=$('adjustField').value,amount=Number($('adjustAmount').value);if(!amount)return toast('اكتب مقدارًا صحيحًا');const reason=await confirmAction('تعديل رصيد','سيتم تسجيل العملية في سجل التدقيق.',true);if(!reason||reason===true)return toast('اكتب سبب العملية');try{loading(true);await api('/admin/user/adjust-balance',{method:'POST',body:JSON.stringify({uid,field,amount,reason})});toast('تم تعديل الرصيد');await openUser(uid);await loadOverview(false)}catch(e){toast(e.message)}finally{loading(false)}}
 async function setUserState(uid,action,enabled){const reason=await confirmAction(action==='freeze'?'تحديث حالة الحساب':'تحديث VIP',enabled?'تأكيد التفعيل؟':'تأكيد الإلغاء؟',action==='freeze');if(reason===null)return;try{loading(true);await api('/admin/user/state',{method:'POST',body:JSON.stringify({uid,action,enabled,reason:reason===true?'':reason,days:30})});toast('تم تحديث حالة المستخدم');await openUser(uid);await loadOverview(false)}catch(e){toast(e.message)}finally{loading(false)}}
 
 async function loadFinance(){try{loading(true);finance=await api('/admin/finance?ts='+Date.now());renderFinance()}catch(e){toast(e.message)}finally{loading(false)}}
-async function openDepositReceipt(id){const tab=window.open('about:blank','_blank');if(!tab)return toast('اسمح بفتح نافذة جديدة لعرض الإيصال');try{const user=auth.currentUser;if(!user)throw new Error('سجل الدخول أولًا');const token=await user.getIdToken();const response=await fetch(API+'/admin/finance/deposit/receipt?id='+encodeURIComponent(id),{headers:{Authorization:'Bearer '+token},cache:'no-store'});if(!response.ok){let data={};try{data=await response.json()}catch{}throw new Error(data.message||data.error||'تعذر تحميل الإيصال')}const objectUrl=URL.createObjectURL(await response.blob());tab.location.href=objectUrl;setTimeout(()=>URL.revokeObjectURL(objectUrl),120000)}catch(e){try{tab.close()}catch{}toast(e.message||'تعذر عرض الإيصال')}}
 function financeStatus(value){const status=String(value||'pending').toLowerCase();return {pending:'معلّق',processing:'قيد المعالجة',approved:'مقبول',rejected:'مرفوض'}[status]||status}
 function financeRow(item,type){
   const rawStatus=String(item.status||'pending').toLowerCase();
@@ -336,11 +378,14 @@ function financeRow(item,type){
   const processing=rawStatus==='processing';
   const statusText=financeStatus(rawStatus);
   if(type==='deposit'){
-    const action=processing?(item.processingAction||'approve'):'approve';
-    const credited=item.creditedAmount??item.receivedAmount??item.approvedAmount;
-    const amountNote=rawStatus==='approved'?' — المبلغ المضاف فعليًا: '+money(credited??item.amount):processing&&item.processingAmount?' — المبلغ الجاري اعتماده: '+money(item.processingAmount):'';
-    const receiptControl=item.hasReceipt?'<button class="btn blue sm" type="button" data-deposit-receipt="'+esc(item.id)+'">عرض الإيصال</button>':'';const controls=pending?'<button class="btn green sm" data-finance="deposit" data-action="approve" data-record-id="'+esc(item.id)+'">قبول وتحديد الواصل</button><button class="btn red sm" data-finance="deposit" data-action="reject" data-record-id="'+esc(item.id)+'">رفض</button>':processing?'<button class="btn green sm" data-finance="deposit" data-action="'+esc(action)+'" data-record-id="'+esc(item.id)+'">استكمال المعالجة</button>':'<span class="badge '+(rawStatus==='approved'?'green':rawStatus==='rejected'?'red':'blue')+'">'+esc(statusText)+'</span>';
-    return '<div class="list-row"><div class="activity-icon">↓</div><div><h4>طلب إيداع '+money(item.requestedAmount??item.amount)+amountNote+'</h4><p>'+esc(item.email||item.uid||'')+' — '+dt(item.createdAt)+'<br>الطريقة: '+esc(item.methodName||item.method||'—')+' — المرجع: '+esc(item.reference||'—')+' — الحالة: '+esc(statusText)+'</p></div><div style="display:grid;gap:5px">'+receiptControl+controls+'</div></div>';
+    const requested=Number(item.requestedAmount||item.amount||0);
+    const approved=Number(item.approvedAmount||0);
+    const adjusted=item.amountAdjusted===true||(approved>0&&Math.abs(approved-requested)>0.004);
+    const approvedLine=(rawStatus==='approved'&&approved>0)
+      ?`<br><b style="color:#7dffcd">أُضيف للرصيد: ${money(approved)}</b>${adjusted?` — المطلوب كان ${money(requested)}`:''}`
+      :'';
+    const receiptBtn=item.hasReceipt?`<button class="btn blue sm" data-deposit-receipt="${esc(item.id)}" type="button">📎 عرض الإيصال</button>`:'<span class="badge">بدون إيصال</span>';
+    return `<div class="list-row"><div class="activity-icon">↓</div><div class="finance-deposit-main"><h4>إيداع ${money(requested)} <span class="badge ${rawStatus==='approved'?'green':rawStatus==='rejected'?'red':'blue'}">${esc(statusText)}</span></h4><p>${esc(item.name||item.email||item.uid||'')}${item.email&&item.name?' — '+esc(item.email):''} — ${dt(item.createdAt)}<br>الطريقة: ${esc(item.methodName||item.method||'—')} — الشبكة: ${esc(item.methodNetwork||'USDT TRC20')} — المرجع: ${esc(item.reference||'—')}${approvedLine}</p><div>${receiptBtn}</div></div><div class="finance-actions">${pending?`<button class="btn green sm" data-finance="deposit" data-action="approve" data-record-id="${esc(item.id)}">قبول وإضافة الرصيد</button><button class="btn red sm" data-finance="deposit" data-action="reject" data-record-id="${esc(item.id)}">رفض</button>`:`<span class="badge ${rawStatus==='approved'?'green':rawStatus==='rejected'?'red':'blue'}">${esc(statusText)}</span>`}</div></div>`;
   }
   const destination=item.destinationAddress||item.destinationDetails||item.details||'—';
   const fullDetails=item.destinationDetails||item.details||destination;
@@ -349,28 +394,57 @@ function financeRow(item,type){
   const statusClass=rawStatus==='approved'?'green':(rawStatus==='rejected'?'red':'blue');
   return `<div class="list-row finance-withdraw-card"><div class="activity-icon">↑</div><div class="finance-withdraw-main"><h4>طلب سحب ${money(item.amount)} <span class="badge ${statusClass}">${esc(statusText)}</span></h4><p>${esc(item.name||'مستخدم')} — ${esc(item.email||'بدون بريد')} — ${dt(item.createdAt)}</p><div class="finance-detail-grid"><div class="finance-detail"><b>رقم المستخدم</b><span>${esc(item.publicId||'—')}</span></div><div class="finance-detail"><b>الهاتف</b><span>${esc(item.phoneNumber||'—')}</span></div><div class="finance-detail"><b>طريقة السحب</b><span>${esc(item.methodName||item.method||'—')}</span></div><div class="finance-detail"><b>العملة والشبكة</b><span>${esc(currency)} — ${esc(network)}</span></div><div class="finance-detail"><b>اسم صاحب الاستلام</b><span>${esc(receiver)}</span></div><div class="finance-detail"><b>${esc(item.destinationLabel||'عنوان الاستلام')}</b><span class="wallet-address">${esc(destination)}</span></div><div class="finance-detail full"><b>بيانات الاستلام كاملة</b><span>${esc(fullDetails)}</span></div>${item.receiverNote?`<div class="finance-detail full"><b>ملاحظة المستخدم</b><span>${esc(item.receiverNote)}</span></div>`:''}<div class="finance-detail"><b>الرصيد قبل / بعد الحجز</b><span>${money(item.balanceBefore)} → ${money(item.balanceAfter)}</span></div><div class="finance-detail"><b>المحجوز قبل / بعد</b><span>${money(item.reservedBefore)} → ${money(item.reservedAfter)}</span></div><div class="finance-detail full"><b>UID المالي</b><span class="finance-request-id">${esc(item.financialUid||item.uid||'—')}</span></div><div class="finance-detail full"><b>رقم الطلب</b><span class="finance-request-id">${esc(item.id||'—')}</span></div>${item.rejectReason?`<div class="finance-detail full"><b>سبب الرفض</b><span>${esc(item.rejectReason)}</span></div>`:''}${processing?`<div class="finance-detail full"><b>حالة المعالجة</b><span>بدأت المعالجة بواسطة ${esc(item.processingBy||'الإدارة')} — ${dt(item.processingAt)}</span></div>`:''}</div></div><div class="finance-actions"><button class="btn blue sm" type="button" data-copy-value="${esc(destination)}">نسخ العنوان</button><button class="btn blue sm" type="button" data-copy-value="${esc(fullDetails)}">نسخ كل البيانات</button>${pending?`<button class="btn green sm" data-finance="withdraw" data-action="approve" data-record-id="${esc(item.id)}">قبول السحب</button><button class="btn red sm" data-finance="withdraw" data-action="reject" data-record-id="${esc(item.id)}">رفض وإرجاع</button>`:`<span class="badge ${statusClass}">${esc(statusText)}</span>`}</div></div>`;
 }
-function renderFinance(){const deps=finance.deposits||[],withs=finance.withdrawals||[];$('depositCount').textContent=deps.filter(x=>['pending','processing'].includes(String(x.status||'pending').toLowerCase())).length+' بحاجة لإجراء';$('withdrawCount').textContent=withs.filter(x=>String(x.status||'pending').toLowerCase()==='pending').length+' معلّق';$('depositList').innerHTML=deps.map(x=>financeRow(x,'deposit')).join('')||'<div class="empty">لا توجد طلبات</div>';$('withdrawList').innerHTML=withs.map(x=>financeRow(x,'withdraw')).join('')||'<div class="empty">لا توجد طلبات</div>';document.querySelectorAll('[data-finance]').forEach(b=>b.onclick=()=>processFinance(b.dataset.finance,b.dataset.recordId,b.dataset.action,b));document.querySelectorAll('[data-deposit-receipt]').forEach(b=>b.onclick=()=>openDepositReceipt(b.dataset.depositReceipt));document.querySelectorAll('[data-copy-value]').forEach(b=>b.onclick=()=>{navigator.clipboard?.writeText(b.dataset.copyValue||'').then(()=>toast('تم النسخ')).catch(()=>toast('تعذر النسخ'))})}
-async function processFinance(type,id,action,button){
-  const item=(type==='deposit'?finance.deposits:finance.withdrawals).find(x=>String(x.id)===String(id))||{};
-  const isDepositApproval=type==='deposit'&&action==='approve';
-  const amountSource=item.processingAmount??item.creditedAmount??item.receivedAmount??item.amount;
-  const amountOptions=isDepositApproval?{value:amountSource,label:'المبلغ الذي وصلك فعليًا (المطلوب من المستخدم: '+money(item.requestedAmount??item.amount)+')',locked:String(item.status||'').toLowerCase()==='processing'&&item.processingAmount!=null}:null;
-  const payout=type==='withdraw'?'المبلغ: '+money(item.amount)+'\nالطريقة: '+(item.methodName||item.method||'—')+'\nالعملة/الشبكة: '+(item.currency||'USD')+' / '+(item.network||'—')+'\nصاحب الاستلام: '+(item.receiverName||'—')+'\nالعنوان: '+(item.destinationAddress||item.details||'—'):'المبلغ المطلوب: '+money(item.requestedAmount??item.amount)+' — '+(item.methodName||item.method||'—')+(isDepositApproval?'\nاكتب المبلغ الذي وصل لمحفظتك فعلًا؛ السيرفر سيضيف هذا الرقم فقط.':'');
-  const decision=await confirmAction(action==='approve'?'تأكيد القبول':'تأكيد الرفض',action==='approve'?'راجع المعلومات قبل التنفيذ:\n'+payout:'سيتم حفظ سبب الرفض وإبلاغ المستخدم.\n'+payout,action==='reject',amountOptions);
-  if(decision===null)return;
-  const related=[...document.querySelectorAll('[data-finance="'+type+'"][data-record-id="'+CSS.escape(String(id))+'"]')];
-  related.forEach(el=>{el.disabled=true});if(button)button.textContent='جارٍ التنفيذ…';
+function renderFinance(){const deps=finance.deposits||[],withs=finance.withdrawals||[];$('depositCount').textContent=deps.filter(x=>String(x.status||'pending').toLowerCase()==='pending').length+' معلّق';$('withdrawCount').textContent=withs.filter(x=>String(x.status||'pending').toLowerCase()==='pending').length+' معلّق';$('depositList').innerHTML=deps.map(x=>financeRow(x,'deposit')).join('')||'<div class="empty">لا توجد طلبات</div>';$('withdrawList').innerHTML=withs.map(x=>financeRow(x,'withdraw')).join('')||'<div class="empty">لا توجد طلبات</div>';document.querySelectorAll('[data-finance]').forEach(b=>b.onclick=()=>processFinance(b.dataset.finance,b.dataset.recordId,b.dataset.action,b));document.querySelectorAll('[data-deposit-receipt]').forEach(b=>b.onclick=()=>showDepositReceipt(b.dataset.depositReceipt));document.querySelectorAll('[data-copy-value]').forEach(b=>b.onclick=()=>{navigator.clipboard?.writeText(b.dataset.copyValue||'').then(()=>toast('تم النسخ')).catch(()=>toast('تعذر النسخ'))})}
+async function showDepositReceipt(id){
   try{
     loading(true);
-    const requestBody={id,action,reason:decision===true?'':(typeof decision==='string'?decision:'')};
-    if(isDepositApproval)requestBody.creditedAmount=Number(decision.amount);
-    const route='/admin/finance/'+(type==='deposit'?'deposit':'withdrawal');
-    const result=await api(route,{method:'POST',body:JSON.stringify(requestBody)});
-    if(isDepositApproval)toast('تم اعتماد المبلغ الواصل وإضافة '+money(result.creditedAmount??decision.amount)+' إلى رصيد المستخدم');
-    else toast(result.alreadyProcessed?'الطلب كان منفذًا وتم تحديث حالته':'تمت معالجة الطلب');
+    const data=await api('/admin/finance/deposit/receipt?id='+encodeURIComponent(id));
+    const url=String(data.receiptDataUrl||'');
+    if(!url){toast('لا يوجد إيصال محفوظ لهذا الطلب');return}
+    const win=window.open('','_blank');
+    if(win){win.document.write('<title>إيصال إيداع '+esc(id)+'</title><body style="margin:0;background:#0a1120;display:grid;place-items:center;min-height:100vh"><img src="'+url+'" style="max-width:96vw;max-height:96vh;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,.6)"/></body>');win.document.close();}
+    else toast('اسمح بالنوافذ المنبثقة لعرض الإيصال');
+  }catch(e){toast(e.message)}finally{loading(false)}
+}
+async function processFinance(type,id,action,button){
+  const item=(type==='deposit'?finance.deposits:finance.withdrawals).find(x=>String(x.id)===String(id))||{};
+  const requested=Number(item.requestedAmount||item.amount||0);
+  if(type==='deposit'&&action==='approve'){
+    /* V228: الأدمن يعتمد المبلغ الواصل الفعلي — أقل أو أكثر من المطلوب. */
+    const answer=await confirmAction(
+      'قبول الإيداع وإضافة الرصيد',
+      `المستخدم: ${item.name||item.email||item.uid||'—'}\nالمبلغ الذي طلبه: ${money(requested)}\nالمرجع: ${item.reference||'—'}\n\nعدّل «المبلغ الواصل» إلى ما وصل فعليًا إلى المحفظة. الرصيد سيُضاف بهذا المبلغ بالضبط.`,
+      false,
+      {amount:requested,amountLabel:'المبلغ الذي وصل فعليًا (USD)',amountHint:'إذا وصل أقل اكتب الأقل، وإذا وصل أكثر اكتب الأكثر. لا يمكن إضافة رصيد بدون هذا المبلغ.'}
+    );
+    if(!answer)return;
+    const amount=Number(answer.amount||requested);
+    if(!(amount>0))return toast('المبلغ الواصل غير صحيح');
+    const notes=[];
+    if(Math.abs(amount-requested)>0.004)notes.push(`${amount>requested?'زيادة':'نقص'} عن المطلوب`);
+    try{
+      loading(true);
+      const result=await api('/admin/finance/deposit',{method:'POST',body:JSON.stringify({id,action:'approve',reason:answer.reason||'',amount})});
+      toast(`تم قبول الإيداع وإضافة ${money(result.amount||amount)} إلى رصيد المستخدم${notes.length?' ('+notes.join('، ')+')':''}`);
+    }catch(e){toast(e.message)}
+    finally{try{await loadFinance();await loadOverview(false)}catch{}loading(false)}
+    return;
+  }
+  const payout=type==='withdraw'?`المبلغ: ${money(item.amount)}\nالطريقة: ${item.methodName||item.method||'—'}\nالعملة/الشبكة: ${item.currency||'USD'} / ${item.network||'—'}\nصاحب الاستلام: ${item.receiverName||'—'}\nالعنوان: ${item.destinationAddress||item.details||'—'}`:(`المبلغ: ${money(requested)} — ${item.methodName||item.method||'—'}`);
+  const reason=await confirmAction(action==='approve'?'تأكيد القبول':'تأكيد الرفض',action==='approve'?'راجع المعلومات قبل التنفيذ:\n'+payout:'سيتم حفظ سبب الرفض وإبلاغ المستخدم.\n'+payout,action==='reject');
+  if(reason===null)return;
+  const related=[...document.querySelectorAll(`[data-finance="${type}"][data-record-id="${CSS.escape(String(id))}"]`)];
+  related.forEach(el=>{el.disabled=true});
+  if(button)button.textContent='جارٍ التنفيذ…';
+  try{
+    loading(true);
+    const result=await api(`/admin/finance/${type==='deposit'?'deposit':'withdrawal'}`,{method:'POST',body:JSON.stringify({id,action,reason:reason===true?'':reason})});
+    toast(result.alreadyProcessed?'الطلب كان منفذًا وتم تحديث حالته':'تمت معالجة الطلب');
   }catch(e){toast(e.message)}
   finally{try{await loadFinance();await loadOverview(false)}catch{}related.forEach(el=>{el.disabled=false});loading(false)}
-}function fillLottery(){const s=lotterySettings||{};$('lotteryTicketPrice').value=Number(s.ticketPrice||1);$('dailyPrize').value=Number(s.daily?.prize||s.draws?.daily?.prize||4500);$('weeklyPrize').value=Number(s.weekly?.prize||s.draws?.weekly?.prize||15000);$('monthlyPrize').value=Number(s.monthly?.prize||s.draws?.monthly?.prize||45000);$('yearlyPrize').value=Number(s.yearly?.prize||s.draws?.yearly?.prize||750000);$('allowBonusTickets').value=String(s.allowBonusForTickets!==false&&s.allowBonus!==false);renderDrawResults()}
+}
+
+function fillLottery(){const s=lotterySettings||{};$('lotteryTicketPrice').value=Number(s.ticketPrice||1);$('dailyPrize').value=Number(s.daily?.prize||s.draws?.daily?.prize||4500);$('weeklyPrize').value=Number(s.weekly?.prize||s.draws?.weekly?.prize||15000);$('monthlyPrize').value=Number(s.monthly?.prize||s.draws?.monthly?.prize||45000);$('yearlyPrize').value=Number(s.yearly?.prize||s.draws?.yearly?.prize||750000);$('allowBonusTickets').value=String(s.allowBonusForTickets!==false&&s.allowBonus!==false);renderDrawResults()}
 function turkeyInputToMillis(value){const raw=String(value||'').trim();if(!raw)return 0;const normalized=raw.length===16?raw+':00+03:00':raw+'+03:00';const timestamp=new Date(normalized).getTime();return Number.isFinite(timestamp)?timestamp:0}
 function turkeyInputValue(timestamp){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date(Number(timestamp||Date.now()))).reduce((a,x)=>(a[x.type]=x.value,a),{});return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`}
 function nextTurkey8Pm(){const now=Date.now(),today=turkeyInputValue(now).slice(0,10),candidate=turkeyInputToMillis(today+'T20:00');return candidate>now?candidate:candidate+86400000}
@@ -664,10 +738,10 @@ async function cancelExchangeOrder(orderId,button){
   finally{loading(false);button.disabled=false}
 }
 
-function fillSupport(){const s=supportSettings||{};$('supportTelegram').value=s.telegram||'';$('supportHours').value=s.hours||'';$('supportActive').value=String(s.active!==false);renderSupportPreview()}
-function renderSupportPreview(){const tg=$('supportTelegram').value||'غير محدد';$('supportPreview').innerHTML='<div class="list-row"><div class="activity-icon">✈️</div><div><h4>Telegram</h4><p>'+esc(tg)+'</p></div></div><div class="list-row"><div class="activity-icon">🕒</div><div><h4>ساعات العمل</h4><p>'+esc($('supportHours').value||'غير محددة')+'</p></div></div>';};
-['supportTelegram','supportHours'].forEach(id=>$(id).oninput=renderSupportPreview);
-$('saveSupport').onclick=async()=>{try{loading(true);const r=await api('/admin/support/settings',{method:'POST',body:JSON.stringify({telegram:$('supportTelegram').value,hours:$('supportHours').value.trim(),active:$('supportActive').value==='true'})});supportSettings=r.support||supportSettings;fillSupport();toast('تم حفظ تيليجرام كقناة الدعم')}catch(e){toast(e.message)}finally{loading(false)}};
+function fillSupport(){const s=supportSettings||{};$('supportWhatsapp').value=s.whatsapp||s.phone||'';$('supportTelegram').value=s.telegram||'';$('supportMessage').value=s.message||'مرحبًا، أحتاج مساعدة في منصة ADNOR';$('supportHours').value=s.hours||'';$('supportActive').value=String(s.active!==false);renderSupportPreview()}
+function renderSupportPreview(){const wa=$('supportWhatsapp').value||'غير محدد',tg=$('supportTelegram').value||'غير محدد';$('supportPreview').innerHTML=`<div class="list-row"><div class="activity-icon">🟢</div><div><h4>WhatsApp</h4><p>${esc(wa)}</p></div></div><div class="list-row"><div class="activity-icon">✈️</div><div><h4>Telegram</h4><p>${esc(tg)}</p></div></div><div class="list-row"><div class="activity-icon">🕒</div><div><h4>ساعات العمل</h4><p>${esc($('supportHours').value||'غير محددة')}</p></div></div>`}
+['supportWhatsapp','supportTelegram','supportHours'].forEach(id=>$(id).oninput=renderSupportPreview);
+$('saveSupport').onclick=async()=>{try{loading(true);const r=await api('/admin/support/settings',{method:'POST',body:JSON.stringify({whatsapp:$('supportWhatsapp').value,telegram:$('supportTelegram').value,message:$('supportMessage').value.trim(),hours:$('supportHours').value.trim(),active:$('supportActive').value==='true'})});supportSettings=r.support||supportSettings;fillSupport();toast('تم حفظ بيانات الدعم عبر السيرفر')}catch(e){toast(e.message)}finally{loading(false)}};
 
 const controlLabels={registrationEnabled:'التسجيل',loginEnabled:'تسجيل الدخول',depositEnabled:'الإيداع',withdrawEnabled:'السحب',lotteryEnabled:'اليانصيب',wheelEnabled:'العجلة',gamesEnabled:'الألعاب',supportEnabled:'الدعم',maintenanceMode:'وضع الصيانة'};
 function hydrateSystemControls(c={}){systemControls={registrationEnabled:c.registrationEnabled!==false,loginEnabled:c.loginEnabled!==false,depositEnabled:c.depositEnabled!==false,withdrawEnabled:c.withdrawEnabled!==false,lotteryEnabled:c.lotteryEnabled!==false,wheelEnabled:c.wheelEnabled!==false,gamesEnabled:c.gamesEnabled!==false,supportEnabled:c.supportEnabled!==false,maintenanceMode:c.maintenanceMode===true,maintenanceMessage:c.maintenanceMessage||''};$('systemSwitches').innerHTML=Object.entries(controlLabels).map(([key,label])=>`<label class="switch"><span>${label}</span><input type="checkbox" data-control="${key}" ${systemControls[key]?'checked':''}></label>`).join('');$('maintenanceMessage').value=systemControls.maintenanceMessage}
@@ -791,6 +865,55 @@ async function startAdminGoogleLogin(){
 $('googleLogin').onclick=startAdminGoogleLogin;
 $('logoutBtn').onclick=()=>signOut(auth);
 
+/* ===== V228 — إشعارات الإدارة الحيّة (طلبات الإيداع اليدوي) ===== */
+let adminNotifUnsub=null,adminNotifSeen=null,adminNotifRefreshTimer=null;
+function adminDepositNotifs(all){
+  return all
+    .filter(x=>/deposit/i.test(String(x.type||''))&&String(x.status||'new')!=='read')
+    .sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0));
+}
+function renderAdminNotifBadge(all){
+  const pending=adminDepositNotifs(all);
+  const badge=$('adminNotifBadge');
+  if(badge){
+    badge.textContent=pending.length>99?'99+':String(pending.length);
+    badge.classList.toggle('hidden',pending.length===0);
+  }
+  return pending;
+}
+async function markAdminNotificationsRead(){
+  try{
+    const snap=await get(ref(db,'admin_notifications'));
+    const updates={};
+    Object.entries(snap.val()||{}).forEach(([id,value])=>{
+      if(!value||!adminDepositNotifs([{id,...value}]).length)return;
+      updates['admin_notifications/'+id+'/status']='read';
+    });
+    if(Object.keys(updates).length)await update(ref(db),updates);
+  }catch(e){console.warn('mark admin notifications failed',e)}
+}
+function startAdminNotifications(){
+  if(adminNotifUnsub||!auth.currentUser)return;
+  adminNotifUnsub=onValue(ref(db,'admin_notifications'),snap=>{
+    const all=Object.entries(snap.val()||{}).map(([id,value])=>({id,...(value||{})}));
+    const pending=renderAdminNotifBadge(all);
+    const ids=new Set(all.map(x=>x.id));
+    if(adminNotifSeen){
+      const fresh=pending.filter(x=>!adminNotifSeen.has(x.id));
+      if(fresh.length){
+        const first=fresh[0];
+        toast('🔔 '+String(first.text||first.name||'طلب إيداع جديد'));
+        if(currentPage==='finance'){
+          clearTimeout(adminNotifRefreshTimer);
+          adminNotifRefreshTimer=setTimeout(()=>{loadFinance().catch(()=>{})},900);
+        }
+      }
+    }
+    adminNotifSeen=ids;
+  },err=>console.warn('admin notifications listen skipped',err));
+}
+$('adminNotifBtn').onclick=()=>{showPage('finance');markAdminNotificationsRead();};
+
 function startSettingsListeners(){onValue(ref(db,'lottery_settings'),s=>{lotterySettings=s.val()||{};fillLottery()});onValue(ref(db,'wheel_settings'),s=>{wheelSettings=s.val()||{};fillWheel()});onValue(ref(db,'system_settings/public_support'),s=>{supportSettings=s.val()||{};fillSupport()})}
 try{await getRedirectResult(auth)}catch(e){$('loginStatus').textContent=e?.message||'تعذر إكمال تسجيل Google'}
 onAuthStateChanged(auth,async user=>{
@@ -800,6 +923,7 @@ onAuthStateChanged(auth,async user=>{
     await api('/admin/overview?range=today');
     $('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');
     startSettingsListeners();
+    startAdminNotifications();
     await Promise.all([loadOverview(false),checkHealth(),loadDrawResults(false,true)]);
     const requested=String(location.hash||'').replace(/^#/,'');
     const allowed=['dashboard','live','users','finance','lottery','games','exchange','agents','referrals','payments','helpdesk','broadcast','content','support','energy','vip','daily','promos','assistant','backups','audit','system'];

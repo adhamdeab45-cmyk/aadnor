@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='adnor-v234-render-npm-fix-1';
+const CACHE='adnor-v228-manual-deposit-stable-winner-1';
 const SHELL=[
   '/', '/index.html', '/app.html', '/offline.html', '/manifest.webmanifest',
   '/favicon.svg', '/apple-touch-icon.png', '/terms.html', '/privacy.html', '/responsible-play.html',

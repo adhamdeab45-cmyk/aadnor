@@ -1,9 +1,13 @@
 {
-  "version": "2.2.13",
-  "build": "V234-RENDER-NPM-FIX",
+  "version": "2.2.8",
+  "build": "V228-MANUAL-DEPOSIT-STABLE-WINNER-TICKER",
   "changes": [
-    "Replaced all non-public package-lock tarball URLs with registry.npmjs.org and added a public npm registry config.",
-    "Clarified that the static website and Node API must be deployed as separate Render services.",
-    "Deposit processing, receipt loading, and draw scheduler fixes from V233 are retained."
+    "الإيداع التلقائي عبر TRON أصبح معطّلًا افتراضيًا، والإيداع اليدوي هو الطريق الرسمي",
+    "المستخدم يكتب المبلغ وينسخ عنوان USDT TRC20 ثم يضغط «تم الإيداع» فيرى تأكيد استلام الطلب",
+    "طلب الإيداع يظهر مباشرة كإشعار للأدمن داخل لوحة التحكم مع عدّاد على الجرس",
+    "الأدمن يوافق بمبلغ الواصل الفعلي (أقل أو أكثر)، والرصيد يُضاف بذلك المبلغ فقط",
+    "الإيصال أصبح اختياريًا في الإيداع اليدوي مع إمكانية عرضه من لوحة الأدمن",
+    "شريط الفائز العلوي يعرض فائزًا واحدًا ثابتًا بدل تبديل الأسماء والحركة المستمرة",
+    "إعادة الرسم أصبحت مشروطة بالتغيّر الفعلي لمنع اهتزاز لوحة آخر نتيجة"
   ]
 }

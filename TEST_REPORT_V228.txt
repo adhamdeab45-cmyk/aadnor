@@ -1,12 +1,63 @@
-ADNOR V228 CHECK REPORT
-=======================
+ADNOR V228 — تقرير الفحص
+========================
 
-PASS — version.json parses and reports version 2.2.8
-PASS — Deposit category, method, details, and form IDs are no longer forced hidden
-PASS — Service worker cache name updated to V228
-PASS — 13 HTML files have no duplicate literal IDs
-PASS — 32 inline JavaScript blocks pass Node.js syntax checks
-PASS — 2 JSON files parse
-PASS — service-worker.js and install-app.js pass Node.js syntax checks
+النطاق المفحوص:
+- adnor-api-main/src/server.js (تعديل مباشر)
+- aadnor-main/app.html (تعديل مباشر)
+- aadnor-main/admin-command-center.html (تعديل مباشر)
+- aadnor-main/service-worker.js, version.json, adnor-api-main/package.json
 
-The archive does not include the backend source referenced by older V218 notes. No live Firebase or deployed-site transaction was run, so this report covers the supplied static project files only.
+1) فحص صياغة JavaScript
+   - node --check لملف server.js: ناجح (exit 0).
+   - استخراج كل كتل <script> من app.html (20 كتلة) وفحصها: كلها ناجحة.
+   - استخراج كتلة السكربت من admin-command-center.html وفحصها: ناجحة.
+
+2) فحص الترميز العربي
+   - الملفات المعدّلة كلها UTF-8 صالح، والنصوص العربية الجديدة موجودة كما كُتبت
+     (لا يوجد أي تشويه ترميز).
+
+3) فحص معرّفات الواجهة
+   - admin-command-center.html: كل معرّفات $(...) المشار إليها موجودة في الصفحة (0 مفقود).
+   - app.html: المعرّفات الجديدة (v228DepositAmount, v228DepositTxid, v228DepositDoneBtn,
+     v228DepositStatus, v228DepositResult, v228DepositAddress, v228DepositQr) كلها موجودة.
+     المعرّفات المفقودة المتبقية هي واجهات الأدمن القديمة المتقاعدة داخل app.html
+     (موجودة قبل V228 ولا علاقة لها بالتعديل).
+
+4) توافق العقد بين الواجهة والسيرفر
+   - POST /finance/deposit/request: الواجهة ترسل
+     { requestId, amount, methodId, reference } والسيرفر يقرأ نفس الحقول.
+   - POST /admin/finance/deposit: الواجهة ترسل { id, action, reason, amount }
+     والسيرفر يستخدم body.amount كمبلغ الواصل الفعلي.
+   - GET /admin/finance/deposit/receipt?id=: مسار جديد محمي بـ requireAdmin.
+
+5) سلوك الإيداع اليدوي
+   - MANUAL_DEPOSITS_ENABLED افتراضيًا true (يمكن إيقافه بـ false).
+   - AUTO_USDT_DEPOSITS_ENABLED افتراضيًا false: create/verify/status ومجدول المزامنة
+     كلها متوقفة، فلا يمكن إضافة رصيد تلقائيًا.
+   - إنشاء طلب إيداع بدون صورة إيصال مسموح، ومع إيصال يتم التحقق من نوعه وحجمه.
+   - طلب الإيداع يُسجَّل pending فقط؛ لا يوجد أي مسار يضيف الرصيد قبل موافقة الأدمن.
+   - عند الموافقة: الرصيد = المبلغ الواصل (وليس المطلوب)، مع حفظ
+     requestedAmount / approvedAmount / amountAdjusted وإشعار المستخدم بالفرق.
+   - أزرار الموافقة/الرفض القديمة داخل app.html (adminApproveDeposit / adminRejectDeposit)
+     أصبحت تنادي السيرفر فقط بمبلغ الواصل، ولم يبقَ أي مسار يكتب realBalance من المتصفح
+     لهذا النوع من الطلبات (يمنع الاحتساب المزدوج).
+
+6) شريط الفائز
+   - after fix: v144TickerHtml يبني عنصرًا واحدًا لآخر نتيجة منشورة (v144LatestVisible)،
+     بدون دورة على الأنواع الأربعة ولا مواعيد قادمة.
+   - v144RenderTicker يكتب HTML فقط عند تغيّر النص (dataset guard)، والأنيميشن
+     v105TickerMove أُلغي لهذا الشريط عبر .v228-static-ticker.
+   - إصلاح استدعاء ذاتي لا نهائي عند وضع الصيانة.
+   - v108SetDigits لا يعيد بناء الأرقام إن لم تتغير (كان يعيد البناء كل 3 ثوانٍ).
+   - v108Listen يحافظ على نسخة السيرفر published، وv144PublishedRaw يختار الأحدث زمنيًا.
+
+7) ما لم يُفحص (يحتاج نشرًا حقيقيًا)
+   - لم يُشغَّل السيرفر مع Firebase حقيقي (لا مفاتيح خدمة داخل بيئة العمل)، لذلك
+     لم يُنفَّذ اختبار End-to-End لطلب إيداع فعلي وموافقة أدمن.
+   - الخطوات المقترحة بعد النشر:
+     أ) تسجيل دخول مستخدم → المحفظة → إيداع → إدخال 10 → «تم الإيداع»
+        والمتوقع: رسالة «تم الإيداع — وصل طلبك للإدارة» ورقم طلب.
+     ب) تسجيل دخول الأدمن: يظهر جرس بعدّاد + Toast. فتح «الإيداع والسحب»،
+        تعديل المبلغ الواصل إلى 9 ثم قبول، والمتوقع: إضافة 9$ فقط لرصيد المستخدم
+        وظهور «أُضيف للرصيد: $9.00 — المطلوب كان $10.00».
+     ج) نشر نتيجة من لوحة الأدمن والتحقق أن شريط الفائز يثبت على الاسم المختار.

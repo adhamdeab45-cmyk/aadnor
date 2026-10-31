@@ -564,6 +564,7 @@
     .v207-copy-box{border:1px solid rgba(255,209,91,.38);border-radius:18px;padding:10px 11px;background:rgba(2,10,22,.72)}.v207-copy-box small{display:block;color:#9fb0c6;font-size:10px;font-weight:900;margin-bottom:4px}.v207-copy-line{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center}.v207-copy-line b{direction:ltr;text-align:left;color:#fff0a4;font-size:14px;overflow-wrap:anywhere}.v207-copy-line button{border:1px solid rgba(33,224,164,.42);border-radius:12px;background:rgba(33,224,164,.12);color:#76ffd5;font-weight:1000;padding:7px 9px;cursor:pointer}
     .v207-warning{margin-top:10px;color:#ffd98a;font-size:11px;font-weight:900;line-height:1.7}.v207-auto-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.v207-auto-actions button{min-height:46px;border-radius:16px;font:inherit;font-weight:1000;cursor:pointer}.v207-auto-actions .check{border:1px solid rgba(33,224,164,.44);background:linear-gradient(180deg,#6affd3,#22dca5 60%,#087b5e);color:#061426}.v207-auto-actions .cancel{border:1px solid rgba(255,209,91,.34);background:rgba(5,17,34,.78);color:#ffe184}
     .v207-countdown{text-align:center;color:#d8e4f3;font-size:12px;font-weight:900;margin-top:9px}.v207-countdown strong{direction:ltr;color:#ffe184;font-size:15px}.v207-paid{border-color:rgba(33,224,164,.58)!important;background:rgba(33,224,164,.10)!important;color:#86ffdc!important}
+    #depositCategoryGrid,#depositSupportCard,#depositMethodStep,#depositMethods,#depositMethodDetails,#depositFormBlock{display:none!important}
     @media(max-width:560px){.v207-auto-create{grid-template-columns:1fr}.v207-auto-grid{grid-template-columns:1fr}.v207-auto-qr{min-height:auto}.v207-auto-qr img{width:170px;height:170px}.v207-auto-actions{grid-template-columns:1fr}.v207-copy-line b{font-size:12px}}
     .v69-method-step{margin-top:6px}.v69-specific-methods{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;margin:0 0 10px!important}
     .v69-specific-methods.hidden{display:none!important}.v69-method{min-height:62px!important;border-radius:20px!important;padding:11px 13px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important}.v69-method strong{color:#fff;font-size:14px;font-weight:1000}.v69-method span{font-size:11px!important;color:#aeb8cc!important;max-width:180px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;margin:0!important}.v69-method.active strong,.v69-method.active span{color:#ffe184!important}.v69-method:after{content:'فتح'!important}.v69-method.active:after{content:'مفتوح'!important;background:linear-gradient(180deg,#40ffd0,#14b987)!important;color:#01140f!important}
@@ -882,7 +883,7 @@
 
 .v144-safe-note{display:inline-block;margin-top:5px;color:#8fe7ff;font-weight:1000}.v144-gold-track{gap:16px}.v144-sep{color:#ffd45d;opacity:.7}.v108-status b{color:#ffe184}.v108-status{min-height:82px}.v104-ticker-track.v144-gold-track{animation-duration:38s!important}
 </style>
-<meta content="V234_RENDER_NPM_FIX" name="adnor-version"/>
+<meta content="V227_REFERRAL_BOTH_PARTY_FINAL_FIX" name="adnor-version"/>
 <style id="adnor-v120-lottery-result-layout-fix">
 /* */
 #page-lottery{
@@ -1362,6 +1363,53 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
   @media(max-width:760px){.adn-exchange-page{padding-bottom:85px}.adx-hero,.adx-trade-zone{grid-template-columns:1fr}.adx-market-stats{grid-template-columns:1fr 1fr}.adx-terminal{grid-template-columns:1fr}.adx-chart-card,.adx-orderbook-card,.adx-trades-card{grid-column:auto}.adx-chart-wrap{height:310px}.adx-card-head{align-items:flex-start;flex-direction:column}.adx-intervals{margin:0;width:100%;overflow:auto;flex-wrap:nowrap;padding-bottom:3px}.adx-intervals button{flex:0 0 auto}.adx-form-grid{grid-template-columns:1fr}.adx-order-preview{grid-template-columns:1fr 1fr}.adx-symbol-line{align-items:flex-start;flex-direction:column}.adx-price-block{text-align:right}.adx-risk-strip{grid-template-columns:auto 1fr}.adx-risk-strip button{grid-column:1/3;width:100%}.adx-order-item{grid-template-columns:auto 1fr auto}.adx-order-item strong{grid-column:2}.adx-order-cancel{grid-column:3;grid-row:1/3}.adx-wallet-mini,.adx-portfolio-grid{grid-template-columns:1fr 1fr}}
   @media(max-width:420px){.adx-market-stats,.adx-wallet-mini,.adx-portfolio-grid,.adx-order-preview{grid-template-columns:1fr 1fr}.adx-chart-wrap{height:270px}.adx-hero-main,.adx-wallet-summary,.adx-chart-card,.adx-orderbook-card,.adx-trades-card,.adx-order-panel,.adx-portfolio-card,.adx-orders-section{border-radius:21px}.adx-symbol-line h2{font-size:28px}.adx-price-block b{font-size:25px}}
 </style>
+<style id="adnor-v228-manual-deposit-css">
+  /* V228 — الإيداع اليدوي USDT TRC20 */
+  .v228-manual-deposit{margin:10px 0 16px;border:1px solid rgba(255,209,91,.58);border-radius:26px;padding:16px;background:radial-gradient(circle at 92% 0,rgba(255,214,92,.14),transparent 38%),linear-gradient(180deg,rgba(8,22,42,.94),rgba(2,8,18,.98));box-shadow:0 14px 34px rgba(0,0,0,.32),inset 0 0 0 1px rgba(255,255,255,.02)}
+  .v228-md-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+  .v228-md-head i{width:44px;height:44px;border-radius:16px;display:grid;place-items:center;font-size:22px;font-style:normal;font-weight:1000;color:#160f02;background:radial-gradient(circle at 32% 24%,#fff7c4,#e9bb45 56%,#8a5410);box-shadow:0 0 18px rgba(255,203,66,.30)}
+  .v228-md-head h4{margin:0;color:#ffe9a3;font-size:16px;font-weight:1000}
+  .v228-md-head p{margin:4px 0 0;color:#b8c4d8;font-size:11.5px;font-weight:800;line-height:1.7}
+  .v228-md-steps{display:grid;gap:10px}
+  .v228-md-address{border:1px solid rgba(255,214,92,.30);border-radius:18px;padding:11px 12px;background:rgba(255,255,255,.035);display:grid;gap:8px}
+  .v228-md-address small{color:#ffd76b;font-size:11px;font-weight:1000}
+  .v228-md-copy{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .v228-md-copy b{flex:1 1 190px;min-width:0;direction:ltr;text-align:left;color:#9ff3ff;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;font-weight:900;word-break:break-all;background:rgba(0,0,0,.30);border:1px dashed rgba(120,230,255,.32);border-radius:12px;padding:8px 10px}
+  .v228-md-copy button{border:1px solid rgba(255,214,92,.55);border-radius:12px;background:linear-gradient(180deg,#ffe089,#c9942a);color:#191001;font:inherit;font-weight:1000;font-size:12px;padding:9px 13px;cursor:pointer}
+  .v228-md-qr{display:flex;justify-content:center}
+  .v228-md-qr img{width:132px;height:132px;border-radius:16px;background:#fff;padding:6px;object-fit:contain;border:1px solid rgba(255,214,92,.35)}
+  .v228-md-hint{color:#a9b6cb;font-size:11px;font-weight:800;line-height:1.7}
+  .v228-md-hint b{color:#ffe184}
+  .v228-md-result{margin-top:12px;border:1px solid rgba(46,230,164,.45);border-radius:18px;padding:14px;background:linear-gradient(180deg,rgba(10,48,38,.72),rgba(3,16,14,.9));text-align:center}
+  .v228-md-result.ok{border-color:rgba(46,230,164,.6)}
+  .v228-md-result h5{margin:0 0 6px;color:#7dffcd;font-size:17px;font-weight:1000}
+  .v228-md-result p{margin:3px 0;color:#cfe0f3;font-size:11.5px;font-weight:800;line-height:1.8}
+  .v228-md-result code{direction:ltr;display:inline-block;background:rgba(0,0,0,.35);border-radius:9px;padding:3px 8px;color:#ffe184;font-size:11px}
+  .v228-md-result .v228-md-reset{margin-top:9px;border:1px solid rgba(255,214,92,.5);border-radius:12px;background:rgba(255,214,92,.10);color:#ffe184;font:inherit;font-weight:1000;font-size:12px;padding:9px 14px;cursor:pointer}
+
+  /* V228 — شريط الفائز: سطر واحد ثابت بدون حركة ولا تبديل أسماء */
+  #appWrap:not(.admin-layout) .v104-ticker-track.v228-static-ticker{
+    display:flex!important;align-items:center!important;justify-content:center!important;flex-wrap:nowrap!important;
+    gap:10px!important;width:100%!important;max-width:100%!important;padding:0 12px!important;
+    animation:none!important;transform:none!important;direction:rtl!important;overflow:hidden!important;
+  }
+  #appWrap:not(.admin-layout) .v228-static-ticker .v228-ticker-badge{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;
+    border:1px solid rgba(255,214,92,.55);background:rgba(255,214,92,.12);color:#ffe9a3;font-size:10.5px;font-weight:1000;white-space:nowrap;
+  }
+  #appWrap:not(.admin-layout) .v228-static-ticker .v228-ticker-item{
+    flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:900;color:#dde7f6;
+  }
+  #appWrap:not(.admin-layout) .v228-static-ticker .v104-ticker-name{
+    max-width:34vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  @media(max-width:520px){
+    #appWrap:not(.admin-layout) .v228-static-ticker{gap:7px!important;padding:0 9px!important}
+    #appWrap:not(.admin-layout) .v228-static-ticker .v228-ticker-item:nth-of-type(4){display:none}
+    #appWrap:not(.admin-layout) .v228-static-ticker .v104-ticker-name{max-width:42vw}
+    #appWrap:not(.admin-layout) .v228-static-ticker .v228-ticker-item{font-size:11px}
+  }
+</style>
 </head>
 <body>
 <div class="aurora"></div>
@@ -1523,7 +1571,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 </div>
 <aside class="v195-home-side">
 <section class="royal-card v195-game-spotlight"><div class="v195-wheel-mini"><span>ADNOR</span></div><h3>عجلة الحظ الملكية</h3><p>ادخل صالة الألعاب، اختر الرهان، واترك السيرفر ينفذ الجولة ويسجل نتيجتها.</p><button class="gold-btn" data-home-go="games">العب الآن</button></section>
-<section class="royal-card v195-support-card"><div class="section-title"><h3>مركز المساعدة</h3><span>لا تضيع بين الأقسام</span></div><p>تذاكر الدعم وتيليجرام في مكان واحد.</p><button class="v195-wide-link" data-home-go="support">فتح الدعم الفني</button></section>
+<section class="royal-card v195-support-card"><div class="section-title"><h3>مركز المساعدة</h3><span>لا تضيع بين الأقسام</span></div><p>تذاكر الدعم وWhatsApp وTelegram في مكان واحد.</p><button class="v195-wide-link" data-home-go="support">فتح الدعم الفني</button></section>
 <section class="royal-card v195-trust-card"><b>🛡️ ADNOR SECURE</b><span>تسجيل الدخول وشحن الوكيل وعمليات السيرفر المحمية تعمل عبر ADNOR API.</span></section>
 </aside>
 </div>
@@ -1655,12 +1703,28 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 <button class="wallet-tab" data-wallet="history"><i>📜</i><b>السجل</b></button>
 </div>
 <div class="wallet-panel v68-wallet-panel v69-wallet-panel" id="wallet-deposit">
-<div class="v69-step-head"><b>1</b><div><h4>اختر نوع الإيداع</h4><p>اختار USD أو ShamCash أو حساب بنكي. بعد الاختيار تظهر لك الطريقة والعنوان.</p></div></div>
+<div class="v69-step-head"><b>1</b><div><h4>إيداع يدوي — USDT (TRC20)</h4><p>اكتب المبلغ، انسخ عنوان المحفظة، حوّل المبلغ، وبعدها اضغط «تم الإيداع». الإدارة تراجع المبلغ الواصل وتضيفه إلى رصيدك.</p></div></div>
 <div class="v69-category-grid" id="depositCategoryGrid"></div>
+<div class="v228-manual-deposit" id="v228ManualDepositCard">
+<div class="v228-md-head"><i>₮</i><div><h4>إيداع USDT يدوي</h4><p>لا يُضاف أي رصيد قبل موافقة الإدارة. الرصيد يُضاف حسب المبلغ الذي وصل فعليًا (أقل أو أكثر من المطلوب).</p></div></div>
+<div class="v228-md-steps">
+<div class="field-wrap"><label>1) المبلغ الذي تريد إيداعه بالدولار</label><div class="field"><span class="ico">💵</span><input id="v228DepositAmount" inputmode="decimal" min="5" placeholder="مثال: 10" step="0.01" type="number"/></div></div>
+<div class="v228-md-address">
+<small>2) عنوان محفظة ADNOR — شبكة TRC20</small>
+<div class="v228-md-copy"><b id="v228DepositAddress">—</b><button data-v228-copy="address" type="button">نسخ العنوان</button></div>
+<div class="v228-md-qr"><img alt="USDT TRC20 deposit QR" id="v228DepositQr" src=""/></div>
+<div class="v228-md-hint">أرسل <b>USDT</b> على شبكة <b>TRC20</b> فقط. أي مبلغ مختلف عن المطلوب سيُعتمد حسب المبلغ الذي وصل فعليًا.</div>
+</div>
+<div class="field-wrap"><label>3) رقم العملية TXID (اختياري — يسرّع المراجعة)</label><div class="field"><span class="ico">🔎</span><input autocomplete="off" id="v228DepositTxid" maxlength="100" placeholder="الصق TXID بعد التحويل" type="text"/></div></div>
+</div>
+<button class="gold-btn" id="v228DepositDoneBtn" type="button">تم الإيداع — أرسل الطلب للإدارة</button>
+<div class="deposit-status" id="v228DepositStatus"></div>
+<div class="v228-md-result hidden" id="v228DepositResult"></div>
+</div>
 <div class="v147-deposit-support-card" id="depositSupportCard">
 <div class="v147-deposit-support-head"><i>💬</i><div><b>تواصل مع فريق وكيل الشحن الحصري</b><span>إذا لم تجد طريقة الإيداع المناسبة، تواصل مباشرة مع وكيل الشحن الحصري وحدد المبلغ وطريقة التحويل، وسيتم إرشادك بأمان.</span></div></div>
 <div class="v147-deposit-support-actions">
-
+<a href="#" id="depositAgentWhatsappLink" rel="noopener" target="_blank">🟢 WhatsApp</a>
 <a href="#" id="depositAgentTelegramLink" rel="noopener" target="_blank">🔵 Telegram</a>
 </div>
 </div>
@@ -1668,13 +1732,13 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 <div class="method-grid v68-method-grid v69-specific-methods hidden" id="depositMethods"></div>
 <div class="method-details v68-method-details v69-method-details hidden" id="depositMethodDetails">اختر طريقة إيداع لعرض التفاصيل.</div>
 <div class="v69-form-block hidden" id="depositFormBlock">
-<div class="v69-step-head"><b>3</b><div><h4>أرسل طلبك لموافقة الإدارة</h4><p>اكتب المبلغ الذي تريد طلبه ثم أرسل الطلب. بعد مراجعة الإدارة سيضاف فقط المبلغ الذي وصل فعليًا.</p></div></div>
+<div class="v69-step-head"><b>3</b><div><h4>أدخل بيانات الطلب</h4><p>بعد التحويل اكتب المبلغ وارفع صورة الإيصال ثم أرسل الطلب للأدمن.</p></div></div>
 <div class="fields v68-wallet-fields v69-wallet-fields">
 <div class="field-wrap"><label>المبلغ بالدولار</label><div class="field"><span class="ico">💵</span><input id="depositAmount" min="1" placeholder="مثال: 10" type="number"/></div></div>
 <div class="field-wrap"><label>رقم/مرجع التحويل</label><div class="field"><span class="ico">#</span><input id="depositRef" placeholder="اكتب رقم العملية أو ملاحظة"/></div></div>
 </div>
 <div class="filebox v68-filebox v69-filebox">📎 رفع صورة الإيصال <input accept="image/*" id="depositReceipt" type="file"/></div>
-<div class="v69-no-address" style="margin-top:10px">هذا طلب يدوي للمراجعة. لن يضاف أي رصيد قبل موافقة الأدمن، وسيُعتمد المبلغ الذي وصل فعليًا.</div><button class="gold-btn v68-submit-btn v69-submit-btn" id="sendDepositBtn">إرسال طلب الإيداع للأدمن</button><div class="deposit-status" id="depositStatus"></div>
+<button class="gold-btn v68-submit-btn v69-submit-btn" id="sendDepositBtn">إرسال طلب الإيداع</button><div class="deposit-status" id="depositStatus"></div>
 </div>
 </div>
 <div class="wallet-panel v68-wallet-panel v69-wallet-panel hidden" id="wallet-withdraw">
@@ -1683,7 +1747,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 <div class="v147-deposit-support-card" id="withdrawSupportCard">
 <div class="v147-deposit-support-head"><i>💬</i><div><b>تواصل مع فريق وكيل السحب الحصري</b><span>إذا لم تجد طريقة السحب المناسبة، تواصل مباشرة مع وكيل السحب الحصري وحدد المبلغ وطريقة الاستلام، وسيتم إرشادك بأمان.</span></div></div>
 <div class="v147-deposit-support-actions">
-
+<a href="#" id="withdrawAgentWhatsappLink" rel="noopener" target="_blank">🟢 WhatsApp</a>
 <a href="#" id="withdrawAgentTelegramLink" rel="noopener" target="_blank">🔵 Telegram</a>
 </div>
 </div>
@@ -1850,7 +1914,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 </div>
 <div class="page" id="page-support">
 <section class="support-hero"><div class="big-icon">💬</div><h2>الدعم الفني الملكي</h2><p>أرسل مشكلتك أو طلبك للإدارة، وسيتم حفظ التذكرة وإشعار الأدمن مباشرة.</p></section>
-<div class="contact-grid" id="supportContactsGrid"><a class="contact-card" href="https://t.me/ADNOR1" rel="noopener" target="_blank"><i>🔵</i><b>Telegram</b><span>@ADNOR1</span></a></div>
+<div class="contact-grid" id="supportContactsGrid"><a class="contact-card" href="https://wa.me/905359334785" rel="noopener" target="_blank"><i>🟢</i><b>WhatsApp</b><span>0535 933 47 85</span></a><a class="contact-card" href="https://t.me/ADNOR1" rel="noopener" target="_blank"><i>🔵</i><b>Telegram</b><span>@ADNOR1</span></a></div>
 <section class="royal-card">
 <div class="section-title"><h3>إرسال تذكرة دعم جديدة</h3><span>حفظ مباشر</span></div>
 <div class="fields">
@@ -1861,7 +1925,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 <button class="gold-btn" id="sendSupportBtn">إرسال التذكرة</button>
 </section>
 <section class="royal-card"><div class="section-title"><h3>تذاكري السابقة</h3><span id="supportCountText">0</span></div><div class="support-ticket-list" id="supportTicketsList"><div class="ticket-card"><div class="ticket-top"><h4>لا توجد تذاكر بعد</h4><span class="badge">فارغ</span></div><p>أي طلب دعم ترسله سيظهر هنا مع حالته.</p></div></div></section>
-<section class="royal-card"><div class="section-title"><h3>أسئلة مهمة</h3><span>اللعب المسؤول</span></div><div class="faq-list"><div class="faq-item"><b>هل يمكن تعديل الرصيد من F12؟</b><p>لا. الرصيد الحقيقي محفوظ داخل نظام ADNOR وليس داخل المتصفح فقط، وكل عملية يتم تسجيلها في سجل العمليات.</p></div><div class="faq-item"><b>هل المنصة مناسبة لمن هم دون 18؟</b><p>لا. ADNOR مخصص لمن هم 18 عامًا أو أكثر فقط، مع قواعد لعب مسؤول وحدود استخدام.</p></div><div class="faq-item"><b>هل البونص قابل للسحب؟</b><p>البونص مخصص للعب فقط. الأرباح الناتجة عنه تتبع قواعد الإدارة قبل التحويل إلى رصيد حقيقي.</p></div><div class="faq-item"><b>متى تتم مراجعة الإيداع والسحب؟</b><p>إيداع USDT TRC20 يُرسل طلبه إلى الإدارة للمراجعة والموافقة، بينما طلب السحب يظهر للإدارة للمراجعة.</p></div></div></section>
+<section class="royal-card"><div class="section-title"><h3>أسئلة مهمة</h3><span>اللعب المسؤول</span></div><div class="faq-list"><div class="faq-item"><b>هل يمكن تعديل الرصيد من F12؟</b><p>لا. الرصيد الحقيقي محفوظ داخل نظام ADNOR وليس داخل المتصفح فقط، وكل عملية يتم تسجيلها في سجل العمليات.</p></div><div class="faq-item"><b>هل المنصة مناسبة لمن هم دون 18؟</b><p>لا. ADNOR مخصص لمن هم 18 عامًا أو أكثر فقط، مع قواعد لعب مسؤول وحدود استخدام.</p></div><div class="faq-item"><b>هل البونص قابل للسحب؟</b><p>البونص مخصص للعب فقط. الأرباح الناتجة عنه تتبع قواعد الإدارة قبل التحويل إلى رصيد حقيقي.</p></div><div class="faq-item"><b>متى تتم مراجعة الإيداع والسحب؟</b><p>إيداع USDT TRC20 يُتحقق منه تلقائيًا من شبكة TRON، بينما طلب السحب يظهر للإدارة للمراجعة.</p></div></div></section>
 </div>
 <div class="page" id="page-account">
 <section class="jackpot"><div class="label">حسابي</div><div class="amount">MY ADNOR</div><div class="drawname" id="accountInfo">ملفك الملكي، الدعوات، والحماية.</div></section>
@@ -1898,7 +1962,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 <div class="ref-box">
 <div class="ref-code-line"><code id="myRefCodeText">ADNOR</code><button class="copy-btn small" id="copyRefCodeBtn">نسخ الكود</button></div>
 <div class="ref-code-line"><code id="myRefLinkText">https://...</code><button class="copy-btn small" id="copyRefLinkBtn">نسخ الرابط</button></div>
-<div class="ref-share-row"><button class="copy-btn" id="shareRefTelegramBtn" type="button">مشاركة تيليجرام</button></div>
+<div class="ref-share-row"><button class="copy-btn" id="shareRefWhatsappBtn" type="button">مشاركة واتساب</button><button class="copy-btn" id="shareRefTelegramBtn" type="button">مشاركة تيليجرام</button></div>
 <div class="ref-reward-line"><div class="ref-reward-pill"><span>صاحب الرابط يأخذ</span><b id="referrerRewardText">$0.25 بونص</b></div><div class="ref-reward-pill"><span>المستخدم الجديد يأخذ</span><b id="newUserRewardText">$1.00 بونص</b></div></div>
 </div>
 <div class="wallet-stats" style="margin-top:12px"><div class="wallet-stat"><span>المسجلين من رابطك</span><b id="refCountText">0</b></div><div class="wallet-stat"><span>أرباح الدعوات المالية</span><b id="refBonusText">$0.00</b></div><div class="wallet-stat"><span>حالة الدعوات</span><b id="refEnabledText">مفعّلة</b></div></div>
@@ -2030,8 +2094,8 @@ function setCurrentPrize(type){
     const defaultLotterySettings={ticketPrice:1,moveLosers:true,daily:{enabled:true,label:'السحب اليومي',prize:4500},weekly:{enabled:true,label:'السحب الأسبوعي',prize:15000},monthly:{enabled:true,label:'السحب الشهري',prize:45000},yearly:{enabled:true,label:'السحب السنوي',prize:750000}};
     let lotterySettings=JSON.parse(JSON.stringify(defaultLotterySettings));
     const drawMeta={daily:{label:'السحب اليومي',jackpot:4500},weekly:{label:'السحب الأسبوعي',jackpot:15000},monthly:{label:'السحب الشهري',jackpot:45000},yearly:{label:'السحب السنوي',jackpot:750000}};
-    const defaultMethods=[{id:'usdt',name:'USDT TRC20',type:'both',active:true,minDeposit:5,minWithdraw:5,address:'TQ8F...ADNOR...X72',qrUrl:'',details:'حوّل عبر شبكة TRC20 فقط، ثم اكتب رقم العملية وارفع الإيصال.',hint:'أقل إيداع 5 USD'},{id:'sham',name:'Sham Cash',type:'both',active:true,minDeposit:100,minWithdraw:100,address:'يُرسل الرقم من الدعم بعد إنشاء الطلب',qrUrl:'',details:'اختر Sham Cash ثم اكتب رقم العملية أو رقم المرسل.',hint:'أقل إيداع 100 ليرة'},{id:'bank',name:'Bank / IBAN',type:'both',active:true,minDeposit:10,minWithdraw:10,address:'IBAN يضاف من لوحة الأدمن',qrUrl:'',details:'اكتب اسم صاحب التحويل ورقم المرجع البنكي.',hint:'تحويل بنكي'},{id:'telegram',name:'Telegram',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'ضع رابط تيليجرام من لوحة الأدمن',qrUrl:'',details:'تواصل مع الدعم عبر تيليجرام ثم أرسل رقم المرجع هنا.',hint:'تنسيق عبر الدعم'}];let methods=[...defaultMethods];let editingPaymentId='usdt';
-    const defaultSupportContacts={telegram:{id:'telegram',name:'Telegram',icon:'🔵',active:true,url:'https://t.me/ADNOR1',subtitle:'@ADNOR1',order:1}};let supportContacts={...defaultSupportContacts};let supportContactsUnsub=null;
+    const defaultMethods=[{id:'usdt',name:'USDT TRC20',type:'both',active:true,minDeposit:5,minWithdraw:5,address:'TQDEph2EkCPmerGEkiRh6RHJgJiBx6zfa4',qrUrl:'',details:'حوّل عبر شبكة TRC20 فقط، ثم اكتب رقم العملية وارفع الإيصال.',hint:'أقل إيداع 5 USD'},{id:'sham',name:'Sham Cash',type:'both',active:true,minDeposit:100,minWithdraw:100,address:'يُرسل الرقم من الدعم بعد إنشاء الطلب',qrUrl:'',details:'اختر Sham Cash ثم اكتب رقم العملية أو رقم المرسل.',hint:'أقل إيداع 100 ليرة'},{id:'bank',name:'Bank / IBAN',type:'both',active:true,minDeposit:10,minWithdraw:10,address:'IBAN يضاف من لوحة الأدمن',qrUrl:'',details:'اكتب اسم صاحب التحويل ورقم المرجع البنكي.',hint:'تحويل بنكي'},{id:'whatsapp',name:'WhatsApp',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'ضع رابط واتساب من لوحة الأدمن',qrUrl:'',details:'تواصل مع الدعم عبر واتساب ثم أرسل رقم المرجع هنا.',hint:'تنسيق عبر الدعم'},{id:'telegram',name:'Telegram',type:'both',active:true,minDeposit:1,minWithdraw:1,address:'ضع رابط تيليجرام من لوحة الأدمن',qrUrl:'',details:'تواصل مع الدعم عبر تيليجرام ثم أرسل رقم المرجع هنا.',hint:'تنسيق عبر الدعم'}];let methods=[...defaultMethods];let editingPaymentId='usdt';
+    const defaultSupportContacts={whatsapp:{id:'whatsapp',name:'WhatsApp',icon:'🟢',active:true,url:'https://wa.me/905359334785',subtitle:'0535 933 47 85',order:1},telegram:{id:'telegram',name:'Telegram',icon:'🔵',active:true,url:'https://t.me/ADNOR1',subtitle:'@ADNOR1',order:2}};let supportContacts={...defaultSupportContacts};let supportContactsUnsub=null;
     const defaultSiteControl={maintenance:false,maintenanceMessage:'النظام قيد الصيانة مؤقتًا. يرجى العودة لاحقًا.',announcement:'',modules:{lottery:true,results:true,games:true,wallet:true,support:true}};let siteControl=JSON.parse(JSON.stringify(defaultSiteControl));let siteControlUnsub=null;
     const defaultWheelSettings={enabled:true,minBet:1,maxBet:500,segments:[{label:'0x',m:0,w:26,enabled:true},{label:'1x',m:1,w:22,enabled:true},{label:'2x',m:2,w:15,enabled:true},{label:'0x',m:0,w:24,enabled:true},{label:'100x',m:100,w:.8,enabled:true},{label:'1000x',m:1000,w:.08,enabled:false},{label:'5000x',m:5000,w:.015,enabled:false},{label:'10000x',m:10000,w:.005,enabled:false},{label:'0.5x',m:.5,w:12,enabled:true},{label:'5x',m:5,w:5,enabled:true},{label:'10x',m:10,w:2,enabled:true},{label:'0x',m:0,w:24,enabled:true}],luckyBox:{enabled:true,chance:35,min:0.10,max:1,cooldownHours:24}};
     let wheelSettings=JSON.parse(JSON.stringify(defaultWheelSettings));
@@ -2045,7 +2109,8 @@ function setCurrentPrize(type){
     function drawLabel(type){return lotterySettings?.[type]?.label || drawMeta[type]?.label || type}
     function drawEnabled(type){return lotterySettings?.[type]?.enabled !== false}
     function nextDrawType(type){return {daily:'weekly',weekly:'monthly',monthly:'yearly',yearly:null}[type]||null}
-    function setText(id,val){const el=$(id);if(el)el.textContent=val}
+    /* V228: الكتابة فقط عند تغيّر النص فعليًا — يمنع اهتزاز اللوحات وإعادة تشغيل الأنيميشن. */
+function setText(id,val){const el=$(id);if(!el)return;const next=String(val==null?'':val);if(el.textContent!==next)el.textContent=next}
     function prizeNameFor(type){return {daily:'الجائزة اليومية',weekly:'الجائزة الأسبوعية',monthly:'الجائزة الشهرية',yearly:'الجائزة السنوية'}[type]||'الجائزة'}
     function updateLotteryUi(){TICKET_PRICE=Number(lotterySettings.ticketPrice||1);setText('ticketPriceText',money(TICKET_PRICE));if(currentDraw){setText('drawName',drawLabel(currentDraw));setText('jackpotText',money(prizeFor(currentDraw)));setText('jackpotLabelText',prizeNameFor(currentDraw))}setText('adminPrizeDaily',money(prizeFor('daily')));setText('adminPrizeWeekly',money(prizeFor('weekly')));setText('adminPrizeMonthly',money(prizeFor('monthly')));setText('adminPrizeYearly',money(prizeFor('yearly')));renderAdminLotterySettings();renderLatestDrawPublic();renderAdminDrawStats()}
     function listenLotterySettings(){if(lotteryUnsub)try{lotteryUnsub()}catch(e){};lotteryUnsub=onValue(ref(db,'lottery_settings'),snap=>{lotterySettings=mergeLotterySettings(snap.val());updateLotteryUi()})}
@@ -2932,8 +2997,7 @@ function setCurrentPrize(type){
     function showWalletPanel(p){document.querySelectorAll('.wallet-panel').forEach(x=>x.classList.add('hidden'));$('wallet-'+p).classList.remove('hidden');document.querySelectorAll('.wallet-tab').forEach(b=>b.classList.toggle('active',b.dataset.wallet===p));if(p==='deposit'){depositCategory='';depositMethod='';clearDepositStatus();renderMethods()}if(p==='withdraw'){withdrawCategory='';withdrawMethod='';clearWithdrawStatus();renderMethods()}}document.querySelectorAll('.wallet-tab').forEach(b=>b.onclick=()=>showWalletPanel(b.dataset.wallet));
     
     function methodHint(m,mode){const min=mode==='deposit'?Number(m.minDeposit||0):Number(m.minWithdraw||0);return min?('أقل '+(mode==='deposit'?'إيداع':'سحب')+' '+min+' USD'):(m.hint||'متاح')}
-    function isWhatsappPaymentMethod(m){return /whatsapp|wa\.me|واتساب|واتس.?اب/i.test(String(m?.id||'')+' '+String(m?.name||''))}
-    function methodAllowed(m,mode){return m&&!isWhatsappPaymentMethod(m)&&m.active!==false&&(m.type==='both'||m.type===mode)}
+    function methodAllowed(m,mode){return m&&m.active!==false&&(m.type==='both'||m.type===mode)}
     function getMethod(id){return methods.find(x=>x.id===id)}
     function methodCategory(m){const t=((m?.id||'')+' '+(m?.name||'')+' '+(m?.details||'')+' '+(m?.hint||'')).toLowerCase();if(t.includes('sham')||t.includes('شام'))return 'sham';if(t.includes('bank')||t.includes('iban')||t.includes('بنك')||t.includes('بنكي')||t.includes('حساب'))return 'bank';return 'usd'}
     function catInfo(cat){return {usd:{icon:'💎',title:'USD',sub:'USDT TRC20 / عملات رقمية'},sham:{icon:'💚',title:'ShamCash',sub:'شام كاش'},bank:{icon:'🏦',title:'حساب بنكي',sub:'IBAN / تحويل بنكي'}}[cat]||{icon:'💳',title:cat,sub:'طريقة دفع'}}
@@ -2990,17 +3054,24 @@ function setCurrentPrize(type){
         box.innerHTML='<div class="v70-selected-withdraw"><h4>طريقة السحب المختارة: '+escapeHtml(m.name)+'</h4><p>الحد الأدنى: '+money(min)+' — الحالة: '+(m.active!==false?'مفعلة':'متوقفة')+'<br>الخطوة التالية: اكتب بيانات الاستلام الخاصة بك بالأسفل ثم اضغط إرسال طلب السحب للأدمن.</p></div>';
         return;
       }
-      const manualUsdDeposit=methodCategory(m)==='usd';
-      const visibleMethodName=manualUsdDeposit?'إيداع USDT — مراجعة الإدارة':m.name;
-      const visibleMethodDetails=manualUsdDeposit?'أرسل طلب الإيداع وانتظر مراجعة الأدمن. يُضاف فقط المبلغ الذي وصل فعليًا بعد الموافقة.':(m.details||m.hint||'');
-      box.innerHTML='<div class="v69-address-card"><div class="v69-address-title"><b>'+escapeHtml(visibleMethodName)+'</b><span>'+paymentTypeLabel(m.type)+'</span></div><p>'+escapeHtml(visibleMethodDetails)+'</p><div class="finance-mini-grid"><div class="finance-pill"><b>الحالة</b>'+(m.active!==false?'مفعلة':'متوقفة')+'</div><div class="finance-pill"><b>الحد الأدنى</b>'+money(min)+'</div><div class="finance-pill"><b>الطريقة</b>'+escapeHtml(catInfo(methodCategory(m)).title)+'</div></div>'+(m.address?'<div class="copy-line"><code>'+escapeHtml(m.address)+'</code><button class="copy-btn" data-copy="'+escapeHtml(m.address)+'" onclick="copyText(this.dataset.copy)">نسخ</button></div>':'<div class="v69-no-address">لا يوجد عنوان مضاف من الأدمن لهذه الطريقة.</div>')+(manualUsdDeposit?'':(m.qrUrl?'<img class="qr-preview" src="'+escapeHtml(m.qrUrl)+'" alt="QR">':''))+'</div>';
+      box.innerHTML='<div class="v69-address-card"><div class="v69-address-title"><b>'+escapeHtml(m.name)+'</b><span>'+paymentTypeLabel(m.type)+'</span></div><p>'+escapeHtml(m.details||m.hint||'')+'</p><div class="finance-mini-grid"><div class="finance-pill"><b>الحالة</b>'+(m.active!==false?'مفعلة':'متوقفة')+'</div><div class="finance-pill"><b>الحد الأدنى</b>'+money(min)+'</div><div class="finance-pill"><b>الطريقة</b>'+escapeHtml(catInfo(methodCategory(m)).title)+'</div></div>'+(m.address?'<div class="copy-line"><code>'+escapeHtml(m.address)+'</code><button class="copy-btn" data-copy="'+escapeHtml(m.address)+'" onclick="copyText(this.dataset.copy)">نسخ</button></div>':'<div class="v69-no-address">لا يوجد عنوان مضاف من الأدمن لهذه الطريقة.</div>')+(m.qrUrl?'<img class="qr-preview" src="'+escapeHtml(m.qrUrl)+'" alt="QR">':'')+'</div>';
     }
-    function renderSpecificMethods(mode,list){const grid=$(mode==='deposit'?'depositMethods':'withdrawMethods');const step=$(mode==='deposit'?'depositMethodStep':'withdrawMethodStep');const details=$(mode==='deposit'?'depositMethodDetails':'withdrawMethodDetails');const form=$(mode==='deposit'?'depositFormBlock':'withdrawFormBlock');if(!grid)return;const cat=mode==='deposit'?depositCategory:withdrawCategory;const selected=mode==='deposit'?depositMethod:withdrawMethod;grid.innerHTML='';if(!cat){grid.classList.add('hidden');if(step)step.classList.add('hidden');if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}const list2=list.filter(m=>methodCategory(m)===cat);if(step)step.classList.remove('hidden');grid.classList.remove('hidden');if(!list2.length){grid.innerHTML='<div class="admin-empty">لا توجد طريقة مفعّلة ضمن هذا الخيار.</div>';if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}list2.forEach(m=>{const b=document.createElement('button');b.className='method v69-method '+(selected===m.id?'active':'');const manualUsdDeposit=mode==='deposit'&&methodCategory(m)==='usd';const visibleMethodName=manualUsdDeposit?'إيداع USDT — مراجعة الإدارة':m.name;const visibleMethodHint=manualUsdDeposit?'أرسل طلبك للأدمن؛ الرصيد ينتظر الموافقة.':methodHint(m,mode);b.innerHTML='<strong>'+escapeHtml(visibleMethodName)+'</strong><span>'+escapeHtml(visibleMethodHint)+'</span>';b.onclick=()=>{if(mode==='deposit')depositMethod=m.id;else withdrawMethod=m.id;renderMethods()};grid.appendChild(b)});renderMethodDetails(mode)}
+    function renderSpecificMethods(mode,list){const grid=$(mode==='deposit'?'depositMethods':'withdrawMethods');const step=$(mode==='deposit'?'depositMethodStep':'withdrawMethodStep');const details=$(mode==='deposit'?'depositMethodDetails':'withdrawMethodDetails');const form=$(mode==='deposit'?'depositFormBlock':'withdrawFormBlock');if(!grid)return;const cat=mode==='deposit'?depositCategory:withdrawCategory;const selected=mode==='deposit'?depositMethod:withdrawMethod;grid.innerHTML='';if(!cat){grid.classList.add('hidden');if(step)step.classList.add('hidden');if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}const list2=list.filter(m=>methodCategory(m)===cat);if(step)step.classList.remove('hidden');grid.classList.remove('hidden');if(!list2.length){grid.innerHTML='<div class="admin-empty">لا توجد طريقة مفعّلة ضمن هذا الخيار.</div>';if(details)details.classList.add('hidden');if(form)form.classList.add('hidden');return}list2.forEach(m=>{const b=document.createElement('button');b.className='method v69-method '+(selected===m.id?'active':'');b.innerHTML='<strong>'+escapeHtml(m.name)+'</strong><span>'+escapeHtml(methodHint(m,mode))+'</span>';b.onclick=()=>{if(mode==='deposit')depositMethod=m.id;else withdrawMethod=m.id;renderMethods()};grid.appendChild(b)});renderMethodDetails(mode)}
     function renderMethods(){const d=$('depositMethods'),w=$('withdrawMethods');if(!d||!w)return;const deps=methods.filter(m=>methodAllowed(m,'deposit'));const withs=methods.filter(m=>methodAllowed(m,'withdraw'));if(depositCategory&&!deps.some(m=>methodCategory(m)===depositCategory))depositCategory='';if(withdrawCategory&&!withs.some(m=>methodCategory(m)===withdrawCategory))withdrawCategory='';if(depositMethod&&!deps.some(m=>m.id===depositMethod))depositMethod='';if(withdrawMethod&&!withs.some(m=>m.id===withdrawMethod))withdrawMethod='';renderCategoryGrid('deposit',deps);renderCategoryGrid('withdraw',withs);renderSpecificMethods('deposit',deps);renderSpecificMethods('withdraw',withs);renderAgentSupportContacts()}
     function getAgentContact(kind){
-      if(String(kind||'').toLowerCase()!=='telegram')return null;
-      return getSupportContactArray().find(c=>isTelegramContact(c))||null;
-    }    function setAgentContactLink(elId,contact,label){
+      const arr=(typeof getSupportContactArray==='function'?getSupportContactArray():Object.values(supportContacts||{}).filter(c=>c&&c.active!==false)).sort((a,b)=>(a.order||99)-(b.order||99));
+      const k=String(kind||'').toLowerCase();
+      return arr.find(c=>{
+        const id=String(c.id||'').toLowerCase();
+        const name=String(c.name||'').toLowerCase();
+        const url=String(c.url||'').toLowerCase();
+        const sub=String(c.subtitle||'').toLowerCase();
+        if(k==='whatsapp')return id.includes('whatsapp')||name.includes('whatsapp')||url.includes('wa.me')||url.includes('whatsapp')||sub.includes('whatsapp');
+        if(k==='telegram')return id.includes('telegram')||name.includes('telegram')||name.includes('تليجرام')||name.includes('تلغرام')||url.includes('t.me')||url.includes('telegram')||sub.includes('telegram')||sub.includes('@');
+        return false;
+      });
+    }
+    function setAgentContactLink(elId,contact,label){
       const el=$(elId);
       if(!el)return;
       const url=contact?normalizeContactUrl(contact.id,contact.url,contact.subtitle):'';
@@ -3016,11 +3087,14 @@ function setCurrentPrize(type){
       }
     }
     function renderAgentSupportContacts(){
+      const whatsapp=getAgentContact('whatsapp');
       const telegram=getAgentContact('telegram');
+      setAgentContactLink('depositAgentWhatsappLink',whatsapp,'🟢 WhatsApp');
       setAgentContactLink('depositAgentTelegramLink',telegram,'🔵 Telegram');
+      setAgentContactLink('withdrawAgentWhatsappLink',whatsapp,'🟢 WhatsApp');
       setAgentContactLink('withdrawAgentTelegramLink',telegram,'🔵 Telegram');
     }
-    function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val).filter(m=>!isWhatsappPaymentMethod(m));methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)},err=>{console.warn('payment methods read skipped',err);methods=[...defaultMethods];renderMethods()})}
+    function listenPaymentMethods(){onValue(ref(db,'payment_methods'),snap=>{const val=snap.val()||{};adminState.paymentMethods=val;const loaded=Object.values(val);methods=loaded.length?loaded.sort((a,b)=>(a.order||0)-(b.order||0)):[...defaultMethods];renderMethods();renderAdminPaymentMethods(methods);try{if(typeof v228RenderDepositCard==='function')v228RenderDepositCard()}catch(e){}if(loaded.length===0 && isAdminUser()) seedPaymentMethods(false)},err=>{console.warn('payment methods read skipped',err);methods=[...defaultMethods];renderMethods();try{if(typeof v228RenderDepositCard==='function')v228RenderDepositCard()}catch(e){}})}
     renderMethods();
     listenWheelSettings();
 
@@ -3325,6 +3399,131 @@ function setCurrentPrize(type){
         img.src=url;
       });
     }
+    /* ===== V228 — إيداع يدوي USDT TRC20 (المستخدم يرسل ثم الأدمن يوافق) ===== */
+    const ADNOR_MANUAL_USDT_ADDRESS='TQDEph2EkCPmerGEkiRh6RHJgJiBx6zfa4';
+    const ADNOR_MANUAL_USDT_MIN=5;
+    const TRON_ADDRESS_RE=/^T[1-9A-HJ-NP-Za-km-z]{33}$/;
+    let v228DepositBusy=false;
+    function v228IsTronAddress(v){return TRON_ADDRESS_RE.test(String(v||'').trim())}
+    function v228UsdtMethod(){
+      /* نستخدم طريقة USDT فقط. لو ما في طريقة USDT معرّفة من الأدمن نرجع للعنوان
+         والحد الأدنى الثابتين، ولا نستخدم طريقة بنكية بالخطأ. */
+      const list=Array.isArray(methods)?methods:[];
+      const isUsdt=m=>/usdt|trc20|tether|tron/i.test([m&&m.id,m&&m.name,m&&m.currency,m&&m.network,m&&m.details].join(' '));
+      const usable=m=>m&&m.active!==false&&String(m.type||'both')!=='withdraw';
+      return list.find(m=>isUsdt(m)&&usable(m))||null;
+    }
+    function v228DepositAddress(){
+      const m=v228UsdtMethod();
+      const raw=String((m&&(m.address||m.account||m.wallet))||'').trim();
+      return v228IsTronAddress(raw)?raw:ADNOR_MANUAL_USDT_ADDRESS;
+    }
+    function v228DepositMin(){
+      const m=v228UsdtMethod();
+      const value=Number((m&&(m.minDeposit||m.minimum))||0);
+      return value>0?value:ADNOR_MANUAL_USDT_MIN;
+    }
+    function v228QrUrl(address){return 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=6&data='+encodeURIComponent(address||'')}
+    function v228SetStatus(text,type){
+      const el=$('v228DepositStatus');
+      if(!el){if(text)toast(text);return}
+      el.textContent=text||'';
+      el.className=text?('deposit-status show '+(type||'work')):'deposit-status';
+    }
+    function v228RenderDepositCard(){
+      const address=v228DepositAddress(), min=v228DepositMin();
+      if($('v228DepositAddress'))$('v228DepositAddress').textContent=address;
+      if($('v228DepositQr'))$('v228DepositQr').src=v228QrUrl(address);
+      const amountInput=$('v228DepositAmount');
+      if(amountInput){amountInput.min=String(min);if(!amountInput.placeholder||/5/.test(amountInput.placeholder))amountInput.placeholder='مثال: '+Math.max(min,10)}
+    }
+    function v228ShowDepositResult(request){
+      const box=$('v228DepositResult');
+      if(!box)return;
+      const id=String(request&&request.id||'');
+      const amount=Number(request&&request.amount||0);
+      box.classList.remove('hidden');
+      box.classList.add('ok');
+      box.innerHTML='<h5>✅ تم الإيداع — وصل طلبك للإدارة</h5>'
+        +'<p>تم تسجيل طلب إيداع بمبلغ '+money(amount)+' وحالته الآن: <b>بانتظار موافقة الإدارة</b>.</p>'
+        +(id?'<p>رقم الطلب: <code>'+escapeHtml(id)+'</code></p>':'')
+        +'<p>سيُضاف إلى رصيدك المبلغ الذي وصل فعليًا بعد موافقة الإدارة، وقد يختلف قليلًا عن المطلوب.</p>'
+        +'<button class="v228-md-reset" type="button" id="v228NewDepositBtn">إيداع جديد</button>';
+      const reset=$('v228NewDepositBtn');
+      if(reset)reset.onclick=v228ResetDepositForm;
+      if($('v228DepositDoneBtn'))$('v228DepositDoneBtn').disabled=false;
+    }
+    function v228ResetDepositForm(){
+      if($('v228DepositAmount'))$('v228DepositAmount').value='';
+      if($('v228DepositTxid'))$('v228DepositTxid').value='';
+      if($('v228DepositResult')){$('v228DepositResult').classList.add('hidden');$('v228DepositResult').innerHTML=''}
+      v228SetStatus('');
+      v228RenderDepositCard();
+      if($('v228DepositDoneBtn'))$('v228DepositDoneBtn').disabled=false;
+    }
+    async function v228SubmitManualDeposit(){
+      if(v228DepositBusy)return;
+      if(!currentUser)return toast('سجل الدخول أولًا');
+      if(currentProfile?.isFrozen)return toast('حسابك موقوف مؤقتًا');
+      const amount=Math.round(Number($('v228DepositAmount')?.value||0)*100)/100;
+      const min=v228DepositMin();
+      if(!(amount>0))return v228SetStatus('اكتب مبلغ الإيداع أولًا.','err');
+      if(amount<min)return v228SetStatus('أقل مبلغ إيداع هو '+money(min)+'.','err');
+      const txid=String($('v228DepositTxid')?.value||'').trim();
+      const method=v228UsdtMethod();
+      const btn=$('v228DepositDoneBtn');
+      v228DepositBusy=true;
+      if(btn)btn.disabled=true;
+      try{
+        v228SetStatus('جاري إرسال طلب الإيداع إلى الإدارة...','work');
+        const response=await adnorApiFetch('/finance/deposit/request',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            requestId:adnorSecureRequestId('manual_deposit'),
+            amount,
+            methodId:(method&&method.id)||'usdt',
+            reference:txid
+          })
+        });
+        const data=await adnorReadApiJson(response);
+        const request=data.request||{};
+        v228SetStatus('','');
+        v228ShowDepositResult(request);
+        toast('تم الإيداع ✅ طلبك بانتظار موافقة الإدارة');
+        if($('v228DepositAmount'))$('v228DepositAmount').value='';
+        if($('v228DepositTxid'))$('v228DepositTxid').value='';
+      }catch(e){
+        console.error('MANUAL_DEPOSIT_REQUEST_FAILED',e);
+        v228SetStatus(e.message||'تعذر إرسال طلب الإيداع','err');
+        toast(e.message||'تعذر إرسال طلب الإيداع');
+      }finally{
+        v228DepositBusy=false;
+        if(btn)btn.disabled=false;
+      }
+    }
+    function v228CopyText(text,message){
+      if(!text)return;
+      const done=()=>toast(message||'تم النسخ');
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(()=>done());
+        return;
+      }
+      try{
+        const ta=document.createElement('textarea');
+        ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();done();
+      }catch(e){toast('تعذر النسخ، انسخ العنوان يدويًا')}
+    }
+    if($('v228DepositDoneBtn'))$('v228DepositDoneBtn').onclick=v228SubmitManualDeposit;
+    document.addEventListener('click',e=>{
+      const btn=e.target&&e.target.closest&&e.target.closest('[data-v228-copy]');
+      if(!btn)return;
+      e.preventDefault();
+      v228CopyText(v228DepositAddress(),'تم نسخ عنوان USDT TRC20');
+    });
+    v228RenderDepositCard();
+    setTimeout(v228RenderDepositCard,1200);
+
     $('sendDepositBtn').onclick=async()=>{
       clearDepositStatus();
       const btn=$('sendDepositBtn');
@@ -3336,20 +3535,20 @@ function setCurrentPrize(type){
       if(!m)return toast('اختر طريقة الإيداع أولًا');
       if(m.minDeposit&&amount<Number(m.minDeposit))return toast('أقل إيداع عبر '+m.name+' هو '+m.minDeposit+' USD');
       const file=$('depositReceipt').files[0];
-
-      if(file&&!file.type?.startsWith('image/'))return setDepositStatus('الإيصال لازم يكون صورة فقط','err');
-      if(file&&file.size>8*1024*1024)return setDepositStatus('حجم الصورة أكبر من 8MB','err');
+      if(!file)return toast('ارفع صورة الإيصال أولًا');
+      if(!file.type?.startsWith('image/'))return setDepositStatus('الإيصال لازم يكون صورة فقط','err');
+      if(file.size>8*1024*1024)return setDepositStatus('حجم الصورة أكبر من 8MB','err');
       try{
         btn.disabled=true;
-        setDepositStatus('جاري إرسال طلب الإيداع للمراجعة...','work');
-        const timeout=file?new Promise((_,reject)=>setTimeout(()=>reject(new Error('انتهت مهلة تجهيز الصورة')),15000)):null;
-        const receiptDataUrl=file?await Promise.race([compressReceiptToDataUrl(file),timeout]):'';
+        setDepositStatus('جاري تجهيز الإيصال وإرسال الطلب إلى السيرفر...','work');
+        const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('انتهت مهلة تجهيز الصورة')),15000));
+        const receiptDataUrl=await Promise.race([compressReceiptToDataUrl(file),timeout]);
         const response=await adnorApiFetch('/finance/deposit/request',{
           method:'POST',headers:{'Content-Type':'application/json'},
           body:JSON.stringify({
             requestId:adnorSecureRequestId('deposit'),amount,
-            methodId:depositMethod,publicId:adnorPublicIdOf(currentProfile||{}),reference:$('depositRef').value.trim(),
-            receiptDataUrl,receiptFileName:file?.name||''
+            methodId:depositMethod,reference:$('depositRef').value.trim(),
+            receiptDataUrl,receiptFileName:file.name
           })
         });
         const data=await adnorReadApiJson(response);
@@ -3425,23 +3624,32 @@ function setCurrentPrize(type){
 
     function normalizeContactUrl(id,url,subtitle){
       url=String(url||'').trim();subtitle=String(subtitle||'').trim();id=String(id||'').toLowerCase();
-      if(url&&/^https:\/\/(t\.me|telegram\.me)\//i.test(url))return url;
-      if(id.includes('telegram')||/^@?[A-Za-z0-9_]{5,}$/.test(subtitle)){const user=subtitle.replace(/^@/,'').trim();return user?'https://t.me/'+user:''}
+      if(url) return url;
+      if(id.includes('whatsapp')){const digits=subtitle.replace(/\D/g,'');const tr=digits.startsWith('90')?digits:(digits.startsWith('0')?'90'+digits.slice(1):digits);return tr?'https://wa.me/'+tr:''}
+      if(id.includes('telegram')){const user=subtitle.replace(/^@/,'').trim();return user?'https://t.me/'+user:''}
       return '#';
     }
-    function isTelegramContact(c){const id=String(c?.id||'').toLowerCase(),type=String(c?.type||'').toLowerCase(),name=String(c?.name||'').toLowerCase(),url=String(c?.url||'').toLowerCase(),subtitle=String(c?.subtitle||c?.value||'').toLowerCase();const identity=[id,type,name,url,subtitle].join(' ');return !/whatsapp|wa\.me|واتساب|واتس.?اب/i.test(identity)&&(/telegram|t\.me|telegram\.me|تليجرام|تلغرام/i.test(identity)||/^@/.test(subtitle))}
     function getSupportContactArray(){
-      return Object.values(supportContacts||{}).filter(c=>c&&c.active!==false&&isTelegramContact(c)).sort((a,b)=>(a.order||99)-(b.order||99));
+      return Object.values(supportContacts||{}).filter(c=>c&&c.active!==false).sort((a,b)=>(a.order||99)-(b.order||99));
     }
     function renderSupportContacts(){
       const grid=$('supportContactsGrid');
-      if(grid){const arr=getSupportContactArray();grid.innerHTML=arr.length?arr.map(c=>{const url=normalizeContactUrl(c.id,c.url,c.subtitle||c.value);return '<a class="contact-card" href="'+escapeHtml(url)+'" target="_blank" rel="noopener"><i>'+escapeHtml(c.icon||'🔵')+'</i><b>Telegram</b><span>'+escapeHtml(c.subtitle||c.url||c.value||'اضغط للتواصل')+'</span></a>'}).join(''):'<div class="contact-card"><i>🔵</i><b>Telegram</b><span>قناة الدعم غير مفعلة حاليًا</span></div>'}
+      if(grid){
+        const arr=getSupportContactArray();
+        grid.innerHTML=arr.length?arr.map(c=>{const url=normalizeContactUrl(c.id,c.url,c.subtitle);return '<a class="contact-card" href="'+escapeHtml(url)+'" target="_blank" rel="noopener"><i>'+escapeHtml(c.icon||'💬')+'</i><b>'+escapeHtml(c.name||c.id||'تواصل')+'</b><span>'+escapeHtml(c.subtitle||c.url||'اضغط للتواصل')+'</span></a>'}).join(''):'<div class="contact-card"><i>💬</i><b>لا توجد قنوات مفعّلة</b><span>سيضيفها الأدمن قريبًا</span></div>';
+      }
       renderDepositSupportContacts();
       renderAdminSupportContacts();
     }
     function listenSupportContacts(){
       if(supportContactsUnsub)return;
-      supportContactsUnsub=onValue(ref(db,'support_contacts'),snap=>{const val=snap.val()||{};const primary=val.primary&&isTelegramContact({...val.primary,id:'primary'})?{primary:{...val.primary,id:'primary'}}:null;const filtered=primary||Object.fromEntries(Object.entries(val).filter(([id,c])=>isTelegramContact({...c,id})));supportContacts=Object.keys(filtered).length?filtered:{...defaultSupportContacts};adminState.supportContacts=supportContacts;renderSupportContacts();if(Object.keys(val).length===0&&isAdminUser())seedSupportContacts(false)},err=>{console.warn('support contacts read skipped',err);supportContacts={...defaultSupportContacts};renderSupportContacts()});
+      supportContactsUnsub=onValue(ref(db,'support_contacts'),snap=>{
+        const val=snap.val()||{};
+        supportContacts=Object.keys(val).length?val:{...defaultSupportContacts};
+        adminState.supportContacts=supportContacts;
+        renderSupportContacts();
+        if(Object.keys(val).length===0 && isAdminUser()) seedSupportContacts(false);
+      },err=>{console.warn('support contacts read skipped',err);supportContacts={...defaultSupportContacts};renderSupportContacts();});
     }
     function fillSupportContactForm(c){
       c=c||{};
@@ -3454,21 +3662,20 @@ function setCurrentPrize(type){
     }
     function renderAdminSupportContacts(){
       const box=$('adminSupportContactsList');if(!box)return;
-      const arr=getSupportContactArray();
+      const arr=Object.values(supportContacts||{}).sort((a,b)=>(a.order||99)-(b.order||99));
       if(!arr.length){box.innerHTML='<div class="admin-empty">لا توجد وسائل تواصل</div>';return}
       box.innerHTML=arr.map(c=>'<div class="admin-row"><div><b>'+escapeHtml(c.icon||'💬')+' '+escapeHtml(c.name||c.id)+'</b><small>'+escapeHtml(c.subtitle||c.url||'')+' — '+(c.active!==false?'مفعّلة':'متوقفة')+'</small></div><div class="admin-actions"><button class="blue" onclick="fillSupportContactForm(supportContacts[\''+c.id+'\'])">تعديل</button><button class="warn" onclick="adminToggleSupportContact(\''+c.id+'\')">'+(c.active!==false?'إيقاف':'تفعيل')+'</button><button class="bad" onclick="adminDeleteSupportContact(\''+c.id+'\')">حذف</button></div></div>').join('');
     }
     async function seedSupportContacts(showToast=true){
       if(!isAdminUser())return;
       const updates={};Object.values(defaultSupportContacts).forEach(c=>updates['support_contacts/'+c.id]={...c,updatedAt:Date.now(),updatedBy:currentUser.email||''});
-      await update(ref(db),updates);if(showToast)toast('تم استرجاع تيليجرام الافتراضي');
+      await update(ref(db),updates);if(showToast)toast('تم استرجاع واتساب وتليجرام الافتراضيين');
     }
     async function adminSaveSupportContact(){
       if(!isAdminUser())return toast('للأدمن فقط');
       let id=String($('contactIdInput')?.value||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'_');
-      if(!id){id=await uiPrompt('اكتب معرف جهة التواصل بالإنكليزي مثل telegram','new_contact')||'';id=id.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'_');if(!id)return}
+      if(!id){id=await uiPrompt('اكتب معرف جهة التواصل بالإنكليزي مثل whatsapp أو telegram','new_contact')||'';id=id.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'_');if(!id)return}
       const data={id,name:$('contactNameInput')?.value.trim()||id,icon:$('contactIconInput')?.value.trim()||'💬',active:$('contactActiveInput')?.value==='true',url:$('contactUrlInput')?.value.trim(),subtitle:$('contactSubtitleInput')?.value.trim(),order:(supportContacts[id]?.order||Object.keys(supportContacts||{}).length+1),updatedAt:Date.now(),updatedBy:currentUser.email||''};
-      if(id.includes('whatsapp')||/wa\.me|whatsapp|واتساب|واتس.?اب/i.test(String(data.name)+' '+String(data.url)))return toast('التواصل متاح عبر تيليجرام فقط');
       if(!data.url)data.url=normalizeContactUrl(id,'',data.subtitle);
       await set(ref(db,'support_contacts/'+id),data);toast('تم حفظ جهة التواصل');fillSupportContactForm(data);
     }
@@ -3983,7 +4190,7 @@ function setCurrentPrize(type){
     if($('selfStopClearBtn'))$('selfStopClearBtn').onclick=()=>setSelfExclusion(0);
     if($('copyRefCodeBtn'))$('copyRefCodeBtn').onclick=()=>copyText(currentProfile?.refCode||'');
     if($('copyRefLinkBtn'))$('copyRefLinkBtn').onclick=()=>copyText(getReferralLink());
-
+    if($('shareRefWhatsappBtn'))$('shareRefWhatsappBtn').onclick=()=>{const txt='انضم إلى ADNOR من رابط دعوتي: '+getReferralLink();window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank')};
     if($('shareRefTelegramBtn'))$('shareRefTelegramBtn').onclick=()=>{const txt='انضم إلى ADNOR من رابط دعوتي: '+getReferralLink();window.open('https://t.me/share/url?url='+encodeURIComponent(getReferralLink())+'&text='+encodeURIComponent(txt),'_blank')};
     if($('applyRefCodeBtn'))$('applyRefCodeBtn').onclick=()=>applyReferralCode();try{capturePendingReferralCode()}catch(e){}
     capturePendingReferralCode();
@@ -4295,8 +4502,31 @@ function renderAdminUsers(users){
     }
     async function v136Logout(){try{if(currentUser){const now=Date.now();const updates={};updates['login_logs/'+currentUser.uid+'/'+now]={action:'logout',email:currentUser.email||'',at:now,createdAt:now,host:location.host,path:location.pathname,userAgent:navigator.userAgent||'',platform:navigator.platform||''};updates['users/'+currentUser.uid+'/lastActivityAt']=now;await update(ref(db),updates)}}catch(e){console.warn(e)}return adnorLogoutNow()}
 async function adminToggleVip(uid){const snap=await get(ref(db,'users/'+uid));const u=snap.val();if(!u)return;const now=Date.now();const vip=!u.isVIP;const updates={};updates['users/'+uid+'/isVIP']=vip;updates['users/'+uid+'/updatedAt']=now;updates['finance_audit/'+now]={action:vip?'vip_on':'vip_off',uid,email:u.email||'',adminEmail:currentUser.email,createdAt:now};updates['user_notifications/'+uid+'/'+now]=notifObj(vip?'vip_on':'vip_off',vip?'تم منحك VIP':'تم إلغاء VIP',vip?'حسابك أصبح ضمن نادي النخبة.':'تمت إعادة حسابك إلى الوضع العادي.');await update(ref(db),updates);toast(vip?'تم منح VIP':'تم إلغاء VIP')}
-    async function adminApproveDeposit(id){if(!(await uiConfirm('قبول الإيداع وإضافة الرصيد للمستخدم؟')))return;const snap=await get(ref(db,'finance/deposits/'+id));const d=snap.val();if(!d||d.status!=='pending')return toast('الطلب غير متاح');const us=await get(ref(db,'users/'+d.uid));const u=us.val()||{};const before=Number(u.realBalance||0),amount=Number(d.amount||0),after=Number((before+amount).toFixed(2)),now=Date.now();const depBonusPercent=(referralSettings.depositBonusEnabled?Number(referralSettings.depositBonusPercent||0):0);const bonusAdd=Number((amount*depBonusPercent/100).toFixed(2));const oldBonus=Number(u.bonusBalance||0),afterBonus=Number((oldBonus+bonusAdd).toFixed(2));const updates={};updates['finance/deposits/'+id+'/status']='approved';updates['finance/deposits/'+id+'/approvedAt']=now;updates['finance/deposits/'+id+'/approvedBy']=currentUser.email;updates['finance/deposits/'+id+'/balanceBefore']=before;updates['finance/deposits/'+id+'/balanceAfter']=after;updates['user_finance/'+d.uid+'/deposits/'+id+'/status']='approved';updates['user_finance/'+d.uid+'/deposits/'+id+'/approvedAt']=now;updates['user_finance/'+d.uid+'/deposits/'+id+'/balanceAfter']=after;updates['users/'+d.uid+'/realBalance']=after;if(bonusAdd>0){updates['users/'+d.uid+'/bonusBalance']=afterBonus;updates['transactions/'+d.uid+'/'+(now+1)]={type:'deposit_bonus',amount:bonusAdd,status:'bonus',note:'بونص إيداع '+depBonusPercent+'%',balanceBefore:oldBonus,balanceAfter:afterBonus,adminEmail:currentUser.email,createdAt:now+1};updates['user_notifications/'+d.uid+'/'+(now+1)]=notifObj('referral_bonus','تم إضافة بونص الإيداع','وصل إلى رصيد البونص '+money(bonusAdd)+' بنسبة '+depBonusPercent+'%.',{amount:bonusAdd})}updates['users/'+d.uid+'/updatedAt']=now;updates['transactions/'+d.uid+'/'+now]={type:'deposit_approved',amount,balanceBefore:before,balanceAfter:after,status:'approved',note:'قبول طلب إيداع رقم '+id,adminEmail:currentUser.email,createdAt:now};updates['finance_audit/'+now]={action:'deposit_approved',requestId:id,uid:d.uid,email:d.email||'',amount,before,after,adminEmail:currentUser.email,createdAt:now};updates['admin_notifications/'+now]={type:'deposit_approved',uid:d.uid,email:d.email||'',text:'تم قبول إيداع '+money(amount)+' للمستخدم '+(d.email||''),createdAt:now,status:'done'};updates['user_notifications/'+d.uid+'/'+now]=notifObj('deposit_approved','تم قبول الإيداع','تم إضافة '+money(amount)+' إلى رصيدك الحقيقي.',{amount,requestId:id});await update(ref(db),updates);toast('تم قبول الإيداع وإضافة الرصيد')}
-    async function adminRejectDeposit(id){const reason=await uiPrompt('سبب رفض الإيداع','الإيصال غير واضح')||'مرفوض من الإدارة';const snap=await get(ref(db,'finance/deposits/'+id));const d=snap.val();if(!d||d.status!=='pending')return toast('الطلب غير متاح');const now=Date.now(),amount=Number(d.amount||0);const updates={};updates['finance/deposits/'+id+'/status']='rejected';updates['finance/deposits/'+id+'/rejectedAt']=now;updates['finance/deposits/'+id+'/rejectedBy']=currentUser.email;updates['finance/deposits/'+id+'/rejectReason']=reason;updates['user_finance/'+d.uid+'/deposits/'+id+'/status']='rejected';updates['user_finance/'+d.uid+'/deposits/'+id+'/rejectedAt']=now;updates['user_finance/'+d.uid+'/deposits/'+id+'/rejectReason']=reason;updates['transactions/'+d.uid+'/'+now]={type:'deposit_rejected',amount,status:'rejected',note:'رفض الإيداع: '+reason,adminEmail:currentUser.email,createdAt:now};updates['finance_audit/'+now]={action:'deposit_rejected',requestId:id,uid:d.uid,email:d.email||'',amount,reason,adminEmail:currentUser.email,createdAt:now};updates['admin_notifications/'+now]={type:'deposit_rejected',uid:d.uid,email:d.email||'',text:'تم رفض إيداع '+money(amount)+' — '+reason,createdAt:now,status:'done'};updates['user_notifications/'+d.uid+'/'+now]=notifObj('deposit_rejected','تم رفض الإيداع','تم رفض طلب الإيداع '+money(amount)+' — السبب: '+reason,{amount,requestId:id});await update(ref(db),updates);toast('تم رفض الإيداع مع حفظ السبب')}
+    async function adminApproveDeposit(id){
+      /* V228: الموافقة على الإيداع تتم من السيرفر فقط وبمبلغ الواصل الفعلي. */
+      if(!isAdminUser())return toast('للأدمن فقط');
+      const snap=await get(ref(db,'finance/deposits/'+id));const d=snap.val();
+      if(!d||d.status!=='pending')return toast('الطلب غير متاح');
+      const requested=Number(d.requestedAmount||d.amount||0);
+      const answer=await uiPrompt('المبلغ الذي وصل فعليًا بالدولار (المطلوب: '+money(requested)+')',requested.toFixed(2),'قبول الإيداع');
+      if(answer===null)return;
+      const amount=Number(String(answer).replace(/[^0-9.]/g,''));
+      if(!(amount>0))return toast('اكتب المبلغ الواصل بشكل صحيح');
+      try{
+        await adnorApiFetch('/admin/finance/deposit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,action:'approve',amount,reason:''})});
+        toast('تم قبول الإيداع وإضافة '+money(amount)+' إلى الرصيد');
+      }catch(e){toast(e.message||'تعذر تنفيذ الموافقة')}
+    }
+    async function adminRejectDeposit(id){
+      /* V228: الرفض يتم من السيرفر فقط. */
+      if(!isAdminUser())return toast('للأدمن فقط');
+      const answer=await uiPrompt('سبب رفض الإيداع','الإيصال غير واضح','رفض الإيداع');
+      const reason=String(answer||'').trim()||'مرفوض من الإدارة';
+      try{
+        await adnorApiFetch('/admin/finance/deposit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,action:'reject',reason})});
+        toast('تم رفض الإيداع مع حفظ السبب');
+      }catch(e){toast(e.message||'تعذر رفض الإيداع')}
+    }
     async function adminApproveWithdraw(id){if(!(await uiConfirm('تأكيد تنفيذ السحب؟ تأكد أنك حولت المبلغ للمستخدم.')))return;const snap=await get(ref(db,'finance/withdrawals/'+id));const w=snap.val();if(!w||w.status!=='pending')return toast('الطلب غير متاح');const us=await get(ref(db,'users/'+w.uid));const u=us.val()||{};const amount=Number(w.amount||0),beforeRes=Number(u.reservedWithdrawalBalance||0),res=Math.max(0,beforeRes-amount),now=Date.now();const updates={};updates['finance/withdrawals/'+id+'/status']='approved';updates['finance/withdrawals/'+id+'/approvedAt']=now;updates['finance/withdrawals/'+id+'/approvedBy']=currentUser.email;updates['finance/withdrawals/'+id+'/reservedBefore']=beforeRes;updates['finance/withdrawals/'+id+'/reservedAfter']=res;updates['user_finance/'+w.uid+'/withdrawals/'+id+'/status']='approved';updates['user_finance/'+w.uid+'/withdrawals/'+id+'/approvedAt']=now;updates['users/'+w.uid+'/reservedWithdrawalBalance']=res;updates['users/'+w.uid+'/updatedAt']=now;updates['transactions/'+w.uid+'/'+now]={type:'withdraw_approved',amount:-amount,status:'approved',note:'تم تنفيذ السحب رقم '+id,adminEmail:currentUser.email,createdAt:now};updates['finance_audit/'+now]={action:'withdraw_approved',requestId:id,uid:w.uid,email:w.email||'',amount,reservedBefore:beforeRes,reservedAfter:res,adminEmail:currentUser.email,createdAt:now};updates['admin_notifications/'+now]={type:'withdraw_approved',uid:w.uid,email:w.email||'',text:'تم قبول سحب '+money(amount)+' للمستخدم '+(w.email||''),createdAt:now,status:'done'};updates['user_notifications/'+w.uid+'/'+now]=notifObj('withdraw_approved','تم قبول السحب','تم تنفيذ طلب السحب بقيمة '+money(amount)+'.',{amount,requestId:id});await update(ref(db),updates);toast('تم قبول السحب وإنهاء الحجز')}
     async function adminRejectWithdraw(id){const reason=await uiPrompt('سبب رفض السحب','بيانات التحويل غير صحيحة')||'مرفوض من الإدارة';const snap=await get(ref(db,'finance/withdrawals/'+id));const w=snap.val();if(!w||w.status!=='pending')return toast('الطلب غير متاح');const us=await get(ref(db,'users/'+w.uid));const u=us.val()||{};const amount=Number(w.amount||0),beforeReal=Number(u.realBalance||0),beforeRes=Number(u.reservedWithdrawalBalance||0),real=Number((beforeReal+amount).toFixed(2)),res=Math.max(0,beforeRes-amount),now=Date.now();const updates={};updates['finance/withdrawals/'+id+'/status']='rejected';updates['finance/withdrawals/'+id+'/rejectedAt']=now;updates['finance/withdrawals/'+id+'/rejectedBy']=currentUser.email;updates['finance/withdrawals/'+id+'/rejectReason']=reason;updates['user_finance/'+w.uid+'/withdrawals/'+id+'/status']='rejected';updates['user_finance/'+w.uid+'/withdrawals/'+id+'/rejectedAt']=now;updates['user_finance/'+w.uid+'/withdrawals/'+id+'/rejectReason']=reason;updates['users/'+w.uid+'/realBalance']=real;updates['users/'+w.uid+'/reservedWithdrawalBalance']=res;updates['users/'+w.uid+'/updatedAt']=now;updates['transactions/'+w.uid+'/'+now]={type:'withdraw_rejected_refund',amount,status:'rejected',balanceBefore:beforeReal,balanceAfter:real,note:'رجوع مبلغ السحب: '+reason,adminEmail:currentUser.email,createdAt:now};updates['finance_audit/'+now]={action:'withdraw_rejected_refund',requestId:id,uid:w.uid,email:w.email||'',amount,reason,beforeReal,afterReal:real,beforeReserved:beforeRes,afterReserved:res,adminEmail:currentUser.email,createdAt:now};updates['admin_notifications/'+now]={type:'withdraw_rejected',uid:w.uid,email:w.email||'',text:'تم رفض سحب '+money(amount)+' وإرجاع الرصيد — '+reason,createdAt:now,status:'done'};updates['user_notifications/'+w.uid+'/'+now]=notifObj('withdraw_rejected','تم رفض السحب وإرجاع الرصيد','تم رفض طلب السحب '+money(amount)+' ورجع المبلغ إلى رصيدك — السبب: '+reason,{amount,requestId:id});await update(ref(db),updates);toast('تم رفض السحب ورجوع المبلغ')}
     async function adminReplySupport(id){const snap=await get(ref(db,'admin_support_tickets/'+id));const t=snap.val();if(!t)return toast('التذكرة غير موجودة');const reply=await uiPrompt('اكتب رد الإدارة',t.adminReply||'');if(!reply)return;const now=Date.now();const updates={};updates['admin_support_tickets/'+id+'/adminReply']=reply;updates['admin_support_tickets/'+id+'/status']='answered';updates['admin_support_tickets/'+id+'/updatedAt']=now;updates['support_tickets/'+t.uid+'/'+id+'/adminReply']=reply;updates['support_tickets/'+t.uid+'/'+id+'/status']='answered';updates['support_tickets/'+t.uid+'/'+id+'/updatedAt']=now;updates['user_notifications/'+t.uid+'/'+now]=notifObj('support_reply','تم الرد على تذكرة الدعم','رد الإدارة على: '+(t.title||'طلب الدعم')+' — '+reply,{ticketId:id});updates['finance_audit/support_reply_'+now]={action:'support_reply',requestId:id,uid:t.uid,email:t.email||'',note:reply,adminEmail:currentUser.email||'',createdAt:now,source:'support_center'};updates['admin_user_notes/'+t.uid+'/'+now]={type:'support_reply',ticketId:id,note:reply,adminEmail:currentUser.email||'',createdAt:now};await update(ref(db),updates);toast('تم إرسال رد الإدارة')}
@@ -4621,7 +4851,7 @@ async function adminToggleVip(uid){const snap=await get(ref(db,'users/'+uid));co
       {title:'كيف يصير السحب؟',keys:['سحب','اليانصيب','السحوبات','بطاقة','تذكرة','نتيجة'],answer:'السحب في ADNOR يتم عبر نظام تذاكر داخل المنصة. تختار رقم تذكرة من 7 خانات، وتتم متابعة النتيجة من قسم النتائج وتذاكري. السحوبات تشمل اليومي والأسبوعي والشهري والسنوي حسب إعدادات الإدارة.'},
       {title:'كيف أعمل إيداع؟',keys:['إيداع','ايداع','اشحن','رصيد','تحويل','إيصال'],answer:'لعمل إيداع: ادخل إلى المحفظة، اختر تبويب الإيداع، اختر طريقة الدفع، اكتب المبلغ ورقم المرجع، ثم ارفع صورة الإيصال. بعد المراجعة من الإدارة يتم قبول الرصيد أو رفضه مع سبب واضح.'},
       {title:'كم مدة السحب؟',keys:['سحب مالي','اسحب','سحب رصيد','مدة السحب','كم مدة السحب','التحويل'],answer:'طلبات السحب تُرسل من المحفظة. يتم حجز المبلغ مباشرة من الرصيد المتاح إلى الرصيد المحجوز، وبعد مراجعة الإدارة يتم قبول السحب أو رفضه وإرجاع المبلغ مع السبب.'},
-      {title:'أين أتابع المنصة؟',keys:['تابع','متابعة','تواصل','واتساب','تليجرام','تلغرام','telegram','whatsapp'],answer:'يمكن متابعة ADNOR والتواصل عبر قناة Telegram الرسمية: @ADNOR1.'},
+      {title:'أين أتابع المنصة؟',keys:['تابع','متابعة','تواصل','واتساب','تليجرام','تلغرام','telegram','whatsapp'],answer:'يمكن متابعة ADNOR والتواصل عبر Telegram: @ADNOR1 أو WhatsApp: 0535 933 47 85. قد تتغير طرق التواصل حسب إعدادات الإدارة داخل الموقع.'},
       {title:'القيمة السوقية',keys:['القيمة السوقية','قيمه سوقيه','market','مليون','قيمة الموقع'],answer:'القيمة السوقية التقديرية المعلنة لمنصة ADNOR هي 5,000,000 دولار، وتستخدم هذه القيمة كتعريف تسويقي للمشروع داخل المنصة.'},
       {title:'الكود الدعائي',keys:['كود','دعائي','حملة','بونص','هدية','promo'],answer:'يمكنك تفعيل الكود الدعائي من صفحة حسابي. إذا كان الكود صحيحًا ومفعّلًا، قد تحصل على بونص، لفات مجانية، أو تذكرة مجانية حسب إعدادات الحملة.'},
       {title:'عجلة الحظ',keys:['عجلة','الحظ','دوران','ربح','خسارة','مضاعف'],answer:'عجلة الحظ تعمل حسب شرائح ومضاعفات مضبوطة من الإدارة. اختر قيمة الرهان، ثم أدر العجلة. النتيجة تظهر مباشرة وتسجل في سجل العمليات والعجلة.'},
@@ -5130,7 +5360,15 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     function v108Visible(type){const r=v108Current(type);return v108IsVisible(r)?r:null}
     function v108VisibleList(){return V108_DRAW_TYPES.map(t=>v108Visible(t)).filter(Boolean).sort((a,b)=>Number(b.publishAt||b.publishedAt||b.updatedAt||0)-Number(a.publishAt||a.publishedAt||a.updatedAt||0))}
     function v108LatestVisibleResult(){return v108VisibleList()[0]||null}
-    function v108SetDigits(id,num){const box=$(id);if(!box)return;box.innerHTML=v108CleanTicket(num).split('').map(n=>'<span>'+n+'</span>').join('')}
+    function v108SetDigits(id,num){
+  const box=$(id);if(!box)return;
+  const clean=v108CleanTicket(num);
+  /* V228: لا نعيد بناء الأرقام إن كانت نفسها — إعادة البناء كل ٣ ثوانٍ كانت
+     تعيد تشغيل نبض اللوحة وتجعلها تبدو كأنها تتحرك ذهابًا وإيابًا. */
+  if(box.dataset.v108Digits===clean)return;
+  box.dataset.v108Digits=clean;
+  box.innerHTML=clean.split('').map(n=>'<span>'+n+'</span>').join('');
+}
     function v108PlaceResultCard(){const card=$('v91LatestResultCard');const tabs=document.querySelector('#page-lottery .tabs');if(card&&tabs&&card.previousElementSibling!==tabs){tabs.insertAdjacentElement('afterend',card)}}
     function v108RenderPublicResult(){
       try{
@@ -5238,7 +5476,18 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
     }
     function v108Listen(){
       if(v108ResultsUnsub)try{v108ResultsUnsub()}catch(e){}
-      v108ResultsUnsub=onValue(ref(db,V108_RESULTS_PATH),snap=>{v108Results=snap.val()||{current:{},history:{},latest:null};v108RenderAdmin();v108RenderPublicResult();},err=>{console.warn('V108 official results read failed',err);v108Results={current:{},history:{},latest:null};v108RenderAdmin();v108RenderPublicResult();});
+      v108ResultsUnsub=onValue(ref(db,V108_RESULTS_PATH),snap=>{
+      /* V228: لا نمسح نسخة السيرفر المنشورة (published) عند تحديث قاعدة البيانات،
+         حتى لا يتبدّل اسم الفائز بين مصدرين مختلفين كل ثانيتين. */
+      const incoming=snap.val()||{};
+      v108Results={
+        ...incoming,
+        current:{...(incoming.current||{})},
+        history:incoming.history||{},
+        published:{...((v108Results&&v108Results.published)||{}),...(incoming.published||{})}
+      };
+      v108RenderAdmin();v108RenderPublicResult();
+    },err=>{console.warn('V108 official results read failed',err);v108Results={current:{},history:{},latest:null,published:(v108Results&&v108Results.published)||{}};v108RenderAdmin();v108RenderPublicResult();});
     }
     function v108TickerMessage(r){
       const drawName=v108Label(r.drawType||'daily');const winner=String(r.winnerName||'مستخدم ADNOR').trim();const ticket=v108CleanTicket(r.ticketNumber);const prizeText=money(r.prize||0);
@@ -5303,16 +5552,22 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
         return [];
       }
       function v144PublishedRaw(type){
-        const published=v108Results.published&&v108Results.published[type];
-        const current=v108Results.current&&v108Results.current[type];
-        const publishedAt=Number(published&&(published.updatedAt||published.publishedAt||published.publishAt)||0);
-        const currentAt=Number(current&&(current.updatedAt||current.publishedAt||current.publishAt||current.hiddenAt)||0);
-        if(current&&v144Status(current)==='hidden'&&currentAt>=publishedAt)return null;
-        const visible=[current,published].filter(r=>r&&v108IsVisible(r)).sort((a,b)=>Number(b.updatedAt||b.publishedAt||b.publishAt||0)-Number(a.updatedAt||a.publishedAt||a.publishAt||0));
-        const latest=visible[0];
-        if(!latest)return null;
-        const source=latest===current?'current':'published';
-        return v144SafeResult(latest,{drawType:type,_v144Path:V144_PATH+'/'+source+'/'+type});
+        /* V228: مصدر واحد حاسم — نأخذ أحدث نسخة (الأحدث زمنيًا) بين نسخة السيرفر
+           ونسخة قاعدة البيانات، بدل التبديل بينهما عند كل تحديث. */
+        const candidates=[];
+        const serverResult=v108Results.published&&v108Results.published[type];
+        if(serverResult&&v144Status(serverResult)!=='hidden'){
+          candidates.push(v144SafeResult(serverResult,{drawType:type,_v144Path:V144_PATH+'/published/'+type}));
+        }
+        const dbResult=v108Results.current&&v108Results.current[type];
+        if(dbResult&&v144Status(dbResult)!=='hidden'&&v108IsVisible(dbResult)){
+          candidates.push(v144SafeResult(dbResult,{drawType:type,_v144Path:V144_PATH+'/current/'+type}));
+        }
+        const usable=candidates.filter(Boolean);
+        if(!usable.length)return null;
+        const stamp=(item)=>Number(item.publishedAt||item.publishAt||item.updatedAt||item.createdAt||0);
+        usable.sort((first,second)=>stamp(second)-stamp(first));
+        return usable[0];
       }
       function v144DueScheduled(type){return v144ScheduledArray(type).filter(r=>Number(r.publishAt||0)<=Date.now()).sort((a,b)=>Number(b.publishAt||0)-Number(a.publishAt||0))[0]||null}
       function v144Upcoming(type){return v144ScheduledArray(type).filter(r=>Number(r.publishAt||0)>Date.now()).sort((a,b)=>Number(a.publishAt||0)-Number(b.publishAt||0))[0]||null}
@@ -5435,15 +5690,45 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       }
       function v144TickerSpanPublished(r){return '<span><b class="v108-ticker-kind">'+escapeHtml(V144_ICONS[r.drawType]||'🏆')+' '+escapeHtml(v144Label(r.drawType))+'</b> الفائز: <b class="v104-ticker-name">'+escapeHtml(r.winnerName||'مستخدم ADNOR')+'</b> — رقم <b class="v104-ticker-ticket">#'+escapeHtml(v144Ticket(r.ticketNumber))+'</b> — الجائزة <b class="v104-ticker-prize">'+escapeHtml(v144Money(r.prize||0))+'</b></span>'}
       function v144TickerSpanUpcoming(type){const up=v144Upcoming(type);const ts=up?.publishAt||v144DefaultPublishAt(type);return '<span><b class="v108-ticker-kind">'+escapeHtml(V144_ICONS[type]||'⏳')+' '+escapeHtml(v144Label(type))+'</b> الموعد القادم: <b class="v104-ticker-ticket">'+escapeHtml(v144Format(ts))+'</b> — الجائزة <b class="v104-ticker-prize">'+escapeHtml(v144Money(up?.prize||v144Prize(type)))+'</b></span>'}
+      /* V228: الشريط العلوي يعرض فائزًا واحدًا ثابتًا — آخر نتيجة رسمية منشورة.
+         لا دورات ولا تبديل أسماء ولا إعادة بناء للحاوية، حتى لا يتحرك الشريط
+         ذهابًا وإيابًا ولا يتغيّر الاسم الذي اختاره الأدمن. */
       function v144TickerHtml(){
-        const items=[];
-        const latest=v144LatestVisible();
-        if(latest)items.push(v144TickerSpanPublished(latest));
-        V144_TYPES.forEach(t=>items.push(v144TickerSpanUpcoming(t)));
-        items.push('<span class="v104-ticker-muted">ADNOR — الشريط الرسمي يعرض أحدث فائز منشور فقط</span>');
-        return '<div class="v104-ticker-track v144-gold-track">'+items.join('<span class="v144-sep">◆</span>')+'</div>';
+        const latest=v144LatestVisible()||null;
+        const type=(latest&&latest.drawType)||currentDraw||'daily';
+        const r=latest||v144Visible(type)||null;
+        if(r){
+          const ticket=v144Ticket(r.ticketNumber);
+          return '<div class="v104-ticker-track v228-static-ticker">'
+            +'<span class="v228-ticker-badge">🏆 آخر فائز رسمي</span>'
+            +'<span class="v228-ticker-item"><b class="v108-ticker-kind">'+escapeHtml(V144_ICONS[r.drawType]||'🏆')+' '+escapeHtml(v144Label(r.drawType))+'</b></span>'
+            +'<span class="v228-ticker-item">الفائز: <b class="v104-ticker-name">'+escapeHtml(r.winnerName||'مستخدم ADNOR')+'</b></span>'
+            +'<span class="v228-ticker-item">التذكرة: <b class="v104-ticker-ticket">#'+escapeHtml(ticket)+'</b></span>'
+            +'<span class="v228-ticker-item">الجائزة: <b class="v104-ticker-prize">'+escapeHtml(v144Money(r.prize||0))+'</b></span></div>';
+        }
+        const upcoming=v144Upcoming(type);
+        const next=upcoming?.publishAt||v144DefaultPublishAt(type);
+        const announcement=String(siteControl?.announcement||'لم تُنشر نتيجة رسمية بعد — تابع إعلان الفائز هنا').trim();
+        return '<div class="v104-ticker-track v228-static-ticker">'
+          +'<span class="v228-ticker-badge">✨ ADNOR</span>'
+          +'<span class="v228-ticker-item">'+escapeHtml(announcement)+'</span>'
+          +'<span class="v228-ticker-item">موعد '+escapeHtml(v144Label(type))+' القادم: <b class="v104-ticker-ticket">'+escapeHtml(v144Format(next))+'</b></span></div>';
       }
-      function v144RenderTicker(){const alert=$('siteControlAlert'),sub=$('siteControlAlertSub');if(!alert)return;if(siteControl&&siteControl.maintenance){try{v93RenderTopWinnerTicker();return}catch(e){}}const html=v144TickerHtml();alert.classList.add('show');if(alert.dataset.v144TickerHtml!==html){alert.innerHTML=html;alert.dataset.v144TickerHtml=html;alert.dataset.v105TickerHtml=html;}if(sub)sub.textContent='';}
+      function v144RenderTicker(){
+        const alert=$('siteControlAlert'),sub=$('siteControlAlertSub');
+        if(!alert)return;
+        /* V228: رسالة الصيانة تُبنى هنا مباشرة (كانت تستدعي نفسها لا نهائيًا). */
+        const html=(siteControl&&siteControl.maintenance)
+          ? '<div class="v104-ticker-track v228-static-ticker"><span class="v228-ticker-badge">⚠️ صيانة</span><span class="v228-ticker-item">'+escapeHtml(siteControl.maintenanceMessage||'الموقع في وضع الصيانة مؤقتًا')+'</span></div>'
+          : v144TickerHtml();
+        alert.classList.add('show');
+        if(alert.dataset.v144TickerHtml!==html){
+          alert.innerHTML=html;
+          alert.dataset.v144TickerHtml=html;
+          alert.dataset.v105TickerHtml=html;
+        }
+        if(sub)sub.textContent='';
+      }
       function v144Attach(){document.querySelectorAll('[data-v108-set8]').forEach(b=>{b.onclick=()=>v144SetDefault(b.dataset.v108Set8)});document.querySelectorAll('[data-v108-save]').forEach(b=>{b.onclick=()=>v144SaveScheduled(b.dataset.v108Save,false)});document.querySelectorAll('[data-v108-now]').forEach(b=>{b.onclick=()=>v144SaveScheduled(b.dataset.v108Now,true)});document.querySelectorAll('[data-v108-hide]').forEach(b=>{b.textContent='إلغاء المجدول';b.onclick=()=>v144Hide(b.dataset.v108Hide)});}
       async function v218RefreshAdminDrawState(silent=false){
         if(!isAdminUser()||!currentUser)return null;
@@ -5461,11 +5746,11 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
           const response=await adnorFetchWithTimeout(ADNOR_API_BASE+'/lottery/results',{headers:{Accept:'application/json'}},15000);
           const data=await response.json().catch(()=>({}));
           if(!response.ok||data.ok!==true)throw new Error(data.message||'تعذر تحديث النتائج');
-          const results=data.results&&typeof data.results==='object'?data.results:{};
-          v108Results.published={...results};
-          v108Results.current={...results};
-          const latest=Object.values(results).sort((a,b)=>Number(b.publishAt||b.publishedAt||b.updatedAt||0)-Number(a.publishAt||a.publishedAt||a.updatedAt||0))[0]||null;
-          v108Results.latestPublished=latest;v108Results.latest=latest;
+          const results=data.results||{};
+          v108Results.published={...(v108Results.published||{}),...results};
+          v108Results.current={...(v108Results.current||{}),...results};
+          const latest=Object.values(results).sort((a,b)=>Number(b.publishAt||b.publishedAt||0)-Number(a.publishAt||a.publishedAt||0))[0];
+          if(latest){v108Results.latestPublished=latest;v108Results.latest=latest;}
           v144RenderPublic();v144RenderTicker();
           return data;
         }catch(e){if(!silent)console.warn('V219 public draw poll skipped',e)}
@@ -6009,7 +6294,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
 
   const EXTRA={
     en:{
-      "إيداع USD يدوي":"Manual USD deposit — admin approval","أرسل USDT على شبكة TRC20 وانتظر مراجعة الإدارة؛ يُضاف فقط المبلغ الواصل فعليًا.":"Submit a manual USDT deposit request. An administrator reviews it and credits only the amount received.","طريقة الإيداع الوحيدة:":"Only deposit method:","أنشئ طلب الإيداع وأرسل المبلغ؛ تضيف الإدارة المبلغ الذي وصل فعليًا بعد المراجعة.":"Create the deposit request and send the money. Admin credits the verified amount after review.","المبلغ الذي تريد إضافته بالدولار":"USD amount to add","إنشاء طلب الإيداع":"Create deposit request","أرسل هذا المبلغ بالضبط":"Send this exact amount","عنوان محفظة ADNOR — TRC20":"ADNOR wallet address — TRC20","سيُضاف إلى رصيدك الحقيقي":"Will be credited to your real balance","نسخ":"Copy","مهم: اختر شبكة":"Important: choose network","فقط، وأرسل المبلغ الدقيق كاملًا. آخر الأرقام الصغيرة هي رمز تحقق تلقائي للطلب.":"only and send the full exact amount. The small final digits are the automatic verification code.","صلاحية الطلب:":"Request expires in:","بانتظار وصول التحويل المؤكد على شبكة TRON...":"Waiting for a confirmed transfer on TRON...","تحقق الآن":"Check now","طلب جديد":"New request","جاري إنشاء طلب إيداع آمن...":"Creating a secure deposit request...","تم إنشاء طلب الإيداع. أرسل المبلغ الدقيق الظاهر.":"Deposit request created. Send the exact amount shown.","جاري فحص شبكة TRON...":"Checking the TRON network...","لم يصل التحويل المؤكد بعد. انتظر قليلًا ثم اضغط تحقق.":"The confirmed transfer has not arrived yet. Wait a moment and check again.","تم اعتماد الإيداع":"Deposit approved","تمت المراجعة":"Reviewed by admin","انتهت مهلة الطلب. أنشئ طلبًا جديدًا ولا ترسل على الطلب القديم.":"The request expired. Create a new request and do not send to the old request.","أقل إيداع هو 5 USD":"Minimum deposit is 5 USD",
+      "إيداع USD تلقائي":"Automatic USD deposit","أرسل USDT على شبكة TRC20، والسيرفر يضيف الرصيد الحقيقي تلقائيًا بدون موافقة الإدارة.":"Send USDT on TRC20 and the server credits your real balance automatically without admin approval.","طريقة الإيداع الوحيدة:":"Only deposit method:","أنشئ الطلب، ثم أرسل أي مبلغ لا يقل عن الحد الأدنى. الرصيد يضاف حسب المبلغ الذي وصل فعليًا.":"Create the request first, then send the exact amount shown.","المبلغ الذي تريد إضافته بالدولار":"USD amount to add","إنشاء طلب الإيداع":"Create deposit request","أرسل هذا المبلغ بالضبط":"Send this exact amount","عنوان محفظة ADNOR — TRC20":"ADNOR wallet address — TRC20","سيُضاف إلى رصيدك الحقيقي":"Will be credited to your real balance","نسخ":"Copy","مهم: اختر شبكة":"Important: choose network","فقط، وأرسل المبلغ الدقيق كاملًا. آخر الأرقام الصغيرة هي رمز تحقق تلقائي للطلب.":"only and send the full exact amount. The small final digits are the automatic verification code.","صلاحية الطلب:":"Request expires in:","بانتظار وصول التحويل المؤكد على شبكة TRON...":"Waiting for a confirmed transfer on TRON...","تحقق الآن":"Check now","طلب جديد":"New request","جاري إنشاء طلب إيداع آمن...":"Creating a secure deposit request...","تم إنشاء طلب الإيداع. أرسل المبلغ الدقيق الظاهر.":"Deposit request created. Send the exact amount shown.","جاري فحص شبكة TRON...":"Checking the TRON network...","لم يصل التحويل المؤكد بعد. انتظر قليلًا ثم اضغط تحقق.":"The confirmed transfer has not arrived yet. Wait a moment and check again.","تم الإيداع تلقائيًا بنجاح":"Automatic deposit completed successfully","تم التأكيد تلقائيًا":"Confirmed automatically","انتهت مهلة الطلب. أنشئ طلبًا جديدًا ولا ترسل على الطلب القديم.":"The request expired. Create a new request and do not send to the old request.","أقل إيداع هو 5 USD":"Minimum deposit is 5 USD",
       "الرصيد":"Balance","رصيد":"Balance","حقيقي":"Real","بونص":"Bonus","محجوز":"Reserved","المتاح":"Available","إخفاء الرصيد":"Hide balance","إظهار الرصيد":"Show balance",
       "الرئيسية":"Home","اليانصيب":"Lottery","الألعاب":"Games","المحفظة":"Wallet","حسابي":"My account","الإعدادات":"Settings","الدعم":"Support","اللغة":"Language","الصوت":"Sound","المظهر":"Theme","الملف الشخصي":"Profile",
       "إيداع":"Deposit","سحب":"Withdraw","الإيداع":"Deposit","السحب":"Withdraw","السجل":"History","سجل":"History","إرسال":"Send","حفظ":"Save","إلغاء":"Cancel","إغلاق":"Close","تأكيد":"Confirm","تم":"Done","حسنًا":"OK","فهمت":"Got it",
@@ -6021,7 +6306,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
       "لا توجد بيانات":"No data","لا توجد نتائج":"No results","لا توجد إشعارات بعد":"No notifications yet","جارٍ التحميل":"Loading","بانتظار التحميل":"Waiting to load","جديد":"New","نشط":"Active","متوقف":"Off","مفعّل":"On","غير مفعّل":"Off"
     },
     tr:{
-      "إيداع USD يدوي":"Manuel USD yatırma","أرسل USDT على شبكة TRC20 وانتظر مراجعة الإدارة؛ يُضاف فقط المبلغ الواصل فعليًا.":"USDT'yi TRC20 ağıyla gönderin ve yönetici incelemesini bekleyin; yalnızca ulaşan miktar eklenir.","طريقة الإيداع الوحيدة:":"Yönetici onayıyla tek yatırma yöntemi:","أنشئ طلب الإيداع وأرسل المبلغ؛ تضيف الإدارة المبلغ الذي وصل فعليًا بعد المراجعة.":"Yatırma talebi oluşturup ödemeyi gönderin; incelemeden sonra yalnızca ulaşan tutar eklenir.","المبلغ الذي تريد إضافته بالدولار":"Eklenecek USD tutarı","إنشاء طلب الإيداع":"Yatırma talebi oluştur","أرسل هذا المبلغ بالضبط":"Bu tam tutarı gönder","عنوان محفظة ADNOR — TRC20":"ADNOR cüzdan adresi — TRC20","سيُضاف إلى رصيدك الحقيقي":"Gerçek bakiyenize eklenecek","نسخ":"Kopyala","مهم: اختر شبكة":"Önemli: ağ olarak","فقط، وأرسل المبلغ الدقيق كاملًا. آخر الأرقام الصغيرة هي رمز تحقق تلقائي للطلب.":"seçin ve tam tutarı eksiksiz gönderin. Sondaki küçük rakamlar otomatik doğrulama kodudur.","صلاحية الطلب:":"Talep süresi:","بانتظار وصول التحويل المؤكد على شبكة TRON...":"TRON ağında onaylı transfer bekleniyor...","تحقق الآن":"Şimdi kontrol et","طلب جديد":"Yeni talep","جاري إنشاء طلب إيداع آمن...":"Güvenli yatırma talebi oluşturuluyor...","تم إنشاء طلب الإيداع. أرسل المبلغ الدقيق الظاهر.":"Yatırma talebi oluşturuldu. Gösterilen tam tutarı gönderin.","جاري فحص شبكة TRON...":"TRON ağı kontrol ediliyor...","لم يصل التحويل المؤكد بعد. انتظر قليلًا ثم اضغط تحقق.":"Onaylı transfer henüz gelmedi. Biraz bekleyip tekrar kontrol edin.","تم اعتماد الإيداع":"Yatırma talebi onaylandı","تمت المراجعة":"Yönetici tarafından incelendi","انتهت مهلة الطلب. أنشئ طلبًا جديدًا ولا ترسل على الطلب القديم.":"Talebin süresi doldu. Yeni talep oluşturun ve eski talebe gönderim yapmayın.","أقل إيداع هو 5 USD":"Minimum yatırma 5 USD",
+      "إيداع USD تلقائي":"Otomatik USD yatırma","أرسل USDT على شبكة TRC20، والسيرفر يضيف الرصيد الحقيقي تلقائيًا بدون موافقة الإدارة.":"USDT'yi TRC20 ağıyla gönderin; sunucu gerçek bakiyeyi yönetici onayı olmadan otomatik ekler.","طريقة الإيداع الوحيدة:":"Tek yatırma yöntemi:","أنشئ الطلب، ثم أرسل أي مبلغ لا يقل عن الحد الأدنى. الرصيد يضاف حسب المبلغ الذي وصل فعليًا.":"Önce talebi oluşturun, sonra gösterilen tam tutarı gönderin.","المبلغ الذي تريد إضافته بالدولار":"Eklenecek USD tutarı","إنشاء طلب الإيداع":"Yatırma talebi oluştur","أرسل هذا المبلغ بالضبط":"Bu tam tutarı gönder","عنوان محفظة ADNOR — TRC20":"ADNOR cüzdan adresi — TRC20","سيُضاف إلى رصيدك الحقيقي":"Gerçek bakiyenize eklenecek","نسخ":"Kopyala","مهم: اختر شبكة":"Önemli: ağ olarak","فقط، وأرسل المبلغ الدقيق كاملًا. آخر الأرقام الصغيرة هي رمز تحقق تلقائي للطلب.":"seçin ve tam tutarı eksiksiz gönderin. Sondaki küçük rakamlar otomatik doğrulama kodudur.","صلاحية الطلب:":"Talep süresi:","بانتظار وصول التحويل المؤكد على شبكة TRON...":"TRON ağında onaylı transfer bekleniyor...","تحقق الآن":"Şimdi kontrol et","طلب جديد":"Yeni talep","جاري إنشاء طلب إيداع آمن...":"Güvenli yatırma talebi oluşturuluyor...","تم إنشاء طلب الإيداع. أرسل المبلغ الدقيق الظاهر.":"Yatırma talebi oluşturuldu. Gösterilen tam tutarı gönderin.","جاري فحص شبكة TRON...":"TRON ağı kontrol ediliyor...","لم يصل التحويل المؤكد بعد. انتظر قليلًا ثم اضغط تحقق.":"Onaylı transfer henüz gelmedi. Biraz bekleyip tekrar kontrol edin.","تم الإيداع تلقائيًا بنجاح":"Otomatik yatırma başarıyla tamamlandı","تم التأكيد تلقائيًا":"Otomatik onaylandı","انتهت مهلة الطلب. أنشئ طلبًا جديدًا ولا ترسل على الطلب القديم.":"Talebin süresi doldu. Yeni talep oluşturun ve eski talebe gönderim yapmayın.","أقل إيداع هو 5 USD":"Minimum yatırma 5 USD",
       "الرصيد":"Bakiye","رصيد":"Bakiye","حقيقي":"Gerçek","بونص":"Bonus","محجوز":"Rezerve","المتاح":"Kullanılabilir","إخفاء الرصيد":"Bakiyeyi gizle","إظهار الرصيد":"Bakiyeyi göster",
       "الرئيسية":"Ana sayfa","اليانصيب":"Çekiliş","الألعاب":"Oyunlar","المحفظة":"Cüzdan","حسابي":"Hesabım","الإعدادات":"Ayarlar","الدعم":"Destek","اللغة":"Dil","الصوت":"Ses","المظهر":"Görünüm","الملف الشخصي":"Profil",
       "إيداع":"Yatır","سحب":"Çek","الإيداع":"Yatırma","السحب":"Çekim","السجل":"Geçmiş","سجل":"Geçmiş","إرسال":"Gönder","حفظ":"Kaydet","إلغاء":"İptal","إغلاق":"Kapat","تأكيد":"Onayla","تم":"Tamam","حسنًا":"Tamam","فهمت":"Anladım",
@@ -6325,7 +6610,7 @@ function listenV94GameCenter(){if(v94GamesUnsub)try{v94GamesUnsub()}catch(e){};v
   #appWrap:not(.admin-layout) .v104-ticker-track,
   #appWrap:not(.admin-layout) .v104-ticker-track.v144-gold-track,
   .v104-ticker-track.v144-gold-track{
-    animation-duration:30s!important;
+    animation-duration:90s!important;
   }
   #appWrap:not(.admin-layout) .v61-top-ticker.site-alert{
     min-height:54px!important;
